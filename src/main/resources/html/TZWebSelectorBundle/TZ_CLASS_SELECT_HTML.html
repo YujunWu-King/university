@@ -102,117 +102,90 @@ a{text-decoration: none;}
 	</div>-->
 	
 	<script type="text/javascript">
-		function changeProvince() {
-			var classid = $('input[name="%bind(:7)"]:checked').val();
-			if (classid == null) {
-				alert("%bind(:8)");
-				return;
-			} else {
-				
-				var aaa = classid.split("--");
-				classid = aaa[0];
-				var projectID=aaa[1];
-				
-				var pageid = "%bind(:2)";
-				var linkId = "%bind(:9)";
-				$("#" + pageid, window.parent.document).val(classid);
-				$("#ClassId", window.parent.document).val(classid);
-				//window.parent.SurveyBuild.classId=classid;
-				$("#BatchId", window.parent.document).val("");
-				$("#"+pageid+"_SPAN", window.parent.document).html($("input[name='%bind(:7)']:checked").parent("label").text());
-				
-				
-				//重置班级和批次的文字说明				
-				var _a = window.parent.SurveyBuild["_items"];
-				$.each(_a,function(i, item) {
-					if (item.hasOwnProperty("children")) {
-						$.each(item["children"],
-								function(y, rec) {
-									$.each(rec,function(instanceid, children) {
-										if (children.classname == "ChooseClass") {
-											children["children"]["bmrBatch"]["wzsm"]="";
-											children["children"]["bmrClass"]["wzsm"]=$("input[name='%bind(:7)']:checked").parent("label").text();
-										}
-									});
-								})						
-					} else {
-						//简单控件
-						if (item.classname == "ChooseClass") {
-							item["children"]["bmrBatch"]["wzsm"]="";
-							item["children"]["bmrClass"]["wzsm"]=$("input[name='%bind(:7)']:checked").parent("label").text();
-						}
-					}
-
-				});
-				
-				//重置批次选择的下拉列表
-				//$("#" + linkId, window.parent.document).empty();
-
-				var params = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_OTHER_STD","OperateType":"EJSON","comParams":{"OType":"BATCH","CLASSID":"'
-						+ classid + '"}}';
-				var option = {};
-				$.ajax({
-					type : "get",
-					dataType : "JSON",
-					data : {
-						tzParams : params
-					},
-					async : false,
-					url : TzUniversityContextPath,
-					success : function(f) {
-						if (f.state.errcode == "0") {
-							option = f.comContent;
-						}
-					}
-				});
-				//$("#"+pageid,window.parent.document).focus();
-				//$("#"+pageid,window.parent.document).trigger("blur");
-				var FIRM_TYPE="<option value=''>"
-					+ window.parent.MsgSet["PLEASE_SELECT"]
-				+ "</option>";
-				
-				//$("#" + linkId, window.parent.document).append(
-				//		"<option value=''>"+ window.parent.MsgSet["PLEASE_SELECT"]+ "</option>");
-
-				for ( var i in option) {
-					FIRM_TYPE = FIRM_TYPE +"<option value='"+ option[i]["code"]+ "'>"+ option[i]["txt"] + "</option>";
-				}
-				//var index=0;
-                //for (var i in option) {
-                //	console.log("i="+index);
-                //	for (var y in option) {
-                //		console.log("y="+option[y]["index"]);
-                //		if (option[y]["index"] ==  index.toString()) {
-                //			console.log("OK");
-                //			FIRM_TYPE = FIRM_TYPE +"<option value='"+ option[y]["code"]+ "'>"+ option[y]["txt"] + "</option>";
-                //		}
-                //	}	
-                //	index =index+1;
-                //}
-				
-				$("#" + linkId, window.parent.document).html(FIRM_TYPE);
-				window.parent.$("#" + linkId).trigger("chosen:updated");
-				
-				//清华特有修改，根据不同的班级 显示某些控件需要隐藏
-				//var classIDDD = $("#ClassId").val(); 
-				console.log(projectID);
-				
-				if (projectID =="PRJ_57") {	
-					$("#TZ_TZ_3_4", window.parent.document).show(); 
-					$("#TZ_TZ_3_3", window.parent.document).parent().parent().show(); 
+	function changeProvince() {
+		var classidS = $('input[name="%bind(:7)"]:checked').val();
+		
+		if (classidS == null) {
+			alert("%bind(:8)");
+			return;
+		} else {
+			var classid = classidS.split("--")[0];
+			var pageid = "%bind(:2)";
+			var linkId = "%bind(:9)";
+			$("#" + pageid, window.parent.document).val(classid);
+			$("#ClassId", window.parent.document).val(classid);
+			$("#BatchId", window.parent.document).val("");
+			$("#"+pageid+"_SPAN", window.parent.document).html($("input[name='%bind(:7)']:checked").parent("label").text());
+			
+			//重置班级和批次的文字说明				
+			var _a = window.parent.SurveyBuild["_items"];
+			$.each(_a,function(i, item) {
+				if (item.hasOwnProperty("children")) {
+					$.each(item["children"],
+							function(y, rec) {
+								$.each(rec,function(instanceid, children) {
+									if (children.classname == "ChooseClass") {
+										children["children"]["bmrBatch"]["wzsm"]="";
+										children["children"]["bmrClass"]["wzsm"]=$("input[name='%bind(:7)']:checked").parent("label").text();
+									}
+								});
+							})						
 				} else {
-					$("#TZ_TZ_3_4", window.parent.document).hide(); 
-					$("#TZ_TZ_3_3", window.parent.document).parent().parent().hide(); 
+					//简单控件
+					if (item.classname == "ChooseClass") {
+						item["children"]["bmrBatch"]["wzsm"]="";
+						item["children"]["bmrClass"]["wzsm"]=$("input[name='%bind(:7)']:checked").parent("label").text();
+					}
 				}
-				closeThis();
-				
-				
+
+			});
+			
+			
+			//重置批次选择的下拉列表
+			var params = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_OTHER_STD","OperateType":"EJSON","comParams":{"OType":"BATCH","CLASSID":"'
+					+ classid + '"}}';
+			var option = {};
+			var classZssm = '';
+			$.ajax({
+				type : "get",
+				dataType : "JSON",
+				data : {
+					tzParams : params
+				},
+				async : false,
+				url : TzUniversityContextPath,
+				success : function(f) {
+					if (f.state.errcode == "0") {
+						option = f.comContent;
+					}
+				}
+			});
+			var arr = new Array();
+			var FIRM_TYPE="<option value=''>"
+				+ window.parent.MsgSet["PLEASE_SELECT"]
+			+ "</option>";
+			
+			for ( var i in option) {
+				FIRM_TYPE = FIRM_TYPE +"<option value='"+ option[i]["code"]+ "'>"+ option[i]["txt"] + "</option>";
+				arr.push(option[i]["code"]);
 			}
+			if(arr.length == 0){
+				window.parent.document.getElementById("div1").style.display='none';
+			}else{
+				window.parent.document.getElementById("div1").style.display='block';
+				window.parent.$("#" + linkId).chosen("destory").chosen({width:"100%"});
+			}
+			$("#" + linkId, window.parent.document).html(FIRM_TYPE);
+			
+			
+			window.parent.$("#" + linkId).trigger("chosen:updated");
+			closeThis();
 		}
-		function closeThis() {
-			var index = parent.layer.getFrameIndex(window.name);
-			parent.layer.close(index);
-		}
+	}
+	function closeThis() {
+		var index = parent.layer.getFrameIndex(window.name);
+		parent.layer.close(index);
+	}
 	</script>
 	<div class="city_foot"></div>
 </body>

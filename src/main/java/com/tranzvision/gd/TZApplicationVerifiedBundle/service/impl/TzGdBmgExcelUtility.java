@@ -5,18 +5,21 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.tranzvision.gd.util.base.GetSpringBeanUtil;
-
+import com.tranzvision.gd.TZApplicationVerifiedBundle.service.impl.TzGdBmglStuClsServiceImpl;
 public class TzGdBmgExcelUtility {
 	
-	private JdbcTemplate jdbcTemplate;
-	
+	private JdbcTemplate jdbcTemplate;	
+	//@Autowired
+	private TzGdBmglStuClsServiceImpl TzGdBmglStuClsServiceImpl;
 	public TzGdBmgExcelUtility() {
 		//构造方法
 		GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
 		this.jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+		this.TzGdBmglStuClsServiceImpl = (TzGdBmglStuClsServiceImpl) getSpringBeanUtil.getSpringBeanByID("com.tranzvision.gd.TZApplicationVerifiedBundle.service.impl.TzGdBmglStuClsServiceImpl");
 	}
 	
 	
@@ -427,5 +430,31 @@ public class TzGdBmgExcelUtility {
 		}
 		return strBmrEmail;
 	}
-	
+	/*获取报名表填写比例*/
+	public String getBmbFillProportion(String strAppInsId ,String strOprId,String strAppTplId) throws Exception
+	{
+		int leng = 0;
+		String viewNameSQL="";
+		if (!strAppTplId.equals("")) {
+			// 报名表总页数
+			// 情况1：双层报名表
+			viewNameSQL = "select count(1) from PS_TZ_APP_XXXPZ_T where  TZ_APP_TPL_ID=? and TZ_COM_LMC=? and TZ_FPAGE_BH !=?";
+			leng = jdbcTemplate.queryForObject(viewNameSQL, new Object[] { strAppTplId, "Page", "" }, Integer.class);
+			// 情况2：单层报名表
+			if (leng == 0) {
+				viewNameSQL = "select count(1) from PS_TZ_APP_XXXPZ_T where  TZ_APP_TPL_ID=? and TZ_COM_LMC=?";
+				leng = jdbcTemplate.queryForObject(viewNameSQL, new Object[] { strAppTplId, "Page" }, Integer.class);
+			}
+		}
+		
+		String TZ_FILL_PROPORTION = jdbcTemplate.queryForObject(
+				"SELECT TZ_FILL_PROPORTION from PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID=?", new Object[] { strAppInsId },
+				String.class);
+		
+		System.out.println(strAppInsId+","+strOprId+","+strAppTplId);
+		//TzGdBmglStuClsServiceImpl TzGdBmglStuClsServiceImpl =new TzGdBmglStuClsServiceImpl();
+		String fillProtion=TzGdBmglStuClsServiceImpl.getBMBFillProportion(strAppInsId, leng, TZ_FILL_PROPORTION);
+		return fillProtion;
+		
+	}
 }

@@ -355,7 +355,7 @@ Ext.define('KitchenSink.view.common.cfgSearchWindow', {
                             break;
                         case '12':item.transDesc = TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00099");
                             break;
-                        case '13':item.transDesc = TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00102");
+                        case '13':item.transDesc = TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00104");
                             break;
                     }
                 });

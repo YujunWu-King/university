@@ -10,7 +10,6 @@ import com.tranzvision.gd.util.base.GetSpringBeanUtil;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.poi.excel.ExcelHandle2;
 import com.tranzvision.gd.util.sql.SqlQuery;
-import com.tranzvision.gd.util.sql.TZGDObject;
 
 /**
  * 招生线索导出进程
@@ -19,7 +18,6 @@ import com.tranzvision.gd.util.sql.TZGDObject;
  */
 public class TzClueExportEngineCls extends BaseEngine {
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void OnExecute() throws Exception {
 		JacksonUtil jacksonUtil = new JacksonUtil();
@@ -55,12 +53,10 @@ public class TzClueExportEngineCls extends BaseEngine {
 				dataCellKeys.add(new String[] { "mobile", "手机" });
 				dataCellKeys.add(new String[] { "companyName", "公司" });
 				dataCellKeys.add(new String[] { "position", "职位" });
-				dataCellKeys.add(new String[] { "localAddress", "常住地" });
 				dataCellKeys.add(new String[] { "bkStateDesc", "报考状态" });
 				dataCellKeys.add(new String[] { "memo", "备注" });
 				dataCellKeys.add(new String[] { "leadStateDesc", "线索状态" });
 				dataCellKeys.add(new String[] { "chargeName", "责任人" });
-				//dataCellKeys.add(new String[] { "refereeName", "推荐人" });
 				dataCellKeys.add(new String[] { "createDttm", "创建时间" });
 				dataCellKeys.add(new String[] { "createWayDesc", "创建方式" });
 				dataCellKeys.add(new String[] { "clueId", "线索ID" });
@@ -118,13 +114,12 @@ public class TzClueExportEngineCls extends BaseEngine {
 	
 	private void tzExportData(SqlQuery sqlQuery,String clueId,List<Map<String, Object>> dataList,String exportType){
 			
-		String name = "", mobile = "", companyName = "", position = "", localAddress = "", bkStateDesc = "", memo = "", 
-			   leadStateDesc = "", chargeName = "", refereeName = "", createDttm = "", createWayDesc = "", colorType = "", closeReason = "", reason = "";
+		String name = "", mobile = "", companyName = "", position = "", bkStateDesc = "", memo = "", 
+			   leadStateDesc = "", chargeName = "",  createDttm = "", createWayDesc = "", colorType = "", closeReason = "", reason = "";
 			  
 		try {
 			String sql = "SELECT A.TZ_LEAD_STATUS,(SELECT M.TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL M WHERE M.TZ_ZHZ_ID=A.TZ_LEAD_STATUS AND M.TZ_ZHZJH_ID='TZ_LEAD_STATUS') TZ_LEAD_STATUS_DESC,A.TZ_JY_GJ_RQ,A.TZ_THYY_ID,C.TZ_LABEL_NAME TZ_THYY_DESC,A.TZ_GBYY_ID,D.TZ_LABEL_NAME TZ_GBYY_DESC,";
-			sql += "A.TZ_COLOUR_SORT_ID,E.TZ_COLOUR_NAME,A.TZ_ZR_OPRID,B.TZ_REALNAME TZ_ZRR_NAME,A.TZ_KH_OPRID,A.TZ_REALNAME,A.TZ_COMP_CNAME,A.TZ_POSITION,A.TZ_MOBILE,A.TZ_PHONE,A.TZ_REFEREE_NAME,";
-			sql += "A.TZ_XSQU_ID,(SELECT C.TZ_LABEL_DESC FROM PS_TZ_XSXS_DQBQ_T C  WHERE A.TZ_XSQU_ID=C.TZ_LABEL_NAME) TZ_XSQU_DESC,A.TZ_BZ,date_format(A.ROW_ADDED_DTTM,'%Y-%m-%d %H:%i') ROW_ADDED_DTTM,A.TZ_RSFCREATE_WAY,";
+			sql += "A.TZ_COLOUR_SORT_ID,E.TZ_COLOUR_NAME,A.TZ_ZR_OPRID,B.TZ_REALNAME TZ_ZRR_NAME,A.TZ_KH_OPRID,A.TZ_REALNAME,A.TZ_COMP_CNAME,A.TZ_POSITION,A.TZ_MOBILE,A.TZ_PHONE,A.TZ_BZ,date_format(A.ROW_ADDED_DTTM,'%Y-%m-%d %H:%i') ROW_ADDED_DTTM,A.TZ_RSFCREATE_WAY,";
 			sql += "(SELECT M.TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL M WHERE M.TZ_ZHZ_ID=A.TZ_RSFCREATE_WAY AND M.TZ_ZHZJH_ID='TZ_RSFCREATE_WAY') TZ_RSFCREATE_WAY_DESC,IF(A.TZ_LEAD_STATUS='F',C.TZ_LABEL_NAME,IF(A.TZ_LEAD_STATUS='G',D.TZ_LABEL_NAME,'')) TZ_REASON";
 			sql += " FROM PS_TZ_XSXS_INFO_T A LEFT JOIN PS_TZ_AQ_YHXX_TBL B ON A.TZ_ZR_OPRID=B.OPRID";
 			sql += " LEFT JOIN PS_TZ_THYY_XSGL_T C ON A.TZ_THYY_ID=C.TZ_THYY_ID";
@@ -139,11 +134,9 @@ public class TzClueExportEngineCls extends BaseEngine {
 				mobile = mapClue.get("TZ_MOBILE") == null ? "" : mapClue.get("TZ_MOBILE").toString();
 				companyName = mapClue.get("TZ_COMP_CNAME") == null ? "" : mapClue.get("TZ_COMP_CNAME").toString();
 				position = mapClue.get("TZ_POSITION") == null ? "" : mapClue.get("TZ_POSITION").toString();
-				localAddress = mapClue.get("TZ_XSQU_DESC") == null ? "" : mapClue.get("TZ_XSQU_DESC").toString();
 				memo = mapClue.get("TZ_BZ") == null ? "" : mapClue.get("TZ_BZ").toString();
 				leadStateDesc = mapClue.get("TZ_LEAD_STATUS_DESC") == null ? "" : mapClue.get("TZ_LEAD_STATUS_DESC").toString();
 				chargeName = mapClue.get("TZ_ZRR_NAME") == null ? "" : mapClue.get("TZ_ZRR_NAME").toString();
-				refereeName = mapClue.get("TZ_REFEREE_NAME") == null ? "" : mapClue.get("TZ_REFEREE_NAME").toString();
 				createDttm = mapClue.get("ROW_ADDED_DTTM") == null ? "" : mapClue.get("ROW_ADDED_DTTM").toString();
 				createWayDesc = mapClue.get("TZ_RSFCREATE_WAY_DESC") == null ? "" : mapClue.get("TZ_RSFCREATE_WAY_DESC").toString();
 				colorType = mapClue.get("TZ_COLOUR_NAME") == null ? "" : mapClue.get("TZ_COLOUR_NAME").toString();
@@ -151,49 +144,35 @@ public class TzClueExportEngineCls extends BaseEngine {
 				reason = mapClue.get("TZ_REASON") == null ? "" : mapClue.get("TZ_REASON").toString();
 				
 				//报考状态
-				String bkStateSql = "SELECT A.TZ_LEAD_ID,A.TZ_APP_INS_ID,B.TZ_FORM_SP_STA,C.TZ_MS_PLAN,D.TZ_BS_RESULT,E.TZ_LQ_STATE,F.TZ_KX_PLAN";
-				bkStateSql += " FROM PS_TZ_XSXS_BMB_T A LEFT JOIN PS_TZ_FORM_WRK_T B ON A.TZ_APP_INS_ID=B.TZ_APP_INS_ID";
-				bkStateSql += " LEFT JOIN PS_TZ_KSBM_EXT_TBL C ON A.TZ_APP_INS_ID=C.TZ_APP_INS_ID";
-				bkStateSql += " LEFT JOIN TZ_IMP_BSBM_TBL D ON A.TZ_APP_INS_ID=D.TZ_APP_INS_ID";
-				bkStateSql += " LEFT JOIN TZ_IMP_LQJD_TBL E ON A.TZ_APP_INS_ID=E.TZ_APP_INS_ID";
-				bkStateSql += " LEFT JOIN TZ_IMP_KXAP_TBL F ON A.TZ_APP_INS_ID=F.TZ_APP_INS_ID";
-				bkStateSql += " WHERE A.TZ_LEAD_ID=?";
-				Map<String, Object> mapBmb = sqlQuery.queryForMap(bkStateSql, new Object[]{clueId});
-				if(mapBmb!=null) {
-					String TZ_FORM_SP_STA =  mapBmb.get("TZ_FORM_SP_STA") == null ? "" : mapBmb.get("TZ_FORM_SP_STA").toString();
-					String TZ_MS_PLAN = mapBmb.get("TZ_MS_PLAN") == null ? "" : mapBmb.get("TZ_MS_PLAN").toString();
-					String TZ_BS_RESULT = mapBmb.get("TZ_BS_RESULT") == null ? "" : mapBmb.get("TZ_BS_RESULT").toString();
-					String TZ_LQ_STATE = mapBmb.get("TZ_LQ_STATE") == null ? "" : mapBmb.get("TZ_LQ_STATE").toString();
-					String TZ_KX_PLAN = mapBmb.get("TZ_KX_PLAN") == null ? "" : mapBmb.get("TZ_KX_PLAN").toString();
-					
-					if(TZ_KX_PLAN!=null && !"".equals(TZ_KX_PLAN)) {
-						bkStateDesc="已入学";
-					} else if("Y".equals(TZ_LQ_STATE)) {
-						bkStateDesc="已录取";
-					} else if("Y".equals(TZ_BS_RESULT)) {
-						bkStateDesc="面试通过";
-					} else if("Y".equals(TZ_MS_PLAN)) {
-						bkStateDesc="已安排面试时间";
-					} else if("A".equals(TZ_FORM_SP_STA)) {
-						bkStateDesc="初审通过";
-					} else {
-						bkStateDesc="已报名";
-					}
+				String bkStateSql = "select 'Y' from PS_TZ_XSXS_BMB_T WHERE TZ_LEAD_ID=? limit 0,1";
+				String hasAppForm = sqlQuery.queryForObject(bkStateSql, new Object[]{clueId}, "String");
+				if("Y".equals(hasAppForm)) {
+					bkStateDesc="已报名";
 				} else {
 					bkStateDesc="未报名";
 				}
+				
+				//其他责任人
+				String qtZrrSql = "select group_concat(TZ_REALNAME SEPARATOR '，') from TZ_XS_QTZRR_V A where TZ_LEAD_ID=? and not exists(select 'Y' from PS_TZ_XSXS_INFO_T where TZ_LEAD_ID=A.TZ_LEAD_ID and TZ_ZR_OPRID=A.TZ_ZRR_OPRID)";
+				String qtZrrName = sqlQuery.queryForObject(qtZrrSql, new Object[]{clueId}, "String");
+				if(qtZrrName != null && !"".equals(qtZrrName)){
+					if(chargeName == null || "".equals(chargeName)){
+						chargeName = qtZrrName;
+					}else{
+						chargeName = chargeName + "，" +  qtZrrName;
+					}
+				}
+				
 				
 				Map<String, Object> mapData = new HashMap<String, Object>();
 				mapData.put("name", name);
 				mapData.put("mobile", mobile);
 				mapData.put("companyName", companyName);
 				mapData.put("position", position);
-				mapData.put("localAddress", localAddress);
 				mapData.put("bkStateDesc", bkStateDesc);
 				mapData.put("memo", memo);
 				mapData.put("leadStateDesc", leadStateDesc);
 				mapData.put("chargeName", chargeName);
-				//mapData.put("refereeName", refereeName);
 				mapData.put("createDttm", createDttm);
 				mapData.put("createWayDesc", createWayDesc);
 				mapData.put("clueId", clueId);

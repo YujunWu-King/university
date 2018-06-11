@@ -1,27 +1,18 @@
 package com.tranzvision.gd.TZMyEnrollmentClueBundle.service.impl;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZMyEnrollmentClueBundle.dao.PsTzXsxsInfoTMapper;
-import com.tranzvision.gd.TZMyEnrollmentClueBundle.dao.PsTzXsxsLogTMapper;
-import com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsInfoT;
 import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteRepCssServiceImpl;
-import com.tranzvision.gd.TZEnrollmentClueBundle.service.impl.TzClueAutoAssign;
+import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.httpclient.CommonUtils;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
-import com.tranzvision.gd.util.base.JacksonUtil;
-import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 
 /**
  * EMBA，学员推荐
@@ -44,8 +35,6 @@ public class TZCreateLeadByStuServiceImpl  extends FrameworkImpl {
 	private PsTzXsxsInfoTMapper psTzXsxsInfoTMapper;
 	@Autowired
 	private GetHardCodePoint GetHardCodePoint;
-	@Autowired
-	private TzClueAutoAssign tzClueAutoAssign;
 	
 	public String tzGetHtmlContent(String strParams) {
 		

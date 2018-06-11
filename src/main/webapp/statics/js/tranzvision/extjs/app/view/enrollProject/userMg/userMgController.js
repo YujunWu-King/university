@@ -84,7 +84,7 @@
                     var getedSQL = responseData.SQL;
 
                     window.getedSQL2 = responseData.SQL;
-
+                    console.log(getedSQL2);
 
                 });
 

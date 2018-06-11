@@ -146,6 +146,14 @@ public class LeaguerStuExcelClsServiceImpl extends FrameworkImpl {
 					oprIdArray = (List<String>)jacksonUtil.getList("applicantsList");
 				} else
 				{
+					String oprid =tzLoginServiceImpl.getLoginedManagerOprid(request);
+					String isSzgly = jdbcTemplate.queryForObject(
+							"SELECT 'Y' FROM PSROLEUSER A,PSROLEDEFN B WHERE A.ROLENAME=B.ROLENAME AND A.ROLEUSER = ? AND A.ROLENAME LIKE '%SZGD%'",
+							new Object[] { oprid }, "String");
+					if ("Y".equals(isSzgly)){
+						//苏州管理员只导出常住地是江苏的人
+						searchSql=searchSql+"AND TZ_LEN_PROID = '江苏'";
+					}
 					oprList = jdbcTemplate.queryForList(searchSql);
 					if (oprList != null && oprList.size() > 0)
 					{

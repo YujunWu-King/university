@@ -6,6 +6,6 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.enrollmentClueStore',
     autoLoad: true,
     comID:'TZ_XSXS_ZSXS_COM',
     pageID:'TZ_XSXS_ZSXS_STD',
-    tzStoreParams:'{"cfgSrhId":"TZ_XSXS_ZSXS_COM.TZ_XSXS_ZSXS_STD.TZ_ZSXS_INFO_VW","condition":{}}',
+    tzStoreParams:'',
     proxy:Ext.tzListProxy()
 });

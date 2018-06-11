@@ -8,7 +8,6 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.audit.auditApplicatio
         'Ext.util.*',
         'Ext.toolbar.Paging',
         'Ext.ux.ProgressBarPager',
-        //'KitchenSink.view.enrollmentManagement.applicationForm.dynamicInfo.dynamicAttributeForm',
         'KitchenSink.view.clueManagement.clueManagement.audit.auditFormFileCheckStore',
         'KitchenSink.view.clueManagement.clueManagement.audit.referenceLetterStore',
         'KitchenSink.view.clueManagement.clueManagement.audit.fileStore',
@@ -31,11 +30,13 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.audit.auditApplicatio
         resize:function(panel){
             var auditApplicationForm = panel.down("form"),
                 photoInfoForm = panel.down("#photoInfoForm");
-            //重新设置照片区域表单宽度（父表单宽度-照片区域宽度145-20左右外边距）
-            photoInfoForm.setWidth(auditApplicationForm.getWidth()-165);
+            //重新设置照片区域表单宽度（父表单宽度-照片区域宽度143-20左右外边距）
+            photoInfoForm.setWidth(auditApplicationForm.getWidth()-164);
         }
     },
     initComponent: function(){
+    	Ext.util.CSS.createStyleSheet(" .readOnly-tagfield-BackgroundColor div {background:#eee;}","readOnly-tagfield-BackgroundColor");
+    	
         var me = this;
         var applicationFormTagStore=this.applicationFormTagStore;
 
@@ -69,7 +70,6 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.audit.auditApplicatio
                     },
                     border: false,
                     bodyPadding: 10,
-                    //heigth: 600,
                     bodyStyle:'overflow-y:auto;overflow-x:hidden',
                     fieldDefaults: {
                         msgTarget: 'side',
@@ -91,7 +91,7 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.audit.auditApplicatio
                     },{
                         layout:'column',
                         items:[{
-                            xtype:'form',
+                        	xtype:'form',
                             itemId:'photoInfoForm',
                             layout: {
                                 type: 'vbox',
@@ -150,41 +150,24 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.audit.auditApplicatio
                                 displayField: 'TZ_LABEL_NAME',
                                 queryMode: 'local',
                                 editable:'false',
-                                readOnly:true
-                            }, {
+                                readOnly:true,
+                                cls: 'readOnly-tagfield-BackgroundColor'
+                            },{
                                 xtype: 'textfield',
-                                fieldLabel:"类别",
-                                name: 'category',
+                                fieldLabel: "责任人",
+                                name: 'personLiable',
+                                value: this.chargeName,
                                 cls:'lanage_1',
                                 readOnly:true
                             }]
                         },{
                             xtype:'component',
                             itemId:'photo',
-                            width:145,
+                            width:143,
                             bind:{
-                                html:'<img src="{photoSrc}" style="width:140px;margin-left:5px;"/>'
+                                html:'<img src="{photoSrc}" style="width:143px;margin-left:5px;"/>'
                             }
                         }]
-                    },{
-                        xtype: 'textfield',
-                        fieldLabel: "责任人",
-                        name: 'personLiable',
-                        value: this.chargeName,
-                        cls:'lanage_1',
-                        readOnly:true
-                    },{
-                        xtype: 'combobox',
-                        fieldLabel: "学历检查",
-                        editable:false,
-                        name: 'degreeCheck',
-                        valueField: 'TValue',
-                        displayField: 'TSDesc',
-                        store: new KitchenSink.view.common.store.appTransStore("TZ_XL_CHECK") ,
-                        queryMode: 'local',
-                        triggerAction: 'all',
-                        cls:'lanage_1',
-                        readOnly:true
                     }]
                 },{
                     xtype: 'tabpanel',
@@ -200,10 +183,13 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.audit.auditApplicatio
                     listeners:{
                         tabchange:function(tabPanel, newCard, oldCard){
                             var queryType;
-                            var form = tabPanel.findParentByType('auditApplicationView').child('form').getForm();
+                            var panel = tabPanel.findParentByType('auditApplicationView');
+                            //触发resize，切换tabpanel出现滚动条会打乱照片排版
+                            panel.fireEvent("resize",panel);
+                            /*
+                            var form = panel.child('form').getForm();
                             var classID = form.findField('classID').getValue();
                             var oprID = form.findField('oprID').getValue();
-
 
                             var tzStoreParams;
                             if (newCard.name == "refLetterAndAttachment"){
@@ -220,89 +206,11 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.audit.auditApplicatio
                                     fileStore.load();
                                 }
                             }
-                            if (newCard.name == "materialCheck"){
-                                var store = newCard.down("grid").store;
-                                if(!store.isLoaded()){
-                                    tzStoreParams = '{"classID":"'+classID+'","oprID":"' + oprID + '","queryType":"FILE"}';
-                                    store.tzStoreParams = tzStoreParams;
-                                    store.load({
-                                        scope: this,
-                                        callback: function(records, operation, success) {
-                                            storeGroup.auditFormFileCheckBackMsgJsonData =new Array(records.length);
-                                        }
-                                    });
-
-                                }
-                            }
                             this.doLayout();
-
+                            */
                         }
                     },
-                    items:[
-                        {
-                            title: "考生资料提交检查",
-                            xtype: 'form',
-                            name:'materialCheck',
-                            autoHeight:true,
-                            layout: {
-                                type: 'vbox',
-                                align: 'stretch'
-                            },
-                            border: false,
-                            bodyStyle:'overflow-x:hidden',
-                            items: [{
-                                xtype: 'grid',
-                                autoHeight: true,
-                                minHeight:200,
-                                bodyBorder:false,
-                                columnLines: true,
-                                viewConfig: {markDirty: false},
-                                name: 'fileCheckGrid',
-                                reference: 'fileCheckGrid',
-                                store: {
-                                    type: 'auditFormFileCheckStore'
-                                },
-                                columns: [
-                                    {
-                                        text: "内容简介",
-                                        dataIndex: 'intro',
-                                        sortable: false,
-                                        minWidth:150,
-                                        flex:1
-                                    },{
-                                        text: "审核状态",
-                                        dataIndex: 'auditState',
-                                        sortable: false,
-                                        width:100,
-                                        renderer:function(v){
-                                            if(v){
-                                                var rec = storeGroup.auditFormFileCheckAuditStateStore.find('TValue',v,0,false,false,true);
-                                                if(rec>-1){
-                                                    return storeGroup.auditFormFileCheckAuditStateStore.getAt(rec).get("TSDesc");
-                                                }else{
-                                                    return "";
-                                                }
-                                            }else{
-                                                return "";
-                                            }
-                                        }
-                                    },{
-                                        text: "审核不通过原因",
-                                        dataIndex: 'failedReason',
-                                        sortable: false,
-                                        width:150
-                                    }
-                                ]
-                            },{
-                                xtype: 'textarea',
-                                name: 'materialRemark',
-                                fieldLabel:'补充说明',
-                                height:60,
-                                labelStyle: 'font-weight:bold',
-                                margin:10
-                            }]
-                        },
-                        {
+                    items:[{
                             minHeight:250,
                             layout: {
                                 type: 'accordion',
@@ -313,8 +221,7 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.audit.auditApplicatio
                             },
                             title: "推荐信和附件",
                             name:'refLetterAndAttachment',
-                            items:[
-                                {
+                            items:[{
                                     title: "推荐信",
                                     xtype: 'grid',
                                     columnLines: true,

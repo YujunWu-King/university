@@ -141,6 +141,7 @@ $(document).ready(function(){
 							}
 						}
 					}else if(fieldId=="TZ_EMAIL"){//邮箱
+					//	  $('#' + fieldId + '_status').html("<span>"+请勿使用hotmail或outlook邮箱+"</span>");
 						if(val!=''){
 							var patrn = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
 							if (!patrn.test(val)){

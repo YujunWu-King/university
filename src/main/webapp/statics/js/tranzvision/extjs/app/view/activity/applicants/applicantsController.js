@@ -636,4 +636,139 @@
 		win.show();
 	},
 
+	
+	//给选中报名人创建线索
+	createClue: function(btn){
+		var actId=btn.findParentByType('applicantsMg').child('form').getForm().getValues()['activityId'];
+		
+		//选中行长度
+		var selList = [];
+		var selModel = this.getView().getSelectionModel().getSelection();
+		var gridStore = this.getView().getStore();
+		if(gridStore.isFiltered()){ //如果使用filter过滤，过滤后的勾选行不发送
+			 for(var i=0;i<selModel.length; i++){
+				var index = gridStore.indexOf(selModel[i]);
+				if(index != -1){
+					selList.push(selModel[i]);	 
+				}
+			}
+		}else{
+			selList = selModel;
+		}
+		
+		var checkLen = selList.length;
+		if(checkLen == 0){
+			Ext.Msg.alert("提示","请选择创建线索的报名人记录");   
+			return;
+		}
+		
+		var bmrIds = [];
+		var existClueFlag="";
+		for(var i=0;i<checkLen;i++){
+			if(selList[i].data.leadId != null && selList[i].data.leadId !=""){
+				existClueFlag = "Y";
+			}
+			bmrIds.push(selList[i].data.applicantsId);
+		}
+		
+		if(existClueFlag=="Y") {
+			Ext.Msg.alert("提示","选择的报名人记录中存在已创建线索的数据，请重新选择");
+			return;
+		}
+		
+		var tzParamsObj={
+			ComID: 	"TZ_GD_BMRGL_COM",
+			PageID: "TZ_GD_BMRGL_STD",
+			OperateType: 'tzCreateClue',
+			comParams: {
+				activityId: actId,
+				bmrIds: bmrIds
+			}
+		};
+		
+		 var tzParams = Ext.JSON.encode(tzParamsObj);
+         Ext.tzSubmit(tzParams,function(){
+        	 var existsLead = result.existsLead;
+	    	 if(existsLead != ""){
+	    		 Ext.Msg.alert("提示",existsLead + "线索已存在，没有重复创建");
+	    	 }
+	    	 
+        	 gridStore.reload();
+         },"创建线索成功",true,this);
+	},
+	
+	//给选中报名人创建其他机构线索
+	createClueForOtherOrg: function(btn){
+		var actId=btn.findParentByType('applicantsMg').child('form').getForm().getValues()['activityId'];
+		
+		//选中行长度
+		var selList = [];
+		var selModel = this.getView().getSelectionModel().getSelection();
+		var gridStore = this.getView().getStore();
+		if(gridStore.isFiltered()){ //如果使用filter过滤，过滤后的勾选行不发送
+			 for(var i=0;i<selModel.length; i++){
+				var index = gridStore.indexOf(selModel[i]);
+				if(index != -1){
+					selList.push(selModel[i]);	 
+				}
+			}
+		}else{
+			selList = selModel;
+		}
+		
+		var checkLen = selList.length;
+		if(checkLen == 0){
+			Ext.Msg.alert("提示","请选择创建线索的报名人记录");   
+			return;
+		}
+		
+		var bmrIds = [];
+		for(var i=0;i<checkLen;i++){
+			bmrIds.push(selList[i].data.applicantsId);
+		}
+		
+        var win = new KitchenSink.view.activity.applicants.chooseClueOrgWindow({
+        	actId: actId,
+        	bmrIds: bmrIds,
+        	callback: function(){
+        		gridStore.reload();
+        	}
+        });
+        //this.getView().add(win);
+        win.show();
+	},
+	
+	createClueEnsure: function(btn){
+		var win = btn.findParentByType('window');
+		var form = win.child('form').getForm();
+		
+		if(!form.isValid()) return;
+		
+		var actId = win.actId,
+			bmrIds = win.bmrIds,
+			orgId = form.getValues()['orgId'];
+		
+		var tzParamsObj={
+			ComID: 	"TZ_GD_BMRGL_COM",
+			PageID: "TZ_GD_BMRGL_STD",
+			OperateType: 'tzCreateClue',
+			comParams: {
+				activityId: actId,
+				bmrIds: bmrIds,
+				orgId: orgId
+			}
+		};
+
+		 var tzParams = Ext.JSON.encode(tzParamsObj);
+	     Ext.tzSubmit(tzParams,function(result){
+	    	 var existsLead = result.existsLead;
+	    	 if(existsLead != ""){
+	    		 Ext.Msg.alert("提示",existsLead + "线索已存在，没有重复创建");
+	    	 }
+	    	 
+	    	 //刷新报名人列表
+	    	 if(typeof(win.callback) == "function") win.callback();
+	    	 win.close();
+	     },"创建线索成功",true,this);
+	}
 });

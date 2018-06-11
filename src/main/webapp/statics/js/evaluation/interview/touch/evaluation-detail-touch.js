@@ -118,7 +118,7 @@ function ks_list(){
 					detallist+="<td class='alt'>"+ksbodyArray[i]['xuHao']+"</td>";
 					//detallist+="<td class='alt'>"+ksbodyArray[i]['appInsId']+"</td>";
 					detallist+="<td class='alt'>"+ksbodyArray[i]['realname']+"</td>";
-					detallist+="<td class='alt'>"+ksbodyArray[i]['genderDesc']+"</td>";
+					//detallist+="<td class='alt'>"+ksbodyArray[i]['genderDesc']+"</td>";
 					detallist+="<td class='alt'>"+ksbodyArray[i]['mssqh']+"</td>";
 					detallist+=concollist;
 					detallist+="<td class='alt' style='padding:0'><a data-icon='arrow-r' data-mini='true' data-inline='true' data-role='button' data-ajax='false' id='favrecipelink' href='javascript:void(0)' onclick='tz_ks_dfq("+ksbodyArray[i]['appInsId']+")' data-corners='true' data-shadow='true'data-iconshadow='true' data-wrapperels='span' data-theme='a' class='ui-btn ui-shadow ui-icon-arrow-r ui-btn-corner-all ui-mini ui-btn-inline ui-btn-icon-left ui-btn-up-c'><span class='ui-btn-inner ui-btn-corner-all ui-corner-top ui-corner-bottom'><span class='ui-btn-text'>进行评审</span></span></a></td>";
@@ -134,7 +134,7 @@ function ks_list(){
 				examerinfoHeader+="<th scope='col' style='text-align:center;'>序号</th>";
 				//examerinfoHeader+="<th scope='col' style='text-align:center;'>报名表编号</th>";
 				examerinfoHeader+="<th scope='col' style='text-align:center;'>姓名</th>";
-				examerinfoHeader+="<th scope='col' style='text-align:center;'>性别</th>";
+				//examerinfoHeader+="<th scope='col' style='text-align:center;'>性别</th>";
 				examerinfoHeader+="<th scope='col' style='text-align:center;'>面试申请号</th>";
 
 				var headbutton="";

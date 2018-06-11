@@ -698,7 +698,7 @@ function tz_apply_click_to_signin_action2(displayURL) {
     var cover = document.createElement("div");
     cover.className = "cover";
     cover.style.cssText = "background: none repeat scroll 0 0 rgba(0, 0, 0, 0.5);height: 100%;left: 0;position: fixed;top: 0;width: 100%;z-index: 10000;";
-    cover.innerHTML = "<div style='margin:-110px auto 0; z-index:10000;width: 700px;padding-bottom: 20px;'><iframe src='" + displayURL + "' style='border: 0 none;width: 100%;padding: 0;height: 700px;' on></iframe></div>";
+    cover.innerHTML = "<div style='margin:opx auto 0; z-index:10000;width: 700px;padding-bottom: 20px;'><iframe src='" + displayURL + "' style='border: 0 none;width: 100%;padding: 0;height: 700px;' on></iframe></div>";
     document.body.appendChild(cover);
 }
 

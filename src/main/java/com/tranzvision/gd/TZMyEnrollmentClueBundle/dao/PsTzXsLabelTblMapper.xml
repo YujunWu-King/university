@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZMyEnrollmentClueBundle.dao.PsTzXsLabelTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsLabelTblKey" >
+    <id column="TZ_LEAD_ID" property="tzLeadId" jdbcType="VARCHAR" />
+    <id column="TZ_LABEL_ID" property="tzLabelId" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsLabelTblKey" >
+    delete from PS_TZ_XS_LABEL_TBL
+    where TZ_LEAD_ID = #{tzLeadId,jdbcType=VARCHAR}
+      and TZ_LABEL_ID = #{tzLabelId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsLabelTblKey" >
+    insert into PS_TZ_XS_LABEL_TBL (TZ_LEAD_ID, TZ_LABEL_ID)
+    values (#{tzLeadId,jdbcType=VARCHAR}, #{tzLabelId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsLabelTblKey" >
+    insert into PS_TZ_XS_LABEL_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzLeadId != null" >
+        TZ_LEAD_ID,
+      </if>
+      <if test="tzLabelId != null" >
+        TZ_LABEL_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzLeadId != null" >
+        #{tzLeadId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLabelId != null" >
+        #{tzLabelId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

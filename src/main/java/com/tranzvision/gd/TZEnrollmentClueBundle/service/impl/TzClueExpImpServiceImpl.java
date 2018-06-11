@@ -12,7 +12,6 @@ import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.aspectj.internal.lang.annotation.ajcDeclareAnnotation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,12 +20,9 @@ import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzExcelDrxxTMapper;
 import com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzExcelDattT;
 import com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzExcelDrxxT;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
-import com.tranzvision.gd.TZAutomaticScreenBundle.dao.PsTzZdcsDcAetMapper;
-import com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzZdcsDcAet;
 import com.tranzvision.gd.TZBaseBundle.service.impl.BatchProcessDetailsImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
-import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzClpsKshTblKey;
 import com.tranzvision.gd.TZMyEnrollmentClueBundle.dao.PsTzXsxsDcAetMapper;
 import com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsDcAet;
 import com.tranzvision.gd.batch.engine.base.BaseEngine;
@@ -68,7 +64,7 @@ public class TzClueExpImpServiceImpl extends FrameworkImpl {
 	
 	/* 导出历史记录列表 */
 	@Override
-	@SuppressWarnings({ "unchecked", "unused" })
+	@SuppressWarnings({ "unchecked" })
 	public String tzQueryList(String strParams, int numLimit, int numStart, String[] errMsg) {
 		String strRet = "";
 		JacksonUtil jacksonUtil = new JacksonUtil();
@@ -254,9 +250,9 @@ public class TzClueExpImpServiceImpl extends FrameworkImpl {
 			
 			if("default".equals(searchSql)) {
 				if("ZSXS".equals(exportType)) {
-					searchSql = "SELECT TZ_LEAD_ID FROM PS_TZ_ZSXS_INFO_VW WHERE TZ_JG_ID='" + orgId + "' AND TZ_LEAD_STATUS<>'G' AND TZ_ZR_OPRID IN ('" + oprid + "','NEXT')";
+					searchSql = "SELECT TZ_LEAD_ID FROM PS_TZ_ZSXS_INFO_VW2 WHERE TZ_JG_ID='" + orgId + "' AND TZ_LEAD_STATUS<>'G' AND TZ_ZR_OPRID2 IN ('" + oprid + "','NEXT')";
 				} else if("MYXS".equals(exportType)) {
-					searchSql = "SELECT TZ_LEAD_ID FROM PS_TZ_XSXS_INFO_VW WHERE TZ_JG_ID='" + orgId + "' AND TZ_LEAD_STATUS<>'G' AND TZ_ZR_OPRID ='" + oprid +"'";
+					searchSql = "SELECT TZ_LEAD_ID FROM PS_TZ_XSXS_INFO_VW WHERE TZ_JG_ID='" + orgId + "' AND TZ_LEAD_STATUS<>'G' AND TZ_ZR_OPRID2 ='" + oprid +"'";
 				}
 			}
 			

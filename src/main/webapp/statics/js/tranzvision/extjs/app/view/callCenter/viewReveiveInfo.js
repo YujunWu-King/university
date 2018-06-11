@@ -13,6 +13,7 @@ Ext.define('KitchenSink.view.callCenter.viewReveiveInfo', {
         'Ext.ux.DataView.LabelEditor',
         'tranzvision.extension.grid.column.Link', 
         'KitchenSink.view.callCenter.userAppListStore',
+        'KitchenSink.view.callCenter.userClueListStore',
         'KitchenSink.view.callCenter.viewUserController'
 	],
 	title: '用户接待单信息', 
@@ -20,6 +21,8 @@ Ext.define('KitchenSink.view.callCenter.viewReveiveInfo', {
 	ignoreChangesFlag:true,
 	actType: 'update',//默认新增
 	initComponent:function(){
+		
+		Ext.util.CSS.createStyleSheet("a.grid-linkcolumn-with-no-click{color:#000; text-decoration:none;}","grid-linkcolumn-with-no-click");
 		//短信模板
 		var smsVarData;
 	
@@ -34,6 +37,7 @@ Ext.define('KitchenSink.view.callCenter.viewReveiveInfo', {
 		});
 		
 		var userAppListStore = new KitchenSink.view.callCenter.userAppListStore();
+		var userClueListStore = new KitchenSink.view.callCenter.userClueListStore();
 		
 		var applicantColumns = [{
             text: "序号",
@@ -101,48 +105,48 @@ Ext.define('KitchenSink.view.callCenter.viewReveiveInfo', {
         }];
 	
 		
-		var materialsColumns = [{
-	        text: "序号",
-	        xtype: 'rownumberer',
-	        width: 50,
-	        align: 'center'
-        },{
-	        text: "报名表编号",
-	        width:120,
-	        dataIndex: 'appInsId',
-	        xtype: 'linkcolumn',
-            handler: 'viewThisApplicationForm',
-            renderer: function(v) {
-                this.text = v;
-                return;
-            }
-	    },{
-            text: "班级编号",
-            dataIndex: 'classId',
-            hidden:true
-        },
-        {
-            text: "批次编号",
-            dataIndex: 'batchId',
-            hidden:true
-        },
-        {
-            text: "报考方向",
-            dataIndex: 'className',
-            flex:1
-        },{
-            text: "报考批次",
-            width:120,
-            dataIndex: 'batchName'
-        },{
-	        text: "是否进入材料评审",
-	        width:150,
-	        dataIndex: 'isOnMaterials'
-	    },{
-	        text: "材料评审结果",
-	        width:120,
-	        dataIndex: 'materialResult'
-	    }];
+//		var materialsColumns = [{
+//	        text: "序号",
+//	        xtype: 'rownumberer',
+//	        width: 50,
+//	        align: 'center'
+//        },{
+//	        text: "报名表编号",
+//	        width:120,
+//	        dataIndex: 'appInsId',
+//	        xtype: 'linkcolumn',
+//            handler: 'viewThisApplicationForm',
+//            renderer: function(v) {
+//                this.text = v;
+//                return;
+//            }
+//	    },{
+//            text: "班级编号",
+//            dataIndex: 'classId',
+//            hidden:true
+//        },
+//        {
+//            text: "批次编号",
+//            dataIndex: 'batchId',
+//            hidden:true
+//        },
+//        {
+//            text: "报考方向",
+//            dataIndex: 'className',
+//            flex:1
+//        },{
+//            text: "报考批次",
+//            width:120,
+//            dataIndex: 'batchName'
+//        },{
+//	        text: "是否进入材料评审",
+//	        width:150,
+//	        dataIndex: 'isOnMaterials'
+//	    },{
+//	        text: "材料评审结果",
+//	        width:120,
+//	        dataIndex: 'materialResult'
+//	    }];
 	   
 		var interviewResultColumns = [{
 	        text: "序号",
@@ -224,6 +228,10 @@ Ext.define('KitchenSink.view.callCenter.viewReveiveInfo', {
 				},{
 					xtype: 'textfield',
 					name:'phoneNum',
+					hidden:true
+				},{
+					xtype: 'textfield',
+					name:'leadId',
 					hidden:true
 				},{
 					xtype : 'fieldset',
@@ -502,6 +510,16 @@ Ext.define('KitchenSink.view.callCenter.viewReveiveInfo', {
                             setType: 0,
                             handler: 'addBlackList',
                             width: 100
+                        },{
+                        	 style: 'margin-left:10px',
+                             xtype: 'button',
+                             text: '创建销售线索',
+                             defaultColor: '',
+                             name: 'createClue',
+                             flagType: 'positive',
+                             setType: 0,
+                             handler: 'createClue',
+                             width: 100
                         }/*,
                         {
                             style: 'margin-left:10px',
@@ -561,6 +579,67 @@ Ext.define('KitchenSink.view.callCenter.viewReveiveInfo', {
                         columnWidth: .15
                     }]
 				},{
+					xtype: 'grid',
+                    title: '线索信息',
+                    minHeight: 100,
+                    name: 'ksClueList',
+                    reference: 'ksClueList',
+                    scrollable:false,
+                    columnLines: true,
+                    autoHeight: true,
+                    columns: [{
+                    	xtype:'linkcolumn',
+                    	text: "姓名",
+                        dataIndex: 'name',
+                        width: 120,
+                        items:[{
+							getText: function(v, meta, rec) {
+								return v;
+							},
+							isDisabled: function(grid, rowIdx, colIdx){
+								var store = grid.getStore();
+								var record = store.getAt(rowIdx);
+								
+								var isClueZrr = record.get("isClueZrr");
+								if(isClueZrr == "Y"){
+									return false;
+								}else{
+									return true;	
+								}
+							},
+							getClass: function(v, meta, rec){
+								var isClueZrr = rec.get("isClueZrr");
+								if(isClueZrr == "Y"){
+									return "";
+								}else{
+									return "grid-linkcolumn-with-no-click";	
+								}
+							},
+							handler: 'viewClueInfo'
+						}]
+                    },{
+                        text: "线索状态",
+                        dataIndex: 'clueStatus',
+                        width: 100,
+                        flex:1
+                    },{
+                        text: "责任人",
+                        dataIndex: 'zrrName',
+                        width: 120,
+                        flex:1
+                    },{
+                        text: "创建方式",
+                        dataIndex: 'createType',
+                        width: 100,
+                        flex:1
+                    },{
+                        text: "创建时间",
+                        dataIndex: 'addTime',
+                        minWidth: 120,
+                        flex: 1
+                    }],
+                    store:userClueListStore
+				},{
                     xtype: 'grid',
                     title: '报名信息',
                     minHeight: 100,
@@ -569,6 +648,7 @@ Ext.define('KitchenSink.view.callCenter.viewReveiveInfo', {
                     scrollable:false,
                     columnLines: true,
                     autoHeight: true,
+                    style : 'margin-top:20px',
                     plugins: [{
                         ptype: 'cellediting',
                         pluginId: 'judgeCellEditing',
@@ -583,31 +663,33 @@ Ext.define('KitchenSink.view.callCenter.viewReveiveInfo', {
                     }],
                     columns: applicantColumns,
                     store:userAppListStore,                    
-                },{
-                    xtype: 'grid',
-                    title: '面试资格',
-                    scrollable:false,
-                    minHeight: 100,
-                    style:"margin-top:15px",
-                    name: 'materialsGrid',
-                    reference: 'materialsGrid',
-                    columnLines: true,
-                    autoHeight: true, 
-                    plugins: [{
-                        ptype: 'cellediting',
-                        pluginId: 'judgeCellEditing',
-                        clicksToEdit: 1,
-                        listeners: {
-                            beforeedit: function(editor, context, eOpts) {
-                                if (context.field == "judgeID" && context.value.length > 0 && !context.record.isModified('judgeID')) {
-                                    return false;
-                                }
-                            }
-                        }
-                    }],
-                    columns: materialsColumns,
-                    store:userAppListStore,                    
-                },{
+                },
+//                {
+//                    xtype: 'grid',
+//                    title: '面试资格',
+//                    scrollable:false,
+//                    minHeight: 100,
+//                    style:"margin-top:15px",
+//                    name: 'materialsGrid',
+//                    reference: 'materialsGrid',
+//                    columnLines: true,
+//                    autoHeight: true, 
+//                    plugins: [{
+//                        ptype: 'cellediting',
+//                        pluginId: 'judgeCellEditing',
+//                        clicksToEdit: 1,
+//                        listeners: {
+//                            beforeedit: function(editor, context, eOpts) {
+//                                if (context.field == "judgeID" && context.value.length > 0 && !context.record.isModified('judgeID')) {
+//                                    return false;
+//                                }
+//                            }
+//                        }
+//                    }],
+//                    columns: materialsColumns,
+//                    store:userAppListStore,                    
+//                }
+                {
                     xtype: 'grid',
                     title: '面试结果',
                     minHeight: 100,

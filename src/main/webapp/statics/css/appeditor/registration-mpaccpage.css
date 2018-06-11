@@ -9,12 +9,12 @@
 .top_main ul{width:96%;overflow:hidden;margin:0 auto}
 .top_main ul li{font-size:14px;color:#fff;margin:10px 15px;float:left}
 .exit{font-size:14px;color:#fff;margin:10px 15px;float:right}
-.top{height:142px;width:100%;background-image:url(../../images/website/skins/23//top_bg.png);background-repeat:no-repeat;background-position:center}
+.top{height:142px;width:100%;background-image:url(../../images/website/skins/23//top_bgmpacc.png);background-repeat:no-repeat;background-position:center}
 .top_main_right{text-align:right;float:right;height:30px;width:360px;padding:0;margin-top:29.5px;margin-right:2.5%;margin-bottom:0;margin-left:0;color:#FFF}
 .top_main{padding:0;height:110px;width:100%;margin-right:auto;margin-left:auto}
 .top_main_left{float:left;margin-left:2.5%;margin-top:29.5px}
 .top_main_right a{color:#FFF;text-decoration:none}
-.footer{width:100%;height:58px;background:url(../../images/website/skins/23//footer.png) no-repeat;margin-top:1%}
+.footer{width:100%;height:58px;background:url(../../images/website/skins/23//footermpacc.png) no-repeat;margin-top:1%}
 .footer p{color:#f2f2f2;font-size:12px;line-height:58px;text-align:center}
 .reg-topmain{
     height: 110px;
@@ -77,11 +77,11 @@
 	padding-left: 15px;
 }
 .regmain-menu ul li a{
-	color:#078445;
+	color:#0070c6;
 }
 /* 第一层菜单*/
 .regmain-menu ul li.menu-active-top{
-	background:#078445;
+	background:#e3001e;
 	color:#fff;
 	border-radius: 5px;
 	padding-left: 15px;
@@ -90,7 +90,7 @@
 	color:#fff;
 }
 .regmain-menu ul li.menu-active-top:hover{
-	background:#078445;
+	background:#e3001e;
 }
 /* 第二层默认菜单*/
 .regmain-menu ul li.menu-active{
@@ -180,7 +180,7 @@
 	line-height:46px;
 	margin-right:10px;
 	border-radius:5px;
-	background:#078445;
+	background:#e3001e;
 }
 .btn-pre{
 	text-align:center;
@@ -204,7 +204,7 @@
     vertical-align: middle;
 }
 .btn-action:hover{
-	background:#078445;
+	background:#0070c6;
 }
 .btn-save:hover{
 	background:#d96600;
@@ -1133,7 +1133,7 @@ url("chrome://browser/content/history/history-panel.xul")
 .sideslip{
 	width:80px;
 	height:44px;
-	background:#078445;
+	background:#e3001e;
 	position:fixed;
     right:30px;
     bottom: 30px;

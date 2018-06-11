@@ -108,7 +108,7 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.myEnrollmentClue',{
 
         var myEnrollClueStore =new KitchenSink.view.clueManagement.clueManagement.myEnrollmentClueStore();
         //默认显示未关闭的数据
-        myEnrollClueStore.tzStoreParams='{"cfgSrhId":"TZ_XSXS_MYXS_COM.TZ_XSXS_MYXS_STD.TZ_XSXS_INFO_VW","condition":{"TZ_LEAD_STATUS-operator": "02","TZ_LEAD_STATUS-value": "G"}}';
+        myEnrollClueStore.tzStoreParams='{"cfgSrhId":"TZ_XSXS_MYXS_COM.TZ_XSXS_MYXS_STD.TZ_XSXS_INFO_VW","condition":{"TZ_JG_ID-operator": "01","TZ_JG_ID-value": "'+ Ext.tzOrgID +'","TZ_LEAD_STATUS-operator": "02","TZ_LEAD_STATUS-value": "G"}}';
 
 
         //类别
@@ -218,6 +218,14 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.myEnrollmentClue',{
                                 type:'string'
                             }
                         },{
+                            text:'邮箱',
+                            lockable: false,
+                            dataIndex:'email',
+                            width:120,
+                            filter:{
+                                type:'string'
+                            }
+                        },{
                             text:'公司',
                             lockable   : false,
                             dataIndex:'comName',
@@ -233,7 +241,7 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.myEnrollmentClue',{
                             filter:{
                                 type:'string'
                             }
-                        },{
+                        },/*{
                             text:'常住地',
                             lockable   : false,
                             dataIndex:'cusPlace',
@@ -241,7 +249,7 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.myEnrollmentClue',{
                             filter:{
                                 type:'string'
                             }
-                        },{
+                        },*/{
                             text:'报考状态',
                             lockable:false,
                             dataIndex:"bmStateDesc",
@@ -257,6 +265,16 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.myEnrollmentClue',{
                             filter:{
                                 type:'string'
                             }
+                        },{
+                        	text:'联系报告',
+    	                    lockable   : false,
+    	                    menuDisabled:true,
+    	                    width:	80,
+    	                    xtype:'actioncolumn',
+    	                    align:'center',
+    	                    items:[
+    	                        {iconCls:'audit',tooltip:'查看和添加联系报告',handler:'addContactReport'}
+    	                    ]
                         }
                     ]
                 },{
@@ -271,7 +289,7 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.myEnrollmentClue',{
                             text:'线索状态',
                             lockable:false,
                             dataIndex:"clueStateDesc",
-                            width:80,
+                            width:90,
                             filter:{
                                 type:'list',
                                 options:leadStatusFilterOptions
@@ -280,7 +298,7 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.myEnrollmentClue',{
                             text:'责任人',
                             lockable:false,
                             dataIndex:"zrPer",
-                            width:70,
+                            width:100,
                             filter:{
                                 type:'string'
                             }
@@ -311,12 +329,12 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.myEnrollmentClue',{
                             text:'创建方式',
                             lockable:false,
                             dataIndex:'createWayDesc',
-                            width:85,
+                            width:90,
                             filter:{
                                 type:'list',
                                 options:createWayFilterOptions
                             }
-                        },{
+                        },/*{
                             text:'线索ID',
                             lockable:false,
                             dataIndex:'clueId',
@@ -324,7 +342,7 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.myEnrollmentClue',{
                             filter:{
                                 type:'string'
                             }
-                        },{
+                        },*/{
                             text:'类别',
                             dataIndex:'colorType',
                             lockable:false,
@@ -349,6 +367,7 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.myEnrollmentClue',{
                             lockable:false,
                             dataIndex:'gbyy',
                             flex:1,
+                            minWidth: 100,
                             filter:{
                                 type:'string'
                             }

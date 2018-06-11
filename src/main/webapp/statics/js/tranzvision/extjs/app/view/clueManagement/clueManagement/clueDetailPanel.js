@@ -22,43 +22,9 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.clueDetailPanel',{
             closeReasonData = me.closeReasonData,
             colorSortData = me.colorSortData,
             customerNameData = me.customerNameData,
-            companyNameData = me.companyNameData;
-
-        /*
-        var clueDetailFormPanel = {
-            //姓名
-            customerNameStore : new KitchenSink.view.common.store.comboxStore({
-                pageSize: 0,
-                recname: 'TZ_XS_CUSNM_V',
-                condition: {
-					TZ_JG_ID: {
-                        value:Ext.tzOrgID,
-                        operator: '01',
-                        type: '01'
-                    },
-                    TZ_REALNAME: {
-                        value: ' ',
-                        operator: '02',
-                        type: '01'
-                    }
-                },
-                result: 'TZ_KH_OPRID,TZ_REALNAME,TZ_DESCR_254'
-            }),
-            //公司
-            companyNameStore : new KitchenSink.view.common.store.comboxStore({
-                pageSize: 0,
-                recname: 'TZ_XS_COMNM_V',
-                condition: {
-                    TZ_JG_ID: {
-                        value:Ext.tzOrgID,
-                        operator: '01',
-                        type: '01'
-                    }
-                },
-                result: 'TZ_COMP_CNAME'
-            })
-        };
-        */
+            companyNameData = me.companyNameData,
+            clueTagStore = me.clueTagStore,
+            otherZrrStore = me.otherZrrStore;
 
 
         var dynamicStore = {
@@ -100,7 +66,6 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.clueDetailPanel',{
         };
 
         Ext.apply(this,{
-            //clueDetailFormPanel:clueDetailFormPanel,
             items: [{
                 xtype: 'form',
                 reference: 'clueDetailForm',
@@ -141,7 +106,7 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.clueDetailPanel',{
                         queryMode: 'local',
                         fieldStyle:'background:#F4F4F4',
                         value: 'C',
-                        flex:1
+                        flex: 1
                     },{
                         width:120,
                         xtype:'button',
@@ -206,9 +171,69 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.clueDetailPanel',{
                     fieldLabel: '责任人',
                     name: 'chargeName',
                     editable:false,
-                    readOnly:true,
-                    fieldStyle:'background:#F4F4F4'
-                }, {
+                    readOnly: me.zrrEditFalg == 'Y' ? false : true,
+                    fieldStyle: me.zrrEditFalg == 'Y' ? '' : 'background:#F4F4F4',
+                    triggers: {
+                        clear: {
+                            cls: 'x-form-clear-trigger',
+                            hidden: true,
+                            handler: function(field){
+                            	field.setValue("");
+                            	field.findParentByType('form').getForm().findField('chargeOprid').setValue("");
+                                field.getTrigger('clear').hide();
+                            }
+                        },
+                        search: {
+                            cls: 'x-form-search-trigger',
+                            handler: "searchCharge"
+                        }
+                    },
+                    listeners: {
+						change: function(field,newValue,oldValue){
+							if(me.zrrEditFalg == 'Y'){
+								field.getTrigger('clear')[(newValue.length > 0) ? 'show' : 'hide']();
+								
+								//如果已有责任人，责任人不可编辑
+								if(newValue && newValue.length > 0){
+									field.getTrigger('clear').hide();
+									var chargeNameField = field.findParentByType('form').getForm().findField('chargeName')
+									chargeNameField.setReadOnly(true);
+									chargeNameField.setFieldStyle('background:#F4F4F4');
+								}
+							}
+						}
+					}
+                },{
+                	xtype: 'tagfield',
+                    fieldLabel: "其他责任人",
+                    name: 'otherCharge',
+                    store: otherZrrStore,
+                    valueField: 'TZ_ZRR_OPRID',
+                    displayField: 'TZ_REALNAME',
+                    filterPickList: false,
+                    createNewOnEnter: false,
+                    createNewOnBlur: false,
+                    queryMode: 'local',
+                    triggers: {
+                        clear: {
+                            cls: 'x-form-clear-trigger',
+                            hidden: true,
+                            handler: function(field){
+                            	field.setValue("");
+                                field.getTrigger('clear').hide();
+                            }
+                        },
+                        search: {
+                            cls: 'x-form-search-trigger',
+                            handler: "searchOtherCharge"
+                        }
+                    },
+                    listeners: {
+						change: function(field,newValue,oldValue){
+							field.getTrigger('clear')[(newValue.length > 0) ? 'show' : 'hide']();
+						}
+					}
+                },{
                     xtype:'textfield',
                     name:'cusOprid',
                     hidden:true
@@ -259,6 +284,11 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.clueDetailPanel',{
                     //allowBlank:false,
                     name: 'cusMobile'
                 },{
+                	xtype: 'textfield',
+                    fieldLabel: '邮箱',
+                    maxLength: 100,
+                    name: 'cusEmail'
+                },{
                     xtype: 'combo',
                     fieldLabel: '公司',
                     maxLength: 50,
@@ -285,25 +315,6 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.clueDetailPanel',{
                     maxLength: 24,
                     name: 'phone'
                 },{
-                    xtype:'textfield',
-                    name:'localId',
-                    hidden:true
-                },{
-                    xtype: 'textfield',
-                    fieldLabel: '常住地',
-                    name: 'localAddress',
-                    editable: false,
-                    triggers: {
-                        clear: {
-                            cls: 'x-form-clear-trigger',
-                            handler: 'clearLocal'
-                        },
-                        search: {
-                            cls: 'x-form-search-trigger',
-                            handler: "searchLocal"
-                        }
-                    }
-                }, {
                     xtype:'combobox',
                     fieldLabel:'类别',
                     name:'colorType',
@@ -356,6 +367,34 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.clueDetailPanel',{
                             }else{
                                 colorEl.applyStyles( 'background: none');
                             }
+                            combo.getTrigger('clear')[(newValue==null || newValue.length == 0) ? 'hide' : 'show']();
+                        }
+                    },
+                    triggers: {
+                        clear: {
+                            cls: 'x-form-clear-trigger',
+                            hidden: true,
+							handler: function(field){
+								field.setValue();
+								field.getTrigger('clear').hide();
+							}
+                        }
+                    }
+                },{
+                	xtype: 'tagfield',
+                    fieldLabel: "标签",
+                    name: 'clueTags',
+                    store: clueTagStore,
+                    valueField: 'TZ_LABEL_ID',
+                    displayField: 'TZ_LABEL_NAME',
+                    filterPickList:true,
+                    createNewOnEnter: true,
+                    createNewOnBlur: true,
+                    queryMode: 'local',
+                    listeners:{
+                        select: function(combo,record,index,eOpts){//匹配下拉值之后置空输入文字
+                            var me = this;
+                            me.inputEl.dom.value = "";
                         }
                     }
                 },{
@@ -393,78 +432,119 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.clueDetailPanel',{
                     grow: true,
                     fieldLabel: '备注',
                     name: 'memo'
-                }
-                ]
+                }]
             },{
-                title:'报名信息',
-                xtype:'grid',
-                columnLines:true,
-                minHeight:170,
-                name:'bmbInfoGrid',
-                reference:'bmbInfoGrid',
-                store:{
-                    type:'clueBmbStore'
+            	xtype:'tabpanel',
+                frame:true,
+                activeTab:0,
+                plain:false,
+                style:'margin:0 10px',
+                resizeTabs:true,
+                defaults:{
+                    autoScroll:false
                 },
-                columns:[{
-                    text:'线索编号',
-                    dataIndex:'clueId',
-                    hidden:true
+                listeners:{
+                    tabchange:function(tabPanel,newCard,oldCard) {
+
+						this.doLayout();
+                    }
+                },
+                items:[{
+	            	title:'报名信息',
+	                xtype:'grid',
+	                columnLines:true,
+	                minHeight:170,
+	                name:'bmbInfoGrid',
+	                reference:'bmbInfoGrid',
+	                store:{
+	                    type:'clueBmbStore'
+	                },
+	                columns:[{
+	                    text:'报名表编号',
+	                    dataIndex:'bmbId',
+	                    width:100
+	                },{
+	                    text:'提交状态',
+	                    dataIndex:'tjStatus',
+	                    width:90,
+	                    sortable:false
+	                },{
+	                    text:'姓名',
+	                    dataIndex:'bmrName',
+	                    width:90,
+	                    sortable:false
+	                },{
+	                    text:'操作',
+	                    sortable:false,
+	                    menuDisabled:true,
+	                    width:50,
+	                    xtype:'actioncolumn',
+	                    align:'center',
+	                    items:[
+	                        {iconCls:'preview',tooltip:'查看报名表',handler:'viewApplication'},
+	                        {iconCls:'audit',tooltip:'审核信息结果',handler:'viewAuditApplication'},
+	                        {iconCls:'delete',tooltip:'删除',handler:'deleteBmb'}
+	                    ]
+	                },{
+	                    text:'手机',
+	                    dataIndex:'bmrMobile',
+	                    width:110,
+	                    sortable:false
+	                },{
+	                    text:'邮箱',
+	                    dataIndex:'bmrEmail',
+	                    width:140,
+	                    sortable:false
+	                },{
+	                    text:'班级名称',
+	                    dataIndex:'bmrClassName',
+	                    sortable:false,
+	                    minWidth:120,
+	                    width: 130,
+	                    flex:1
+	                },{
+	                    text:'初审状态',
+	                    dataIndex:'bmrCsStatus',
+	                    sortable:false,
+	                    width:100
+	                },{
+	                    text:'录取状态',
+	                    dataIndex:'bmrLqStatus',
+	                    sortable:false,
+	                    width:100
+	                }]
                 },{
-                    text:'报名表编号',
-                    dataIndex:'bmbId',
-                    width:110
-                },{
-                    text:'提交状态',
-                    dataIndex:'tjStatus',
-                    width:100,
-                    sortable:false
-                },{
-                    text:'姓名',
-                    dataIndex:'bmrName',
-                    width:90,
-                    sortable:false
-                },{
-                    text:'操作',
-                    sortable:false,
-                    menuDisabled:true,
-                    width:50,
-                    xtype:'actioncolumn',
-                    align:'center',
-                    items:[
-                        {iconCls:'preview',tooltip:'查看报名表',handler:'viewApplication'},
-                        {iconCls:'audit',tooltip:'审核信息结果',handler:'viewAuditApplication'},
-                        {iconCls:'delete',tooltip:'删除',handler:'deleteBmb'}
-                    ]
-                },{
-                    text:'手机',
-                    dataIndex:'bmrMobile',
-                    width:120,
-                    sortable:false
-                },{
-                    text:'邮箱',
-                    dataIndex:'bmrEmail',
-                    width:180,
-                    sortable:false
-                },{
-                    text:'班级名称',
-                    dataIndex:'bmrClassName',
-                    sortable:false,
-                    flex:1
-                },{
-                    text:'初审状态',
-                    dataIndex:'bmrCsStatus',
-                    sortable:false,
-                    width:105
-                },{
-                    text:'收费状态',
-                    dataIndex:'bmrsfStatus',
-                    sortable:false,
-                    width:105
-                },{
-                    text:'录取状态',
-                    dataIndex:'bmrLqStatus',
-                    sortable:false,
-                    width:105
+                	title:'联系报告',
+                    name:"connectReport",
+                    listeners:{
+                        afterrender:function(panel){
+							var clueID = panel.findParentByType("tabpanel").findParentByType("panel").clueID;
+                            var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_XSXS_INFO_COM"]["TZ_CONNECT_RPT_STD"];
+                            if( pageResSet == "" || pageResSet == undefined){
+                                Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+                                return;
+                            }
+                            //该功能对应的JS类
+                            var className = pageResSet["jsClassName"];
+                            if(className == "" || className == undefined){
+                                Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_CONNECT_RPT_STD，请检查配置。');
+                                return;
+                            }
+                            var contentPanel, cmp, ViewClass, clsProto;
+
+                            contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+                            contentPanel.body.addCls('kitchensink-example');
+
+                            if(!Ext.ClassManager.isCreated(className)){
+                                Ext.syncRequire(className);
+                            }
+                            ViewClass = Ext.ClassManager.get(className);
+							
+                            panel.add(new ViewClass({
+                                TZ_LEAD_ID:clueID
+                            }));
+                        }
+                    }
                 }]
             }],
             buttons: [{
@@ -491,7 +571,12 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.clueDetailPanel',{
         this.colorSortData = config.colorSortData;
         this.customerNameData = config.customerNameData;
         this.companyNameData = config.companyNameData;
+        this.clueTagStore = config.clueTagStore;
+        this.otherZrrStore = config.otherZrrStore;
         this.fromType = config.fromType;
+        this.clueID = config.clueID;
+        this.zrrEditFalg = config.zrrEditFalg;
+        
         this.callParent();
     }
 });
