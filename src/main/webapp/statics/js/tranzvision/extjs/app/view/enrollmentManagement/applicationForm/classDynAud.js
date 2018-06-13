@@ -121,9 +121,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.applicationForm.classDynAud', 
 		,{
 			xtype: 'textarea',
 			fieldLabel: Ext.tzGetResourse("TZ_AUD_COM.TZ_AUD_LIST_STD.sql","SQL"),
-			name: 'audSQL',
-		
-			
+			name: 'audSQL',		
 		}
 		
 		,{

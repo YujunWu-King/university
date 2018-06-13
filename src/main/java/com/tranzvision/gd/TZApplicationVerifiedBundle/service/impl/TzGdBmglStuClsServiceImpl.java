@@ -181,9 +181,13 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 					mapList.put("colorType", rowList[6]);
 					mapList.put("submitState", rowList[7]);
 					mapList.put("submitDate", rowList[8]);
-					mapList.put("interviewResult", rowList[9]);
-					String sql1="select B.TZ_BEIZHU from PS_TZ_APP_LIST_VW A,PS_TZ_REG_USER_T B where A.OPRID=B.OPRID and A.OPRID=?";
+			//		mapList.put("interviewResult", rowList[9]);
+					String sql2="select A.TZ_RESULT_CODE from TZ_IMP_MSJG_TBL A,PS_TZ_APP_LIST_VW B where A.TZ_APP_INS_ID=B.TZ_APP_INS_ID and A.TZ_APP_INS_ID=? ";
+					String interviewResult=jdbcTemplate.queryForObject(sql2,new Object[]{rowList[2]},"String");
+					mapList.put("interviewResult",interviewResult);
+					String sql1="select B.TZ_REMARK from PS_TZ_APP_LIST_VW A,PS_TZ_FORM_WRK_T B where A.OPRID=B.OPRID and A.OPRID=?";
 					String note=jdbcTemplate.queryForObject(sql1, new Object[]{rowList[0]},"String");
+					note=TzGdBmglStuClsServiceImpl.stripHtml(note);
 					mapList.put("note",note);
 					/* 根据模板配置显示报名表信息 */
 					String appInsID = rowList[2];
@@ -326,6 +330,18 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 		}
 		return jacksonUtil.Map2json(mapRet);
 	}
+	
+	//去除html标签   by  linhong
+	public static String stripHtml(String content) { 
+		// <p>段落替换为换行 
+		content = content.replaceAll("<p .*?>", ""); 
+		// <br><br/>替换为换行 
+		content = content.replaceAll("<br\\s*/?>", ""); 
+		// 去掉其它的<>之间的东西 
+		content = content.replaceAll("\\<.*?>", ""); 
+		
+		return content; 
+		}
 
 	/* 修改学生类别信息 */
 	@Override
