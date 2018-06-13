@@ -556,7 +556,6 @@ public class TzLoginForBoxController {
 
 					boolean createResult = false;
 					int createTimes = 5;
-					//话单文件，按原始的文件名存储
 					//String sysFileName = "";
 					while (!createResult && createTimes > 0) {
 
@@ -572,7 +571,15 @@ public class TzLoginForBoxController {
 					}
 
 					if (createResult) {
-
+						// 看是否是图片，如果是，则获取图片的宽、高
+						//if (getSysHardCodeVal.getImageSuffix().contains(suffix.toLowerCase())) {
+						//	ArrayList<Integer> imgWH = fileManageServiceImpl
+						//			.getImageWidthHeight(parentPath + File.separator + sysFileName);
+						//	if (imgWH.size() > 0) {
+						//		imgWidth = imgWH.get(0);
+						//		imgHeight = imgWH.get(1);
+						//	}
+						//}
 
 						Map<String, Object> mapFile = new HashMap<String, Object>();
 						mapFile.put("filename", filename);
