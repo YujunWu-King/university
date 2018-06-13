@@ -3,6 +3,8 @@ Ext.define('KitchenSink.view.enrollProject.userMg.userMgModel', {
     fields: [
         {name: 'OPRID'},		
         {name: 'userName'},   //姓名
+        {name: 'classID'},//班级编号
+        {name:'appInsID'},//报名表编号
         {name: 'nationId'},	  //身份证号
         {name: 'mshId'},  
         {name: 'userSex'},
@@ -13,6 +15,9 @@ Ext.define('KitchenSink.view.enrollProject.userMg.userMgModel', {
         {name: 'zcTime'},		//注册时间
         {name: 'bitch'},		//批次名称
         {name: 'acctlock'},
+        {name:'tj_zt'},
+        {name:'ms_result'},
+        {name:'remark'},
         {name: 'hmdUser'}
         /*{name: 'fieldStr_1'},
         {name: 'fieldStr_2'},

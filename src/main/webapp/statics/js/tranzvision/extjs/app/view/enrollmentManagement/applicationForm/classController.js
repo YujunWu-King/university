@@ -164,7 +164,7 @@
         window.classID2=record.data.classID;
         window.batchID2=record.data.batchID;
         var render = function(initialData){
-
+        	
             cmp = new ViewClass({
                     initialData:initialData,
                     classID:classID,
@@ -646,7 +646,7 @@
         var classID=record.get("classID");
         var oprID=record.get("oprID");
         var appInsID=record.get("appInsID");
-
+        console.log(appInsID);
         if(appInsID!=""){
             var tzParams='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+appInsID+'","isEdit":"Y"}}';
             var viewUrl =Ext.tzGetGeneralURL()+"?tzParams="+encodeURIComponent(tzParams);
