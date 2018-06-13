@@ -78,7 +78,11 @@
 					text:Ext.tzGetResourse("TZ_UM_USERMG_COM.TZ_UM_USERMG_STD.downloadExcel","查看导出结果并下载"),
 					name:'downloadExcel',
 					handler:'exportExcelOrDownload'
-				}]
+				},{
+					text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.sendEmailSelectedPerson","给选中人发送邮件"),
+					glyph:'xf1d8@FontAwesome',
+					handler:'sendEmlSelPers'
+                }]
 			}
 		]
 	}],
@@ -104,6 +108,18 @@
                 text: '姓名',
                 sortable: true,
                 dataIndex: 'userName',
+                width: 75
+            },{
+                text: '班级号',
+                sortable: true,
+                dataIndex: 'classID',
+                hidden:true,
+                width: 75
+            },{
+                text: '报名表编号',
+                sortable: true,
+                dataIndex: 'appInsID',
+                hidden:true,
                 width: 75
             },{
                 text: '面试申请号',
@@ -208,8 +224,33 @@
     				//}   
     				//return value;     				 
     			}
-            }
-            ,{
+            },{
+                text: '提交状态',
+                sortable: true,
+                dataIndex: 'tj_zt',
+                width: 80,
+                renderer:function(value,metadata,record){
+	    	   		if(value == null || value==""){
+	    	   				return "";	
+	    	   			}
+    				if (value =='S') {
+    					return "保存";
+    				} 
+    				if(value=='U') {
+    					return "提交";
+    				}
+    			}
+            },{
+                text: '面试结果',
+                sortable: true,
+                dataIndex: 'ms_result',
+                width: 130
+            },{
+                text: '备注',
+                sortable: true,
+                dataIndex: 'remark',
+                width: 130
+            },{
                 text: '黑名单',
                 sortable: true,
                 dataIndex: 'hmdUser',
@@ -240,7 +281,8 @@
 			   "with":50,
 			   align: 'center',
 			   			 items:[
-			   			  {text: '查看',iconCls: 'view',tooltip: '查看',handler:'viewUserByRow'}
+			   			  {text: '查看',iconCls: 'view',tooltip: '查看',handler:'viewUserByRow'},
+			   			  {text: '查看报名表',iconCls: 'preview',tooltip: '查看报名表',handler:'viewApplicationForm'}
 			   			]
             }],
             store: store,
