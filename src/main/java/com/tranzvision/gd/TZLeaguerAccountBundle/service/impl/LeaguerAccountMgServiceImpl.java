@@ -205,7 +205,7 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 			// json数据要的结果字段;
 			String[] resultFldArray = { "OPRID", "TZ_REALNAME", "TZ_GENDER", "TZ_EMAIL", "TZ_MOBILE", "TZ_JIHUO_ZT",
 					"TZ_ZHCE_DT", "ACCTLOCK", "TZ_BLACK_NAME", "NATIONAL_ID", "TZ_MSH_ID", "TZ_CLASS_NAME",
-					"TZ_CLASS_ID", "TZ_APP_INS_ID","TZ_FILL_PROPORTION","TZ_BATCH_NAME" };
+					"TZ_CLASS_ID", "TZ_APP_INS_ID","TZ_FILL_PROPORTION","TZ_BATCH_NAME" ,"TZ_RESULT_CODE","TZ_APP_FORM_STA","TZ_REMARK"};
 			
 			
 			
@@ -239,19 +239,21 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 					mapList.put("mshId", rowList[10]);
 					mapList.put("applyInfo", rowList[11]);
 					mapList.put("bitch", rowList[15]);
+					mapList.put("ms_result", rowList[16]);
+					mapList.put("tj_zt", rowList[17]);
+					mapList.put("remark", stripHtml(rowList[18]));
 				//	mapList.put("zcTime", rowList[9]);
 				//	mapList.put("acctlock", rowList[10]);
 				//	mapList.put("hmdUser", rowList[11]);
-				//	mapList.put("hmdUser", rowList[12]);
+					mapList.put("classID", rowList[12]);
+					mapList.put("appInsID", rowList[13]);
 					TZ_FILL_PROPORTION =  rowList[14];
 					int leng = 0;
-					
 					
 					
 					strBmbTpl = jdbcTemplate.queryForObject(strBmbTplSQL, new Object[] { rowList[12] },
 							"String");
 					
-					System.out.println("strBmbTpl="+strBmbTpl);
 				//	 System.out.println("班级id"+rowList[12]);
 					if (strBmbTpl == null) {
 						strBmbTpl = "";
@@ -934,5 +936,16 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 		}
 
 		return strRet;
+	}
+	//提出备注自带<p>标签
+	public static String stripHtml(String content) { 
+		// <p>段落替换为换行 
+		content = content.replaceAll("<p .*?>", ""); 
+		// <br><br/>替换为换行 
+		content = content.replaceAll("<br\\s*/?>", ""); 
+		// 去掉其它的<>之间的东西 
+		content = content.replaceAll("\\<.*?>", ""); 
+		
+		return content; 
 	}
 }

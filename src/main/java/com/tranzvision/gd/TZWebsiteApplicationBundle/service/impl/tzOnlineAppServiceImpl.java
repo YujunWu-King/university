@@ -146,7 +146,6 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 		jacksonUtil.json2Map(comParams);
 		// 组件注册引用编号
 		String strReferenceId = request.getParameter("classid");
-
 		String contextUrl = request.getContextPath();
 		String strTzGeneralURL = contextUrl + "/dispatcher";
 
@@ -260,7 +259,6 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				strClassId = "";
 			}
 		}
-
 		if (strSiteId == null || strSiteId.equals("null")) {
 			strSiteId = "";
 		}
