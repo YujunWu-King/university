@@ -529,10 +529,10 @@ public class TzAutoSumServicelImpl extends FrameworkImpl {
 						String msResult = map.get("msResult") == null ? "" : map.get("msResult").toString();
 						String YYNL = map.get("YYNL") == null ? "0.00" : map.get("YYNL").toString();
 						String strMsYy="";
-						if("MEM".equals(jgId)){
-							strMsYy=msResult;
-						}else{
+						if("MBA".equals(jgId)){
 							strMsYy=msResult+"（英语："+YYNL+"分）";
+						}else{
+							strMsYy=msResult;
 						}
 						
 						String sqlCount = "SELECT COUNT(1) FROM TZ_IMP_MSJG_TBL WHERE TZ_APP_INS_ID=?";

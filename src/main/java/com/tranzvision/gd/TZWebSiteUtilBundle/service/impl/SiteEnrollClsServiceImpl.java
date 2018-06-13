@@ -841,28 +841,27 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				}
 
 				
-				//根据手机和邮箱查询是否存在未关闭的线索，如果有则不用创建新线索
-				String sql = "select TZ_LEAD_ID from PS_TZ_XSXS_INFO_T where TZ_JG_ID=? and TZ_MOBILE=? and TZ_EMAIL=? and TZ_LEAD_STATUS<>'G' order by ROW_ADDED_DTTM desc limit 0,1";
+				//根据手机或邮箱查询是否存在未关闭的线索，如果有则不用创建新线索
+				String sql = "select TZ_LEAD_ID from PS_TZ_XSXS_INFO_T where TZ_JG_ID=? and ((TZ_MOBILE<>' ' and TZ_MOBILE=?) or (TZ_EMAIL<>' ' and TZ_EMAIL=?)) and TZ_LEAD_STATUS<>'G' order by ROW_ADDED_DTTM desc limit 0,1";
 				String existsClueId = jdbcTemplate.queryForObject(sql, new Object[]{ strOrgId, strTZ_MOBILE, strTZ_EMAIL }, "String");
 				if(existsClueId != null){
-					PsTzXsxsInfoTWithBLOBs psTzXsxsInfoT = psTzXsxsInfoTMapper.selectByPrimaryKey(existsClueId);
-					psTzXsxsInfoT.setTzKhOprid(oprId);
-					
-					if(strTZ_REALNAME != null 
-							&& !"".equals(strTZ_REALNAME)
-							&& !strTZ_REALNAME.equals(psTzXsxsInfoT.getTzRealname())){
-							if(psTzXsxsInfoT.getTzRealname() != null
-									&& !"".equals(psTzXsxsInfoT.getTzRealname())){
-								psTzXsxsInfoT.setTzRealname(psTzXsxsInfoT.getTzRealname() + "，" + strTZ_REALNAME);
-							}else{
-								psTzXsxsInfoT.setTzRealname(strTZ_REALNAME);
-							}
-					}
-					
-					psTzXsxsInfoT.setRowLastmantOprid(oprId);
-					psTzXsxsInfoT.setRowLastmantDttm(new Date());
-					psTzXsxsInfoTMapper.updateByPrimaryKeySelective(psTzXsxsInfoT);
-					
+//					PsTzXsxsInfoTWithBLOBs psTzXsxsInfoT = psTzXsxsInfoTMapper.selectByPrimaryKey(existsClueId);
+//					psTzXsxsInfoT.setTzKhOprid(oprId);
+//					
+//					if(strTZ_REALNAME != null 
+//						&& !"".equals(strTZ_REALNAME)
+//						&& !strTZ_REALNAME.equals(psTzXsxsInfoT.getTzRealname())){
+//						if(psTzXsxsInfoT.getTzRealname() != null
+//								&& !"".equals(psTzXsxsInfoT.getTzRealname())){
+//							psTzXsxsInfoT.setTzRealname(psTzXsxsInfoT.getTzRealname() + "，" + strTZ_REALNAME);
+//						}else{
+//							psTzXsxsInfoT.setTzRealname(strTZ_REALNAME);
+//						}
+//					}
+//					
+//					psTzXsxsInfoT.setRowLastmantOprid(oprId);
+//					psTzXsxsInfoT.setRowLastmantDttm(new Date());
+//					psTzXsxsInfoTMapper.updateByPrimaryKeySelective(psTzXsxsInfoT);
 				}else{
 					// 创建线索及分配
 					PsTzXsxsInfoTWithBLOBs psTzXsxsInfoT = new PsTzXsxsInfoTWithBLOBs();
@@ -872,9 +871,8 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 					// 分配状态-未分配
 					String strDefaultStatus = GetHardCodePoint.getHardCodePointVal("TZ_LEAD_BM_STATUS");
 					psTzXsxsInfoT.setTzLeadStatus(strDefaultStatus);
-					// 线索创建方式-在线报名
-					String strDefaultCreateWay = GetHardCodePoint.getHardCodePointVal("TZ_LEAD_BM_CREWAY");
-					psTzXsxsInfoT.setTzRsfcreateWay(strDefaultCreateWay);
+					//线索创建方式-网站注册
+					psTzXsxsInfoT.setTzRsfcreateWay("D");
 
 					psTzXsxsInfoT.setTzKhOprid(oprId);
 					psTzXsxsInfoT.setTzRealname(strTZ_REALNAME);

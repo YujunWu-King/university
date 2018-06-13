@@ -251,6 +251,7 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 		 var oprId = formValues.oprId;
 		 var callXh = formValues.receiveId;
 		 var leadId = formValues.leadId;
+		 var phone = formValues.phoneNum;
 		 
 		 if(leadId != null && leadId != ""){
 			 Ext.Msg.alert("提示","接待单已创建过线索");
@@ -261,7 +262,8 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 				OperateType: 'CREATECLUE',
 				comParams: {
 					OPRID: oprId,
-					callXh: callXh
+					callXh: callXh,
+					phoneNum: phone
 				}
 			 };
 			 

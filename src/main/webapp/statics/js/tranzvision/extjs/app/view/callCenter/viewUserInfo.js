@@ -592,7 +592,7 @@ Ext.define('KitchenSink.view.callCenter.viewUserInfo', {
                             text: '创建销售线索',
                             defaultColor: '',
                             name: 'createClue',
-                            disabled:buttonDisabled,
+//                          disabled:buttonDisabled,
                             flagType: 'positive',
                             setType: 0,
                             handler: 'createClue',

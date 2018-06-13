@@ -15,5 +15,6 @@ Ext.define('KitchenSink.view.enrollmentManagement.applicationForm.stuModel', {
         {name: 'moreInfo'},
         {name: 'group_name'},
         {name: 'group_date'},
+        {name: 'note'}
         ]
 });

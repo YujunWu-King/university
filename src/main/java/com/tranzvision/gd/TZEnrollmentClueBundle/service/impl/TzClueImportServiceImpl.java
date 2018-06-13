@@ -62,9 +62,6 @@ public class TzClueImportServiceImpl extends FrameworkImpl {
 			int insertNum = 0,unInsertNum = 0;
 			String unFindChargeClue = "";
 			String completeSameClue = "";
-			String unAssignZrrClue = "";
-			String existNameClue = "";
-			String existNameMobileClue = "";
 			
 			String unFindFlag = "";
 			
@@ -133,65 +130,17 @@ public class TzClueImportServiceImpl extends FrameworkImpl {
 					}
 					unInsertNum ++;
 				} else {
-				/*
-					//如果姓名、公司、手机完全一样，不插入
-					Integer countRepeat = sqlQuery.queryForObject("SELECT COUNT(1) FROM PS_TZ_XSXS_INFO_T WHERE TZ_REALNAME=? AND TZ_COMP_CNAME=? AND TZ_MOBILE=?", new Object[]{name,companyName,mobile},"Integer");
+					//如果手机或邮箱已存在未关闭线索，则不导入
+					Integer countRepeat = sqlQuery.queryForObject("SELECT COUNT(1) FROM PS_TZ_XSXS_INFO_T WHERE TZ_JG_ID=? AND ((TZ_MOBILE<>' ' and TZ_MOBILE=?) or (TZ_EMAIL<>' ' and TZ_EMAIL=?)) AND TZ_LEAD_STATUS<>'G'", new Object[]{orgId,mobile,email},"Integer");
 					if(countRepeat>0) {
 						if(!"".equals(completeSameClue)) {
-							completeSameClue = completeSameClue + "<br>" + "姓名：" + name + "，手机：" + mobile + "，公司：" + companyName;
+							completeSameClue = completeSameClue + "<br>" + "姓名：" + name + "，手机：" + mobile + "，邮箱：" + email;
 						} else {
-							completeSameClue = "姓名：" + name + "，手机：" + mobile + "，公司：" + companyName;
+							completeSameClue = "姓名：" + name + "，手机：" + mobile + "，邮箱：" + email;
 						}
 						unInsertNum ++;
 					} else {
-				*/
 						insertNum ++;
-						
-						String existNameMobile = "";
-						String existZrrOprid = "";
-						Integer existMobile = 0;
-						Integer existName = 0;
-						//根据姓名手机查询是否存在重复的未关闭的线索
-						Map<String,Object> mapNameMobile = sqlQuery.queryForMap("SELECT 'Y' TZ_FLAG,TZ_ZR_OPRID FROM PS_TZ_XSXS_INFO_T WHERE TZ_REALNAME=? AND TZ_MOBILE=? AND TZ_REALNAME<>' ' AND TZ_MOBILE<>' ' AND TZ_LEAD_STATUS<>'G' LIMIT 0,1", new Object[]{name,mobile});	
-						if(mapNameMobile!=null) {
-							existNameMobile = mapNameMobile.get("TZ_FLAG") == null ? "" : mapNameMobile.get("TZ_FLAG").toString();
-							existZrrOprid = mapNameMobile.get("TZ_ZR_OPRID") == null ? "" : mapNameMobile.get("TZ_ZR_OPRID").toString();
-						}
-						
-						if("Y".equals(existNameMobile)) {
-							if(!"".equals(existNameMobileClue)) {
-								existNameMobileClue = existNameMobileClue + "<br>" + "姓名：" + name + "，手机：" + mobile;
-							} else {
-								existNameMobileClue = "姓名：" + name + "，手机：" + mobile;
-							}
-						} else {
-	
-							//根据手机查询是否存在重复的未关闭的线索，如果存在则不分配责任人，2017-11-28
-							if(mobile!=null && !"".equals(mobile)) {
-								existMobile = sqlQuery.queryForObject("SELECT COUNT(1) FROM PS_TZ_XSXS_INFO_T WHERE TZ_MOBILE=? AND TZ_LEAD_STATUS<>'G'", new Object[]{mobile},"Integer");
-								if(existMobile>0) {
-									if(!"".equals(unAssignZrrClue)) {
-										unAssignZrrClue = unAssignZrrClue + "<br>" + "姓名：" + name + "，手机：" + mobile;
-									} else {
-										unAssignZrrClue = "姓名：" + name + "，手机：" + mobile;
-									}
-								}
-							}
-					
-							//根据姓名查询是否存在重复的未关闭的线索，进行提示
-							existName = sqlQuery.queryForObject("SELECT COUNT(1) FROM PS_TZ_XSXS_INFO_T WHERE TZ_LEAD_STATUS<>'G' AND TZ_REALNAME=?", new Object[]{name},"Integer");
-							if(existName>0) {
-								if(!"".equals(existNameClue)) {
-									existNameClue = existNameClue + "<br>" + "姓名：" + name + "，手机：" + mobile;
-								} else {
-									existNameClue = "姓名：" + name + "，手机：" + mobile;
-								}
-							} 
-						}
-						
-						if("MYXS".equals(importFrom)) {
-							unAssignZrrClue = "";
-						}
 					
 						//新增线索
 						String clueId = String.valueOf(getSeqNum.getSeqNum("TZ_XSXS_INFO_T", "TZ_LEAD_ID"));
@@ -211,48 +160,13 @@ public class TzClueImportServiceImpl extends FrameworkImpl {
 							psTzXsxsInfoT.setTzZrOprid(chargeOprid);
 						} else {
 							if("ZSXS".equals(importFrom)) {
-								//招生线索管理导入
-								if("Y".equals(existNameMobile)) {
-									//存在姓名手机相同未关闭的线索
-									if(!"".equals(chargeOprid)) {
-									    //指定了责任人
-										psTzXsxsInfoT.setTzLeadStatus("C");
-										psTzXsxsInfoT.setTzZrOprid(chargeOprid);
-									} else {
-										//没有指定责任人
-										if(!"".equals(existZrrOprid)) {
-											psTzXsxsInfoT.setTzLeadStatus("C");
-											psTzXsxsInfoT.setTzZrOprid(existZrrOprid);
-											chargeOprid = existZrrOprid;
-										} else  {
-											psTzXsxsInfoT.setTzLeadStatus("A");
-										}
-									}
+								if(!"".equals(chargeOprid)) {
+								    //指定了责任人
+									psTzXsxsInfoT.setTzLeadStatus("C");
+									psTzXsxsInfoT.setTzZrOprid(chargeOprid);
 								} else {
-									if(existMobile>0) {
-										//存在手机相同未关闭的线索，不分配责任人
-										psTzXsxsInfoT.setTzLeadStatus("A");
-									} else {
-										if(existName>0) {
-											//存在姓名相同未关闭的线索
-											if(!"".equals(chargeOprid)) {
-												psTzXsxsInfoT.setTzLeadStatus("C");
-												psTzXsxsInfoT.setTzZrOprid(chargeOprid);
-											} else {
-												//没有责任人，责任人为当前登录人
-												psTzXsxsInfoT.setTzLeadStatus("C");
-												psTzXsxsInfoT.setTzZrOprid(oprid);
-												chargeOprid=oprid;
-											}
-										} else {
-											if(!"".equals(chargeOprid)) {
-												psTzXsxsInfoT.setTzLeadStatus("C");
-												psTzXsxsInfoT.setTzZrOprid(chargeOprid);
-											} else {
-												psTzXsxsInfoT.setTzLeadStatus("A");
-											}
-										}
-									}
+									//没有指定责任人
+									psTzXsxsInfoT.setTzLeadStatus("A");
 								}
 							}
 						}
@@ -263,17 +177,14 @@ public class TzClueImportServiceImpl extends FrameworkImpl {
 						psTzXsxsInfoT.setRowLastmantDttm(new Date());
 						psTzXsxsInfoTMapper.insert(psTzXsxsInfoT);
 						
-					/*}*/
+					}
 				}
 			}
 			
 			mapRet.put("insertNum", insertNum);
 			mapRet.put("unInsertNum", unInsertNum);
-			mapRet.put("unAssignZrrClue", unAssignZrrClue);
-			mapRet.put("existNameClue", existNameClue);
 			mapRet.put("unFindChargeClue", unFindChargeClue);
 			mapRet.put("completeSameClue", completeSameClue);
-			mapRet.put("existNameMobileClue", existNameMobileClue);
 			
 			strRet = jacksonUtil.Map2json(mapRet);
 			

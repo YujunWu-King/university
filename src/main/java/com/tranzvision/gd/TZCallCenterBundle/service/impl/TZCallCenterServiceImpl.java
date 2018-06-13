@@ -664,81 +664,89 @@ public class TZCallCenterServiceImpl extends FrameworkImpl {
 				
 				strOprid = jacksonUtil.getString("OPRID");
 				String strCallXh = jacksonUtil.getString("callXh");
+				String phoneNum = jacksonUtil.getString("phoneNum");
+				
 				//当前机构
 				String currOrgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 				String currOprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 				
-				if(strOprid != null && !"".equals(strOprid) 
+				if(phoneNum != null && !"".equals(phoneNum) 
 						&& strCallXh != null && !"".equals(strCallXh)){
 					
-					String sql = "select TZ_PHONE,TZ_LEAD_ID from PS_TZ_PH_JDD_TBL where TZ_XH=?";
-					Map<String, Object> return1 = sqlQuery.queryForMap(sql, new Object[]{ strCallXh });
-					String mobile = "";
+					String sql = "select TZ_LEAD_ID from PS_TZ_PH_JDD_TBL where TZ_XH=? and TZ_PHONE=?";
+					Map<String, Object> return1 = sqlQuery.queryForMap(sql, new Object[]{ strCallXh, phoneNum });
 					String leadId = "";
+					int existsCount = 0;
 					if(return1 != null){
-						mobile = return1.get("TZ_PHONE")==null?"":String.valueOf(return1.get("TZ_PHONE"));
 						leadId = return1.get("TZ_LEAD_ID")==null?"":String.valueOf(return1.get("TZ_LEAD_ID"));
 					}
 					
+					sql = "select count(*) from PS_TZ_XSXS_INFO_T where TZ_JG_ID=? and TZ_LEAD_STATUS<>'G' and (TZ_MOBILE<>' ' and TZ_MOBILE=?)";
+					existsCount = sqlQuery.queryForObject(sql, new Object[]{ currOrgId, phoneNum }, "int");
 					
 					if(leadId != null && !"".equals(leadId)){
 						errorMsg[0] = "1";
 						errorMsg[1] = "接待单已创建销售线索";
 					}else{
-						sql = "SELECT TZ_REALNAME,TZ_COMPANY_NAME FROM PS_TZ_REG_USER_T WHERE OPRID=?";
-						Map<String, Object> return2 = sqlQuery.queryForMap(sql, new Object[]{strOprid});
-						String name = "";
-						String company = "";
-						if(return2 != null){
-							name = return2.get("TZ_REALNAME")==null?"":String.valueOf(return2.get("TZ_REALNAME"));
-							company = return2.get("TZ_COMPANY_NAME")==null?"":String.valueOf(return2.get("TZ_COMPANY_NAME"));
-						}
-						
-						sql = "SELECT TZ_EMAIL FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
-						String email = sqlQuery.queryForObject(sql, new Object[]{ strOprid }, "String");
-						
-						
-						String TZ_LEAD_ID = String.valueOf(getSeqNum.getSeqNum("TZ_XSXS_INFO_T", "TZ_LEAD_ID"));
-						
-						PsTzXsxsInfoTWithBLOBs psTzXsxsInfoT = new PsTzXsxsInfoTWithBLOBs();
-						psTzXsxsInfoT.setTzLeadId(TZ_LEAD_ID);
-						psTzXsxsInfoT.setTzJgId(currOrgId);
+						if(existsCount > 0){
+							errorMsg[0] = "1";
+							errorMsg[1] = "创建失败，系统中已存在手机对应的线索";
+						}else{
+							sql = "SELECT TZ_REALNAME,TZ_COMPANY_NAME FROM PS_TZ_REG_USER_T WHERE OPRID=?";
+							Map<String, Object> return2 = sqlQuery.queryForMap(sql, new Object[]{strOprid});
+							String name = "";
+							String company = "";
+							if(return2 != null){
+								name = return2.get("TZ_REALNAME")==null?"":String.valueOf(return2.get("TZ_REALNAME"));
+								company = return2.get("TZ_COMPANY_NAME")==null?"":String.valueOf(return2.get("TZ_COMPANY_NAME"));
+							}
+							
+							sql = "SELECT TZ_EMAIL FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
+							String email = sqlQuery.queryForObject(sql, new Object[]{ strOprid }, "String");
+							
+							
+							String TZ_LEAD_ID = String.valueOf(getSeqNum.getSeqNum("TZ_XSXS_INFO_T", "TZ_LEAD_ID"));
+							
+							PsTzXsxsInfoTWithBLOBs psTzXsxsInfoT = new PsTzXsxsInfoTWithBLOBs();
+							psTzXsxsInfoT.setTzLeadId(TZ_LEAD_ID);
+							psTzXsxsInfoT.setTzJgId(currOrgId);
 
-						psTzXsxsInfoT.setTzRsfcreateWay("F"); /*接待单快速创建*/
-						psTzXsxsInfoT.setTzLeadStatus("A");
-						
-						psTzXsxsInfoT.setTzRealname(name);
-						psTzXsxsInfoT.setTzKhOprid(strOprid);
-						psTzXsxsInfoT.setTzEmail(email);
-						psTzXsxsInfoT.setTzMobile(mobile);
-						psTzXsxsInfoT.setTzCompCname(company);
-						
-						psTzXsxsInfoT.setRowAddedDttm(new Date());
-						psTzXsxsInfoT.setRowAddedOprid(currOprid);
-						psTzXsxsInfoT.setRowLastmantDttm(new Date());
-						psTzXsxsInfoT.setRowLastmantOprid(currOprid);
-						
-						int rtn = psTzXsxsInfoTMapper.insert(psTzXsxsInfoT);
-						if(rtn > 0){
-							sql = "UPDATE PS_TZ_PH_JDD_TBL SET TZ_LEAD_ID=? WHERE TZ_XH=?";
-							sqlQuery.update(sql, new Object[]{TZ_LEAD_ID, strCallXh});
+							psTzXsxsInfoT.setTzRsfcreateWay("F"); /*接待单快速创建*/
+							psTzXsxsInfoT.setTzLeadStatus("A");
 							
-							mapRet.put("leadId", TZ_LEAD_ID);
+							psTzXsxsInfoT.setTzRealname(name);
+							psTzXsxsInfoT.setTzKhOprid(strOprid);
+							psTzXsxsInfoT.setTzEmail(email);
+							psTzXsxsInfoT.setTzMobile(phoneNum);
+							psTzXsxsInfoT.setTzCompCname(company);
 							
-							//线索关联报名表
-//							sql = "select TZ_APP_INS_ID from PS_TZ_FORM_WRK_T A where OPRID=? and not exists(select 'Y' from PS_TZ_XSXS_BMB_T B join PS_TZ_XSXS_INFO_T C on(B.TZ_LEAD_ID=C.TZ_LEAD_ID) where B.TZ_APP_INS_ID=A.TZ_APP_INS_ID and C.TZ_LEAD_STATUS<>'G') limit 0,1";
-							sql = "select max(TZ_APP_INS_ID) as TZ_APP_INS_ID from PS_TZ_FORM_WRK_T where OPRID=?";
-							Long appInsId = sqlQuery.queryForObject(sql, new Object[]{ strOprid }, "Long");
-							if(appInsId != null && appInsId > 0){
-								PsTzXsxsBmbT psTzXsxsBmbT = new PsTzXsxsBmbT(); 
-								psTzXsxsBmbT.setTzLeadId(TZ_LEAD_ID);
-								psTzXsxsBmbT.setTzAppInsId(appInsId);
-								psTzXsxsBmbT.setRowAddedDttm(new Date());
-								psTzXsxsBmbT.setRowAddedOprid(currOprid);
-								psTzXsxsBmbT.setRowLastmantDttm(new Date());
-								psTzXsxsBmbT.setRowLastmantOprid(currOprid);
+							psTzXsxsInfoT.setRowAddedDttm(new Date());
+							psTzXsxsInfoT.setRowAddedOprid(currOprid);
+							psTzXsxsInfoT.setRowLastmantDttm(new Date());
+							psTzXsxsInfoT.setRowLastmantOprid(currOprid);
+							
+							int rtn = psTzXsxsInfoTMapper.insert(psTzXsxsInfoT);
+							if(rtn > 0){
+								sql = "UPDATE PS_TZ_PH_JDD_TBL SET TZ_LEAD_ID=? WHERE TZ_XH=?";
+								sqlQuery.update(sql, new Object[]{TZ_LEAD_ID, strCallXh});
 								
-								psTzXsxsBmbTMapper.insert(psTzXsxsBmbT);
+								mapRet.put("leadId", TZ_LEAD_ID);
+								
+								//线索关联报名表
+//								sql = "select TZ_APP_INS_ID from PS_TZ_FORM_WRK_T A where OPRID=? and not exists(select 'Y' from PS_TZ_XSXS_BMB_T B join PS_TZ_XSXS_INFO_T C on(B.TZ_LEAD_ID=C.TZ_LEAD_ID) where B.TZ_APP_INS_ID=A.TZ_APP_INS_ID and C.TZ_LEAD_STATUS<>'G') limit 0,1";
+								sql = "select max(TZ_APP_INS_ID) as TZ_APP_INS_ID from PS_TZ_FORM_WRK_T where OPRID=?";
+								Long appInsId = sqlQuery.queryForObject(sql, new Object[]{ strOprid }, "Long");
+								if(appInsId != null && appInsId > 0){
+									PsTzXsxsBmbT psTzXsxsBmbT = new PsTzXsxsBmbT(); 
+									psTzXsxsBmbT.setTzLeadId(TZ_LEAD_ID);
+									psTzXsxsBmbT.setTzAppInsId(appInsId);
+									psTzXsxsBmbT.setRowAddedDttm(new Date());
+									psTzXsxsBmbT.setRowAddedOprid(currOprid);
+									psTzXsxsBmbT.setRowLastmantDttm(new Date());
+									psTzXsxsBmbT.setRowLastmantOprid(currOprid);
+									
+									psTzXsxsBmbTMapper.insert(psTzXsxsBmbT);
+								}
 							}
 						}
 					}

@@ -1207,9 +1207,9 @@ public class tzOnlineAppEngineImpl {
 	 */
 	@SuppressWarnings("unchecked")
 	private void addXSXS(String strAppOprId, String AppInsId, String JGID, Boolean isWeChart) {
-		System.out.println("JGID：" + JGID);
-		System.out.println("strAppOprId：" + strAppOprId);
-		System.out.println("AppInsId：" + AppInsId);
+//		System.out.println("JGID：" + JGID);
+//		System.out.println("strAppOprId：" + strAppOprId);
+//		System.out.println("AppInsId：" + AppInsId);
 		String sql = "select TZ_LEAD_ID,TZ_RSFCREATE_WAY from PS_TZ_XSXS_INFO_T where TZ_KH_OPRID=? and (TZ_LEAD_STATUS is null or TZ_LEAD_STATUS <> ?)";
 
 		List<Map<String, Object>> list = sqlQuery.queryForList(sql, new Object[] { strAppOprId, "G" });
@@ -1245,19 +1245,15 @@ public class tzOnlineAppEngineImpl {
 			String name = "";
 			String sex = "";
 			String company = "";
-			String city = "";
 
-			sql = "select A.TZ_REALNAME,A.TZ_GENDER,A.TZ_COMPANY_NAME,B.TZ_LABEL_NAME,C.TZ_EMAIL,C.TZ_MOBILE ";
-			sql = sql
-					+ "from PS_TZ_REG_USER_T A,PS_TZ_XSXS_DQBQ_T B,PS_TZ_AQ_YHXX_TBL C where A.OPRID=? AND A.TZ_LEN_PROID=B.TZ_LABEL_DESC ";
-			sql = sql + "AND A.OPRID=C.OPRID";
+			sql = "select A.TZ_REALNAME,A.TZ_GENDER,A.TZ_COMPANY_NAME,C.TZ_EMAIL,C.TZ_MOBILE from PS_TZ_REG_USER_T A,PS_TZ_AQ_YHXX_TBL C where A.OPRID=? AND A.OPRID=C.OPRID";
+
 			map = sqlQuery.queryForMap(sql, new String[] { strAppOprId });
 			if (map != null) {
 				name = map.get("TZ_REALNAME") == null ? "" : String.valueOf(map.get("TZ_REALNAME"));
 
 				sex = map.get("TZ_GENDER") == null ? "" : String.valueOf(map.get("TZ_GENDER"));
 				company = map.get("TZ_COMPANY_NAME") == null ? "" : String.valueOf(map.get("TZ_COMPANY_NAME"));
-				city = map.get("TZ_LABEL_NAME") == null ? "" : String.valueOf(map.get("TZ_LABEL_NAME"));
 				email = map.get("TZ_EMAIL") == null ? "" : String.valueOf(map.get("TZ_EMAIL"));
 				phone = map.get("TZ_MOBILE") == null ? "" : String.valueOf(map.get("TZ_MOBILE"));
 			}
@@ -1266,7 +1262,7 @@ public class tzOnlineAppEngineImpl {
 //			list = sqlQuery.queryForList(sql, new Object[] { phone, "G" });
 			
 			//根据注册的手机号和与邮箱与系统中已经有的线索进行匹配
-			sql = "select TZ_LEAD_ID,TZ_RSFCREATE_WAY,TZ_KH_OPRID from PS_TZ_XSXS_INFO_T A where TZ_JG_ID=? and TZ_LEAD_STATUS<>'G' and TZ_MOBILE=? and TZ_EMAIL=? and not exists(select 'X' from PS_TZ_XSXS_BMB_T where TZ_LEAD_ID=A.TZ_LEAD_ID) order by ROW_ADDED_DTTM";
+			sql = "select TZ_LEAD_ID,TZ_RSFCREATE_WAY,TZ_KH_OPRID from PS_TZ_XSXS_INFO_T A where TZ_JG_ID=? and TZ_LEAD_STATUS<>'G' and ((TZ_MOBILE<>' ' and TZ_MOBILE=?) or (TZ_EMAIL<>' ' and TZ_EMAIL=?)) and not exists(select 'X' from PS_TZ_XSXS_BMB_T where TZ_LEAD_ID=A.TZ_LEAD_ID) order by ROW_ADDED_DTTM";
 			list = sqlQuery.queryForObject(sql, new Object[] { JGID, phone, email },"String");
 
 			String TZ_KH_OPRID = "";
@@ -1308,9 +1304,6 @@ public class tzOnlineAppEngineImpl {
 				System.out.println("没有符合条件的，新建立线索");
 				TZ_LEAD_ID = String.valueOf(getSeqNum.getSeqNum("TZ_XSXS_INFO_T", "TZ_LEAD_ID"));
 
-				System.out.println("name：" + name);
-				System.out.println("TZ_LEAD_ID：" + TZ_LEAD_ID);
-				System.out.println("city：" + city);
 
 				// 线索创建方式-在线报名
 				String strDefaultCreateWay = GetHardCodePoint.getHardCodePointVal("TZ_LEAD_BM_CREWAY");
@@ -1331,7 +1324,6 @@ public class tzOnlineAppEngineImpl {
 				psTzXsxsInfoT.setRowAddedOprid(strAppOprId);
 				psTzXsxsInfoT.setRowLastmantDttm(new java.util.Date());
 				psTzXsxsInfoT.setRowLastmantOprid(strAppOprId);
-				psTzXsxsInfoT.setTzXsquId(city);
 				psTzXsxsInfoTMapper.insert(psTzXsxsInfoT);
 
 				// 绑定报名表
