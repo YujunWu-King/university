@@ -13,6 +13,7 @@ Ext.define('KitchenSink.view.callCenter.viewUserInfo', {
         'Ext.ux.DataView.LabelEditor',
         'tranzvision.extension.grid.column.Link', 
         'KitchenSink.view.callCenter.userAppListStore',
+        'KitchenSink.view.callCenter.userClueListStore',
         'KitchenSink.view.callCenter.viewUserController'
 	],
 	title: '用户接待单信息', 
@@ -20,10 +21,14 @@ Ext.define('KitchenSink.view.callCenter.viewUserInfo', {
 	ignoreChangesFlag:true,
 	actType: 'update',//默认新增
 	initComponent:function(){	
+		Ext.util.CSS.createStyleSheet("a.grid-linkcolumn-with-no-click{color:#000; text-decoration:none;}","grid-linkcolumn-with-no-click");
+		
 		var callXh = getCookie("callCenterXh");
+		console.log("000="+callXh);
 		var phone = getCookie("callCenterPhone");
 		var type = getCookie("callCenterType");	
-		var OPRID = getCookie("callCenterOprid");
+		var oprid11 = getCookie("callCenterOprid");
+	//	console.log("5555="+oprid11);
 		//为避免查询无关人员，如果无phone
 		if(phone==null||phone==undefined||phone==""){
 			phone = "999999999999999";
@@ -36,7 +41,9 @@ Ext.define('KitchenSink.view.callCenter.viewUserInfo', {
 		
 		Ext.tzLoadAsync(tzParams,function(response){
 			oprid = response.OPRID;
+			console.log("1111="+oprid);
 			historyCount = response.viewHistoryCall;
+			console.log("2222="+historyCount);
 			bmrBmActCount = response.bmrBmActCount;
 		});
 		var button = "";
@@ -52,6 +59,7 @@ Ext.define('KitchenSink.view.callCenter.viewUserInfo', {
 		var bmActButtonText = '<span style="text-decoration:underline;color:blue;">' + bmrBmActCount + '</span>';
 		
 		var userAppListStore = new KitchenSink.view.callCenter.userAppListStore();
+		var userClueListStore = new KitchenSink.view.callCenter.userClueListStore();
 		var formData;		
 		
 		tzParams = '{"ComID":"TZ_CALLCR_USER_COM","PageID":"TZ_CALLC_USER_STD","OperateType":"QF","comParams":{"OPRID":"' + oprid + '","type":"' + type + '","callXh":"' + callXh + '","phone":"' + phone +'"}}';
@@ -72,7 +80,7 @@ Ext.define('KitchenSink.view.callCenter.viewUserInfo', {
 		
 		//短信模板
 		var smsVarData;
-	
+	//	var tzParams = '{"ComID":"TZ_CALLCR_USER_COM","PageID":"TZ_CALLC_USER_STD","OperateType":"SMSMODEL","comParams":{"ORGID":"SEM"}}';
 		var tzParams = '{"ComID":"TZ_CALLCR_USER_COM","PageID":"TZ_CALLC_USER_STD","OperateType":"SMSMODEL","comParams":{"ORGID":"' + Ext.tzOrgID + '"}}';
 		Ext.tzLoadAsync(tzParams,function(response){
 			smsVarData = response.root;
@@ -291,6 +299,10 @@ Ext.define('KitchenSink.view.callCenter.viewUserInfo', {
 				},{
 					xtype: 'textfield',
 					name:'phoneNum',
+					hidden:true
+				},{
+					xtype: 'textfield',
+					name:'leadId',
 					hidden:true
 				},{
 					xtype : 'fieldset',
@@ -574,6 +586,17 @@ Ext.define('KitchenSink.view.callCenter.viewUserInfo', {
                             setType: 0,
                             handler: 'addBlackList',
                             width: 100
+                        },{
+                        	style: 'margin-left:10px',
+                            xtype: 'button',
+                            text: '创建销售线索',
+                            defaultColor: '',
+                            name: 'createClue',
+//                          disabled:buttonDisabled,
+                            flagType: 'positive',
+                            setType: 0,
+                            handler: 'createClue',
+                            width: 100
                         }/*,
                         {
                             style: 'margin-left:10px',
@@ -632,6 +655,67 @@ Ext.define('KitchenSink.view.callCenter.viewUserInfo', {
                         handler: 'search',
                         columnWidth: .15
                     }]
+				},{
+					xtype: 'grid',
+                    title: '线索信息',
+                    minHeight: 100,
+                    name: 'ksClueList',
+                    reference: 'ksClueList',
+                    scrollable:false,
+                    columnLines: true,
+                    autoHeight: true,
+                    columns: [{
+                    	xtype:'linkcolumn',
+                    	text: "姓名",
+                        dataIndex: 'name',
+                        width: 120,
+                        items:[{
+							getText: function(v, meta, rec) {
+								return v;
+							},
+							isDisabled: function(grid, rowIdx, colIdx){
+								var store = grid.getStore();
+								var record = store.getAt(rowIdx);
+								
+								var isClueZrr = record.get("isClueZrr");
+								if(isClueZrr == "Y"){
+									return false;
+								}else{
+									return true;	
+								}
+							},
+							getClass: function(v, meta, rec){
+								var isClueZrr = rec.get("isClueZrr");
+								if(isClueZrr == "Y"){
+									return "";
+								}else{
+									return "grid-linkcolumn-with-no-click";	
+								}
+							},
+							handler: 'viewClueInfo'
+						}]
+                    },{
+                        text: "线索状态",
+                        dataIndex: 'clueStatus',
+                        width: 100,
+                        flex:1
+                    },{
+                        text: "责任人",
+                        dataIndex: 'zrrName',
+                        width: 120,
+                        flex:1
+                    },{
+                        text: "创建方式",
+                        dataIndex: 'createType',
+                        width: 100,
+                        flex:1
+                    },{
+                        text: "创建时间",
+                        dataIndex: 'addTime',
+                        minWidth: 120,
+                        flex: 1
+                    }],
+                    store:userClueListStore
 				},{
                     xtype: 'grid',
                     title: '报名信息',
@@ -760,6 +844,7 @@ Ext.define('KitchenSink.view.callCenter.viewUserInfo', {
 
 function getCookie(name){
     var arrstr = document.cookie.split("; ");
+    console.log(document.cookie);
     for(var i = 0;i < arrstr.length;i ++){
         var temp = arrstr[i].split("=");
         if(temp[0] == name) return unescape(temp[1]);

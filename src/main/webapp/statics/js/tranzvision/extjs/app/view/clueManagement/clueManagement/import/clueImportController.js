@@ -145,11 +145,8 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.import.clueImportCont
             Ext.tzSubmit(tzParams,function(responseData){
                 var insertNum = responseData.insertNum;
                 var unInsertNum =  responseData.unInsertNum;
-                var unAssignZrrClue = responseData.unAssignZrrClue;
-                var existNameClue = responseData.existNameClue;
                 var unFindChargeClue = responseData.unFindChargeClue;
                 var completeSameClue = responseData.completeSameClue;
-                var existNameMobileClue = responseData.existNameMobileClue;
 
                 var msgTip = "共导入"+insertNum+"条数据";
                 if(unInsertNum>0) {
@@ -158,18 +155,10 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.import.clueImportCont
                         msgTip += "<br>因为输入的责任人未找到，以下线索未导入：<br>" + unFindChargeClue;
                     }
                     if(completeSameClue!="") {
-                        msgTip += "<br>因为姓名手机公司完全一样，以下线索未导入：<br>" + completeSameClue;
+                        msgTip += "<br>因为手机或邮箱已存在对应线索，以下线索未导入：<br>" + completeSameClue;
                     }
                 }
-                if(unAssignZrrClue!="") {
-                    msgTip += "<br>因为手机重复，以下线索没有分配责任人：<br>" + unAssignZrrClue;
-                }
-                if(existNameMobileClue!=""){
-                    msgTip += "<br>系统中已存在与以下线索姓名手机相同的线索：<br>" + existNameMobileClue;
-                }
-                if(existNameClue!=""){
-                    msgTip += "<br>系统中已存在与以下线索姓名相同的线索：<br>" + existNameClue;
-                }
+                
                 Ext.Msg.alert("提示",msgTip);
                 win.close();
 

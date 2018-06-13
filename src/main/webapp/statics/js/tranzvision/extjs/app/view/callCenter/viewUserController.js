@@ -71,8 +71,9 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 			var msgForm = this.lookupReference('userMgForm');
 			var form = this.lookupReference('userMgForm').getForm();
 			var userInfoForm =this.lookupReference('userMgForm').down('form[name=userInfoForm]').getForm();
-			var processInfoForm =this.lookupReference('userMgForm').down('form[name=processInfoForm]').getForm();
-			//var ksdrInfoForm =this.lookupReference('userMgForm').down('form[name=ksdrInfoForm]').getForm();
+			console.log(userInfoForm);
+		//	var processInfoForm =this.lookupReference('userMgForm').down('form[name=processInfoForm]').getForm();
+		var ksdrInfoForm =this.lookupReference('userMgForm').down('form[name=kslcInfoForm]').getForm();
 
 			var tzParams = '{"ComID":"TZ_UM_USERMG_COM","PageID":"TZ_UM_USERINFO_STD","OperateType":"QF","comParams":{"OPRID":"'+OPRID+'"}}';
 			//加载数据
@@ -85,9 +86,9 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 			//考生导入信息;
 			//ksdrInfoForm.setValues(formData.ksdrInfo);
 			//考生个人信息
-			userInfoForm.setValues(formData.perInfo)
+			userInfoForm.setValues(formData.perInfo);
 			//录取流程
-			processInfoForm.setValues(formData.lqlcInfo);
+			ksdrInfoForm.setValues(formData.lqlcInfo);
 			
 			if(msgForm.down('hiddenfield[name=titleImageUrl]').getValue()){
 				msgForm.down('image[name=titileImage]').setSrc(TzUniversityContextPath + msgForm.down('hiddenfield[name=titleImageUrl]').getValue());	
@@ -243,6 +244,36 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 			 }
 		 });
 	 },
+	 //创建销售线索
+	 createClue: function(btn){
+		 var form = this.getView().lookupReference("userForm");		
+		 var formValues = form.getValues();
+		 var oprId = formValues.oprId;
+		 var callXh = formValues.receiveId;
+		 var leadId = formValues.leadId;
+		 var phone = formValues.phoneNum;
+		 
+		 if(leadId != null && leadId != ""){
+			 Ext.Msg.alert("提示","接待单已创建过线索");
+		 }else{
+			 var tzParamsObj = {
+				ComID: 'TZ_CALLCR_USER_COM',
+				PageID: 'TZ_CALLC_USER_STD',
+				OperateType: 'CREATECLUE',
+				comParams: {
+					OPRID: oprId,
+					callXh: callXh,
+					phoneNum: phone
+				}
+			 };
+			 
+			 var tzParams = Ext.JSON.encode(tzParamsObj);
+			 Ext.tzSubmit(tzParams,function(result){	
+				 console.log(result);
+				 form.getForm().setValues(result);
+			 }); 
+		 }
+	 },
 	 saveInfo:function(btn){
 		 var form = this.getView().lookupReference("userForm");		
 		 var formValues = form.getValues();
@@ -324,6 +355,13 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 
 						store.tzStoreParams = tzStoreParams;
 						store.load();
+						
+						//加载线索
+						var clueGrid = form.down("grid[name=ksClueList]");
+						var clueGridStore = clueGrid.getStore();
+						clueGridStore.tzStoreParams = '{"type": "CLUELIST", "oprid": "' + oprid + '"}';
+						clueGridStore.load();
+						
 						//将按钮恢复点击
 						me.disabledButton(form,false);
 					}else{
@@ -458,7 +496,14 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 					var tzStoreParams = '{"cfgSrhId":"TZ_CALLCR_USER_COM.TZ_CALLC_USER_STD.TZ_USER_CALL1_VW","condition":{"OPRID-operator": "01","OPRID-value": "'+ oprid+'"}}';
 
 					store.tzStoreParams = tzStoreParams;
-					store.load();									
+					store.load();
+					
+					
+					//加载线索
+					var clueGrid = _this.down("grid[name=ksClueList]");
+					var clueGridStore = clueGrid.getStore();
+					clueGridStore.tzStoreParams = '{"type": "CLUELIST", "oprid": "' + oprid + '"}';
+					clueGridStore.load();
 				}
 			});
 			
@@ -530,6 +575,7 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 		 form.down("button[name=updatePsw]").disabled=disalbed;		 
 		 form.down("button[name=invalidAccount]").disabled=disalbed;		 
 		 form.down("button[name=addBlackList]").disabled=disalbed;
+		 form.down("button[name=createClue]").disabled=disalbed;
 		 
 		 if(disalbed){
 			 form.down("button[name=viewUserBtn]").addCls('x-item-disabled x-btn-disabled');
@@ -537,12 +583,14 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 			 form.down("button[name=updatePsw]").addCls('x-item-disabled x-btn-disabled');
 			 form.down("button[name=invalidAccount]").addCls('x-item-disabled x-btn-disabled');
 			 form.down("button[name=addBlackList]").addCls('x-item-disabled x-btn-disabled');
+			 form.down("button[name=createClue]").addCls('x-item-disabled x-btn-disabled');
 		 }else{
 			 form.down("button[name=viewUserBtn]").removeCls('x-item-disabled x-btn-disabled');
 			 form.down("button[name=activeAccount]").removeCls('x-item-disabled x-btn-disabled');
 			 form.down("button[name=updatePsw]").removeCls('x-item-disabled x-btn-disabled');
 			 form.down("button[name=invalidAccount]").removeCls('x-item-disabled x-btn-disabled');
 			 form.down("button[name=addBlackList]").removeCls('x-item-disabled x-btn-disabled');
+			 form.down("button[name=createClue]").removeCls('x-item-disabled x-btn-disabled');
 		 }
 	 },
 	 
@@ -670,5 +718,314 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 	        );
 
 	        win.show();
+	 },
+	 
+	 //查看线索
+	 viewClueInfo: function(view, rowIndex, colIndex){
+		 	var store = view.findParentByType("grid").store;
+	        var selRec = store.getAt(rowIndex);
+	        var clueId = selRec.get("clueId");
+	        
+	        Ext.tzSetCompResourses("TZ_XSXS_INFO_COM");
+	        //是否有访问权限
+	        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_XSXS_INFO_COM"]["TZ_XSXS_DETAIL_STD"];
+	        if (pageResSet == "" || pageResSet == undefined) {
+	            Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+	            return;
+	        }
+	        //该功能对应的JS类
+	        var className = pageResSet["jsClassName"];
+	        if (className == "" || className == undefined) {
+	            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_XSXS_DETAIL_STD，请检查配置。');
+	            return;
+	        }
+
+	        var contentPanel, cmp, className, ViewClass, clsProto;
+	        var themeName = Ext.themeName;
+
+	        contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+	        contentPanel.body.addCls('kitchensink-example');
+	        if (!Ext.ClassManager.isCreated(className)) {
+	            Ext.syncRequire(className);
+	        }
+	        ViewClass = Ext.ClassManager.get(className);
+
+	        //获取线索信息中的下拉框值
+	        var backReasonId, backReasonName, closeReasonId, closeReasonName, colorTypeId, colorTypeName, colorTypeCode;
+	        var backReasonFlag, closeReasonFlag, colorTypeFlag;
+	        var i, j, m, n;
+	        var backReasonData = [],
+	            closeReasonData = [],
+	            colorSortData = [],
+	            customerNameData = [],
+	            companyNameData = [];
+	        var tzDropDownParams = '{"ComID":"TZ_XSXS_INFO_COM","PageID":"TZ_XSXS_DETAIL_STD","OperateType":"tzGetDropDownInfo","comParams":{"clueId":"' + clueId + '"}}';
+	        Ext.tzLoad(tzDropDownParams, function (respData) {
+	            backReasonId = respData.backReasonId;
+	            backReasonName = respData.backReasonName;
+	            closeReasonId = respData.closeReasonId;
+	            closeReasonName = respData.closeReasonName;
+	            colorTypeId = respData.colorTypeId;
+	            colorTypeName = respData.colorTypeName;
+	            colorTypeCode = respData.colorTypeCode;
+
+
+	            var myMask = new Ext.LoadMask(
+	                {
+	                    msg    : TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00022"),
+	                    target : Ext.getCmp('tranzvision-framework-content-panel')
+	                });
+
+	            myMask.show();
+
+
+	            //退回原因
+	            var validBackReasonStore = new KitchenSink.view.common.store.comboxStore({
+	                recname: 'TZ_XS_THYY_V',
+	                condition: {
+	                    TZ_JG_ID: {
+	                        value: Ext.tzOrgID,
+	                        operator: '01',
+	                        type: '01'
+	                    }
+	                },
+	                result: 'TZ_THYY_ID,TZ_LABEL_NAME',
+	                listeners: {
+	                    load: function (store, records, successful, eOpts) {
+	                        for (i = 0; i < records.length; i++) {
+	                            backReasonData.push(records[i].data);
+	                            if (backReasonId.length == 0 || records[i].data["TZ_THYY_ID"] == backReasonId) {
+	                                backReasonFlag = "Y";
+	                            }
+	                        }
+	                        if (backReasonFlag == "Y") {
+
+	                        } else {
+	                            backReasonData.push({
+	                                TZ_THYY_ID: backReasonId,
+	                                TZ_LABEL_NAME: backReasonName
+	                            });
+	                        }
+
+	                        //关闭原因
+	                        var validCloseReasonStore = new KitchenSink.view.common.store.comboxStore({
+	                            recname: 'TZ_XS_GBYY_V',
+	                            condition: {
+	                                TZ_JG_ID: {
+	                                    value: Ext.tzOrgID,
+	                                    operator: '01',
+	                                    type: '01'
+	                                }
+	                            },
+	                            result: 'TZ_GBYY_ID,TZ_LABEL_NAME',
+	                            listeners: {
+	                                load: function (store, records, successful, eOpts) {
+	                                    for (j = 0; j < records.length; j++) {
+	                                        closeReasonData.push(records[j].data);
+	                                        if (closeReasonId.length == 0 || records[j].data["TZ_GBYY_ID"] == closeReasonId) {
+	                                            closeReasonFlag = "Y";
+	                                        }
+	                                    }
+	                                    if (closeReasonFlag == "Y") {
+
+	                                    } else {
+	                                        closeReasonData.push({
+	                                            TZ_GBYY_ID: closeReasonId,
+	                                            TZ_LABEL_NAME: closeReasonName
+	                                        });
+	                                    }
+
+	                                    //类别
+	                                    var validColorSortStore = new KitchenSink.view.common.store.comboxStore({
+	                                        recname: 'TZ_XS_XSLB_V',
+	                                        condition: {
+	                                            TZ_JG_ID: {
+	                                                value: Ext.tzOrgID,
+	                                                operator: '01',
+	                                                type: '01'
+	                                            }
+	                                        },
+	                                        result: 'TZ_COLOUR_SORT_ID,TZ_COLOUR_NAME,TZ_COLOUR_CODE',
+	                                        listeners: {
+	                                            load: function (store, records, successful, eOpts) {
+	                                                for (k = 0; k < records.length; k++) {
+	                                                    colorSortData.push(records[k].data);
+	                                                    if (colorTypeId.length == 0 || records[k].data["TZ_COLOUR_SORT_ID"] == colorTypeId) {
+	                                                        colorTypeFlag = "Y";
+	                                                    }
+	                                                }
+	                                                if (colorTypeFlag == "Y") {
+
+	                                                } else {
+	                                                    colorSortData.push({
+	                                                        TZ_COLOUR_SORT_ID: colorTypeId,
+	                                                        TZ_COLOUR_NAME: colorTypeName,
+	                                                        TZ_COLOUR_CODE: colorTypeCode
+	                                                    });
+	                                                }
+
+
+	                                                //姓名
+	                                                var customerNameStore = new KitchenSink.view.common.store.comboxStore({
+	                                                    pageSize: 0,
+	                                                    recname: 'TZ_XS_CUSNM_V',
+	                                                    condition: {
+	                                                        TZ_JG_ID: {
+	                                                            value: Ext.tzOrgID,
+	                                                            operator: '01',
+	                                                            type: '01'
+	                                                        }
+	                                                    },
+	                                                    result: 'TZ_KH_OPRID,TZ_REALNAME,TZ_DESCR_254',
+	                                                    listeners: {
+	                                                        load: function (store, records, successful, eOpts) {
+	                                                            for (m = 0; m < records.length; m++) {
+	                                                                customerNameData.push(records[m].data);
+	                                                            }
+
+
+	                                                            //公司
+	                                                            var companyNameStore = new KitchenSink.view.common.store.comboxStore({
+	                                                                pageSize: 0,
+	                                                                recname: 'TZ_XS_COMNM_V',
+	                                                                condition: {
+	                                                                    TZ_JG_ID: {
+	                                                                        value: Ext.tzOrgID,
+	                                                                        operator: '01',
+	                                                                        type: '01'
+	                                                                    }
+	                                                                },
+	                                                                result: 'TZ_COMP_CNAME',
+	                                                                listeners: {
+	                                                                    load: function (store, records, successful, eOpts) {
+	                                                                        for (n = 0; n < records.length; n++) {
+	                                                                            companyNameData.push(records[n].data);
+	                                                                        }
+
+	                                                                        //线索标签
+	                                                                        var clueTagStore= new KitchenSink.view.common.store.comboxStore({
+	                                                                            recname:'TZ_LABEL_DFN_T',
+	                                                                            condition:{
+	                                                                            	TZ_JG_ID:{
+	                                                                                    value: Ext.tzOrgID,
+	                                                                                    operator:'01',
+	                                                                                    type:'01'
+	                                                                                },
+	                                                                                TZ_LABEL_STATUS:{
+	                                                                                    value: 'Y',
+	                                                                                    operator:'01',
+	                                                                                    type:'01'
+	                                                                                }
+	                                                                            },
+	                                                                            result:'TZ_LABEL_ID,TZ_LABEL_NAME'
+	                                                                        });
+	                                                                        clueTagStore.load({
+	                                                                        	callback: function(){
+	                                                                        		
+	                                                                        		var otherZrrStore= new KitchenSink.view.common.store.comboxStore({
+	                                                                                    recname:'TZ_XS_QTZRR_V',
+	                                                                                    condition:{
+	                                                                                    	TZ_LEAD_ID:{
+	                                                                                            value: clueId,
+	                                                                                            operator:'01',
+	                                                                                            type:'01'
+	                                                                                        }
+	                                                                                    },
+	                                                                                    result:'TZ_ZRR_OPRID,TZ_REALNAME'
+	                                                                                });
+	                                                                        		otherZrrStore.load({
+	                                                                                	callback: function(){
+	                                                                                		myMask.hide();
+
+	                                                                                        cmp = new ViewClass({
+	                                                                                            clueID: clueId,
+	                                                                                            backReasonData: backReasonData,
+	                                                                                            closeReasonData: closeReasonData,
+	                                                                                            colorSortData: colorSortData,
+	                                                                                            customerNameData: customerNameData,
+	                                                                                            companyNameData: companyNameData,
+	                                                                                            clueTagStore: clueTagStore,
+	                                                                                            otherZrrStore: otherZrrStore,
+	                                                                                            zrrEditFalg: 'Y'
+	                                                                                        });
+
+	                                                                                        cmp.on('afterrender', function (panel) {
+	                                                                                            var form = panel.child('form').getForm();
+	                                                                                            var tabpanel = panel.child('tabpanel');
+	                                                                                            var store = tabpanel.child("grid").store;
+	                                                                                            var glBmbBut = panel.down("button[name=glBmbBut]");
+	                                                                                            //参数
+	                                                                                            var tzParams = '{"ComID":"TZ_XSXS_INFO_COM","PageID":"TZ_XSXS_DETAIL_STD","OperateType":"QF","comParams":{"clueId":"' + clueId + '"}}';
+	                                                                                            Ext.tzLoad(tzParams, function (respData) {
+	                                                                                                var formData = respData.formData;
+	                                                                                                //基本信息
+	                                                                                                form.setValues(formData);
+
+	                                                                                                //根据显示状态显示相应的其他字段
+	                                                                                                var clueState = form.findField('clueState').getValue();
+
+	                                                                                                form.findField('backReasonId').setVisible(false);
+	                                                                                                form.findField('closeReasonId').setVisible(false);
+	                                                                                                form.findField('contactDate').setVisible(false);
+	                                                                                                form.findField('backReasonId').allowBlank = true;
+	                                                                                                form.findField('closeReasonId').allowBlank = true;
+	                                                                                                form.findField('contactDate').allowBlank = true;
+
+	                                                                                                //退回原因
+	                                                                                                if (clueState == "F") {
+	                                                                                                    form.findField('backReasonId').setVisible(true);
+	                                                                                                    form.findField('backReasonId').allowBlank = false;
+	                                                                                                }
+	                                                                                                //关闭原因
+	                                                                                                if (clueState == "G") {
+	                                                                                                    form.findField('closeReasonId').setVisible(true);
+	                                                                                                    form.findField('closeReasonId').allowBlank = false;
+	                                                                                                }
+	                                                                                                //建议跟进日期
+	                                                                                                if (clueState == "D") {
+	                                                                                                    form.findField('contactDate').setVisible(true);
+	                                                                                                    form.findField('contactDate').allowBlank = false;
+	                                                                                                }
+
+
+	                                                                                                //线索状态为关闭或者报考状态不是未报名，关联报名表按钮隐藏
+	                                                                                                var bkStatus = form.findField("bkStatus").getValue();
+	                                                                                                if (clueState == "G" || bkStatus != "A") {
+	                                                                                                    glBmbBut.setVisible(false);
+	                                                                                                }
+
+	                                                                                                //加载报名表信息
+	                                                                                                var clueId = form.findField("clueId").getValue();
+	                                                                                                store.tzStoreParams = '{"clueId":"' + clueId + '"}';
+	                                                                                                store.load();
+	                                                                                            });
+	                                                                                        });
+
+	                                                                                        var tab = contentPanel.add(cmp);
+	                                                                                        contentPanel.setActiveTab(tab);
+	                                                                                        Ext.resumeLayouts(true);
+	                                                                                        if (cmp.floating) {
+	                                                                                            cmp.show();
+	                                                                                        }
+	                                                                                	}
+	                                                                                });
+	                                                                        	}
+	                                                                        });
+	                                                                    }
+	                                                                }
+	                                                            });
+	                                                        }
+	                                                    }
+	                                                });
+	                                            }
+	                                        }
+	                                    });
+	                                }
+	                            }
+	                        });
+	                    }
+	                }
+	            });
+	        });
 	 }
 });

@@ -1,0 +1,12 @@
+Ext.define("KitchenSink.view.clueManagement.clueManagement.MsgAttachmentStore",{
+    extend:'Ext.data.Store',
+    alias:"store.MsgAttachmentStore",
+    model:'KitchenSink.view.clueManagement.clueManagement.MsgAttachmentModel',
+    pageSize:10,
+    autoLoad:false,
+    comID:"TZ_XSXS_INFO_COM",
+    pageID:"TZ_CONNECT_RPT_STD",
+    operateType:"getFiles",
+    tzStoreParams:"",
+    proxy:Ext.tzListProxy()
+});

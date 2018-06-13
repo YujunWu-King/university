@@ -1,30 +1,32 @@
 package com.tranzvision.gd.TZEnrollmentClueBundle.service.impl;
 
-import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.ObjectUtils.Null;
 import org.apache.commons.lang3.StringUtils;
-import org.aspectj.org.eclipse.jdt.core.dom.ReturnStatement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZLabelSetBundle.dao.PsTzLabelDfnTMapper;
+import com.tranzvision.gd.TZLabelSetBundle.model.PsTzLabelDfnT;
+import com.tranzvision.gd.TZMyEnrollmentClueBundle.dao.PsTzXsLabelTblMapper;
+import com.tranzvision.gd.TZMyEnrollmentClueBundle.dao.PsTzXsQtzrrTblMapper;
 import com.tranzvision.gd.TZMyEnrollmentClueBundle.dao.PsTzXsxsInfoTMapper;
 import com.tranzvision.gd.TZMyEnrollmentClueBundle.dao.PsTzXsxsLogTMapper;
-import com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsInfoT;
+import com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsLabelTblKey;
+import com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsQtzrrTblKey;
 import com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsInfoTWithBLOBs;
 import com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsLogT;
 import com.tranzvision.gd.util.base.JacksonUtil;
-import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -52,7 +54,12 @@ public class TzClueDetailServiceImpl extends FrameworkImpl {
 	@Autowired
 	private PsTzXsxsLogTMapper psTzXsxsLogTMapper;
 	@Autowired
-	private GetHardCodePoint getHardCodePoint;
+	private PsTzLabelDfnTMapper psTzLabelDfnTMapper;
+	@Autowired
+	private PsTzXsLabelTblMapper psTzXsLabelTblMapper;
+	@Autowired
+	private PsTzXsQtzrrTblMapper psTzXsQtzrrTblMapper;
+
 	
 	
 	/*获取线索信息*/
@@ -84,12 +91,32 @@ public class TzClueDetailServiceImpl extends FrameworkImpl {
 					String TZ_POSITION = mapData.get("TZ_POSITION") == null ? "" : mapData.get("TZ_POSITION").toString();
 					String TZ_MOBILE = mapData.get("TZ_MOBILE") == null ? "" : mapData.get("TZ_MOBILE").toString();
 					String TZ_PHONE = mapData.get("TZ_PHONE") == null ? "" : mapData.get("TZ_PHONE").toString();
+					String TZ_EMAIL = mapData.get("TZ_EMAIL") == null ? "" : mapData.get("TZ_EMAIL").toString();
 					String TZ_REFEREE_NAME = mapData.get("TZ_REFEREE_NAME") == null ? "" : mapData.get("TZ_REFEREE_NAME").toString();
-					String TZ_XSQU_ID = mapData.get("TZ_XSQU_ID") == null ? "" : mapData.get("TZ_XSQU_ID").toString();
-					String TZ_XSQU_DESC = mapData.get("TZ_XSQU_DESC") == null ? "" : mapData.get("TZ_XSQU_DESC").toString();
 					String TZ_BZ = mapData.get("TZ_BZ") == null ? "" : mapData.get("TZ_BZ").toString();
 					String TZ_BMR_STATUS = mapData.get("TZ_BMR_STATUS") == null ? "" : mapData.get("TZ_BMR_STATUS").toString();
 				
+					
+					// 线索标签;
+					ArrayList<String> strTagList = new ArrayList<>();
+					List<Map<String, Object>> list = sqlQuery.queryForList("SELECT TZ_LABEL_ID FROM PS_TZ_XS_LABEL_TBL WHERE TZ_LEAD_ID=?", new Object[] { clueId });
+					if (list != null && list.size() > 0) {
+						for (int i = 0; i < list.size(); i++) {
+							String strTagID = (String) list.get(i).get("TZ_LABEL_ID");
+							strTagList.add(strTagID);
+						}
+					}
+					
+					//其他责任人
+					ArrayList<String> otherCharge = new ArrayList<>();
+					List<Map<String, Object>> zrrlist = sqlQuery.queryForList("SELECT TZ_ZRR_OPRID FROM PS_TZ_XS_QTZRR_TBL WHERE TZ_LEAD_ID=?", new Object[] { clueId });
+					if (zrrlist != null && zrrlist.size() > 0) {
+						for (int i = 0; i < zrrlist.size(); i++) {
+							String zrrOprid = (String) zrrlist.get(i).get("TZ_ZRR_OPRID");
+							otherCharge.add(zrrOprid);
+						}
+					}
+					
 					Map<String, Object> mapFormData = new HashMap<String,Object>();
 					mapFormData.put("clueId", clueId);
 					mapFormData.put("clueState", TZ_LEAD_STATUS);
@@ -104,12 +131,14 @@ public class TzClueDetailServiceImpl extends FrameworkImpl {
 					mapFormData.put("companyName", TZ_COMP_CNAME);
 					mapFormData.put("position", TZ_POSITION);
 					mapFormData.put("phone", TZ_PHONE);
-					mapFormData.put("localId", TZ_XSQU_ID);
-					mapFormData.put("localAddress", TZ_XSQU_DESC);
+					mapFormData.put("cusEmail", TZ_EMAIL);
 					mapFormData.put("colorType", TZ_COLOUR_SORT_ID);
 					mapFormData.put("bkStatus", TZ_BMR_STATUS);
 					mapFormData.put("refereeName", TZ_REFEREE_NAME);
 					mapFormData.put("memo", TZ_BZ);
+					mapFormData.put("clueTags", strTagList);
+					mapFormData.put("otherCharge", otherCharge);
+					
 					
 					mapRet.put("formData", mapFormData);
 					
@@ -157,18 +186,11 @@ public class TzClueDetailServiceImpl extends FrameworkImpl {
 					String TZ_CLASS_NAME=mapData.get("TZ_CLASS_NAME")==null?"":mapData.get("TZ_CLASS_NAME").toString();
 					String TZ_FORM_SP_STA=mapData.get("TZ_FORM_SP_STA")==null?"待审核":mapData.get("TZ_FORM_SP_STA").toString();
 				
-					String TZ_JF_STATUS=sqlQuery.queryForObject("select 'Y' from PS_TZ_XFJIAOF_TBL where TZ_APP_INS_ID=?", new Object[]{TZ_APP_INS_ID}, "String");
-					if("Y".equals(TZ_JF_STATUS)){
-						TZ_JF_STATUS="已缴费";
-					}else{
-						TZ_JF_STATUS="未缴费";
+					String TZ_LQ_STATUS=sqlQuery.queryForObject("SELECT TZ_RESULT_CODE from TZ_IMP_FS_TBL where TZ_APP_INS_ID=?", new Object[]{TZ_APP_INS_ID}, "String");
+					if(TZ_LQ_STATUS == null){
+						TZ_LQ_STATUS="";
 					}
-					String TZ_LQ_STATUS=sqlQuery.queryForObject("SELECT 'Y' from TZ_IMP_LQJD_TBL where TZ_APP_INS_ID=? and TZ_LQ_STATE='Y'", new Object[]{TZ_APP_INS_ID}, "String");
-					if("Y".equals(TZ_LQ_STATUS)){
-						TZ_LQ_STATUS="已录取";
-					}else{
-						TZ_LQ_STATUS="未录取";
-					}
+					
 					Map<String, Object> mapList = new HashMap<String, Object>();
 					mapList.put("clueId", clueId);
 					mapList.put("bmbId", TZ_APP_INS_ID);
@@ -180,7 +202,6 @@ public class TzClueDetailServiceImpl extends FrameworkImpl {
 					mapList.put("bmrClassId", TZ_CLASS_ID);
 					mapList.put("bmrClassName", TZ_CLASS_NAME);
 					mapList.put("bmrCsStatus", TZ_FORM_SP_STA);
-					mapList.put("bmrsfStatus", TZ_JF_STATUS);
 					mapList.put("bmrLqStatus", TZ_LQ_STATUS);
 					listData.add(mapList);
 				}
@@ -244,6 +265,7 @@ public class TzClueDetailServiceImpl extends FrameworkImpl {
 	
 	
 	/*线索基本信息保存*/
+	@SuppressWarnings("unchecked")
 	private Map<String, Object> tzEditClueInfo(Map<String, Object> dataMap, String[] errMsg) {
 		
 		Map<String,Object> map=new HashMap<String,Object>();
@@ -253,14 +275,12 @@ public class TzClueDetailServiceImpl extends FrameworkImpl {
 		String closeReasonId="";
 		String contactDate="";
 		String chargeOprid="";
-		String chargeName="";
 		String cusName="";
 		String cusMobile="";
 		String companyName="";
 		String position="";
 		String phone="";
-		String localId="";
-		String localAddress="";
+		String cusEmail = "";
 		String colorType="";
 		String bkStatus="";
 		String refereeName="";
@@ -268,6 +288,10 @@ public class TzClueDetailServiceImpl extends FrameworkImpl {
 		String fromType="";
 		String createWay="";
 		
+		// 标签;
+		ArrayList<String> arrTag = new ArrayList<>();
+		//其他责任人
+		ArrayList<String> otherCharge = new ArrayList<>();
 		try {
 			String oprid=tzLoginServiceImpl.getLoginedManagerOprid(request);
 			String jgId=tzLoginServiceImpl.getLoginedManagerOrgid(request);
@@ -281,68 +305,92 @@ public class TzClueDetailServiceImpl extends FrameworkImpl {
 				closeReasonId=dataMap.get("closeReasonId")==null?"":dataMap.get("closeReasonId").toString();
 				contactDate=dataMap.get("contactDate")==null?"":dataMap.get("contactDate").toString();
 				chargeOprid=dataMap.get("chargeOprid")==null?"":dataMap.get("chargeOprid").toString();
-				chargeName=dataMap.get("chargeName")==null?"":dataMap.get("chargeName").toString();
 				cusName=dataMap.get("cusName")==null?"":dataMap.get("cusName").toString();
 				cusMobile=dataMap.get("cusMobile")==null?"":dataMap.get("cusMobile").toString();
 				companyName=dataMap.get("companyName")==null?"":dataMap.get("companyName").toString();
 				position=dataMap.get("position")==null?"":dataMap.get("position").toString();
 				phone=dataMap.get("phone")==null?"":dataMap.get("phone").toString();
-				localId=dataMap.get("localId")==null?"":dataMap.get("localId").toString();
-				localAddress=dataMap.get("localAddress")==null?"":dataMap.get("localAddress").toString();
+				cusEmail=dataMap.get("cusEmail")==null?"":dataMap.get("cusEmail").toString();
 				colorType=dataMap.get("colorType")==null?"":dataMap.get("colorType").toString();
 				bkStatus=dataMap.get("bkStatus")==null?"":dataMap.get("bkStatus").toString();
 				refereeName=dataMap.get("refereeName")==null?"":dataMap.get("refereeName").toString();
 				memo=dataMap.get("memo")==null?"":dataMap.get("memo").toString();
 				fromType=dataMap.get("fromType")==null?"":dataMap.get("fromType").toString();
+				//标签
+				if (dataMap.get("clueTags") != null && !"".equals(dataMap.get("clueTags"))) {
+					arrTag = (ArrayList<String>) dataMap.get("clueTags");
+				}
+				//其他责任人
+				if(dataMap.get("otherCharge") != null && !"".equals(dataMap.get("otherCharge"))){
+					otherCharge = (ArrayList<String>) dataMap.get("otherCharge");
+				}
 			}
 		
 			if("".equals(clueId)||clueId==null){
-
 				//创建方式：招生线索管理-手工创建、我的招生线索-自主开发
 				if("MYXS".equals(fromType)) {
 					createWay = "I";
 				} else {
 					createWay = "G";
 				}
-				clueId=String.valueOf(getSeqNum.getSeqNum("TZ_XSXS_INFO_T", "TZ_LEAD_ID"));
-				PsTzXsxsInfoTWithBLOBs PsTzXsxsInfoT=new PsTzXsxsInfoTWithBLOBs();
-				PsTzXsxsInfoT.setTzLeadId(clueId);
-				PsTzXsxsInfoT.setTzJgId(jgId);
-				PsTzXsxsInfoT.setTzLeadStatus(clueState);
-				//线索创建方式
-				PsTzXsxsInfoT.setTzRsfcreateWay(createWay);	
-				PsTzXsxsInfoT.setTzZrOprid(chargeOprid);
-				PsTzXsxsInfoT.setTzRealname(cusName);
-				PsTzXsxsInfoT.setTzCompCname(companyName);
-				PsTzXsxsInfoT.setTzMobile(cusMobile);
-				PsTzXsxsInfoT.setTzPhone(phone);
-				PsTzXsxsInfoT.setTzPosition(position);
-				PsTzXsxsInfoT.setTzXsquId(localId);
-				PsTzXsxsInfoT.setTzRefereeName(refereeName);
-				PsTzXsxsInfoT.setTzBz(memo);
-				PsTzXsxsInfoT.setTzColourSortId(colorType);
-				PsTzXsxsInfoT.setRowAddedOprid(oprid);
-				PsTzXsxsInfoT.setRowLastmantOprid(oprid);
-				PsTzXsxsInfoT.setRowAddedDttm(new java.util.Date());
-				PsTzXsxsInfoT.setRowLastmantDttm(new java.util.Date());
-				psTzXsxsInfoTMapper.insert(PsTzXsxsInfoT);
-				map.put("clueId", clueId);
-				map.put("bkStatus", "A");
 				
-				/*查询是否存在姓名相同未关闭的线索*/
-				Integer existName = sqlQuery.queryForObject("SELECT COUNT(1) FROM PS_TZ_XSXS_INFO_T WHERE TZ_LEAD_ID<>? AND TZ_LEAD_STATUS<>'G' AND TZ_REALNAME=?", new Object[]{clueId,cusName},"Integer");
-				if(existName>0) {
-					map.put("existName", "Y");
-				} else {
-					map.put("existName", "");
+				String sql = "select count(*) from PS_TZ_XSXS_INFO_T where TZ_JG_ID=? and TZ_LEAD_STATUS<>'G' and ((TZ_MOBILE<>' ' and TZ_MOBILE=?) or (TZ_EMAIL<>' '  and TZ_EMAIL=?))";
+				int existsCount = sqlQuery.queryForObject(sql, new Object[]{ jgId,cusMobile,cusEmail }, "int");
+				if(existsCount > 0){
+					errMsg[0] = "1";
+					errMsg[1] = "保存失败，手机或邮箱已存在对应线索";
+				}else{
+					clueId=String.valueOf(getSeqNum.getSeqNum("TZ_XSXS_INFO_T", "TZ_LEAD_ID"));
+					PsTzXsxsInfoTWithBLOBs PsTzXsxsInfoT=new PsTzXsxsInfoTWithBLOBs();
+					PsTzXsxsInfoT.setTzLeadId(clueId);
+					PsTzXsxsInfoT.setTzJgId(jgId);
+					PsTzXsxsInfoT.setTzLeadStatus(clueState);
+					//线索创建方式
+					PsTzXsxsInfoT.setTzRsfcreateWay(createWay);	
+					PsTzXsxsInfoT.setTzZrOprid(chargeOprid);
+					PsTzXsxsInfoT.setTzRealname(cusName);
+					PsTzXsxsInfoT.setTzCompCname(companyName);
+					PsTzXsxsInfoT.setTzMobile(cusMobile);
+					PsTzXsxsInfoT.setTzPhone(phone);
+					PsTzXsxsInfoT.setTzEmail(cusEmail);
+					PsTzXsxsInfoT.setTzPosition(position);
+					PsTzXsxsInfoT.setTzRefereeName(refereeName);
+					PsTzXsxsInfoT.setTzBz(memo);
+					PsTzXsxsInfoT.setTzColourSortId(colorType);
+					PsTzXsxsInfoT.setRowAddedOprid(oprid);
+					PsTzXsxsInfoT.setRowLastmantOprid(oprid);
+					PsTzXsxsInfoT.setRowAddedDttm(new java.util.Date());
+					PsTzXsxsInfoT.setRowLastmantDttm(new java.util.Date());
+					psTzXsxsInfoTMapper.insert(PsTzXsxsInfoT);
+					map.put("clueId", clueId);
+					map.put("bkStatus", "A");
+					
+					/*查询是否存在姓名相同未关闭的线索*/
+					Integer existName = sqlQuery.queryForObject("SELECT COUNT(1) FROM PS_TZ_XSXS_INFO_T WHERE TZ_LEAD_ID<>? AND TZ_LEAD_STATUS<>'G' AND TZ_REALNAME=?", new Object[]{clueId,cusName},"Integer");
+					if(existName>0) {
+						map.put("existName", "Y");
+					} else {
+						map.put("existName", "");
+					}
 				}
-				
-				
 			}else{
 				PsTzXsxsInfoTWithBLOBs PsTzXsxsInfoT=new PsTzXsxsInfoTWithBLOBs();
 				PsTzXsxsInfoT.setTzLeadId(clueId);
 				PsTzXsxsInfoT.setTzJgId(jgId);
-				PsTzXsxsInfoT.setTzLeadStatus(clueState);
+//				PsTzXsxsInfoT.setTzLeadStatus(clueState);  保存的时候不要直接保存线索状态
+				
+				//如果是未分配，有责任人时要设置为"跟进中"，如果没有责任人，状态是否要设置为“未分配”
+				if((chargeOprid != null && !"".equals(chargeOprid)) 
+						|| (otherCharge != null && otherCharge.size() > 0)){
+					if("A".equals(clueState)){
+						PsTzXsxsInfoT.setTzLeadStatus("C");
+						clueState = "C";
+					}
+				}else{
+					PsTzXsxsInfoT.setTzLeadStatus("A");
+					clueState = "A";
+				}
+				
 				PsTzXsxsInfoT.setTzThyyId(backReasonId);
 				PsTzXsxsInfoT.setTzGbyyId(closeReasonId);
 				if(contactDate!=null && !"".equals(contactDate)) {
@@ -353,8 +401,8 @@ public class TzClueDetailServiceImpl extends FrameworkImpl {
 				PsTzXsxsInfoT.setTzCompCname(companyName);
 				PsTzXsxsInfoT.setTzMobile(cusMobile);
 				PsTzXsxsInfoT.setTzPhone(phone);
+				PsTzXsxsInfoT.setTzEmail(cusEmail);
 				PsTzXsxsInfoT.setTzPosition(position);
-				PsTzXsxsInfoT.setTzXsquId(localId);
 				PsTzXsxsInfoT.setTzRefereeName(refereeName);
 				PsTzXsxsInfoT.setTzBz(memo);
 				PsTzXsxsInfoT.setTzColourSortId(colorType);
@@ -365,45 +413,85 @@ public class TzClueDetailServiceImpl extends FrameworkImpl {
 				map.put("clueId", clueId);
 				
 				//报考状态
-				String sql = tzSQLObject.getSQLText("SQL.TZEnrollmentClueServiceImpl.TzGetClueBmbStateInfo");
-				Map<String, Object> mapBmb = sqlQuery.queryForMap(sql, new Object[]{clueId});
-				if(mapBmb!=null) {
-					String TZ_FORM_SP_STA =  mapBmb.get("TZ_FORM_SP_STA") == null ? "" : mapBmb.get("TZ_FORM_SP_STA").toString();
-					String TZ_MS_PLAN = mapBmb.get("TZ_MS_PLAN") == null ? "" : mapBmb.get("TZ_MS_PLAN").toString();
-					String TZ_BS_RESULT = mapBmb.get("TZ_BS_RESULT") == null ? "" : mapBmb.get("TZ_BS_RESULT").toString();
-					String TZ_LQ_STATE = mapBmb.get("TZ_LQ_STATE") == null ? "" : mapBmb.get("TZ_LQ_STATE").toString();
-					String TZ_KX_PLAN = mapBmb.get("TZ_KX_PLAN") == null ? "" : mapBmb.get("TZ_KX_PLAN").toString();
-					
-					if(TZ_KX_PLAN!=null && !"".equals(TZ_KX_PLAN)) {
-						//已入学
-						bkStatus="G";
-					} else if("Y".equals(TZ_LQ_STATE)) {
-						//已录取
-						bkStatus="F";
-					} else if("Y".equals(TZ_BS_RESULT)) {
-						//面试通过
-						bkStatus="E";
-					} else if("Y".equals(TZ_MS_PLAN)) {
-						//已安排面试时间
-						bkStatus="D";
-					} else if("A".equals(TZ_FORM_SP_STA)) {
-						//初审通过
-						bkStatus="C";
-					} else {
-						//已报名
-						bkStatus="B";
-					}
-				} else {
+				String sql = "select 'Y' from PS_TZ_XSXS_BMB_T where TZ_LEAD_ID=? limit 0,1";
+				String bmbExists = sqlQuery.queryForObject(sql, new Object[]{ clueId }, "String");
+				
+				if("Y".equals(bmbExists)){
+					//已报名
+					bkStatus="B";
+				}else{
 					//未报名
 					bkStatus="A";
 				}
+				
 				map.put("bkStatus", bkStatus);
 				map.put("existName", "");
 			}
-			   
 			map.put("clueState", clueState);
 			
 			
+			//保存其他责任人
+			sqlQuery.update("DELETE FROM PS_TZ_XS_QTZRR_TBL WHERE TZ_LEAD_ID=?", new Object[] { clueId });
+			if (otherCharge != null && otherCharge.size() > 0) {
+				for (int i = 0; i < otherCharge.size(); i++) {
+					String oZrrOprid = otherCharge.get(i);
+					if (oZrrOprid != null && !"".equals(oZrrOprid)) {
+						PsTzXsQtzrrTblKey psTzXsQtzrrTblKey = new PsTzXsQtzrrTblKey();
+						psTzXsQtzrrTblKey.setTzLeadId(clueId);
+						psTzXsQtzrrTblKey.setTzZrrOprid(oZrrOprid);
+						psTzXsQtzrrTblMapper.insert(psTzXsQtzrrTblKey);
+					}
+				}
+			}
+			
+			//保存标签，如果标签不存在，新建标签
+			sqlQuery.update("DELETE FROM PS_TZ_XS_LABEL_TBL WHERE TZ_LEAD_ID=?", new Object[] { clueId });
+			String str_jg_id = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+			if (arrTag != null && arrTag.size() > 0) {
+				for (int i = 0; i < arrTag.size(); i++) {
+					String strTag = arrTag.get(i);
+					if (strTag != null && !"".equals(strTag)) {
+						int strTagExist = 0;
+						String strTagNameExist = "";
+						strTagExist = sqlQuery.queryForObject("SELECT count(1) FROM PS_TZ_LABEL_DFN_T WHERE TZ_JG_ID=? AND TZ_LABEL_ID=?",new Object[] { str_jg_id, strTag }, "Integer");
+						
+						if (strTagExist > 0) {
+							PsTzXsLabelTblKey psTzXsLabelTblKey = new PsTzXsLabelTblKey();
+							psTzXsLabelTblKey.setTzLeadId(clueId);;
+							psTzXsLabelTblKey.setTzLabelId(strTag);
+							psTzXsLabelTblMapper.insert(psTzXsLabelTblKey);
+						} else {
+							String strLabelID = "";
+							strTagNameExist = sqlQuery.queryForObject(
+									"SELECT TZ_LABEL_ID FROM PS_TZ_LABEL_DFN_T WHERE TZ_JG_ID=? AND TZ_LABEL_NAME=? AND TZ_LABEL_STATUS='Y' limit 0,1",
+									new Object[] { str_jg_id, strTag }, "String");
+							if (strTagNameExist != null && !"".equals(strTagNameExist)) {
+								/* 存在同名的标签 */
+								strLabelID = strTagNameExist;
+							} else {
+								strLabelID = "00000000" + String.valueOf(getSeqNum.getSeqNum("TZ_LABEL_DFN_T", "TZ_LABEL_ID"));
+								strLabelID = strLabelID.substring(strLabelID.length() - 8, strLabelID.length());
+								PsTzLabelDfnT psTzLabelDfnT = new PsTzLabelDfnT();
+								psTzLabelDfnT.setTzLabelId(strLabelID);
+								psTzLabelDfnT.setTzLabelName(strTag);
+								psTzLabelDfnT.setTzLabelDesc(strTag);
+								psTzLabelDfnT.setTzJgId(str_jg_id);
+								psTzLabelDfnT.setTzLabelStatus("Y");
+								psTzLabelDfnT.setRowAddedDttm(new Date());
+								psTzLabelDfnT.setRowAddedOprid(oprid);
+								psTzLabelDfnT.setRowLastmantDttm(new Date());
+								psTzLabelDfnT.setRowLastmantOprid(oprid);
+								psTzLabelDfnTMapper.insert(psTzLabelDfnT);
+							}
+
+							PsTzXsLabelTblKey psTzXsLabelTblKey = new PsTzXsLabelTblKey();
+							psTzXsLabelTblKey.setTzLeadId(clueId);;
+							psTzXsLabelTblKey.setTzLabelId(strLabelID);
+							psTzXsLabelTblMapper.insert(psTzXsLabelTblKey);
+						}
+					}
+				}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -796,10 +884,6 @@ public class TzClueDetailServiceImpl extends FrameworkImpl {
 			if("tzGetDropDownInfo".equals(operateType)) {
 				strRet = getDropDownInfo(strParams,errorMsg);
 			}
-			//获取当前登录人的线索角色
-			if("tzGetPersonRole".equals(operateType)) {
-				strRet = getPersonRole(strParams,errorMsg);
-			}
 			//获取历史线索客户信息
 			if("tzGetCustomerInfo".equals(operateType)) {
 				strRet = getCustomerInfo(strParams,errorMsg);
@@ -928,52 +1012,7 @@ public class TzClueDetailServiceImpl extends FrameworkImpl {
 		return strRet;
 	}
 	
-	
-	/*当前登录人的销售线索角色*/
-	public String getPersonRole(String strParams,String[] errorMsg) {
-		String strRet = "";
-		Map<String, Object> mapRet = new HashMap<String,Object>();
-		JacksonUtil jacksonUtil = new JacksonUtil();
-		
-		try {
-			
-			//当前登录人
-			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
-			
-			String roleWhere = "";
-			//能查看所有地区的角色：线索管理员+一般人员
-			String role = getHardCodePoint.getHardCodePointVal("TZ_XSXS_ALLDQ_ROLE");
-			String[] roleArr = role.split(",");
-			for(int i=0;i<roleArr.length;i++) {
-				if(i==0) {
-					roleWhere = "'" + roleArr[i] + "'";
-				} else {
-					roleWhere += "," + "'" + roleArr[i] + "'";
-				}
-			}
-			
-			String sql = "SELECT COUNT(1) FROM PSROLEUSER WHERE ROLEUSER='" + oprid + "' AND ROLENAME IN (" + roleWhere + ")";
-			Integer roleCount = sqlQuery.queryForObject(sql, "Integer");
-			
-			String viewAllFlag = "";
-			if(roleCount>0) {
-				viewAllFlag = "Y";
-			}
-			
-			mapRet.put("viewAllFlag", viewAllFlag);
-			
-			strRet = jacksonUtil.Map2json(mapRet);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			errorMsg[0] = "1";
-			errorMsg[1] = e.toString();
-		}
-		
-		return strRet;
-	}
-	
-	
+
 	/*获取历史线索客户信息*/
 	public String getCustomerInfo(String strParams,String[] errorMsg) {
 		String strRet = "";

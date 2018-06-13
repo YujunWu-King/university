@@ -17,7 +17,6 @@ import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdKjComServiceImpl;
 import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.CreateTaskServiceImpl;
 import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.SendSmsOrMalServiceImpl;
-import com.tranzvision.gd.TZEnrollmentClueBundle.service.impl.TzClueAutoAssign;
 import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzLxfsInfoTblMapper;
 import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzRegUserTMapper;
 import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzLxfsInfoTbl;
@@ -47,10 +46,10 @@ import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzKsTjxTbl;
 import com.tranzvision.gd.util.Calendar.DateUtil;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzSystemException;
+import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
-import com.tranzvision.gd.util.sql.TZGDObject;
-import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;;
+import com.tranzvision.gd.util.sql.TZGDObject;;
 
 @Service
 public class tzOnlineAppEngineImpl {
@@ -120,9 +119,6 @@ public class tzOnlineAppEngineImpl {
 
 	@Autowired
 	private GdKjComServiceImpl gdKjComServiceImpl;
-
-	@Autowired
-	private TzClueAutoAssign tzClueAutoAssign;
 
 	@Autowired
 	private PsTzXsxsInfoTMapper psTzXsxsInfoTMapper;
@@ -1209,34 +1205,28 @@ public class tzOnlineAppEngineImpl {
 	 * @param AppInsId
 	 * @param JGID
 	 */
+	@SuppressWarnings("unchecked")
 	private void addXSXS(String strAppOprId, String AppInsId, String JGID, Boolean isWeChart) {
-		System.out.println("JGID：" + JGID);
-		System.out.println("strAppOprId：" + strAppOprId);
-		System.out.println("AppInsId：" + AppInsId);
-		String sql = "select TZ_LEAD_ID,TZ_RSFCREATE_WAY,TZ_XSQU_ID from PS_TZ_XSXS_INFO_T where TZ_KH_OPRID=? and (TZ_LEAD_STATUS is null or TZ_LEAD_STATUS <> ?)";
+//		System.out.println("JGID：" + JGID);
+//		System.out.println("strAppOprId：" + strAppOprId);
+//		System.out.println("AppInsId：" + AppInsId);
+		String sql = "select TZ_LEAD_ID,TZ_RSFCREATE_WAY from PS_TZ_XSXS_INFO_T where TZ_KH_OPRID=? and (TZ_LEAD_STATUS is null or TZ_LEAD_STATUS <> ?)";
 
 		List<Map<String, Object>> list = sqlQuery.queryForList(sql, new Object[] { strAppOprId, "G" });
 		Map<String, Object> map = null;
 		String TZ_LEAD_ID = "";
-		String TZ_XSQU_ID = "";
 		String TZ_RSFCREATE_WAY = "";
 		boolean falge = false;
-		String isAutoAssign = "";
-
-		sql = "SELECT TZ_COMMENT1 FROM PS_TZ_REG_USER_T WHERE OPRID =?";
-		String country = sqlQuery.queryForObject(sql, new String[] { strAppOprId }, "String");
 
 		// 先按照OprId 检查，如果存在，并且未关联报名表,去关联报名表，创建方式为D(会员注册)的优先
 		for (Object object : list) {
 			map = (Map<String, Object>) object;
 			TZ_LEAD_ID = map.get("TZ_LEAD_ID") == null ? "" : String.valueOf(map.get("TZ_LEAD_ID"));
-			TZ_XSQU_ID = map.get("TZ_XSQU_ID") == null ? "" : String.valueOf(map.get("TZ_XSQU_ID"));
 			if (checkXSXS(TZ_LEAD_ID) != 0) {
 				continue;
 			} else {
 				falge = true;
-				TZ_RSFCREATE_WAY = map.get("TZ_RSFCREATE_WAY") == null ? ""
-						: String.valueOf(map.get("TZ_RSFCREATE_WAY"));
+				TZ_RSFCREATE_WAY = map.get("TZ_RSFCREATE_WAY") == null ? "" : String.valueOf(map.get("TZ_RSFCREATE_WAY"));
 				if (TZ_RSFCREATE_WAY.equals("D")) {
 					break;
 				}
@@ -1249,50 +1239,31 @@ public class tzOnlineAppEngineImpl {
 			// 按OprId找到符合条件的线索 绑定报名表
 			System.out.println("绑定报名表");
 			bangdBMB(TZ_LEAD_ID, AppInsId, strAppOprId);
-
-			isAutoAssign = this.getIsAutoAssign(JGID);
-
-			if (isAutoAssign.equals("Y")) {
-				// 分配线索
-				System.out.println("分配线索");
-				// String orgId：机构ID
-				// String oprid: 当前登录人OPRID
-				// String clueId: 线索编号
-				// String countryId：国籍值（非描述）
-				// String localId：常住地编号（非描述）
-				// String[] errorMsg：存放错误信息
-				tzClueAutoAssign.autoAssign(JGID, strAppOprId, TZ_LEAD_ID, country, TZ_XSQU_ID, null);
-			}
 		} else {
-			// 按手机判断
 			String phone = "";
 			String email = "";
 			String name = "";
 			String sex = "";
 			String company = "";
-			String zhiwu = "";
-			String city = "";
-			String department = "";
 
-			sql = "select A.TZ_REALNAME,A.TZ_GENDER,A.TZ_COMPANY_NAME,A.TZ_COMMENT16,B.TZ_LABEL_NAME,A.TZ_DEPTMENT,C.TZ_EMAIL,C.TZ_MOBILE ";
-			sql = sql
-					+ "from PS_TZ_REG_USER_T A,PS_TZ_XSXS_DQBQ_T B,PS_TZ_AQ_YHXX_TBL C where A.OPRID=? AND A.TZ_LEN_PROID=B.TZ_LABEL_DESC ";
-			sql = sql + "AND A.OPRID=C.OPRID";
+			sql = "select A.TZ_REALNAME,A.TZ_GENDER,A.TZ_COMPANY_NAME,C.TZ_EMAIL,C.TZ_MOBILE from PS_TZ_REG_USER_T A,PS_TZ_AQ_YHXX_TBL C where A.OPRID=? AND A.OPRID=C.OPRID";
+
 			map = sqlQuery.queryForMap(sql, new String[] { strAppOprId });
 			if (map != null) {
 				name = map.get("TZ_REALNAME") == null ? "" : String.valueOf(map.get("TZ_REALNAME"));
 
 				sex = map.get("TZ_GENDER") == null ? "" : String.valueOf(map.get("TZ_GENDER"));
 				company = map.get("TZ_COMPANY_NAME") == null ? "" : String.valueOf(map.get("TZ_COMPANY_NAME"));
-				zhiwu = map.get("TZ_COMMENT16") == null ? "" : String.valueOf(map.get("TZ_COMMENT16"));
-				city = map.get("TZ_LABEL_NAME") == null ? "" : String.valueOf(map.get("TZ_LABEL_NAME"));
-				department = map.get("TZ_DEPTMENT") == null ? "" : String.valueOf(map.get("TZ_DEPTMENT"));
 				email = map.get("TZ_EMAIL") == null ? "" : String.valueOf(map.get("TZ_EMAIL"));
 				phone = map.get("TZ_MOBILE") == null ? "" : String.valueOf(map.get("TZ_MOBILE"));
 			}
 
-			sql = "select TZ_LEAD_ID,TZ_RSFCREATE_WAY,TZ_KH_OPRID,TZ_XSQU_ID from PS_TZ_XSXS_INFO_T where TZ_MOBILE=? and (TZ_LEAD_STATUS is null or TZ_LEAD_STATUS <> ?)";
-			list = sqlQuery.queryForList(sql, new Object[] { phone, "G" });
+//			sql = "select TZ_LEAD_ID,TZ_RSFCREATE_WAY,TZ_KH_OPRID,TZ_XSQU_ID from PS_TZ_XSXS_INFO_T where TZ_MOBILE=? and (TZ_LEAD_STATUS is null or TZ_LEAD_STATUS <> ?)";
+//			list = sqlQuery.queryForList(sql, new Object[] { phone, "G" });
+			
+			//根据注册的手机号和与邮箱与系统中已经有的线索进行匹配
+			sql = "select TZ_LEAD_ID,TZ_RSFCREATE_WAY,TZ_KH_OPRID from PS_TZ_XSXS_INFO_T A where TZ_JG_ID=? and TZ_LEAD_STATUS<>'G' and ((TZ_MOBILE<>' ' and TZ_MOBILE=?) or (TZ_EMAIL<>' ' and TZ_EMAIL=?)) and not exists(select 'X' from PS_TZ_XSXS_BMB_T where TZ_LEAD_ID=A.TZ_LEAD_ID) order by ROW_ADDED_DTTM";
+			list = sqlQuery.queryForObject(sql, new Object[] { JGID, phone, email },"String");
 
 			String TZ_KH_OPRID = "";
 
@@ -1306,7 +1277,6 @@ public class tzOnlineAppEngineImpl {
 					continue;
 				} else {
 					TZ_LEAD_ID = map.get("TZ_LEAD_ID") == null ? "" : String.valueOf(map.get("TZ_LEAD_ID"));
-					TZ_XSQU_ID = map.get("TZ_XSQU_ID") == null ? "" : String.valueOf(map.get("TZ_XSQU_ID"));
 					if (checkXSXS(TZ_LEAD_ID) != 0) {
 						continue;
 					} else {
@@ -1329,75 +1299,36 @@ public class tzOnlineAppEngineImpl {
 				// 更新线索里面的TZ_KH_OPRID
 				sql = "UPDATE PS_TZ_XSXS_INFO_T SET TZ_KH_OPRID=? WHERE TZ_LEAD_ID=?";
 				sqlQuery.update(sql, new Object[] { strAppOprId, TZ_LEAD_ID });
-				// 分配线索
-				isAutoAssign = this.getIsAutoAssign(JGID);
-
-				if (isAutoAssign.equals("Y")) {
-					System.out.println("分配线索");
-					tzClueAutoAssign.autoAssign(JGID, strAppOprId, TZ_LEAD_ID, country, TZ_XSQU_ID, null);
-				}
 			} else {
 				// 新建线索
 				System.out.println("没有符合条件的，新建立线索");
 				TZ_LEAD_ID = String.valueOf(getSeqNum.getSeqNum("TZ_XSXS_INFO_T", "TZ_LEAD_ID"));
 
-				System.out.println("name：" + name);
-				System.out.println("TZ_LEAD_ID：" + TZ_LEAD_ID);
-				System.out.println("city：" + city);
-
-				// sql = "INSERT INTO PS_TZ_XSXS_INFO_T
-				// (TZ_LEAD_ID,TZ_JG_ID,TZ_RSFCREATE_WAY,TZ_REALNAME,TZ_KH_OPRID,";
-				// sql = sql
-				// +
-				// "TZ_COMP_CNAME,TZ_SEX,TZ_DEPARTMENT,TZ_POSITION,TZ_EMAIL,TZ_MOBILE,ROW_ADDED_DTTM,
-				// ROW_ADDED_OPRID,";
-				// sql = sql + "ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID,
-				// TZ_XSQU_ID) VALUES ";
-				// sql = sql + "(?,?,?,?,?,?,?,?,?,?,?,NOW(),?,NOW(),?,?)";
 
 				// 线索创建方式-在线报名
 				String strDefaultCreateWay = GetHardCodePoint.getHardCodePointVal("TZ_LEAD_BM_CREWAY");
-				// 线索创建方式-微信端
-				String strWeiChatCreateWay = GetHardCodePoint.getHardCodePointVal("TZ_LEAD_WX_CREWAY");
-
-				// System.out.println("sql:" + sql);
-				// sqlQuery.update(sql, new Object[] { TZ_LEAD_ID, JGID, "B",
-				// name, strAppOprId, company, sex, department,
-				// zhiwu, email, phone, strAppOprId, strAppOprId, city });
 
 				PsTzXsxsInfoTWithBLOBs psTzXsxsInfoT = new PsTzXsxsInfoTWithBLOBs();
 				psTzXsxsInfoT.setTzLeadId(TZ_LEAD_ID);
 				psTzXsxsInfoT.setTzJgId(JGID);
-				if (isWeChart) {
-					psTzXsxsInfoT.setTzRsfcreateWay(strWeiChatCreateWay);
-				} else {
-					psTzXsxsInfoT.setTzRsfcreateWay(strDefaultCreateWay);
-				}
+
+				psTzXsxsInfoT.setTzRsfcreateWay(strDefaultCreateWay);
+				
 				psTzXsxsInfoT.setTzRealname(name);
 				psTzXsxsInfoT.setTzKhOprid(strAppOprId);
 				psTzXsxsInfoT.setTzCompCname(company);
 				psTzXsxsInfoT.setTzSex(sex);
-				psTzXsxsInfoT.setTzDepartment(department);
-				psTzXsxsInfoT.setTzPosition(zhiwu);
 				psTzXsxsInfoT.setTzEmail(email);
 				psTzXsxsInfoT.setTzMobile(phone);
 				psTzXsxsInfoT.setRowAddedDttm(new java.util.Date());
 				psTzXsxsInfoT.setRowAddedOprid(strAppOprId);
 				psTzXsxsInfoT.setRowLastmantDttm(new java.util.Date());
 				psTzXsxsInfoT.setRowLastmantOprid(strAppOprId);
-				psTzXsxsInfoT.setTzXsquId(city);
 				psTzXsxsInfoTMapper.insert(psTzXsxsInfoT);
 
 				// 绑定报名表
 				System.out.println("绑定报名表");
 				bangdBMB(TZ_LEAD_ID, AppInsId, strAppOprId);
-				// 分配线索
-				isAutoAssign = this.getIsAutoAssign(JGID);
-
-				if (isAutoAssign.equals("Y")) {
-					System.out.println("分配线索");
-					tzClueAutoAssign.autoAssign(JGID, strAppOprId, TZ_LEAD_ID, country, city, null);
-				}
 			}
 		}
 

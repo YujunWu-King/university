@@ -3,9 +3,9 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.import.clueImportMode
     fields:[
         {name:'name'},
         {name:'mobile'},
+        {name:'email'},
         {name:'companyName'},
         {name:'position'},
-        {name:'localName'},
         {name:'memo'},
         {name:'chargeName'},
         {name:'createWay'},

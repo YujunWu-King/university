@@ -116,6 +116,8 @@ public class SecurityForCollectFee {
 	try {
 		String a = SecurityForCollectFee.generalAuthenticator(key, dev);
 		System.out.println(a);
+		int b=SecurityForCollectFee.checkAuthenticator(a, key, dev);
+		System.out.println(b);
 	} catch (Exception e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();

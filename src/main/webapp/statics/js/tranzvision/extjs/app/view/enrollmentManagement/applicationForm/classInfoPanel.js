@@ -296,15 +296,17 @@
                                 filter: {
                                     type: 'string'
                                 }
-                            },{
-                                text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.nationalID","证件号码"),
-                                dataIndex: 'nationalID',
-                                width:100,
-                                lockable   : false,
-                                filter: {
-                                    type: 'string'
-                                }
-                            },{
+                            },
+//                            {
+//                                text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.nationalID","证件号码"),
+//                                dataIndex: 'nationalID',
+//                                width:100,
+//                                lockable   : false,
+//                                filter: {
+//                                    type: 'string'
+//                                }
+//                            },
+                            {
                                 text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.submitState","提交状态"),
                                 dataIndex: 'submitState',
                                 lockable   : false,
@@ -327,6 +329,24 @@
                                         return "";
                                     }
                                 }
+                            },
+                            {
+                               text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.Result","面试结果"),
+                               dataIndex: 'interviewResult',
+                               width:100,
+                               lockable   : false,
+                               filter: {
+                                  type: 'string'
+                               }
+                            },
+                            {
+                               text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.note","备注"),
+                               dataIndex: 'note',
+                               width:100,
+                               lockable   : false,
+                               filter: {
+                                   type: 'string'
+                               }
                             },{
                                 xtype:'datecolumn',
                                 format:'Y-m-d',

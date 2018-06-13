@@ -1,20 +1,17 @@
 package com.tranzvision.gd.TZEnrollmentClueBundle.service.impl;
 
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletRequest;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import org.apache.commons.lang.ObjectUtils.Null;
-import org.apache.http.protocol.HTTP;
+import javax.servlet.http.HttpServletRequest;
+
 //import org.apache.jasper.el.JasperELResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +19,6 @@ import org.springframework.stereotype.Service;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZMyEnrollmentClueBundle.dao.PsTzXsxsInfoTMapper;
-import com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsInfoT;
 import com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsInfoTWithBLOBs;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.GetSeqNum;
@@ -45,8 +41,6 @@ public class TzClueImportServiceImpl extends FrameworkImpl {
 	@Autowired
 	private PsTzXsxsInfoTMapper psTzXsxsInfoTMapper;
 	@Autowired
-	private TzClueAutoAssign tzClueAutoAssign;
-	@Autowired
 	private GetSeqNum getSeqNum;
 
 	
@@ -68,9 +62,6 @@ public class TzClueImportServiceImpl extends FrameworkImpl {
 			int insertNum = 0,unInsertNum = 0;
 			String unFindChargeClue = "";
 			String completeSameClue = "";
-			String unAssignZrrClue = "";
-			String existNameClue = "";
-			String existNameMobileClue = "";
 			
 			String unFindFlag = "";
 			
@@ -85,16 +76,10 @@ public class TzClueImportServiceImpl extends FrameworkImpl {
 				
 				String name = mapData.get("name") == null ? "" : mapData.get("name").toString().trim();
 				String mobile = mapData.get("mobile") == null ? "" : mapData.get("mobile").toString().trim();
+				String email = mapData.get("email") == null ? "" : mapData.get("email").toString().trim();
 				String companyName = mapData.get("companyName") == null ? "" : mapData.get("companyName").toString().trim();
 				String position = mapData.get("position") == null ? "" : mapData.get("position").toString().trim();
-				String localName = mapData.get("localName") == null ? "" : mapData.get("localName").toString().trim();
 				String memo = mapData.get("memo") == null ? "" : mapData.get("memo").toString().trim();
-				
-				//常住地
-				String localId = "";
-				if(!"".equals(localName)) {
-					localId = sqlQuery.queryForObject("SELECT TZ_LABEL_NAME FROM PS_TZ_XSXS_DQBQ_T WHERE TZ_JG_ID=? AND (TZ_LABEL_DESC=? OR TZ_LABEL_NAME=?) AND TZ_LABEL_STATUS='Y'", new Object[]{orgId,localName,localName},"String");
-				}
 			
 				
 				/*招生线索管理导入有责任人、创建方式、创建时间*/
@@ -145,65 +130,17 @@ public class TzClueImportServiceImpl extends FrameworkImpl {
 					}
 					unInsertNum ++;
 				} else {
-				/*
-					//如果姓名、公司、手机完全一样，不插入
-					Integer countRepeat = sqlQuery.queryForObject("SELECT COUNT(1) FROM PS_TZ_XSXS_INFO_T WHERE TZ_REALNAME=? AND TZ_COMP_CNAME=? AND TZ_MOBILE=?", new Object[]{name,companyName,mobile},"Integer");
+					//如果手机或邮箱已存在未关闭线索，则不导入
+					Integer countRepeat = sqlQuery.queryForObject("SELECT COUNT(1) FROM PS_TZ_XSXS_INFO_T WHERE TZ_JG_ID=? AND ((TZ_MOBILE<>' ' and TZ_MOBILE=?) or (TZ_EMAIL<>' ' and TZ_EMAIL=?)) AND TZ_LEAD_STATUS<>'G'", new Object[]{orgId,mobile,email},"Integer");
 					if(countRepeat>0) {
 						if(!"".equals(completeSameClue)) {
-							completeSameClue = completeSameClue + "<br>" + "姓名：" + name + "，手机：" + mobile + "，公司：" + companyName;
+							completeSameClue = completeSameClue + "<br>" + "姓名：" + name + "，手机：" + mobile + "，邮箱：" + email;
 						} else {
-							completeSameClue = "姓名：" + name + "，手机：" + mobile + "，公司：" + companyName;
+							completeSameClue = "姓名：" + name + "，手机：" + mobile + "，邮箱：" + email;
 						}
 						unInsertNum ++;
 					} else {
-				*/
 						insertNum ++;
-						
-						String existNameMobile = "";
-						String existZrrOprid = "";
-						Integer existMobile = 0;
-						Integer existName = 0;
-						//根据姓名手机查询是否存在重复的未关闭的线索
-						Map<String,Object> mapNameMobile = sqlQuery.queryForMap("SELECT 'Y' TZ_FLAG,TZ_ZR_OPRID FROM PS_TZ_XSXS_INFO_T WHERE TZ_REALNAME=? AND TZ_MOBILE=? AND TZ_REALNAME<>' ' AND TZ_MOBILE<>' ' AND TZ_LEAD_STATUS<>'G' LIMIT 0,1", new Object[]{name,mobile});	
-						if(mapNameMobile!=null) {
-							existNameMobile = mapNameMobile.get("TZ_FLAG") == null ? "" : mapNameMobile.get("TZ_FLAG").toString();
-							existZrrOprid = mapNameMobile.get("TZ_ZR_OPRID") == null ? "" : mapNameMobile.get("TZ_ZR_OPRID").toString();
-						}
-						
-						if("Y".equals(existNameMobile)) {
-							if(!"".equals(existNameMobileClue)) {
-								existNameMobileClue = existNameMobileClue + "<br>" + "姓名：" + name + "，手机：" + mobile;
-							} else {
-								existNameMobileClue = "姓名：" + name + "，手机：" + mobile;
-							}
-						} else {
-	
-							//根据手机查询是否存在重复的未关闭的线索，如果存在则不分配责任人，2017-11-28
-							if(mobile!=null && !"".equals(mobile)) {
-								existMobile = sqlQuery.queryForObject("SELECT COUNT(1) FROM PS_TZ_XSXS_INFO_T WHERE TZ_MOBILE=? AND TZ_LEAD_STATUS<>'G'", new Object[]{mobile},"Integer");
-								if(existMobile>0) {
-									if(!"".equals(unAssignZrrClue)) {
-										unAssignZrrClue = unAssignZrrClue + "<br>" + "姓名：" + name + "，手机：" + mobile;
-									} else {
-										unAssignZrrClue = "姓名：" + name + "，手机：" + mobile;
-									}
-								}
-							}
-					
-							//根据姓名查询是否存在重复的未关闭的线索，进行提示
-							existName = sqlQuery.queryForObject("SELECT COUNT(1) FROM PS_TZ_XSXS_INFO_T WHERE TZ_LEAD_STATUS<>'G' AND TZ_REALNAME=?", new Object[]{name},"Integer");
-							if(existName>0) {
-								if(!"".equals(existNameClue)) {
-									existNameClue = existNameClue + "<br>" + "姓名：" + name + "，手机：" + mobile;
-								} else {
-									existNameClue = "姓名：" + name + "，手机：" + mobile;
-								}
-							} 
-						}
-						
-						if("MYXS".equals(importFrom)) {
-							unAssignZrrClue = "";
-						}
 					
 						//新增线索
 						String clueId = String.valueOf(getSeqNum.getSeqNum("TZ_XSXS_INFO_T", "TZ_LEAD_ID"));
@@ -214,8 +151,8 @@ public class TzClueImportServiceImpl extends FrameworkImpl {
 						psTzXsxsInfoT.setTzRealname(name);
 						psTzXsxsInfoT.setTzCompCname(companyName);
 						psTzXsxsInfoT.setTzMobile(mobile);
+						psTzXsxsInfoT.setTzEmail(email);
 						psTzXsxsInfoT.setTzPosition(position);
-						psTzXsxsInfoT.setTzXsquId(localId);
 						psTzXsxsInfoT.setTzBz(memo);
 						if("MYXS".equals(importFrom)) {
 							//我的招生线索导入，责任人为当前登录人
@@ -223,48 +160,13 @@ public class TzClueImportServiceImpl extends FrameworkImpl {
 							psTzXsxsInfoT.setTzZrOprid(chargeOprid);
 						} else {
 							if("ZSXS".equals(importFrom)) {
-								//招生线索管理导入
-								if("Y".equals(existNameMobile)) {
-									//存在姓名手机相同未关闭的线索
-									if(!"".equals(chargeOprid)) {
-									    //指定了责任人
-										psTzXsxsInfoT.setTzLeadStatus("C");
-										psTzXsxsInfoT.setTzZrOprid(chargeOprid);
-									} else {
-										//没有指定责任人
-										if(!"".equals(existZrrOprid)) {
-											psTzXsxsInfoT.setTzLeadStatus("C");
-											psTzXsxsInfoT.setTzZrOprid(existZrrOprid);
-											chargeOprid = existZrrOprid;
-										} else  {
-											psTzXsxsInfoT.setTzLeadStatus("A");
-										}
-									}
+								if(!"".equals(chargeOprid)) {
+								    //指定了责任人
+									psTzXsxsInfoT.setTzLeadStatus("C");
+									psTzXsxsInfoT.setTzZrOprid(chargeOprid);
 								} else {
-									if(existMobile>0) {
-										//存在手机相同未关闭的线索，不分配责任人
-										psTzXsxsInfoT.setTzLeadStatus("A");
-									} else {
-										if(existName>0) {
-											//存在姓名相同未关闭的线索
-											if(!"".equals(chargeOprid)) {
-												psTzXsxsInfoT.setTzLeadStatus("C");
-												psTzXsxsInfoT.setTzZrOprid(chargeOprid);
-											} else {
-												//没有责任人，责任人为当前登录人
-												psTzXsxsInfoT.setTzLeadStatus("C");
-												psTzXsxsInfoT.setTzZrOprid(oprid);
-												chargeOprid=oprid;
-											}
-										} else {
-											if(!"".equals(chargeOprid)) {
-												psTzXsxsInfoT.setTzLeadStatus("C");
-												psTzXsxsInfoT.setTzZrOprid(chargeOprid);
-											} else {
-												psTzXsxsInfoT.setTzLeadStatus("A");
-											}
-										}
-									}
+									//没有指定责任人
+									psTzXsxsInfoT.setTzLeadStatus("A");
 								}
 							}
 						}
@@ -275,29 +177,14 @@ public class TzClueImportServiceImpl extends FrameworkImpl {
 						psTzXsxsInfoT.setRowLastmantDttm(new Date());
 						psTzXsxsInfoTMapper.insert(psTzXsxsInfoT);
 						
-						if(existMobile>0 && "ZSXS".equals(importFrom)) {
-						
-						} else {
-							if(chargeOprid!=null && !"".equals(chargeOprid)) {
-								//责任人已存在
-							} else {
-								//如果有常住地，需要调用自动分配线索
-								if(localId!=null && !"".equals(localId)) {
-									tzClueAutoAssign.autoAssign(orgId,oprid,clueId, "",localId, errMsg);
-								}
-							}
-						}
-					/*}*/
+					}
 				}
 			}
 			
 			mapRet.put("insertNum", insertNum);
 			mapRet.put("unInsertNum", unInsertNum);
-			mapRet.put("unAssignZrrClue", unAssignZrrClue);
-			mapRet.put("existNameClue", existNameClue);
 			mapRet.put("unFindChargeClue", unFindChargeClue);
 			mapRet.put("completeSameClue", completeSameClue);
-			mapRet.put("existNameMobileClue", existNameMobileClue);
 			
 			strRet = jacksonUtil.Map2json(mapRet);
 			
@@ -311,6 +198,7 @@ public class TzClueImportServiceImpl extends FrameworkImpl {
 	}
 	
 	
+	@SuppressWarnings("unchecked")
 	public String tzOther(String operateType, String strParams, String[] errMsg) {
 		String strRet = "";
 		JacksonUtil jacksonUtil = new JacksonUtil();
@@ -355,7 +243,7 @@ public class TzClueImportServiceImpl extends FrameworkImpl {
 		try {
 			
 			//当前机构
-			String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+//			String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 			
 			int num = 0;
 			for(num=0;num<strData.length;num++) {
@@ -366,11 +254,10 @@ public class TzClueImportServiceImpl extends FrameworkImpl {
 				
 				String modelId = mapData.get("id") == null ? "" : mapData.get("id").toString();
 				String name = mapData.get("name") == null ? "" : mapData.get("name").toString();
-				String mobile = mapData.get("mobile") == null ? "" : mapData.get("mobile").toString();
-				String companyName = mapData.get("companyName") == null ? "" : mapData.get("companyName").toString();
-				String position = mapData.get("position") == null ? "" : mapData.get("position").toString();
-				String localName = mapData.get("localName") == null ? "" : mapData.get("localName").toString();
-				String memo = mapData.get("memo") == null ? "" : mapData.get("memo").toString();
+//				String mobile = mapData.get("mobile") == null ? "" : mapData.get("mobile").toString();
+//				String companyName = mapData.get("companyName") == null ? "" : mapData.get("companyName").toString();
+//				String position = mapData.get("position") == null ? "" : mapData.get("position").toString();
+//				String memo = mapData.get("memo") == null ? "" : mapData.get("memo").toString();
 				String createWay = mapData.get("createWay") == null ? "" : mapData.get("createWay").toString();
 				String createDttm = mapData.get("createDttm") == null ? "" : mapData.get("createDttm").toString();
 				
@@ -393,20 +280,6 @@ public class TzClueImportServiceImpl extends FrameworkImpl {
 				Boolean isMobile = (mobile==null || "".equals(mobile)) ? true : this.isMobile(mobile);
 				*/
 			
-				
-				//常住地有效性
-				//Boolean localRequire = false;
-				Boolean localValidate = true;
-				if(localName!=null && !"".equals(localName)) {
-					//localRequire = true;
-					//可能为描述信息或者值
-					String localId = sqlQuery.queryForObject("SELECT TZ_LABEL_NAME FROM PS_TZ_XSXS_DQBQ_T WHERE TZ_JG_ID=? AND (TZ_LABEL_DESC=? OR TZ_LABEL_NAME=?) AND TZ_LABEL_STATUS='Y'", new Object[]{orgId,localName,localName},"String");
-					if(localId!=null && !"".equals(localId)) {
-						localValidate = true;
-					} else {
-						localValidate = false;
-					}
-				} 
 				
 				//创建方式必填、有效性
 				Boolean createWayRequire = false;
@@ -446,7 +319,7 @@ public class TzClueImportServiceImpl extends FrameworkImpl {
 					createDttmValidate = true;
 				}
 				
-				Boolean validationResult = nameRequired  && localValidate && createWayRequire && createWayValidate && createDttmRequire && createDttmValidate ;
+				Boolean validationResult = nameRequired  &&  createWayRequire && createWayValidate && createDttmRequire && createDttmValidate ;
 				
 				ArrayList<String> validationMsgList = new ArrayList<String>();
 				
@@ -464,9 +337,6 @@ public class TzClueImportServiceImpl extends FrameworkImpl {
 					validationMsgList.add("常住地必填");
 				}
 				*/
-				if(!localValidate) {
-					validationMsgList.add("常住地找不到");
-				}
 				if(!createWayRequire) {
 					validationMsgList.add("线索来源必填");
 				}

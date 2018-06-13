@@ -182,7 +182,9 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 					mapList.put("submitState", rowList[7]);
 					mapList.put("submitDate", rowList[8]);
 					mapList.put("interviewResult", rowList[9]);
-
+					String sql1="select B.TZ_BEIZHU from PS_TZ_APP_LIST_VW A,PS_TZ_REG_USER_T B where A.OPRID=B.OPRID and A.OPRID=?";
+					String note=jdbcTemplate.queryForObject(sql1, new Object[]{rowList[0]},"String");
+					mapList.put("note",note);
 					/* 根据模板配置显示报名表信息 */
 					String appInsID = rowList[2];
 					TZ_FILL_PROPORTION = rowList[10];

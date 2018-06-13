@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZMyEnrollmentClueBundle.dao.PsTzLxbgDfnTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzLxbgDfnT" >
+    <id column="TZ_CALLREPORT_ID" property="tzCallreportId" jdbcType="BIGINT" />
+    <result column="TZ_CALL_SUBJECT" property="tzCallSubject" jdbcType="VARCHAR" />
+    <result column="TZ_CALL_DATE" property="tzCallDate" jdbcType="DATE" />
+    <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
+    <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzLxbgDfnT" extends="BaseResultMap" >
+    <result column="TZ_CALL_INFO" property="tzCallInfo" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_CALLREPORT_ID, TZ_CALL_SUBJECT, TZ_CALL_DATE, ROW_ADDED_DTTM, ROW_ADDED_OPRID, 
+    ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID
+  </sql>
+  <sql id="Blob_Column_List" >
+    TZ_CALL_INFO
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from PS_TZ_LXBG_DFN_T
+    where TZ_CALLREPORT_ID = #{tzCallreportId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from PS_TZ_LXBG_DFN_T
+    where TZ_CALLREPORT_ID = #{tzCallreportId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzLxbgDfnT" >
+    insert into PS_TZ_LXBG_DFN_T (TZ_CALLREPORT_ID, TZ_CALL_SUBJECT, TZ_CALL_DATE, 
+      ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, 
+      ROW_LASTMANT_OPRID, TZ_CALL_INFO)
+    values (#{tzCallreportId,jdbcType=BIGINT}, #{tzCallSubject,jdbcType=VARCHAR}, #{tzCallDate,jdbcType=DATE}, 
+      #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, 
+      #{rowLastmantOprid,jdbcType=VARCHAR}, #{tzCallInfo,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzLxbgDfnT" >
+    insert into PS_TZ_LXBG_DFN_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzCallreportId != null" >
+        TZ_CALLREPORT_ID,
+      </if>
+      <if test="tzCallSubject != null" >
+        TZ_CALL_SUBJECT,
+      </if>
+      <if test="tzCallDate != null" >
+        TZ_CALL_DATE,
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM,
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID,
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM,
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID,
+      </if>
+      <if test="tzCallInfo != null" >
+        TZ_CALL_INFO,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzCallreportId != null" >
+        #{tzCallreportId,jdbcType=BIGINT},
+      </if>
+      <if test="tzCallSubject != null" >
+        #{tzCallSubject,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCallDate != null" >
+        #{tzCallDate,jdbcType=DATE},
+      </if>
+      <if test="rowAddedDttm != null" >
+        #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCallInfo != null" >
+        #{tzCallInfo,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzLxbgDfnT" >
+    update PS_TZ_LXBG_DFN_T
+    <set >
+      <if test="tzCallSubject != null" >
+        TZ_CALL_SUBJECT = #{tzCallSubject,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCallDate != null" >
+        TZ_CALL_DATE = #{tzCallDate,jdbcType=DATE},
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCallInfo != null" >
+        TZ_CALL_INFO = #{tzCallInfo,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where TZ_CALLREPORT_ID = #{tzCallreportId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzLxbgDfnT" >
+    update PS_TZ_LXBG_DFN_T
+    set TZ_CALL_SUBJECT = #{tzCallSubject,jdbcType=VARCHAR},
+      TZ_CALL_DATE = #{tzCallDate,jdbcType=DATE},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      TZ_CALL_INFO = #{tzCallInfo,jdbcType=LONGVARCHAR}
+    where TZ_CALLREPORT_ID = #{tzCallreportId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzLxbgDfnT" >
+    update PS_TZ_LXBG_DFN_T
+    set TZ_CALL_SUBJECT = #{tzCallSubject,jdbcType=VARCHAR},
+      TZ_CALL_DATE = #{tzCallDate,jdbcType=DATE},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR}
+    where TZ_CALLREPORT_ID = #{tzCallreportId,jdbcType=BIGINT}
+  </update>
+</mapper>

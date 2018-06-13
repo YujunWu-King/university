@@ -1,102 +1,72 @@
 Ext.define('KitchenSink.view.clueManagement.clueManagement.clueDetailController',{
     extend:'Ext.app.ViewController',
     alias:'controller.clueDetailController',
-    //选择常住地
-    searchLocal:function(btn) {
-        var me = this;
-        var form = btn.findParentByType("form").getForm();
+    
+    //选择责任人
+    searchCharge: function(field){
+    	//是否有访问权限
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_XSXS_INFO_COM"]["TZ_ZRR_XZ_STD"];
+        if(pageResSet==""||pageResSet==undefined) {
+            Ext.MessageBox.alert('提示','您没有修改数据的权限');
+            return;
+        }
+        //该功能对应的JS类
+        var className = pageResSet['jsClassName'];
+        if(className==""||className==undefined) {
+            Ext.MessageBox.alert('提示','未找到该功能页面对应的JS类，页面ID为：TZ_ZRR_XZ_STD，请检查配置。');
+            return;
+        }
 
-        var tzRoleParams = '{"ComID":"TZ_XSXS_INFO_COM","PageID":"TZ_XSXS_DETAIL_STD","OperateType":"tzGetPersonRole","comParams":{}}';
-        Ext.tzLoad(tzRoleParams, function (respData) {
-            var viewAllFlag = respData.viewAllFlag;
-            if (viewAllFlag == "Y") {
-                //线索管理员和一般人员能选择所有常住地
-                me.showAllAddress(form);
-            } else {
-                //区域负责人只能选择自己的主管地区+自主开发地区
-                me.showSelfAddress(form);
-            }
+        Ext.syncRequire(className);
+        var ViewClass = Ext.ClassManager.get(className);
 
+        var win = new ViewClass({
+        	selModel: 'S',
+        	callback: function(selRecord){
+    			var oprid = selRecord[0].data.oprid;
+        		var name = selRecord[0].data.name;
+        		
+        		field.setValue(name);
+        		field.findParentByType('form').getForm().findField('chargeOprid').setValue(oprid);
+        	}
         });
-    },
-    //选择所有常住地
-    showAllAddress: function (form) {
-        Ext.tzShowPromptSearch({
-            recname: 'TZ_XSXS_YXDQ_VW',
-            searchDesc: '选择常住地',
-            maxRow:100,
-            condition:{
-                srhConFields:{
-                    TZ_LABEL_DESC:{
-                        desc:'常住地',
-                        operator:'07',
-                        type:'01'
-                    },
-                    TZ_JG_ID:{
-                        desc:'机构编号',
-                        operator:'01',
-                        type:'01',
-                        value:Ext.tzOrgID,
-                        editable:false
-                    }
-                }
-            },
-            srhresult:{
-                TZ_LABEL_NAME: '常住地编号',
-                TZ_LABEL_DESC: '常住地'
-            },
-            multiselect: false,
-            callback: function(selection){
-                var localId=selection[0].data.TZ_LABEL_NAME;
-                var localAddress=selection[0].data.TZ_LABEL_DESC;
 
-                form.findField("localId").setValue(localId);
-                form.findField("localAddress").setValue(localAddress);
-            }
-        });
+        win.show();
     },
-    //选择自己的常住地
-    showSelfAddress: function (form) {
-        Ext.tzShowPromptSearch({
-            recname: 'TZ_PER_DQ_VW',
-            searchDesc: '选择常住地',
-            maxRow:100,
-            condition:{
-                srhConFields:{
-                    TZ_LABEL_DESC:{
-                        desc:'常住地',
-                        operator:'07',
-                        type:'01'
-                    },
-                    TZ_DLZH_ID:{
-                        desc:'登录账号',
-                        operator:'01',
-                        type:'01',
-                        value:TranzvisionMeikecityAdvanced.Boot.loginUserId,
-                        editable:false
-                    }
-                }
-            },
-            srhresult:{
-                TZ_AQDQ_LABEL: '常住地编号',
-                TZ_LABEL_DESC: '常住地'
-            },
-            multiselect: false,
-            callback: function(selection){
-                var localId=selection[0].data.TZ_AQDQ_LABEL;
-                var localAddress=selection[0].data.TZ_LABEL_DESC;
+    
+    //选择其他责任人
+    searchOtherCharge: function(field){
+    	//是否有访问权限
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_XSXS_INFO_COM"]["TZ_ZRR_XZ_STD"];
+        if(pageResSet==""||pageResSet==undefined) {
+            Ext.MessageBox.alert('提示','您没有修改数据的权限');
+            return;
+        }
+        //该功能对应的JS类
+        var className = pageResSet['jsClassName'];
+        if(className==""||className==undefined) {
+            Ext.MessageBox.alert('提示','未找到该功能页面对应的JS类，页面ID为：TZ_ZRR_XZ_STD，请检查配置。');
+            return;
+        }
 
-                form.findField("localId").setValue(localId);
-                form.findField("localAddress").setValue(localAddress);
-            }
+        Ext.syncRequire(className);
+        var ViewClass = Ext.ClassManager.get(className);
+
+        var fieldStore = field.getStore();
+        var win = new ViewClass({
+        	selModel: 'M',
+        	callback: function(selRecord){
+        		for(var i=0; i<selRecord.length; i++){
+        			var oprid = selRecord[i].data.oprid;
+            		var name = selRecord[i].data.name;
+            		
+            		fieldStore.add({TZ_ZRR_OPRID: oprid, TZ_REALNAME: name});
+            		field.addValue(oprid);
+        		}
+        	}
         });
-    },
-    //清除常住地
-    clearLocal:function(field) {
-        field.setValue("");
-        //常住地编号也要置空
-        var form = field.findParentByType("form").getForm();
-        form.findField("localId").setValue("");
+
+        win.show();
     },
     //过往状态
     viewClueOldState:function(btn){
@@ -493,7 +463,8 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.clueDetailController'
         //创建线索panel
         var clueInfo = this.getView();
         var form=clueInfo.child("form").getForm();
-        var grid=clueInfo.child("grid");
+        var tabpanel = clueInfo.child("tabpanel");
+        var grid=tabpanel.child("grid");
         var store=grid.getStore();
         if(!form.isValid){
             return false;
@@ -531,18 +502,18 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.clueDetailController'
         var tzParams = '{"ComID":"TZ_XSXS_INFO_COM","PageID":"TZ_XSXS_DETAIL_STD","OperateType":"U","comParams":{' + comParams + '}}';
 
         Ext.tzSubmit(tzParams, function (response) {
-
-            form.setValues({"clueId": response.clueId});
+        	var clueId = response.clueId;
             var bkStatus = response.bkStatus;
             var clueState = response.clueState;
             var existName = response.existName;
+            
             //线索状态为关闭，报考状态不是未报名，关联报名表按钮隐藏
             if (clueState == "G" || bkStatus != "A") {
                 glBmbBut.setVisible(false);
             } else {
                 glBmbBut.setVisible(true);
-                form.findField("bkStatus").setValue(bkStatus);
             }
+            form.setValues({"clueId": clueId, "clueState": clueState, "bkStatus": bkStatus});
 
             if(existName=="Y") {
                 Ext.MessageBox.alert("提示","已存在姓名相同的线索");
@@ -576,7 +547,7 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.clueDetailController'
         //创建线索panel
         var clueInfo = this.getView();
         var form=clueInfo.child("form").getForm();
-        var grid=clueInfo.child("grid");
+        var grid=clueInfo.child("tabpanel").child("grid");
         var store=grid.getStore();
         if(!form.isValid){
             return false;
@@ -642,24 +613,6 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.clueDetailController'
             Ext.syncRequire(className);
         }
         ViewClass = Ext.ClassManager.get(className);
-        clsProto = ViewClass.prototype;
-        if (clsProto.themes) {
-            clsProto.themeInfo = clsProto.themes[themeName];
-            if (themeName === 'gray') {
-                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
-            } else if (themeName !== 'neptune' && themeName !== 'classic') {
-                if (themeName === 'crisp-touch') {
-                    clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
-                }
-                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
-            }
-
-            // Sometimes we forget to include allowances for other themes, so issue a warning as a reminder.
-            if (!clsProto.themeInfo) {
-                Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
-                    themeName + '\'. Is this intentional?');
-            }
-        }
 
         var form=btn.findParentByType("form").getForm();
         var clueId=form.findField("clueId").getValue();
@@ -735,28 +688,7 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.clueDetailController'
             Ext.syncRequire(className);
         }
         ViewClass = Ext.ClassManager.get(className);
-        clsProto = ViewClass.prototype;
-
-        if (clsProto.themes) {
-            clsProto.themeInfo = clsProto.themes[themeName];
-
-            if (themeName === 'gray') {
-                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
-            } else if (themeName !== 'neptune' && themeName !== 'classic') {
-                if (themeName === 'crisp-touch') {
-                    clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
-                }
-                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
-            }
-            // <debug warn>
-            // Sometimes we forget to include allowances for other themes, so issue a warning as a reminder.
-            if (!clsProto.themeInfo) {
-                Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
-                    themeName + '\'. Is this intentional?');
-            }
-            // </debug>
-        }
-
+        
         var classID,oprID ,appInsID,record;
 
         var record = grid.store.getAt(rowIndex);
@@ -785,8 +717,7 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.clueDetailController'
             },
             result:'TZ_LABEL_ID,TZ_LABEL_NAME'
         });
-        applicationFormTagStore.load(
-            {
+        applicationFormTagStore.load({
                 scope:this,
                 callback:function(){
                     cmp = new ViewClass({appInsID:appInsID,applicationFormTagStore:applicationFormTagStore,chargeName:chargeName});
@@ -797,18 +728,19 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.clueDetailController'
                         Ext.tzLoad(tzParams,function(respData){
                             var formData = respData.formData;
                             form.setValues(formData);
-                            tabpanel.down('form[name=materialCheck]').getForm().setValues(formData);
-
-                            var store = tabpanel.down('form[name=materialCheck]').down("grid").store;
-                            var tzStoreParams = '{"classID":"'+classID+'","oprID":"' + oprID + '","queryType":"FILE"}';
-                            store.tzStoreParams = tzStoreParams;
-                            store.load(/*{
-                                scope: this,
-                                callback: function(records, operation, success) {
-                                    storeGroup.auditFormFileCheckBackMsgJsonData =new Array(records.length);
-                                }
-                            }*/);
-
+                            
+                            var refLetterStore = tabpanel.down('grid[name=refLetterGrid]').store;
+                            var fileStore = tabpanel.down('grid[name=fileGrid]').store;
+                            if(!refLetterStore.isLoaded()){
+                                tzStoreParams = '{"classID":"'+classID+'","oprID":"' + oprID + '","queryType":"REFLETTER"}';
+                                refLetterStore.tzStoreParams = tzStoreParams;
+                                refLetterStore.load();
+                            }
+                            if(!fileStore.isLoaded()){
+                                tzStoreParams = '{"classID":"'+classID+'","oprID":"' + oprID + '","queryType":"ATTACHMENT"}';
+                                fileStore.tzStoreParams = tzStoreParams;
+                                fileStore.load();
+                            }
 
                             //照片
                             panel.getViewModel().set("photoSrc",formData["photoUrl"]);

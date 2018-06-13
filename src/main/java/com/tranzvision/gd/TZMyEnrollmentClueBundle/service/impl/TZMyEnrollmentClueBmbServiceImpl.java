@@ -14,9 +14,7 @@ import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZMyEnrollmentClueBundle.dao.PsTzXsxsBmbTMapper;
-import com.tranzvision.gd.TZMyEnrollmentClueBundle.dao.PsTzXsxsInfoTMapper;
 import com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsBmbT;
-import com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsInfoT;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 @Service("com.tranzvision.gd.TZMyEnrollmentClueBundle.service.impl.TZMyEnrollmentClueBmbServiceImpl")
@@ -32,8 +30,7 @@ public class TZMyEnrollmentClueBmbServiceImpl extends FrameworkImpl {
 	private FliterForm fliterForm;
 	@Autowired
 	private PsTzXsxsBmbTMapper psTzXsxsBmbTMapper;
-	@Autowired
-	private PsTzXsxsInfoTMapper psTzXsxsInfoTMapper;
+
 	
 	@Override
 	public String tzQueryList(String strParams, int numLimit, int numStart, String[] errorMsg) {
@@ -139,39 +136,19 @@ public class TZMyEnrollmentClueBmbServiceImpl extends FrameworkImpl {
 	
     //根据报名表编号,获取报考状态
 	private String getClueBkStatus(String bmbId) {
-		//默认‘已报名’
-		String status="B";
+		String bkStatus = "";
+		//报考状态
+		String sql = "select 'Y' from PS_TZ_XSXS_BMB_T where TZ_APP_INS_ID=? limit 0,1";
+		String bmbExists = sqlQuery.queryForObject(sql, new Object[]{ bmbId }, "String");
 		
-		//U 已提交,S 新建,OUT 撤销,BACK 退回修改
-		String submitStatus=sqlQuery.queryForObject("select TZ_APP_FORM_STA from PS_TZ_APP_INS_T where TZ_APP_INS_ID=?", new Object[]{bmbId}, "String");
-		//A 审批通过,B拒绝,C 待审核
-		String auditStatus=sqlQuery.queryForObject("select TZ_FORM_SP_STA from PS_TZ_FORM_WRK_T where TZ_APP_INS_ID=?",  new Object[]{bmbId}, "String");
-		//Y 通过,N 未通过
-		String mssjStatus=sqlQuery.queryForObject("select TZ_MS_PLAN from PS_TZ_KSBM_EXT_TBL where TZ_APP_INS_ID=?", new Object[]{bmbId}, "String");
-		//Y 通过,N 未通过,U待定
-		String bsStatus=sqlQuery.queryForObject("select TZ_BS_RESULT from TZ_IMP_BSBM_TBL where TZ_APP_INS_ID=?",  new Object[]{bmbId}, "String");
-		//Y 录取,N 未录取,U待定
-		String lqStatus=sqlQuery.queryForObject("SELECT TZ_LQ_STATE from TZ_IMP_LQJD_TBL where TZ_APP_INS_ID=?", new Object[]{bmbId}, "String");
-		//Y 已入学
-		String rxStatus=sqlQuery.queryForObject("select 'Y' from TZ_IMP_KXAP_TBL where TZ_APP_INS_ID=?", new Object[]{bmbId}, "String");
-		
-		//报考状态为‘已入学’
-        if("Y".equals(rxStatus)){
-        	status="G";
-        } else if ("Y".equals(lqStatus)){
-        	//报考状态为‘已录取’
-        	status="F";
-        } else if("Y".equals(bsStatus)){
-        	//报考状态为‘面试通过’
-        	status="E";
-        } else if("Y".equals(mssjStatus)){
-        	//报考状态为‘已安排面试时间’
-        	status="D";
-        } else if("A".equals(auditStatus)){
-        	//报考状态为‘初审通过’
-        	status="C";
-        } 
+		if("Y".equals(bmbExists)){
+			//已报名
+			bkStatus="B";
+		}else{
+			//未报名
+			bkStatus="A";
+		}
         
-		return status;
+		return bkStatus;
 	}
 }

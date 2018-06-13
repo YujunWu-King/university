@@ -299,6 +299,9 @@ public class TzEventApplyFormServiceImpl extends FrameworkImpl {
 			}if("MPACC".equals(orgid)){
 				strRet = tzGDObject.getHTMLText("HTML.TZEventsBundle.TZ_APPLY_REG_FORM_HEAD3", str_items_html, strUrl, "",
 						"", timeOut, serverError, onlineApplyText, tipsMsg, closeBtn, backBtn, submitBtn, requireTips, request.getContextPath());
+			}if("IMBA".equals(orgid)){
+				strRet = tzGDObject.getHTMLText("HTML.TZEventsBundle.TZ_APPLY_REG_FORM_HEAD4", str_items_html, strUrl, "",
+						"", timeOut, serverError, onlineApplyText, tipsMsg, closeBtn, backBtn, submitBtn, requireTips, request.getContextPath());
 			}else{
 				strRet = tzGDObject.getHTMLText("HTML.TZEventsBundle.TZ_APPLY_REG_FORM_HEAD", str_items_html, strUrl, "",
 						"", timeOut, serverError, onlineApplyText, tipsMsg, closeBtn, backBtn, submitBtn, requireTips, request.getContextPath());
