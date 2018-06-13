@@ -489,34 +489,27 @@ public class TzLoginForBoxController {
 
 					boolean createResult = false;
 					int createTimes = 5;
-					String sysFileName = "";
+					//话单文件，按原始的文件名存储
+					//String sysFileName = "";
 					while (!createResult && createTimes > 0) {
 
 						// Create the file on server
-						sysFileName = (new StringBuilder(String.valueOf(getNowTime()))).append(".").append(suffix)
-								.toString();
-						if (sysFileName.indexOf('/') != -1)
-							sysFileName = sysFileName.substring(sysFileName.lastIndexOf('/') + 1);
+						//sysFileName = (new StringBuilder(String.valueOf(getNowTime()))).append(".").append(suffix)
+						//		.toString();
+						//if (sysFileName.indexOf('/') != -1)
+						//	sysFileName = sysFileName.substring(sysFileName.lastIndexOf('/') + 1);
 
-						createResult = fileManageServiceImpl.CreateFile(parentPath, sysFileName, bytes);
+						createResult = fileManageServiceImpl.CreateFile(parentPath, filename, bytes);
 
 						createTimes--;
 					}
 
 					if (createResult) {
-						// 看是否是图片，如果是，则获取图片的宽、高
-						if (getSysHardCodeVal.getImageSuffix().contains(suffix.toLowerCase())) {
-							ArrayList<Integer> imgWH = fileManageServiceImpl
-									.getImageWidthHeight(parentPath + File.separator + sysFileName);
-							if (imgWH.size() > 0) {
-								imgWidth = imgWH.get(0);
-								imgHeight = imgWH.get(1);
-							}
-						}
+
 
 						Map<String, Object> mapFile = new HashMap<String, Object>();
 						mapFile.put("filename", filename);
-						mapFile.put("sysFileName", sysFileName);
+						//mapFile.put("sysFileName", sysFileName);
 						mapFile.put("size", String.valueOf(fileSize / 1024L) + "k");
 						// mapFile.put("path", parentPath);
 						mapFile.put("accessPath", accessPath);
