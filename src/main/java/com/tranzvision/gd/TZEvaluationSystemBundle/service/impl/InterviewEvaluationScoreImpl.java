@@ -22,6 +22,7 @@ import com.tranzvision.gd.TZMbaPwMspsBundle.model.PsTzMpPwKsTbl;
 import com.tranzvision.gd.TZMbaPwMspsBundle.model.PsTzMpPwKsTblKey;
 import com.tranzvision.gd.TZMbaPwMspsBundle.model.PsTzMspskspwTbl;
 import com.tranzvision.gd.TZMbaPwMspsBundle.model.PsTzMspskspwTblKey;
+import com.tranzvision.gd.TZScoreModeManagementBundle.service.impl.TzScoreInsCalculationNewObject;
 import com.tranzvision.gd.TZScoreModeManagementBundle.service.impl.TzScoreInsCalculationObject;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
@@ -55,6 +56,8 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 	private GetHardCodePoint getHardCodePoint;
 	@Autowired
 	private TzScoreInsCalculationObject tzScoreInsCalculationObject;
+	@Autowired
+	private TzScoreInsCalculationNewObject tzScoreInsCalculationNewObject;
 	
 	
 	@Override
@@ -1399,7 +1402,7 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 			} else {
 				//调用保存成绩项方法
 				itemScoreParams = jacksonUtil.Map2json(mapItemsScore);
-				String [] saveRet = tzScoreInsCalculationObject.PwdfSaveUpdate("MS", classId, applyBatchId, bmbId, itemScoreParams);
+				String [] saveRet = tzScoreInsCalculationNewObject.PwdfSaveUpdate("MS", classId, applyBatchId, bmbId, itemScoreParams);
 				result = saveRet[0];
 				resultMsg = saveRet[1];
 			}
