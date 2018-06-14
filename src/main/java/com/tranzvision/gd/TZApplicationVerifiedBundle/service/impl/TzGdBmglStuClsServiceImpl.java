@@ -187,7 +187,9 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 					mapList.put("interviewResult",interviewResult);
 					String sql1="select B.TZ_REMARK from PS_TZ_APP_LIST_VW A,PS_TZ_FORM_WRK_T B where A.OPRID=B.OPRID and A.OPRID=?";
 					String note=jdbcTemplate.queryForObject(sql1, new Object[]{rowList[0]},"String");
+					if(note!=null){
 					note=TzGdBmglStuClsServiceImpl.stripHtml(note);
+					}
 					mapList.put("note",note);
 					/* 根据模板配置显示报名表信息 */
 					String appInsID = rowList[2];
