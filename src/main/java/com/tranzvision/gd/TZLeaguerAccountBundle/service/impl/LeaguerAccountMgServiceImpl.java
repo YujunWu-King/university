@@ -241,7 +241,7 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 					mapList.put("bitch", rowList[15]);
 					mapList.put("ms_result", rowList[16]);
 					mapList.put("tj_zt", rowList[17]);
-					mapList.put("remark", stripHtml(rowList[18]));
+					mapList.put("remark", rowList[18]!=null?stripHtml(rowList[18]):rowList[18]);
 				//	mapList.put("zcTime", rowList[9]);
 				//	mapList.put("acctlock", rowList[10]);
 				//	mapList.put("hmdUser", rowList[11]);
