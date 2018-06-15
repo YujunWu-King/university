@@ -1996,7 +1996,7 @@
                 buttons: [ {
                     text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.audit","审批"),
                     iconCls:"send",
-                    handler: "auditApplicationForm"
+                    handler: "auditApplicationForm1"
                 },
                     {
                         text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.close","关闭"),
@@ -2011,7 +2011,7 @@
             Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"),Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.cantFindAppForm","找不到该报名人的报名表"));
         }
     },
-    auditApplicationForm:function(grid, rowIndex, colIndex){
+    auditApplicationForm1:function(grid, rowIndex, colIndex){
     	Ext.tzSetCompResourses("TZ_BMGL_BMBSH_COM");
         //是否有访问权限
         var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_BMGL_BMBSH_COM"]["TZ_BMGL_AUDIT_STD"];
