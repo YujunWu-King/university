@@ -13,13 +13,14 @@
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsyySetTbl" extends="BaseResultMap" >
     <result column="TZ_DESCR" property="tzDescr" jdbcType="LONGVARCHAR" />
+    <result column="TZ_MATERIAL" property="tzMaterial" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     TZ_CLASS_ID, TZ_BATCH_ID, TZ_OPEN_DT, TZ_OPEN_TM, TZ_CLOSE_DT, TZ_CLOSE_TM, TZ_OPEN_STA, 
     TZ_SHOW_FRONT
   </sql>
   <sql id="Blob_Column_List" >
-    TZ_DESCR
+    TZ_DESCR,TZ_MATERIAL
   </sql>
   <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsyySetTblKey" >
     select 
@@ -38,11 +39,12 @@
   <insert id="insert" parameterType="com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsyySetTbl" >
     insert into PS_TZ_MSYY_SET_TBL (TZ_CLASS_ID, TZ_BATCH_ID, TZ_OPEN_DT, 
       TZ_OPEN_TM, TZ_CLOSE_DT, TZ_CLOSE_TM, 
-      TZ_OPEN_STA, TZ_SHOW_FRONT, TZ_DESCR
+      TZ_OPEN_STA, TZ_SHOW_FRONT, TZ_DESCR, TZ_MATERIAL
       )
     values (#{tzClassId,jdbcType=VARCHAR}, #{tzBatchId,jdbcType=VARCHAR}, #{tzOpenDt,jdbcType=DATE}, 
       #{tzOpenTm,jdbcType=TIME}, #{tzCloseDt,jdbcType=DATE}, #{tzCloseTm,jdbcType=TIME}, 
-      #{tzOpenSta,jdbcType=VARCHAR}, #{tzShowFront,jdbcType=VARCHAR}, #{tzDescr,jdbcType=LONGVARCHAR}
+      #{tzOpenSta,jdbcType=VARCHAR}, #{tzShowFront,jdbcType=VARCHAR}, #{tzDescr,jdbcType=LONGVARCHAR},
+      #{tzMaterial,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsyySetTbl" >
@@ -75,6 +77,9 @@
       <if test="tzDescr != null" >
         TZ_DESCR,
       </if>
+      <if test="tzMaterial != null" >
+        TZ_MATERIAL,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="tzClassId != null" >
@@ -104,6 +109,9 @@
       <if test="tzDescr != null" >
         #{tzDescr,jdbcType=LONGVARCHAR},
       </if>
+      <if test="tzMaterial != null" >
+        #{TZ_MATERIAL,jdbcType=LONGVARCHAR},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsyySetTbl" >
@@ -130,6 +138,9 @@
       <if test="tzDescr != null" >
         TZ_DESCR = #{tzDescr,jdbcType=LONGVARCHAR},
       </if>
+      <if test="tzMaterial != null" >
+        TZ_MATERIAL = #{tzMaterial,jdbcType=VARCHAR},
+      </if>
     </set>
     where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
       and TZ_BATCH_ID = #{tzBatchId,jdbcType=VARCHAR}
@@ -142,7 +153,8 @@
       TZ_CLOSE_TM = #{tzCloseTm,jdbcType=TIME},
       TZ_OPEN_STA = #{tzOpenSta,jdbcType=VARCHAR},
       TZ_SHOW_FRONT = #{tzShowFront,jdbcType=VARCHAR},
-      TZ_DESCR = #{tzDescr,jdbcType=LONGVARCHAR}
+      TZ_DESCR = #{tzDescr,jdbcType=LONGVARCHAR},
+      TZ_MATERIAL = #{tzMaterial,jdbcType=LONGVARCHAR}
     where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
       and TZ_BATCH_ID = #{tzBatchId,jdbcType=VARCHAR}
   </update>

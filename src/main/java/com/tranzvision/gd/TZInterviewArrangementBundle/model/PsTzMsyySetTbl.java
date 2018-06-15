@@ -17,6 +17,7 @@ public class PsTzMsyySetTbl extends PsTzMsyySetTblKey {
 
     private String tzDescr;
 
+    private String tzMaterial;
     public Date getTzOpenDt() {
         return tzOpenDt;
     }
@@ -72,4 +73,14 @@ public class PsTzMsyySetTbl extends PsTzMsyySetTblKey {
     public void setTzDescr(String tzDescr) {
         this.tzDescr = tzDescr == null ? null : tzDescr.trim();
     }
+
+	public String getTzMaterial() {
+		return tzMaterial;
+	}
+
+	public void setTzMaterial(String tzMaterial) {
+		this.tzMaterial = tzMaterial;
+	}
+    
+    
 }
