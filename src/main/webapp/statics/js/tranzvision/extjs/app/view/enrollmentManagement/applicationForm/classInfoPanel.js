@@ -329,8 +329,30 @@
                                         return "";
                                     }
                                 }
-                            },
-                            {
+                            },{
+                                text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.auditState","评审状态"),
+                                dataIndex: 'auditState',
+                                lockable   : false,
+                                width: 95,
+                                filter: {
+                                    type: 'list',
+                                    options: auditStateFilterOptions
+                                },
+                                renderer:function(v){
+                                    if(v){
+                                        var index = auditStateStore.find('TValue',v,0,false,true,true);
+                                        if(index>-1){
+                                            return auditStateStore.getAt(index).get("TSDesc");
+                                        }else{
+                                        	index = auditStateStore.find('TSDesc',v,0,false,true,true);
+                                        	 if(index>-1){
+                                        		 return auditStateStore.getAt(index).get("TSDesc");
+                                        	 }
+                                        }                                        
+                                        return "";
+                                    }
+                                }
+                            },{
                                text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.Result","面试结果"),
                                dataIndex: 'interviewResult',
                                width:100,
@@ -358,29 +380,6 @@
                                     type: 'date',
                                     format:'Y-m-d',
                                     active:true
-                                }
-                            },{
-                                text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.auditState","评审状态"),
-                                dataIndex: 'auditState',
-                                lockable   : false,
-                                width: 95,
-                                filter: {
-                                    type: 'list',
-                                    options: auditStateFilterOptions
-                                },
-                                renderer:function(v){
-                                    if(v){
-                                        var index = auditStateStore.find('TValue',v,0,false,true,true);
-                                        if(index>-1){
-                                            return auditStateStore.getAt(index).get("TSDesc");
-                                        }else{
-                                        	index = auditStateStore.find('TSDesc',v,0,false,true,true);
-                                        	 if(index>-1){
-                                        		 return auditStateStore.getAt(index).get("TSDesc");
-                                        	 }
-                                        }                                        
-                                        return "";
-                                    }
                                 }
                             },{
                                 text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.interviewResult","面试结果"),
