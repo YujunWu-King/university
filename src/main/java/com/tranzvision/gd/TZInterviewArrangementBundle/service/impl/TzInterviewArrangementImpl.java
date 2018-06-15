@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,8 @@ import com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMssjArrTbl;
 import com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMssjArrTblKey;
 import com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsyySetTbl;
 import com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsyySetTblKey;
+import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzMszgTMapper;
+import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzMszgT;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.poi.excel.ExcelHandle;
@@ -71,6 +74,10 @@ public class TzInterviewArrangementImpl extends FrameworkImpl{
 	
 	@Autowired
 	private PsTzMssjArrTblMapper psTzMssjArrTblMapper;
+	
+	@Autowired
+	private PsTzMszgTMapper psTzMszgTMapper;
+	
 
 	/*
 	 * 获取指定班级批次信息
@@ -132,6 +139,7 @@ public class TzInterviewArrangementImpl extends FrameworkImpl{
 						map.put("openStatus", psTzMsyySetTbl.getTzOpenSta());
 						map.put("frontView", psTzMsyySetTbl.getTzShowFront());
 						map.put("descr", psTzMsyySetTbl.getTzDescr());
+						map.put("material", psTzMsyySetTbl.getTzMaterial());
 					}
 
 					strRtn = jacksonUtil.Map2json(map);
@@ -243,12 +251,127 @@ public class TzInterviewArrangementImpl extends FrameworkImpl{
 			case "importMsPlan":
 				strRet = this.tzImportMsPlan(strParams, errorMsg);
 				break;
+			case "publishInterview":
+				//面试发布预约
+				strRet = this.publishInterview(strParams, errorMsg);
+				break;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			errorMsg[0] = "1";
 			errorMsg[1] = "操作异常。" + e.getMessage();
 		}
+		return strRet;
+	}
+	
+	/**
+	 * 发布面试预约
+	 * @param strParams
+	 * @param errorMsg
+	 * @return
+	 */
+	private String publishInterview(String strParams, String[] errorMsg) {
+		String strRet = "";
+		Map<String,Object> rtnMap = new HashMap<String,Object>();
+		rtnMap.put("result", "");
+		
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		try {
+			jacksonUtil.json2Map(strParams);
+			
+			long tzAppInsId = 0;
+			String TZ_JG_ID = "";
+			String classID = jacksonUtil.getString("classID");
+			String batchID = jacksonUtil.getString("batchID");
+			String batchName = jacksonUtil.getString("batchName");
+			String material = jacksonUtil.getString("material");
+			
+			
+			PsTzMsyySetTblKey pmstk  = new PsTzMsyySetTblKey();
+			pmstk.setTzClassId(classID);
+			pmstk.setTzBatchId(batchID);
+			PsTzMsyySetTbl ptmst = psTzMsyySetTblMapper.selectByPrimaryKey(pmstk);
+			ptmst.setTzMaterial(material);
+			psTzMsyySetTblMapper.updateByPrimaryKeyWithBLOBs(ptmst);
+			
+			//从cookie中获取机构id
+			Cookie[] cookies = request.getCookies();
+			for (Cookie cookie : cookies) {
+				if(cookie.getName().equals("tzmo")) {
+					TZ_JG_ID = cookie.getValue();
+				}
+			}
+
+		
+			String sql1 = "select TZ_MS_PLAN_SEQ,OPRID from PS_TZ_MSYY_KS_TBL where TZ_CLASS_ID=? and TZ_BATCH_ID=?";
+			
+			String sql2 = "select A.TZ_APP_INS_ID from PS_TZ_FORM_WRK_T A,PS_TZ_CLASS_INF_T B\n" + 
+					" where A.OPRID=? and A.TZ_CLASS_ID =B.TZ_CLASS_ID and B.TZ_JG_ID=?\n" + 
+					"order by A.TZ_APP_INS_ID desc limit 1";
+			
+			String sql3 = "select * from PS_TZ_MSSJ_ARR_TBL where TZ_CLASS_ID=? and TZ_BATCH_ID=? and TZ_MS_PLAN_SEQ=?";
+			
+			//String sql4 = "select DISTINCT TZ_MS_PLAN_SEQ from PS_TZ_MSYY_KS_TBL  where TZ_CLASS_ID=? and TZ_BATCH_ID=?;";
+			
+			List<Map<String, Object>> list = jdbcTemplate.queryForList(sql1, new Object[] {classID, batchID});
+			String msDate = "";
+			String msLocation = "";
+			String bjMsStartTime = "";
+			String msXxBz = "";
+			String oprID = "";
+			String TZ_MS_PLAN_SEQ = "";
+			
+			if(list != null && list.size() != 0) {
+				for (Map<String, Object> map : list) {
+					oprID = map.get("OPRID") + "";
+					TZ_MS_PLAN_SEQ = map.get("TZ_MS_PLAN_SEQ") + "";
+					
+					//查询报名表编号
+					String tzAppInsId_ = jdbcTemplate.queryForObject(sql2, new Object[] {oprID, TZ_JG_ID}, "String");
+					tzAppInsId = Long.valueOf(tzAppInsId_);
+					//查询面试安排信息
+					Map<String, Object> map2 = jdbcTemplate.queryForMap(sql3, new Object[] {classID, batchID, TZ_MS_PLAN_SEQ});
+					msDate = map2.get("TZ_MS_DATE") + "";
+					msLocation = map2.get("TZ_MS_LOCATION") + "";
+					bjMsStartTime = map2.get("TZ_START_TM") + "";
+					msXxBz = map2.get("TZ_MS_ARR_DEMO") + "";
+					
+					boolean flag = true;
+					//根据报名表编号查询
+					PsTzMszgT ptt = psTzMszgTMapper.selectByPrimaryKey(tzAppInsId);
+					if(ptt == null) {
+						//如果为空，新建一个
+						ptt = new PsTzMszgT();
+						ptt.setTzAppInsId(tzAppInsId);
+						flag = false;
+					}
+					ptt.setTzResultCode("是");
+					ptt.setTzAddress(msLocation);
+					ptt.setTzDate(msDate);
+					ptt.setTzMaterial(material);
+					ptt.setTzMsBatch(batchName);
+					ptt.setTzTime(bjMsStartTime);
+					ptt.setTzRemark(msXxBz);
+					
+					if(flag) {
+						psTzMszgTMapper.updateByPrimaryKey(ptt);
+					}else {
+						psTzMszgTMapper.insert(ptt);
+					}
+					
+				}
+			}
+			
+			
+			
+			
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			errorMsg[0] = "1";
+			errorMsg[1] = "操作异常。"+e.getMessage();
+		}
+		strRet = jacksonUtil.Map2json(rtnMap);
 		return strRet;
 	}
 
