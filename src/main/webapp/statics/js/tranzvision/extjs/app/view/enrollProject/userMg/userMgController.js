@@ -1947,7 +1947,7 @@
                 });
             });
     },
-    viewApplicationForm: function(grid, rowIndex,colIndex){
+    viewApplicationForm1: function(grid, rowIndex,colIndex){
         Ext.tzSetCompResourses("TZ_ONLINE_REG_COM");
         //是否有访问权限
         var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_ONLINE_REG_COM"]["TZ_ONLINE_APP_STD"];
