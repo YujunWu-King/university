@@ -24,14 +24,14 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.export.exportExcelCon
         var win = btn.findParentByType('exportExcelWindow');
         var classId = win.classId;
         var batchId = win.batchId;
-        var classBatch = classId+"-"+batchId;
+        var exportType = win.exportType;
 
         Ext.tzShowCFGSearch({
             cfgSrhId: 'TZ_XSXS_DRDC_COM.TZ_XSXS_DRDC_STD.TZ_EXCEL_DC_V',
             condition:
             {
                 "TZ_DLZH_ID": TranzvisionMeikecityAdvanced.Boot.loginUserId,
-                "TZ_DR_LXBH": classBatch,
+                "TZ_DR_LXBH": exportType,
                 "TZ_COM_ID": "TZ_XSXS_DRDC_COM",
                 "TZ_PAGE_ID": "TZ_XSXS_DRDC_STD"
             },

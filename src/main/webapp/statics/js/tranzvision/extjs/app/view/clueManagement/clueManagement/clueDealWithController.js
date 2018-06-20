@@ -60,7 +60,9 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.clueDealWithControlle
         var grid=btn.findParentByType("grid");
         Ext.tzShowCFGSearch({
             cfgSrhId: 'TZ_XSXS_INFO_COM.TZ_ZRR_XZ_STD.TZ_XSXS_ZRR_VW',
-            condition:{},
+            condition:{
+            	"TZ_JG_ID": Ext.tzOrgID
+            },
             callback: function(seachCfg){
                 var store = btn.findParentByType("grid").store;
                 btn.findParentByType('grid').getStore().clearFilter();//查询基于可配置搜索，清除预设的过滤条件
