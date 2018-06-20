@@ -172,7 +172,7 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
 				 e += '<input id="' +data["itemId"]+child.bmrClass.itemId + '" type="hidden" name="' + child.bmrClass.itemId + '" value="' + child.bmrClass.value + '">';
 
 				 if(SurveyBuild._readonly){
-					 if(batchId !=''){
+					 //if(batchId !=''){
 						 // 只读模式
 						 e += '<div class="input-list">';
 						 e += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire  == "Y" ? "*": "") + '</span>' + MsgSet["INTERVIEW_BATCH"] + '</div>';
@@ -180,14 +180,14 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
 						 e += '  <div class="input-list-suffix left"></div>';
 						 e += '  <div class="clear"></div>';
 						 e += '</div>';
-						 if(child.bmrClass.zssm !=''){
-							 e += '<div class="mainright-box pos-rela">' + child.bmrClass.zssm + '</div>';
-						 }
-					 }else{
-						 if(child.bmrClass.zssm !=''){
-							 e += '<div class="mainright-box pos-rela">' + child.bmrClass.zssm + '</div>';
-						 }
-					 }
+//						 if(child.bmrClass.zssm !=''){
+//							 e += '<div class="mainright-box pos-rela">' + child.bmrClass.zssm + '</div>';
+//						 }
+//					 }else{
+//						 if(child.bmrClass.zssm !=''){
+//							 e += '<div class="mainright-box pos-rela">' + child.bmrClass.zssm + '</div>';
+//						 }
+//					 }
 
 				 }else {
 					 // 编辑模式
