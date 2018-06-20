@@ -129,9 +129,9 @@ public class TzZddfWYServiceImpl extends TzZddfServiceImpl {
 				key = entry.getKey();
 
 				// 如果是值，那么找到他的类型
-				if (TZ_XXX_BH.startsWith("TZ_7TZ_TZ_7_2")) {
+				if (key.startsWith("TZ_7TZ_TZ_7_2")) {
 					// 得到对应的考试类型
-					keyType = chage(TZ_XXX_BH);
+					keyType = chage(key);
 					// 报名表中的字段 1:GRE 2:GMAT 3:托福TOFEL 4:TOEFL 机考 5:TOFEL IBT(网考）
 					// 6:雅思IELTS 7:专业八级（TEM8） 8:专业四级（TEM4） 9:剑桥商务英语（BEC高级）
 					// 10:剑桥商务英语（BEC中级） 11:CET-4 12:CET-6
