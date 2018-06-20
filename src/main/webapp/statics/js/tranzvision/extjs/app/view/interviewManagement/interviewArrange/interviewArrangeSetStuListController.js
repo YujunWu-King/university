@@ -368,5 +368,33 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
 				}
 			});	
 		}
-	}
+	},
+	exportKsMd: function(btn){
+		var msArrGrid = btn.findParentByType("grid");
+		//var selList = msArrGrid.getSelectionModel().getSelection();
+		
+		var itwArrInfRec = msArrGrid.findParentByType("panel").child("form").getForm().getFieldValues();
+		var classID = itwArrInfRec["classID"];
+		var batchID = itwArrInfRec["batchID"];
+
+		var tzParamsObj = {
+        		ComID: "TZ_MS_ARR_MG_COM",
+        		PageID: "TZ_MS_CAL_ARR_STD",
+        		OperateType: "exportKsMd",
+        		comParams:{
+        			classID: classID,
+        			batchID: batchID,
+        			//exportData: expArr
+        		}
+        	};
+        var tzParams = Ext.JSON.encode(tzParamsObj);
+		Ext.tzLoad(tzParams,function(respData){
+			var fileUrl = respData.fileUrl;
+			if(fileUrl != ""){
+				window.open(fileUrl, "download","status=no,menubar=yes,toolbar=no,location=no");
+			}else{
+				Ext.Msg.alert("提示","下载失败，文件不存在");
+			}
+		});
+	},
 });

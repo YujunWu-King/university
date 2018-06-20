@@ -47,7 +47,8 @@ import com.tranzvision.gd.util.sql.TZGDObject;
 public class TzInterviewArrangementImpl extends FrameworkImpl{
 	@Autowired
 	private SqlQuery jdbcTemplate;
-
+	@Autowired
+	private SqlQuery sqlQuery;
 	@Autowired
 	private HttpServletRequest request;
 	
@@ -254,6 +255,9 @@ public class TzInterviewArrangementImpl extends FrameworkImpl{
 			case "publishInterview":
 				//面试发布预约
 				strRet = this.publishInterview(strParams, errorMsg);
+				break;
+			case "exportKsMd":
+				strRet = this.tzExportKsMd(strParams, errorMsg);
 				break;
 			}
 		} catch (Exception e) {
@@ -741,6 +745,135 @@ public class TzInterviewArrangementImpl extends FrameworkImpl{
 	}
 	
 	
+	/**
+	 * 导出面试考生名单
+	 * @param strParams
+	 * @param errorMsg
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	private String tzExportKsMd(String strParams, String[] errorMsg){
+		String strRet = "";
+		Map<String,Object> rtnMap = new HashMap<String,Object>();
+		rtnMap.put("fileUrl", "");
+		
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		try {
+			jacksonUtil.json2Map(strParams);
+			String classID = jacksonUtil.getString("classID");
+			String batchID = jacksonUtil.getString("batchID");
+			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+			//查询面试安排总数
+			String sql = "SELECT COUNT(*) FROM PS_TZ_MSPS_KSH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APPLY_PC_ID IN (SELECT TZ_BATCH_ID FROM PS_TZ_CLS_BATCH_T WHERE TZ_CLASS_ID=?)";
+			int total = sqlQuery.queryForObject(sql, new Object[] { classID, batchID, classID }, "int");
+			ArrayList<Map<String, Object>> listJson = new ArrayList<Map<String, Object>>();
+			List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
+				if (total > 0) {
+					String downloadPath = getSysHardCodeVal.getDownloadPath();
+					String expDirPath = downloadPath + "/" + orgid + "/" + getDateNow() + "/" + "interviewExpExcel";
+					String absexpDirPath = request.getServletContext().getRealPath(expDirPath);
+					
+					// 表头
+					List<String[]> dataCellKeys = new ArrayList<String[]>();
+					dataCellKeys.add(new String[]{ "interview-mshid", "面试申请号" });
+					dataCellKeys.add(new String[]{ "interview-name", "姓名" });
+					dataCellKeys.add(new String[]{ "interview-class", "报考班级" });
+					dataCellKeys.add(new String[]{ "interview-batch", "申请面试批次" });
+					dataCellKeys.add(new String[]{ "interview-email", "邮箱" });
+					dataCellKeys.add(new String[]{ "interview-phone", "手机" });
+					dataCellKeys.add(new String[]{ "interview-yyStatus", "预约状态" });
+					dataCellKeys.add(new String[]{ "interview-tag", "标签" });
+					
+					sql = "SELECT TZ_APP_INS_ID FROM PS_TZ_MSPS_KSH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APPLY_PC_ID IN (SELECT TZ_BATCH_ID FROM PS_TZ_CLS_BATCH_T WHERE TZ_CLASS_ID=?) order by TZ_APP_INS_ID ";
+					List<Map<String, Object>> listData = sqlQuery.queryForList(sql, new Object[] { classID, batchID, classID});
+				
+					for (Map<String, Object> mapData : listData) {
+						Map<String, Object> mapDataex = new HashMap<String, Object>();
+						
+						// 报名表实例ID
+						String appIns = String.valueOf(mapData.get("TZ_APP_INS_ID"));
+	
+						// 查询姓名
+						sql = "SELECT OPRID,TZ_REALNAME,TZ_MSH_ID,TZ_EMAIL,TZ_MOBILE FROM PS_TZ_AQ_YHXX_TBL A WHERE exists(SELECT 'X' FROM PS_TZ_FORM_WRK_T B,PS_TZ_MSPS_KSH_TBL C WHERE B.TZ_APP_INS_ID=C.TZ_APP_INS_ID and C.TZ_CLASS_ID=? and C.TZ_APPLY_PC_ID=? and B.TZ_APP_INS_ID=? and B.OPRID=A.OPRID)";
+						Map<String, Object> yhxxMap = sqlQuery.queryForMap(sql, new Object[] { classID, batchID, appIns });
+						
+						String oprid = "";
+						String name = "";
+						String interviewAppId = "";
+						String mobile = "";
+						String email = "";
+						if (yhxxMap != null) {
+							oprid = yhxxMap.get("OPRID") == null ? "" : yhxxMap.get("OPRID").toString();
+							name = yhxxMap.get("TZ_REALNAME") == null ? "" : yhxxMap.get("TZ_REALNAME").toString();
+							interviewAppId = yhxxMap.get("TZ_MSH_ID") == null ? ""
+									: yhxxMap.get("TZ_MSH_ID").toString();
+							mobile = yhxxMap.get("TZ_MOBILE") == null ? "" : yhxxMap.get("TZ_MOBILE").toString();
+							email = yhxxMap.get("TZ_EMAIL") == null ? "" : yhxxMap.get("TZ_EMAIL").toString();
+						}
+						
+						
+						sql = "select TZ_CLASS_NAME,TZ_BATCH_NAME from PS_TZ_FORM_WRK_T A join PS_TZ_CLASS_INF_T B on(A.TZ_CLASS_ID=B.TZ_CLASS_ID) left join PS_TZ_CLS_BATCH_T C on(A.TZ_BATCH_ID=C.TZ_BATCH_ID) where A.TZ_APP_INS_ID=?";
+						Map<String, Object> clsMap = sqlQuery.queryForMap(sql, new Object[] { appIns });
+						String className = "";
+						String batchName = "";
+						if(clsMap != null){
+							className = clsMap.get("TZ_CLASS_NAME") == null ? "" : clsMap.get("TZ_CLASS_NAME").toString();
+							batchName = clsMap.get("TZ_BATCH_NAME") == null ? "" : clsMap.get("TZ_BATCH_NAME").toString();
+						}
+	
+						//预约状态
+						sql = "select 'Y' from PS_TZ_MSYY_KS_TBL where TZ_CLASS_ID=? and TZ_BATCH_ID=? and OPRID=? limit 1";
+						String yySta = sqlQuery.queryForObject(sql, new Object[]{ classID, batchID, oprid }, "String");
+						String yyStatus = "未预约";
+						if("Y".equals(yySta)){
+							yyStatus = "已预约";
+						}
+						
+						// 标签
+						String strLabel = "";
+						sql = "SELECT TZ_LABEL_NAME FROM PS_TZ_FORM_LABEL_T A,PS_TZ_LABEL_DFN_T B WHERE A.TZ_LABEL_ID=B.TZ_LABEL_ID AND TZ_APP_INS_ID=?";
+						List<Map<String, Object>> labelList = sqlQuery.queryForList(sql,
+								new Object[] { appIns });
+						for (Map<String, Object> mapLabel : labelList) {
+							String label = String.valueOf(mapLabel.get("TZ_LABEL_NAME"));
+							if (!"".equals(label) && label != null) {
+								strLabel = strLabel == "" ? label : strLabel + "； " + label;
+							}
+						}
+						if (yhxxMap != null) {
+							mapDataex.put("interview-mshid", interviewAppId);
+							mapDataex.put("interview-name", name);
+							mapDataex.put("interview-class",className);
+							mapDataex.put("interview-batch", batchName);
+							mapDataex.put("interview-email", email);
+							mapDataex.put("interview-phone", mobile);
+							mapDataex.put("interview-yyStatus",yyStatus);
+							mapDataex.put("interview-tag", strLabel);
+						}
+						
+						dataList.add(mapDataex);
+						/* 将文件上传之前，先重命名该文件 */
+						Date dt = new Date();
+						SimpleDateFormat datetimeFormate = new SimpleDateFormat("yyyyMMddHHmmss");
+						String sDttm = datetimeFormate.format(dt);
+						String strUseFileName = "MSKSMD_"+sDttm + "_" + classID + batchID + "." + "xlsx"; 
+						
+						ExcelHandle2 excelHandle = new ExcelHandle2(expDirPath, absexpDirPath);
+						boolean rst = excelHandle.export2Excel(strUseFileName, dataCellKeys, dataList);
+						if (rst) {
+							String urlExcel = request.getContextPath() + excelHandle.getExportExcelPath();
+							rtnMap.replace("fileUrl", urlExcel);
+						}
+				}
+			}	
+		}catch(Exception e){
+			e.printStackTrace();
+			errorMsg[0] = "1";
+			errorMsg[1] = "操作异常。"+e.getMessage();
+		}
+		strRet = jacksonUtil.Map2json(rtnMap);
+		return strRet;
+	}
 	/**
 	 * 导出面试安排
 	 * @param strParams

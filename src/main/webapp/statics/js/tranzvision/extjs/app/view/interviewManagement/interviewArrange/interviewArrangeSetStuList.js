@@ -164,7 +164,11 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
 								iconCls:"sms",
 								handler:'tzSendEmailSmsToStu',
 								sendType: "SMS"
-							}]
+							},{
+                                text: "导出考生名单",
+                                iconCls:"export",
+                                handler:'exportKsMd'
+                            }]
 						}
 					]
                 }],
