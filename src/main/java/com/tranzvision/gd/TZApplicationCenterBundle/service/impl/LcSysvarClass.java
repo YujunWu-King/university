@@ -532,6 +532,92 @@ public class LcSysvarClass {
 		}
 		return result;
 	}
+	
+	//审核背景
+	public String[] getAppShBj(String[] para) {
+		long appIns = Long.parseLong(para[1]);
+		
+
+		GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+		JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+
+		String[] result = { "", defalutString };
+		String isPublish = "";
+		String content = "";
+		try {
+			//String lcName = jdbcTemplate.queryForObject(sql, String.class, new Object[] { "TZ_SHBJ" });
+			String getShBjSql="SELECT TZ_FORM_SP_STA FROM PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID=?";
+			String shBj=jdbcTemplate.queryForObject(getShBjSql, String.class, new Object[] {appIns});
+			if("".equals(shBj)||"N".equals(shBj)){
+				return result;			
+				}
+			if ("A".equals(shBj)) {
+				isPublish = "Y";
+				content=content + "<table class='table_style1'><thead><tr><td width='100.0%'>审核背景结果</td></tr></thead><tbody><tr><td style='word-break:break-all;'>通过</td></tr></tbody></table>";
+			} if("B".equals(shBj)){
+				isPublish = "Y";
+				content=content + "<table class='table_style1'><thead><tr><td width='100.0%'>审核背景结果</td></tr></thead><tbody><tr><td style='word-break:break-all;'>不通过</td></tr></tbody></table>";
+			}
+			result[0]=isPublish;
+			result[1]=content;
+		} catch (Exception e) {
+
+		}
+		return result;
+	}
+	
+	//笔试
+	public String[] getWriteResult(String[] para) {
+		String type = para[0];
+		long appIns = Long.parseLong(para[1]);
+		String rootPath = para[2];
+		String isMobile = para[3];
+		String siteId = para[4];
+
+		GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+		JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+		System.out.println("getOtherStatus");
+		// String defalutString = "<span>未发布</span>";
+		String[] result = { "", defalutString };
+		String sql = "select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
+		try {
+			String lcName = jdbcTemplate.queryForObject(sql, String.class, new Object[] { "TZ_BS" });
+			System.out.println("lcName:" + lcName);
+			if (lcName != null && !"".equals(lcName)) {
+				result = this.analyLcDrInfo(siteId, lcName, type, appIns, rootPath, isMobile, defalutString);
+			}
+		} catch (Exception e) {
+
+		}
+		return result;
+	}
+	
+	
+	//预录取通知
+		public String[] getReviewMessge(String[] para) {
+			String type = para[0];
+			long appIns = Long.parseLong(para[1]);
+			String rootPath = para[2];
+			String isMobile = para[3];
+			String siteId = para[4];
+
+			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+			System.out.println("getOtherStatus");
+			// String defalutString = "<span>未发布</span>";
+			String[] result = { "", defalutString };
+			String sql = "select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
+			try {
+				String lcName = jdbcTemplate.queryForObject(sql, String.class, new Object[] { "TZ_YLQTZ" });
+				System.out.println("lcName:" + lcName);
+				if (lcName != null && !"".equals(lcName)) {
+					result = this.analyLcDrInfo(siteId, lcName, type, appIns, rootPath, isMobile, defalutString);
+				}
+			} catch (Exception e) {
+
+			}
+			return result;
+		}
 
 	// 流程导入表信息;
 	private String[] analyLcDrInfo(String siteId, String lcName, String type, long appIns, String rootPath,
