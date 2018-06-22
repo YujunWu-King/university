@@ -181,6 +181,7 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 					mapList.put("colorType", rowList[6]);
 					mapList.put("submitState", rowList[7]);
 					mapList.put("submitDate", rowList[8]);
+
 			//		mapList.put("interviewResult", rowList[9]);
 					String sql2="select A.TZ_RESULT_CODE from TZ_IMP_MSJG_TBL A,PS_TZ_APP_LIST_VW B where A.TZ_APP_INS_ID=B.TZ_APP_INS_ID and A.TZ_APP_INS_ID=? ";
 					String interviewResult=jdbcTemplate.queryForObject(sql2,new Object[]{rowList[2]},"String");
@@ -191,6 +192,9 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 					note=TzGdBmglStuClsServiceImpl.stripHtml(note);
 					}
 					mapList.put("note",note);
+
+					
+
 					/* 根据模板配置显示报名表信息 */
 					String appInsID = rowList[2];
 					TZ_FILL_PROPORTION = rowList[10];
@@ -332,18 +336,22 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 		}
 		return jacksonUtil.Map2json(mapRet);
 	}
-	
-	//去除html标签   by  linhong
-	public static String stripHtml(String content) { 
-		// <p>段落替换为换行 
-		content = content.replaceAll("<p .*?>", ""); 
-		// <br><br/>替换为换行 
-		content = content.replaceAll("<br\\s*/?>", ""); 
-		// 去掉其它的<>之间的东西 
-		content = content.replaceAll("\\<.*?>", ""); 
-		
-		return content; 
+
+	// 去除html标签 by linhong
+	public static String stripHtml(String content) {
+		if (content != null) {
+			// <p>段落替换为换行
+			content = content.replaceAll("<p .*?>", "");
+			// <br><br/>替换为换行
+			content = content.replaceAll("<br\\s*/?>", "");
+			// 去掉其它的<>之间的东西
+			content = content.replaceAll("\\<.*?>", "");
+
+			return content;
+		} else {
+			return "";
 		}
+	}
 
 	/* 修改学生类别信息 */
 	@Override
@@ -827,6 +835,7 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 		returnMap.put("result", strAppInsList);
 		return jacksonUtil.Map2json(returnMap);
 	}
+
 	/* 获取AppID及OprID */
 	private String tzGetAppIdAndOprID(String comParams, String[] errorMsg) {
 		JacksonUtil jacksonUtil = new JacksonUtil();
@@ -837,9 +846,9 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 		Map<String, Object> returnMap = new HashMap<>();
 
 		try {
-//			jacksonUtil.json2Map(comParams);
-//			String AppIdSQL = (String) jacksonUtil.getString("getAppIdSQL");
-			
+			// jacksonUtil.json2Map(comParams);
+			// String AppIdSQL = (String) jacksonUtil.getString("getAppIdSQL");
+
 			jacksonUtil.json2Map(comParams);
 			String configSearchCondition = (String) comParams;
 			String strClassID = "";
@@ -875,9 +884,9 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 
 			if (strBatchID.length() > 0) {
 				System.out.println("strBatchID exist");
-				strRet=strRet+" AND TZ_BATCH_ID='" + strBatchID + "'";
+				strRet = strRet + " AND TZ_BATCH_ID='" + strBatchID + "'";
 			}
-			
+
 			String AppIdSQL = strRet.replaceAll("TZ_APP_INS_ID", "OPRID,TZ_APP_INS_ID");
 
 			System.out.println(AppIdSQL);
