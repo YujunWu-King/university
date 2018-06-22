@@ -44,10 +44,10 @@ public class TzYyGroupServiceImpl extends FrameworkImpl {
 
 			if (null != classID && !"".equals(classID) && null != batchID && !"".equals(batchID)) {
 				// 查询面试安排总数
-				String sql = "SELECT DISTINCT TZ_MS_PLAN_SEQ FROM PS_TZ_MSYY_KS_TBL WHERE OPRID IN ( SELECT A.OPRID FROM PS_TZ_FORM_WRK_T A, PS_TZ_MSPS_KSH_TBL B WHERE B.TZ_CLASS_ID = ? AND B.TZ_APPLY_PC_ID = ? AND B.TZ_APP_INS_ID = A.TZ_APP_INS_ID ) AND TZ_MS_PLAN_SEQ IN ( SELECT TZ_MS_PLAN_SEQ FROM PS_TZ_MSSJ_ARR_TBL WHERE TZ_MS_PUB_STA = ? AND TZ_MS_OPEN_STA = ? )";
+				String sql = "SELECT DISTINCT TZ_MS_PLAN_SEQ FROM PS_TZ_MSYY_KS_TBL WHERE OPRID IN ( SELECT A.OPRID FROM PS_TZ_FORM_WRK_T A, PS_TZ_MSPS_KSH_TBL B WHERE B.TZ_CLASS_ID = ? AND B.TZ_APPLY_PC_ID = ? AND B.TZ_APP_INS_ID = A.TZ_APP_INS_ID ) AND TZ_MS_PLAN_SEQ IN ( SELECT TZ_MS_PLAN_SEQ FROM PS_TZ_MSSJ_ARR_TBL WHERE TZ_MS_PUB_STA = ? AND TZ_MS_OPEN_STA = ? AND TZ_CLASS_ID=? AND TZ_BATCH_ID = ?)";
 
 				List<Map<String, Object>> listData = jdbcTemplate.queryForList(sql,
-						new Object[] { classID, batchID, "Y", "Y" });
+						new Object[] { classID, batchID, "Y", "Y",classID, batchID });
 
 				int total = listData.size();
 				ArrayList<String> l = new ArrayList<String>();
