@@ -396,10 +396,10 @@ public class TzLoginForBoxController {
 		System.out.println("domain=" + domain);
 		String cookiePath = getCookieProps.getCookiePath();
 		System.out.println("cookiePath=" + cookiePath);
-		tzCookie.addCookie(response, "callCenterXh", strSemNum, 36000, "ecust.tranzvision.net", cookiePath, false, false);
-		tzCookie.addCookie(response, "callCenterPhone", strTel, 36000, "ecust.tranzvision.net", cookiePath, false, false);
-		tzCookie.addCookie(response, "callCenterType", strType, 36000, "ecust.tranzvision.net", cookiePath, false, false);
-		tzCookie.addCookie(response, "callCenterOprid", strOprId, 36000, "ecust.tranzvision.net", cookiePath, false, false);
+		tzCookie.addCookie(response, "callCenterXh", strSemNum, 36000, domain, cookiePath, false, false);
+		tzCookie.addCookie(response, "callCenterPhone", strTel, 36000, domain, cookiePath, false, false);
+		tzCookie.addCookie(response, "callCenterType", strType, 36000, domain, cookiePath, false, false);
+		tzCookie.addCookie(response, "callCenterOprid", strOprId, 36000, domain, cookiePath, false, false);
 //		tzCookie.addCookie(response, "callCenterXh", strSemNum, 36000, domain, cookiePath, false, false);
 //		tzCookie.addCookie(response, "callCenterPhone", strTel, 36000, domain, cookiePath, false, false);
 //		tzCookie.addCookie(response, "callCenterType", strType, 36000, domain, cookiePath, false, false);
