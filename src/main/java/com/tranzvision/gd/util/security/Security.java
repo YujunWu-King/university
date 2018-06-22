@@ -326,24 +326,18 @@ public class Security {
 	}
 
 	public static void main(String[] args) {
-		String key = "161F3578E028C9E2F567A27EE5F2F8A2C9BDAEFE3DFDFABD";
-		String For3DES = "2415225000000000408159$TZ_163024";
+		String securitykey = "A0DFDF28AEAB2F131327FEDE5C2D8A6D399E4F568A2D4EFD";
+		String usertoken = "8XBuwicXEWfrijjaWPTaJSOCyuomYIZWZC1RNYVfOStHqSKSClfc/jtgGImndE9tSXMhxbqXSfBCYjLKwohqVOxptQUQlMED";
 		//String For3DES = "abaedaaaeavvasevagoknfac";
-		System.out.println(For3DES.length());
+		//System.out.println(For3DES.length());
 		byte[] IV_SECURITY = { 1, 2, 3, 4, 5, 6, 7, 8 };
 		String linkString = "$";
 		try {
-			String aa = Security.generalStringFor3DES(key, For3DES, For3DES, IV_SECURITY, linkString);
-			System.out.println("3DES:"+aa);
-			System.out.println(aa.length());
-//			String bb=Security.Decrypt3DES2String("A0DFDF28AEAB2F131327FEDE5C2D8A6D399E4F568A2D4EFD", "8XBuwicXEWfrijjaWPTaJSOCyuomYIZWTNjiz5XkFuedSeNo3YxcuP/LMjSfyytY9BxBWQr7GYN2LBHeReXbfrLJiQ/oU2mt", IV_SECURITY);
-//			System.out.println("bb="+bb);
-//			String cc=Security.Decrypt3DES2String("A0DFDF28AEAB2F131327FEDE5C2D8A6D399E4F568A2D4EFD", "8XBuwicXEWfrijjaWPTaJSOCyuomYIZWFtKGlrCJ8Ak4uT8bj0dujD0TE/lwja+kcL2c9vTQxnqQ2ONUA8tlRWva+ZV0L6Vt", IV_SECURITY);
-//			System.out.println("cc="+cc);
-			MD5 md5 = new MD5();
-			aa = md5.getMD5(For3DES.getBytes());
-			System.out.println("MD5:"+aa);
-			System.out.println(aa.length());
+			//byte[] IV_SECURITY = { 1, 2, 3, 4, 5, 6, 7, 8 };
+			String u = Security.Decrypt3DES2String(securitykey, usertoken, IV_SECURITY);
+			System.out.println("u=" + u);
+			String currentDlzhId = u.substring(0, u.indexOf("$"));
+			System.out.println("currentDlzhId=" + currentDlzhId);
 			
 			//String gzip = Security.compactString(For3DES);
 			
