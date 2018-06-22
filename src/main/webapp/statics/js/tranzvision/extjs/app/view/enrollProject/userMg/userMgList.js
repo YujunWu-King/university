@@ -286,7 +286,7 @@
 			   align: 'center',
 			   			 items:[
 			   			  {text: '查看',iconCls: 'view',tooltip: '查看',handler:'viewUserByRow'},
-			   			  {text: '查看报名表',iconCls: 'preview',tooltip: '查看报名表',handler:'viewApplicationForm'}
+			   			  {text: '查看报名表',iconCls: 'preview',tooltip: '查看报名表',handler:'viewApplicationForm1'}
 			   			]
             }],
             store: store,

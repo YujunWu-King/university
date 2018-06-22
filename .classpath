@@ -29,6 +29,9 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/org.eclipse.jst.server.tomcat.runtimeTarget/Apache Tomcat v8.0"/>
-	<classpathentry kind="lib" path="D:/bcprov-jdk15on-1.54.jar"/>
+<<<<<<< HEAD
+	<classpathentry kind="lib" path="D:/work/lib/bcprov-jdk15on-1.54.jar"/>
+=======
+>>>>>>> ee12c1c9e0587b05ddfea3930b6a379aec885a69
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

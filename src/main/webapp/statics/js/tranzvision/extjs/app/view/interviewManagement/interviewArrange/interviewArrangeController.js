@@ -80,6 +80,56 @@
 		form.setValues({classID:classID,batchID:batchID});
         win.show();
     },
+    
+    //发布面试预约
+    publishInterviewArrange: function(btn){
+    	var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_MS_ARR_MG_COM"]["TZ_MSKS_VIEW_STD"];
+		if( pageResSet == "" || pageResSet == undefined){
+			Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+			return;
+		}
+		//该功能对应的JS类
+		var className = pageResSet["jsClassName"];
+		if(className == "" || className == undefined){
+			Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_MSKS_VIEW_STD，请检查配置。');
+			return;
+		}
+		
+		var comSiteParams = this.getView().child("form").getForm().getValues();
+		var classID = comSiteParams["classID"];
+		var batchID = comSiteParams["batchID"];
+		//面试批次
+		var batchName = comSiteParams["batchName"];
+		//携带材料
+		var material = comSiteParams["material"];
+		var grid = btn.up('grid');
+		//获取总行数
+		var count = grid.getStore().getCount();
+		if(count == null ){
+			Ext.MessageBox.alert('提示', '没有可以发布的对象！');
+			return;
+		}
+		
+		/*for(var i=0;i<count;i++){
+			var rec = grid.getStore().getAt(i);
+			
+		}
+		//get()里面加上dataIndex的值，即可获取该列的值
+		var msDate = rec.get('msDate');					
+		var bjMsStartTime = rec.get('bjMsStartTime');
+		var msLocation = rec.get('msLocation');
+		var msXxBz = rec.get('msXxBz');
+		var msResult = "是";*/
+		
+		var infoText = "面试预约发布成功！";
+		//Params= '{"classID":"'+classID+'","batchID":"'+batchID+'","batchName":"'+batchName+'","material":"'+material+'","msLocation":"'+msLocation+'","msXxBz":"'+msXxBz+'","msDate":"'+msDate+'","bjMsStartTime":"'+bjMsStartTime+'"}';
+		Params= '{"classID":"'+classID+'","batchID":"'+batchID+'","batchName":"'+batchName+'","material":"'+material+'"}';
+		var tzParams = '{"ComID":"TZ_MS_ARR_MG_COM","PageID":"TZ_MS_CAL_ARR_STD","OperateType":"publishInterview","comParams":'+Params+'}';
+		Ext.tzSubmit(tzParams,function(responseData){
+			//-----------------------------------------------------------------------
+		},infoText,true,this);
+    },
+    
 
 	//批量清除考生安排
 	ms_cleanAp: function(){

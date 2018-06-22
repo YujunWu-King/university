@@ -163,6 +163,10 @@
 		            zIndex: 900,
 					name: 'descr'
 				},{
+					xtype: 'textfield',
+		            fieldLabel: '面试现场携带材料',
+					name: 'material'
+				},{
 					xtype: 'grid',
 					frame: true,
 					name: 'msjh_grid',
@@ -177,7 +181,8 @@
 							/*{text:"自动生成面试安排计划",tooltip:"自动生成面试安排计划",iconCls:"",handler:'SetInterviewTime'},'-',*/
 							{text:"新增面试安排",tooltip:"新增面试安排",iconCls:"add",handler:'addInterviewTime'},'-',
 							{text:"设置参与本批次面试的考生",tooltip:"设置参与本批次面试的考生",iconCls:"set",handler:'setInterviewApplicant'},'-',
-							{text:"查看预约考生",tooltip:"查看预约考生",iconCls:"view",handler:'viewArrangeStuList'},'->',
+							{text:"查看预约考生",tooltip:"查看预约考生",iconCls:"view",handler:'viewArrangeStuList'},'-',
+							{text:"发布面试预约",tooltip:"发布面试预约",iconCls:"set",handler:'publishInterviewArrange'},'->',
 							{
 								xtype:'splitbutton',
 								text:'更多操作',
