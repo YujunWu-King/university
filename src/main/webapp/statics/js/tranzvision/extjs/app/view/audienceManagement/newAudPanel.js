@@ -303,7 +303,7 @@ Ext.define('KitchenSink.view.audienceManagement.newAudPanel', {
 		iconCls:"save",
 		handler: 'onComRegSave',
 		name: 'audSave',
-		id:'audSave',
+		//id:'audSave',
 		reference:'audSave'
 		
 	}, {
