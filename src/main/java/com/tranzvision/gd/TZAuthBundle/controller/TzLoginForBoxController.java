@@ -148,7 +148,7 @@ public class TzLoginForBoxController {
 		byte[] IV_SECURITY = { 1, 2, 3, 4, 5, 6, 7, 8 };
 		String linkString = "$";
 		String usertoken = Security.generalStringFor3DES(securitykey, For3DES, For3DES, IV_SECURITY, linkString);
-		System.out.println("usertoken="+usertoken);
+		System.out.println("usertoken=" + usertoken);
 		request.getSession().setAttribute("token", usertoken);
 		String oprid = op;
 		// request.getSession().setAttribute("oprid", oprid);
@@ -213,18 +213,20 @@ public class TzLoginForBoxController {
 		Map<String, Object> jsonMap = null;
 		String key = "";
 		int len = tm.size();
-		System.out.println("len="+len);
+		System.out.println("len=" + len);
 		int i = 0;
 		StringBuffer sb = new StringBuffer();
 		String Authenticator = "";
 		for (Map.Entry<String, String> entry : tm.entrySet()) {
 			key = entry.getKey();
 			System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
-			if (entry.getValue() == null || StringUtils.isBlank(entry.getValue().toString())) {
-				jsonMap = new HashMap<String, Object>();
-				jsonMap.put("res_code", "-0001");
-				jsonMap.put("res_message", "传入参数" + key + "为空");
-				return jsonMap;
+			if (!entry.getKey().equals("tel")) {
+				if (entry.getValue() == null || StringUtils.isBlank(entry.getValue().toString())) {
+					jsonMap = new HashMap<String, Object>();
+					jsonMap.put("res_code", "-0001");
+					jsonMap.put("res_message", "传入参数" + key + "为空");
+					return jsonMap;
+				}
 			}
 
 			// 是否超时
@@ -251,8 +253,8 @@ public class TzLoginForBoxController {
 			}
 			if (i == len - 1 && key.equals("authenticator")) {
 				Authenticator = entry.getValue().toString();
-				System.out.println("a="+Authenticator);
-				System.out.println("i="+i);
+				System.out.println("a=" + Authenticator);
+				System.out.println("i=" + i);
 			}
 			i++;
 		}
@@ -335,7 +337,7 @@ public class TzLoginForBoxController {
 		// 校验传入参数
 		// usertoken+tel+callid+timestamp
 		LinkedHashMap<String, String> tm = new LinkedHashMap<String, String>();
-		//tm.put("usertoken", usertoken);
+		// tm.put("usertoken", usertoken);
 		tm.put("tel", strTel);
 		tm.put("callid", callid);
 		tm.put("timestamp", timestamp);
@@ -372,7 +374,7 @@ public class TzLoginForBoxController {
 		psTzPhJddTbl.setTzPhone(strTel);
 		psTzPhJddTbl.setTzCallDtime(new Date());
 		psTzPhJddTbl.setTzDealwithZt("A");
-//		psTzPhJddTbl.setTzDescr("111111");
+		// psTzPhJddTbl.setTzDescr("111111");
 		psTzPhJddTblMapper.insert(psTzPhJddTbl);
 		// sql="select * from PS_TZ_REG_USE2_V where TZ_JG_ID=? and
 		// TZ_BD_MOBILE=?";
@@ -400,10 +402,14 @@ public class TzLoginForBoxController {
 		tzCookie.addCookie(response, "callCenterPhone", strTel, 36000, domain, cookiePath, false, false);
 		tzCookie.addCookie(response, "callCenterType", strType, 36000, domain, cookiePath, false, false);
 		tzCookie.addCookie(response, "callCenterOprid", strOprId, 36000, domain, cookiePath, false, false);
-//		tzCookie.addCookie(response, "callCenterXh", strSemNum, 36000, domain, cookiePath, false, false);
-//		tzCookie.addCookie(response, "callCenterPhone", strTel, 36000, domain, cookiePath, false, false);
-//		tzCookie.addCookie(response, "callCenterType", strType, 36000, domain, cookiePath, false, false);
-//		tzCookie.addCookie(response, "callCenterOprid", strOprId, 36000, domain, cookiePath, false, false);
+		// tzCookie.addCookie(response, "callCenterXh", strSemNum, 36000,
+		// domain, cookiePath, false, false);
+		// tzCookie.addCookie(response, "callCenterPhone", strTel, 36000,
+		// domain, cookiePath, false, false);
+		// tzCookie.addCookie(response, "callCenterType", strType, 36000,
+		// domain, cookiePath, false, false);
+		// tzCookie.addCookie(response, "callCenterOprid", strOprId, 36000,
+		// domain, cookiePath, false, false);
 
 		// 读取用户信息
 		PsTzAqYhxxTblKey psTzAqYhxxTblKey = new PsTzAqYhxxTblKey();
@@ -444,7 +450,7 @@ public class TzLoginForBoxController {
 			mobileUrlMenu = SqlQuery.queryForObject(strHardSQL, new Object[] { "TZ_MPACC_PHONE_USERMENU" }, "String");
 		}
 		strUrl = strUrl + "#" + mobileUrlMenu;
-		if ("MEM".equals(currentDlzhId) || "MPACC".equals(currentDlzhId) || "MBA_Admin".equals(currentDlzhId)) {
+		if (currentDlzhId != null && !currentDlzhId.equals("")) {
 			response.sendRedirect(strUrl);
 		} else {
 			strUrl = request.getContextPath() + "/login/" + id.toLowerCase();
@@ -556,14 +562,17 @@ public class TzLoginForBoxController {
 
 					boolean createResult = false;
 					int createTimes = 5;
-					//String sysFileName = "";
+					// String sysFileName = "";
 					while (!createResult && createTimes > 0) {
 
 						// Create the file on server
-						//sysFileName = (new StringBuilder(String.valueOf(getNowTime()))).append(".").append(suffix)
-						//		.toString();
-						//if (sysFileName.indexOf('/') != -1)
-						//	sysFileName = sysFileName.substring(sysFileName.lastIndexOf('/') + 1);
+						// sysFileName = (new
+						// StringBuilder(String.valueOf(getNowTime()))).append(".").append(suffix)
+						// .toString();
+						// if (sysFileName.indexOf('/') != -1)
+						// sysFileName =
+						// sysFileName.substring(sysFileName.lastIndexOf('/') +
+						// 1);
 
 						createResult = fileManageServiceImpl.CreateFile(parentPath, filename, bytes);
 
@@ -572,18 +581,21 @@ public class TzLoginForBoxController {
 
 					if (createResult) {
 						// 看是否是图片，如果是，则获取图片的宽、高
-						//if (getSysHardCodeVal.getImageSuffix().contains(suffix.toLowerCase())) {
-						//	ArrayList<Integer> imgWH = fileManageServiceImpl
-						//			.getImageWidthHeight(parentPath + File.separator + sysFileName);
-						//	if (imgWH.size() > 0) {
-						//		imgWidth = imgWH.get(0);
-						//		imgHeight = imgWH.get(1);
-						//	}
-						//}
+						// if
+						// (getSysHardCodeVal.getImageSuffix().contains(suffix.toLowerCase()))
+						// {
+						// ArrayList<Integer> imgWH = fileManageServiceImpl
+						// .getImageWidthHeight(parentPath + File.separator +
+						// sysFileName);
+						// if (imgWH.size() > 0) {
+						// imgWidth = imgWH.get(0);
+						// imgHeight = imgWH.get(1);
+						// }
+						// }
 
 						Map<String, Object> mapFile = new HashMap<String, Object>();
 						mapFile.put("filename", filename);
-						//mapFile.put("sysFileName", sysFileName);
+						// mapFile.put("sysFileName", sysFileName);
 						mapFile.put("size", String.valueOf(fileSize / 1024L) + "k");
 						// mapFile.put("path", parentPath);
 						mapFile.put("accessPath", accessPath);
