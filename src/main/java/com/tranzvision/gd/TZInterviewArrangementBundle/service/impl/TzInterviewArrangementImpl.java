@@ -291,12 +291,12 @@ public class TzInterviewArrangementImpl extends FrameworkImpl{
 			String material = jacksonUtil.getString("material");
 			
 			
-			PsTzMsyySetTblKey pmstk  = new PsTzMsyySetTblKey();
+			/*PsTzMsyySetTblKey pmstk  = new PsTzMsyySetTblKey();
 			pmstk.setTzClassId(classID);
 			pmstk.setTzBatchId(batchID);
 			PsTzMsyySetTbl ptmst = psTzMsyySetTblMapper.selectByPrimaryKey(pmstk);
 			ptmst.setTzMaterial(material);
-			psTzMsyySetTblMapper.updateByPrimaryKeyWithBLOBs(ptmst);
+			psTzMsyySetTblMapper.updateByPrimaryKeyWithBLOBs(ptmst);*/
 			
 			//从cookie中获取机构id
 			Cookie[] cookies = request.getCookies();
@@ -430,9 +430,10 @@ public class TzInterviewArrangementImpl extends FrameworkImpl{
 				psTzMsyySetTbl.setTzOpenSta(String.valueOf(formData.get("openStatus")));
 				psTzMsyySetTbl.setTzShowFront(String.valueOf(formData.get("frontView")));
 				psTzMsyySetTbl.setTzDescr(String.valueOf(formData.get("descr")));
+				psTzMsyySetTbl.setTzMaterial(String.valueOf(formData.get("material")));
 				psTzMsyySetTblMapper.updateByPrimaryKeyWithBLOBs(psTzMsyySetTbl);
 			}else{
-				psTzMsyySetTbl = new PsTzMsyySetTbl();
+				psTzMsyySetTbl = new PsTzMsyySetTbl(); 
 				psTzMsyySetTbl.setTzClassId(classID);
 				psTzMsyySetTbl.setTzBatchId(batchID);
 				psTzMsyySetTbl.setTzOpenDt(openDate);
@@ -442,6 +443,7 @@ public class TzInterviewArrangementImpl extends FrameworkImpl{
 				psTzMsyySetTbl.setTzOpenSta(String.valueOf(formData.get("openStatus")));
 				psTzMsyySetTbl.setTzShowFront(String.valueOf(formData.get("frontView")));
 				psTzMsyySetTbl.setTzDescr(String.valueOf(formData.get("descr")));
+				psTzMsyySetTbl.setTzMaterial(String.valueOf(formData.get("material")));
 				psTzMsyySetTblMapper.insert(psTzMsyySetTbl);
 			}
 			
