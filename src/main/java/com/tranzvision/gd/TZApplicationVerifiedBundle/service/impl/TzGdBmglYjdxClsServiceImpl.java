@@ -79,8 +79,9 @@ public class TzGdBmglYjdxClsServiceImpl extends FrameworkImpl {
 							Map<String, Object> map = list.get(num_1);
 				            sOprID = (String)map.get("oprID");
 				            sAppInsID = Long.parseLong((String)map.get("appInsID"));
-				            if(sOprID != null && !"".equals(sOprID)
-				            		&& sAppInsID != 0){
+//				            if(sOprID != null && !"".equals(sOprID)
+//				            		&& sAppInsID != 0){
+				            if(sOprID != null && !"".equals(sOprID)){
 				            	/*为听众添加成员:姓名，称谓，报名人联系方式*/
 				                String strName = jdbcTemplate.queryForObject("SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=? limit 0,1",new Object[]{sOprID},"String");
 				 
@@ -98,6 +99,7 @@ public class TzGdBmglYjdxClsServiceImpl extends FrameworkImpl {
 				                	wechat = (String)lxfsMap.get("TZ_WEIXIN");
 				                	//skype = (String)lxfsMap.get("TZ_SKYPE");
 				                }
+				               
 				                createTaskServiceImpl.addAudCy(audID,strName, "", mainMobilePhone, backupMobilePhone, mainEmail, backupEmail, wechat, sOprID, "", "", String.valueOf(sAppInsID));
 
 				            }
