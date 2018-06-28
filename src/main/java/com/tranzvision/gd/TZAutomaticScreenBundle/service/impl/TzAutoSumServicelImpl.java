@@ -364,6 +364,10 @@ public class TzAutoSumServicelImpl extends FrameworkImpl {
 					bzId=sqlQuery.queryForObject(
 							"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?",
 							new Object[] { "TZ_MEM_MS_RESULT" }, "String");
+				}else if ("MPACC".equals(orgId)){
+					bzId=sqlQuery.queryForObject(
+							"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?",
+							new Object[] { "TZ_MPACC_MS_RESULT" }, "String");
 				}else{
 					bzId=sqlQuery.queryForObject(
 							"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?",

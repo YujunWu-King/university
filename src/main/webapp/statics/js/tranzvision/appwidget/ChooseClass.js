@@ -65,10 +65,10 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
 	                        if(f.state.errcode == "0"){
 	                            val = f.comContent.classCode;
 	                            desc = f.comContent.className;
-	                            desc1 = f.comContent.classZssm;
+//	                            desc1 = f.comContent.classZssm;
 	                            child.bmrClass.value = val;
 	                            child.bmrClass.wzsm = desc;
-	                            child.bmrClass.zssm = desc1;
+//	                            child.bmrClass.zssm = desc1;
 	                        }
 	                    }
 	                });
