@@ -4,6 +4,7 @@ encoding//src/main/java/com/tranzvision/gd/TZInterviewArrangementBundle/service/
 encoding//src/main/java/com/tranzvision/gd/TZUnifiedImportBundle/service/impl/ImportMaterialEvaRstImpl.java=UTF-8
 encoding//src/main/java/com/tranzvision/gd/TZUnifiedImportBundle/service/impl/ImportOtherImpl.java=UTF-8
 encoding//src/main/java/com/tranzvision/gd/TZWebsiteApplicationBundle/service/impl/tzOnlineAppServiceImpl.java=UTF-8
+encoding//src/main/java/com/tranzvision/gd/util/base/JacksonUtil.java=UTF-8
 encoding//src/main/resources/html/TZMobileWebsiteIndexBundle=UTF-8
 encoding//src/main/resources/html/TZMobileWebsiteIndexBundle/TZ_GD_MCHOSE_AN_BATCH_HTML.html=UTF-8
 encoding//src/main/resources/html/TZMobileWebsiteIndexBundle/TZ_GD_MCHOSE_BATCH_LIST_HTML.html=UTF-8
@@ -31,4 +32,3 @@ encoding//src/main/webapp/statics/js/tranzvision/extjs/app/view/interviewManagem
 encoding//src/main/webapp/statics/js/tranzvision/extjs/app/view/judgeMaterialsReview/examineeEvaluateController.js=UTF-8
 encoding//src/main/webapp/statics/js/tranzvision/extjs/app/view/materialsReview/materialsReview/materialsReviewSchedule.js=UTF-8
 encoding//src/main/webapp/statics/js/website/m/mIndex.js=UTF-8
-encoding/<project>=UTF-8
