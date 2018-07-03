@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import freemarker.template.utility.StringUtil;
 
 /**
- * jackson JSON操作方法类
+ * jackson JSON鎿嶄綔鏂规硶绫�
  * 
  * @author SHIHUA
  * @since 2015-10-30
@@ -24,14 +24,14 @@ public class JacksonUtil {
 	private Map<String, Object> jsonMap;
 
 	/**
-	 * 构造函数
+	 * 鏋勯�犲嚱鏁�
 	 */
 	public JacksonUtil() {
 
 	}
 
 	/**
-	 * 构造函数，把JSON字符串转换成 Map
+	 * 鏋勯�犲嚱鏁帮紝鎶奐SON瀛楃涓茶浆鎹㈡垚 Map
 	 * 
 	 * @param jsonStr
 	 */
@@ -40,7 +40,7 @@ public class JacksonUtil {
 	}
 
 	/**
-	 * 将JSON字符串转换成Map
+	 * 灏咼SON瀛楃涓茶浆鎹㈡垚Map
 	 * 
 	 * @param jsonStr
 	 */
@@ -49,7 +49,7 @@ public class JacksonUtil {
 	}
 
 	/**
-	 * 私有方法，调用jackson接口方法将JSON字符串转换成Map
+	 * 绉佹湁鏂规硶锛岃皟鐢╦ackson鎺ュ彛鏂规硶灏咼SON瀛楃涓茶浆鎹㈡垚Map
 	 * 
 	 * @param jsonStr
 	 * @return Map<String, Object> or null
@@ -72,7 +72,7 @@ public class JacksonUtil {
 	}
 
 	/**
-	 * 将JSON字符串转换成json并返回，但不存在成员变量中
+	 * 灏咼SON瀛楃涓茶浆鎹㈡垚json骞惰繑鍥烇紝浣嗕笉瀛樺湪鎴愬憳鍙橀噺涓�
 	 * 
 	 * @param jsonStr
 	 * @return Map<String, Object> or null
@@ -82,7 +82,7 @@ public class JacksonUtil {
 	}
 
 	/**
-	 * 将Map转换成String并返回
+	 * 灏哅ap杞崲鎴怱tring骞惰繑鍥�
 	 * 
 	 * @param mapData
 	 * @return String
@@ -99,7 +99,7 @@ public class JacksonUtil {
 	}
 
 	/**
-	 * 将ArrayList转换成String并返回
+	 * 灏咥rrayList杞崲鎴怱tring骞惰繑鍥�
 	 * 
 	 * @param listData
 	 * @return String
@@ -116,7 +116,7 @@ public class JacksonUtil {
 	}
 
 	/**
-	 * 获取通过构造函数或json2Map转换得到的Map
+	 * 鑾峰彇閫氳繃鏋勯�犲嚱鏁版垨json2Map杞崲寰楀埌鐨凪ap
 	 * 
 	 * @return Map<String, Object> or null
 	 */
@@ -125,7 +125,7 @@ public class JacksonUtil {
 	}
 
 	/**
-	 * 根据key值获取Map值
+	 * 鏍规嵁key鍊艰幏鍙朚ap鍊�
 	 * 
 	 * @param key
 	 * @return Map<String, Object> or null
@@ -149,7 +149,7 @@ public class JacksonUtil {
 	}
 
 	/**
-	 * 根据key值获取List值
+	 * 鏍规嵁key鍊艰幏鍙朙ist鍊�
 	 * 
 	 * @param key
 	 * @return List<?> or null
@@ -172,7 +172,7 @@ public class JacksonUtil {
 	}
 
 	/**
-	 * 根据key值获取String值
+	 * 鏍规嵁key鍊艰幏鍙朣tring鍊�
 	 * 
 	 * @param key
 	 * @return String or null
@@ -197,7 +197,7 @@ public class JacksonUtil {
 	}
 
 	/**
-	 * 根据key值获取int值
+	 * 鏍规嵁key鍊艰幏鍙杋nt鍊�
 	 * 
 	 * @param key
 	 * @return int
@@ -212,7 +212,7 @@ public class JacksonUtil {
 	}
 
 	/**
-	 * 根据key值获取long值
+	 * 鏍规嵁key鍊艰幏鍙杔ong鍊�
 	 * 
 	 * @param key
 	 * @return long
@@ -227,7 +227,7 @@ public class JacksonUtil {
 	}
 
 	/**
-	 * 根据key值获取double值
+	 * 鏍规嵁key鍊艰幏鍙杁ouble鍊�
 	 * 
 	 * @param key
 	 * @return double
@@ -244,7 +244,7 @@ public class JacksonUtil {
 	}
 
 	/**
-	 * 根据key值获取boolean值
+	 * 鏍规嵁key鍊艰幏鍙朾oolean鍊�
 	 * 
 	 * @param key
 	 * @return boolean
@@ -254,7 +254,7 @@ public class JacksonUtil {
 	}
 
 	/**
-	 * 根据key获取给定格式的日期时间数值
+	 * 鏍规嵁key鑾峰彇缁欏畾鏍煎紡鐨勬棩鏈熸椂闂存暟鍊�
 	 * 
 	 * @param key
 	 * @param dateFormat
@@ -271,7 +271,7 @@ public class JacksonUtil {
 	}
 
 	/**
-	 * 根据key获取指定格式（yyyy-MM-dd）的日期值
+	 * 鏍规嵁key鑾峰彇鎸囧畾鏍煎紡锛坹yyy-MM-dd锛夌殑鏃ユ湡鍊�
 	 * 
 	 * @param key
 	 * @return Date or null
@@ -281,7 +281,7 @@ public class JacksonUtil {
 	}
 
 	/**
-	 * 根据key获取指定格式（yyyy-MM-dd HH:mm:ss）的日期时间值
+	 * 鏍规嵁key鑾峰彇鎸囧畾鏍煎紡锛坹yyy-MM-dd HH:mm:ss锛夌殑鏃ユ湡鏃堕棿鍊�
 	 * 
 	 * @param key
 	 * @return Date or null
@@ -291,7 +291,7 @@ public class JacksonUtil {
 	}
 
 	/**
-	 * 判断Map中是否存在某个键值
+	 * 鍒ゆ柇Map涓槸鍚﹀瓨鍦ㄦ煇涓敭鍊�
 	 * 
 	 * @param key
 	 * @return boolean
@@ -306,8 +306,8 @@ public class JacksonUtil {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		/*JacksonUtil jacksonUtil = new JacksonUtil();
-		//String a = "{\"tplID\":\"100\",\"fileName\":\"aaa\",\"storDates\":[{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_1\",\"fieldName\":\"文字说明\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-1\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_2r_name\",\"fieldName\":\"姓名\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-2\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_2r_company\",\"fieldName\":\"工作单位\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-3\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_2r_post\",\"fieldName\":\"职务\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-4\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_2r_phone\",\"fieldName\":\"联系电话\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-5\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_2r_email\",\"fieldName\":\"电子邮件\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-6\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_2r_relation\",\"fieldName\":\"申请人关系\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-7\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_2r_language\",\"fieldName\":\"推荐信语音\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-8\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_2r_by1\",\"fieldName\":\"与考生关系\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-9\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_2r_by2\",\"fieldName\":\"备用字段二\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-10\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_2r_by3\",\"fieldName\":\"备用字段三\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-11\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_2r_by4\",\"fieldName\":\"备用字段四\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-12\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_2r_by5\",\"fieldName\":\"备用字段五\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-13\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_2r_sex\",\"fieldName\":\"性别\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-14\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_8\",\"fieldName\":\"推荐人姓名\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-15\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_6\",\"fieldName\":\"被推荐考生姓名\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-16\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_3\",\"fieldName\":\"您认识考生的方式、认识的时间和了解程度，对考生思想品德、道德修养方面的介绍：\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-17\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_4\",\"fieldName\":\"对考生学术水平、科研能力、实践能力、研究成果、知识结构、外国语水平等的介绍：\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-18\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_5\",\"fieldName\":\"考生的特长和弱点，该考生是否具有创新的潜力，有无继续培养的前途，对考生报考清华大学推荐免试研究生的意见：\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-19\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_APP_INS_ID\",\"fieldName\":\"报名表实例编号\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-20\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_APP_FORM_STA\",\"fieldName\":\"报名表提交状态\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-21\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_FORM_SP_STA\",\"fieldName\":\"初审状态\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-22\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_APP_SUB_DTTM\",\"fieldName\":\"提交时间\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-23\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_ZL_AUDIT_STATUS\",\"fieldName\":\"资料审核状态\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-24\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_COLOR_SORT_ID\",\"fieldName\":\"颜色类别编号\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-25\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_COLOR_NAME\",\"fieldName\":\"颜色类别\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-26\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_REMARK\",\"fieldName\":\"备注\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-27\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_REMARK_SHORT\",\"fieldName\":\"短备注\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-28\"}}]}";
-		String a = "{bmrClass={instanceId=bmrClass, itemId=CC_Project, itemName=报考方向, title=报考方向, orderby=1, value=76, StorageType=S, wzsm=报名表测试, classname=baseComponent}, bmrBatch={instanceId=bmrBatch, itemId=CC_Batch, itemName=面试批次, title=面试批次, orderby=2, value=, StorageType=S, option={A151442202={txt=班级1批次1, other=N, code=45, defaultval=N, orderby=0, weight=0}, A646431964={txt=班级1批次2, other=N, code=46, defaultval=N, orderby=0, weight=0}}, wzsm=, classname=Select}}";
+		//String a = "{\"tplID\":\"100\",\"fileName\":\"aaa\",\"storDates\":[{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_1\",\"fieldName\":\"鏂囧瓧璇存槑\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-1\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_2r_name\",\"fieldName\":\"濮撳悕\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-2\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_2r_company\",\"fieldName\":\"宸ヤ綔鍗曚綅\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-3\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_2r_post\",\"fieldName\":\"鑱屽姟\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-4\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_2r_phone\",\"fieldName\":\"鑱旂郴鐢佃瘽\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-5\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_2r_email\",\"fieldName\":\"鐢靛瓙閭欢\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-6\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_2r_relation\",\"fieldName\":\"鐢宠浜哄叧绯籠",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-7\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_2r_language\",\"fieldName\":\"鎺ㄨ崘淇¤闊砛",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-8\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_2r_by1\",\"fieldName\":\"涓庤�冪敓鍏崇郴\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-9\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_2r_by2\",\"fieldName\":\"澶囩敤瀛楁浜孿",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-10\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_2r_by3\",\"fieldName\":\"澶囩敤瀛楁涓塡",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-11\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_2r_by4\",\"fieldName\":\"澶囩敤瀛楁鍥沑",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-12\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_2r_by5\",\"fieldName\":\"澶囩敤瀛楁浜擻",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-13\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_2r_sex\",\"fieldName\":\"鎬у埆\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-14\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_8\",\"fieldName\":\"鎺ㄨ崘浜哄鍚峔",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-15\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_6\",\"fieldName\":\"琚帹鑽愯�冪敓濮撳悕\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-16\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_3\",\"fieldName\":\"鎮ㄨ璇嗚�冪敓鐨勬柟寮忋�佽璇嗙殑鏃堕棿鍜屼簡瑙ｇ▼搴︼紝瀵硅�冪敓鎬濇兂鍝佸痉銆侀亾寰蜂慨鍏绘柟闈㈢殑浠嬬粛锛歕",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-17\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_4\",\"fieldName\":\"瀵硅�冪敓瀛︽湳姘村钩銆佺鐮旇兘鍔涖�佸疄璺佃兘鍔涖�佺爺绌舵垚鏋溿�佺煡璇嗙粨鏋勩�佸鍥借姘村钩绛夌殑浠嬬粛锛歕",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-18\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_5\",\"fieldName\":\"鑰冪敓鐨勭壒闀垮拰寮辩偣锛岃鑰冪敓鏄惁鍏锋湁鍒涙柊鐨勬綔鍔涳紝鏈夋棤缁х画鍩瑰吇鐨勫墠閫旓紝瀵硅�冪敓鎶ヨ�冩竻鍗庡ぇ瀛︽帹鑽愬厤璇曠爺绌剁敓鐨勬剰瑙侊細\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-19\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_APP_INS_ID\",\"fieldName\":\"鎶ュ悕琛ㄥ疄渚嬬紪鍙穃",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-20\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_APP_FORM_STA\",\"fieldName\":\"鎶ュ悕琛ㄦ彁浜ょ姸鎬乗",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-21\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_FORM_SP_STA\",\"fieldName\":\"鍒濆鐘舵�乗",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-22\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_APP_SUB_DTTM\",\"fieldName\":\"鎻愪氦鏃堕棿\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-23\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_ZL_AUDIT_STATUS\",\"fieldName\":\"璧勬枡瀹℃牳鐘舵�乗",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-24\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_COLOR_SORT_ID\",\"fieldName\":\"棰滆壊绫诲埆缂栧彿\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-25\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_COLOR_NAME\",\"fieldName\":\"棰滆壊绫诲埆\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-26\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_REMARK\",\"fieldName\":\"澶囨敞\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-27\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_REMARK_SHORT\",\"fieldName\":\"鐭娉╘",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-28\"}}]}";
+		String a = "{bmrClass={instanceId=bmrClass, itemId=CC_Project, itemName=鎶ヨ�冩柟鍚�, title=鎶ヨ�冩柟鍚�, orderby=1, value=76, StorageType=S, wzsm=鎶ュ悕琛ㄦ祴璇�, classname=baseComponent}, bmrBatch={instanceId=bmrBatch, itemId=CC_Batch, itemName=闈㈣瘯鎵规, title=闈㈣瘯鎵规, orderby=2, value=, StorageType=S, option={A151442202={txt=鐝骇1鎵规1, other=N, code=45, defaultval=N, orderby=0, weight=0}, A646431964={txt=鐝骇1鎵规2, other=N, code=46, defaultval=N, orderby=0, weight=0}}, wzsm=, classname=Select}}";
 		
 		
 		
@@ -317,15 +317,15 @@ public class JacksonUtil {
 		String fileName = jacksonUtil.getString("fileName");
 		String storDates = jacksonUtil.getString("storDates");
 
-		System.out.println("tplID：" + tplID);
-		System.out.println("fileName：" + fileName);
-		System.out.println("storDates：" + storDates);
+		System.out.println("tplID锛�" + tplID);
+		System.out.println("fileName锛�" + fileName);
+		System.out.println("storDates锛�" + storDates);
 
 		// jacksonUtil.json2Map(storDates);
 		List<Map<String, Object>> jsonArray = (List<Map<String, Object>>) jacksonUtil.getList("storDates");
-		System.out.println("jsonArray：" + jsonArray.size()); */
+		System.out.println("jsonArray锛�" + jsonArray.size()); */
 		
-		String acc = "{\"classId\":147,\"batchId\":108,\"data\":{\"groupName\":\"2组\",\"groupID\":\"2\",\"check\":true,\"suNum\":0,\"id\":\"KitchenSink.view.enrollmentManagement.interviewGroup.interviewGroupModel-2\"}}";
+		String acc = "{\"classId\":147,\"batchId\":108,\"data\":{\"groupName\":\"2缁刓\",\"groupID\":\"2\",\"check\":true,\"suNum\":0,\"id\":\"KitchenSink.view.enrollmentManagement.interviewGroup.interviewGroupModel-2\"}}";
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		jacksonUtil.json2Map(acc);
 		Map<String, Object> data = jacksonUtil.getMap("data");

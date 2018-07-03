@@ -332,14 +332,13 @@ public class LcSysvarClass {
 
 		GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
 		JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
-		String  sqlString="select TZ_BMH_ID from PS_TZ_FORM_WRK_T where TZ_APP_INS_ID=?";
-		String bmhID= jdbcTemplate.queryForObject(sqlString, String.class, new Object[] { appIns });
+
 		String[] result = { "", defalutString };
 		String sql = "select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
 		try {
 			String lcName = jdbcTemplate.queryForObject(sql, String.class, new Object[] { "TZ_MSZG" });
 			if (lcName != null && !"".equals(lcName)) {
-				result = this.analyLcDrInfo(siteId, lcName, type, bmhID, rootPath, isMobile, defalutString);
+				result = this.analyLcDrInfo(siteId, lcName, type, appIns, rootPath, isMobile, defalutString);
 			}
 		} catch (Exception e) {
 
@@ -361,13 +360,11 @@ public class LcSysvarClass {
 		// String defalutString = "<span>未发布</span>";
 		String[] result = { "", defalutString };
 		String sql = "select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
-		String  sqlString="select TZ_BMH_ID from PS_TZ_FORM_WRK_T where TZ_APP_INS_ID=?";
-		String bmhID= jdbcTemplate.queryForObject(sqlString, String.class, new Object[] { appIns });
 		try {
 			String lcName = jdbcTemplate.queryForObject(sql, String.class, new Object[] { "TZ_MSJG" });
 			if (lcName != null && !"".equals(lcName)) {
 
-				result = this.analyLcDrInfo(siteId, lcName, type, bmhID, rootPath, isMobile, defalutString);
+				result = this.analyLcDrInfo(siteId, lcName, type, appIns, rootPath, isMobile, defalutString);
 
 				/*
 				 * String QrcodeHtml=""; //录取状态 String tzLuquStaSql=
@@ -428,14 +425,12 @@ public class LcSysvarClass {
 		JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
 
 		// String defalutString = "<span>未发布</span>";
-		String  sqlString="select TZ_BMH_ID from PS_TZ_FORM_WRK_T where TZ_APP_INS_ID=?";
-		String bmhID= jdbcTemplate.queryForObject(sqlString, String.class, new Object[] { appIns });
 		String[] result = { "", defalutString };
 		String sql = "select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
 		try {
 			String lcName = jdbcTemplate.queryForObject(sql, String.class, new Object[] { "TZ_LKBM" });
 			if (lcName != null && !"".equals(lcName)) {
-				result = this.analyLcDrInfo(siteId, lcName, type, bmhID, rootPath, isMobile, defalutString);
+				result = this.analyLcDrInfo(siteId, lcName, type, appIns, rootPath, isMobile, defalutString);
 			}
 		} catch (Exception e) {
 
@@ -455,15 +450,12 @@ public class LcSysvarClass {
 		JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
 
 		// String defalutString = "<span>未发布</span>";
-		String  sqlString="select TZ_BMH_ID from PS_TZ_FORM_WRK_T where TZ_APP_INS_ID=?";
-		String bmhID= jdbcTemplate.queryForObject(sqlString, String.class, new Object[] { appIns });
 		String[] result = { "", defalutString };
 		String sql = "select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
 		try {
 			String lcName = jdbcTemplate.queryForObject(sql, String.class, new Object[] { "TZ_FS" });
-			
 			if (lcName != null && !"".equals(lcName)) {
-				result = this.analyLcDrInfo(siteId, lcName, type, bmhID, rootPath, isMobile, defalutString);
+				result = this.analyLcDrInfo(siteId, lcName, type, appIns, rootPath, isMobile, defalutString);
 
 				String QrcodeHtml = "";
 				// 录取状态
@@ -527,15 +519,13 @@ public class LcSysvarClass {
 		JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
 		System.out.println("getOtherStatus");
 		// String defalutString = "<span>未发布</span>";
-		String  sqlString="select TZ_BMH_ID from PS_TZ_FORM_WRK_T where TZ_APP_INS_ID=?";
-		String bmhID= jdbcTemplate.queryForObject(sqlString, String.class, new Object[] { appIns });
 		String[] result = { "", defalutString };
 		String sql = "select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
 		try {
 			String lcName = jdbcTemplate.queryForObject(sql, String.class, new Object[] { "TZ_QT" });
 			System.out.println("lcName:" + lcName);
 			if (lcName != null && !"".equals(lcName)) {
-				result = this.analyLcDrInfo(siteId, lcName, type, bmhID, rootPath, isMobile, defalutString);
+				result = this.analyLcDrInfo(siteId, lcName, type, appIns, rootPath, isMobile, defalutString);
 			}
 		} catch (Exception e) {
 
@@ -591,12 +581,10 @@ public class LcSysvarClass {
 		String[] result = { "", defalutString };
 		String sql = "select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
 		try {
-			String  sqlString="select TZ_BMH_ID from PS_TZ_FORM_WRK_T where TZ_APP_INS_ID=?";
-			String bmhID= jdbcTemplate.queryForObject(sqlString, String.class, new Object[] { appIns });
 			String lcName = jdbcTemplate.queryForObject(sql, String.class, new Object[] { "TZ_BS" });
 			System.out.println("lcName:" + lcName);
 			if (lcName != null && !"".equals(lcName)) {
-				result = this.analyLcDrInfo(siteId, lcName, type, bmhID, rootPath, isMobile, defalutString);
+				result = this.analyLcDrInfo(siteId, lcName, type, appIns, rootPath, isMobile, defalutString);
 			}
 		} catch (Exception e) {
 
@@ -617,15 +605,13 @@ public class LcSysvarClass {
 			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
 			System.out.println("getOtherStatus");
 			// String defalutString = "<span>未发布</span>";
-			String  sqlString="select TZ_BMH_ID from PS_TZ_FORM_WRK_T where TZ_APP_INS_ID=?";
-			String bmhID= jdbcTemplate.queryForObject(sqlString, String.class, new Object[] { appIns });
 			String[] result = { "", defalutString };
 			String sql = "select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
 			try {
 				String lcName = jdbcTemplate.queryForObject(sql, String.class, new Object[] { "TZ_YLQTZ" });
 				System.out.println("lcName:" + lcName);
 				if (lcName != null && !"".equals(lcName)) {
-					result = this.analyLcDrInfo(siteId, lcName, type, bmhID, rootPath, isMobile, defalutString);
+					result = this.analyLcDrInfo(siteId, lcName, type, appIns, rootPath, isMobile, defalutString);
 				}
 			} catch (Exception e) {
 
@@ -634,7 +620,7 @@ public class LcSysvarClass {
 		}
 
 	// 流程导入表信息;
-	private String[] analyLcDrInfo(String siteId, String lcName, String type, String appIns, String rootPath,
+	private String[] analyLcDrInfo(String siteId, String lcName, String type, long appIns, String rootPath,
 			String isMobile, String defalutString) {
 		String[] result = { "", defalutString };
 		// 查询表明;
@@ -689,7 +675,7 @@ public class LcSysvarClass {
 						Map<String, Object> valueMap = null;
 						try {
 							fieldSelectSQL = " select " + fieldSelectSQL + " from " + tableName
-									+ " where TZ_BMH_ID = ? ";
+									+ " where TZ_APP_INS_ID = ? ";
 
 							valueMap = jdbcTemplate.queryForMap(fieldSelectSQL, new Object[] { appIns });
 						} catch (Exception e1) {
@@ -798,7 +784,7 @@ public class LcSysvarClass {
 						Map<String, Object> valueMap = null;
 						try {
 							fieldSelectSQL = " select " + fieldSelectSQL + " from " + tableName
-									+ " where TZ_BMH_ID = ? ";
+									+ " where TZ_APP_INS_ID = ? ";
 
 							valueMap = jdbcTemplate.queryForMap(fieldSelectSQL, new Object[] { appIns });
 						} catch (Exception e1) {
@@ -993,192 +979,5 @@ public class LcSysvarClass {
 
 		return result;
 	}
-	//解析成绩
-	public String[] getXmdxLkcj(String[] para) {
-		String type = para[0];
-		long appIns = Long.parseLong(para[1]);
-		String rootPath = para[2];
-		String isMobile = para[3];
-		String siteId = para[4];
-
-		GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
-		JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
-
-		// String defalutString = "<span>未发布</span>";
-		String  sqlString="select TZ_BMH_ID from PS_TZ_FORM_WRK_T where TZ_APP_INS_ID=?";
-		String bmhID= jdbcTemplate.queryForObject(sqlString, String.class, new Object[] { appIns });
-		System.out.println(bmhID);
-		String[] result = { "", defalutString };
-		String sql = "select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
-		try {
-			String lcName = jdbcTemplate.queryForObject(sql, String.class, new Object[] { "TZ_XMDX_LKCJ" });
-			if (lcName != null && !"".equals(lcName)) {
-				result = this.analyLcDrInfo(siteId, lcName, type, bmhID, rootPath, isMobile, defalutString);
-			}
-		} catch (Exception e) {
-
-		}
-		return result;
-	}
-	//复试资格
-	public String[] getXmdxMszg(String[] para) {
-		String type = para[0];
-		long appIns = Long.parseLong(para[1]);
-		String rootPath = para[2];
-		String isMobile = para[3];
-		String siteId = para[4];
-       
-		GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
-		JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
-		String  sqlString="select TZ_BMH_ID from PS_TZ_FORM_WRK_T where TZ_APP_INS_ID=?";
-		String bmhID= jdbcTemplate.queryForObject(sqlString, String.class, new Object[] { appIns });
-		String[] result = { "", defalutString };
-		String sql = "select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
-		try {
-			String lcName = jdbcTemplate.queryForObject(sql, String.class, new Object[] { "TZ_XMDX_FSZG" });
-			if (lcName != null && !"".equals(lcName)) {
-				result = this.analyLcDrInfo(siteId, lcName, type, bmhID, rootPath, isMobile, defalutString);
-			}
-		} catch (Exception e) {
-
-		}
-		return result;
-	}
-	//复试结果
-	public String[] getXmdxFsjg(String[] para) {
-		String type = para[0];
-		long appIns = Long.parseLong(para[1]);
-		String rootPath = para[2];
-		String isMobile = para[3];
-		String siteId = para[4];
-
-		GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
-		JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
-
-		String[] result = { "", defalutString };
-		String sql = "select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
-		String  sqlString="select TZ_BMH_ID from PS_TZ_FORM_WRK_T where TZ_APP_INS_ID=?";
-		String bmhID= jdbcTemplate.queryForObject(sqlString, String.class, new Object[] { appIns });
-		try {
-			String lcName = jdbcTemplate.queryForObject(sql, String.class, new Object[] { "TZ_XMDX_FSJG" });
-			if (lcName != null && !"".equals(lcName)) {
-				result = this.analyLcDrInfo(siteId, lcName, type, bmhID, rootPath, isMobile, defalutString);
-			}
-		} catch (Exception e) {
-
-		}
-		return result;
-	}
-	//拟录取结果
-	public String[] getXmdxNlqjg(String[] para) {
-		String type = para[0];
-		long appIns = Long.parseLong(para[1]);
-		String rootPath = para[2];
-		String isMobile = para[3];
-		String siteId = para[4];
-
-		GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
-		JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
-		System.out.println("getOtherStatus");
-		// String defalutString = "<span>未发布</span>";
-		String  sqlString="select TZ_BMH_ID from PS_TZ_FORM_WRK_T where TZ_APP_INS_ID=?";
-		String bmhID= jdbcTemplate.queryForObject(sqlString, String.class, new Object[] { appIns });
-		String[] result = { "", defalutString };
-		String sql = "select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
-		try {
-			String lcName = jdbcTemplate.queryForObject(sql, String.class, new Object[] { "TZ_XMDX_NLQJG" });
-			System.out.println("lcName:" + lcName);
-			if (lcName != null && !"".equals(lcName)) {
-				result = this.analyLcDrInfo(siteId, lcName, type, bmhID, rootPath, isMobile, defalutString);
-			}
-		} catch (Exception e) {
-
-		}
-		return result;
-	}
-	//材料提交
-	public String[] getXmdxCltj(String[] para) {
-		String type = para[0];
-		long appIns = Long.parseLong(para[1]);
-		String rootPath = para[2];
-		String isMobile = para[3];
-		String siteId = para[4];
-        System.out.println(String.valueOf(appIns));
-		GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
-		JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
-		System.out.println("getOtherStatus");
-		// String defalutString = "<span>未发布</span>";
-		String  sqlString="select TZ_BMH_ID from PS_TZ_FORM_WRK_T where TZ_APP_INS_ID=?";
-		String bmhID= jdbcTemplate.queryForObject(sqlString, String.class, new Object[] { appIns });
-		String[] result = { "", defalutString };
-		String sql = "select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
-		try {
-			String lcName = jdbcTemplate.queryForObject(sql, String.class, new Object[] { "TZ_XMDX_CLTJ" });
-			System.out.println("lcName:" + lcName);
-			if (lcName != null && !"".equals(lcName)) {
-				result = this.analyLcDrInfo(siteId, lcName, type, bmhID, rootPath, isMobile, defalutString);
-			}
-		} catch (Exception e) {
-
-		}
-		return result;
-	}
-	//联考报名
-	public String[] getXmdxLkbm(String[] para) {
-		String type = para[0];
-		long appIns = Long.parseLong(para[1]);
-		String rootPath = para[2];
-		String isMobile = para[3];
-		String siteId = para[4];
-        System.out.println(String.valueOf(appIns));
-		GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
-		JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
-		System.out.println("getOtherStatus");
-		// String defalutString = "<span>未发布</span>";
-		String  sqlString="select TZ_BMH_ID from PS_TZ_FORM_WRK_T where TZ_APP_INS_ID=?";
-		String bmhID= jdbcTemplate.queryForObject(sqlString, String.class, new Object[] { appIns });
-		String[] result = { "", defalutString };
-		String sql = "select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
-		try {
-			String lcName = jdbcTemplate.queryForObject(sql, String.class, new Object[] { "TZ_XMDX_LKBM" });
-			System.out.println("lcName:" + lcName);
-			if (lcName != null && !"".equals(lcName)) {
-				result = this.analyLcDrInfo(siteId, lcName, type, bmhID, rootPath, isMobile, defalutString);
-			}
-		} catch (Exception e) {
-
-		}
-		return result;
-	}
-	//面试结果
-	public String[] getXmdxMsjg(String[] para) {
-		String type = para[0];
-		long appIns = Long.parseLong(para[1]);
-		String rootPath = para[2];
-		String isMobile = para[3];
-		String siteId = para[4];
-        System.out.println(String.valueOf(appIns));
-		GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
-		JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
-		System.out.println("getOtherStatus");
-		// String defalutString = "<span>未发布</span>";
-		String  sqlString="select TZ_BMH_ID from PS_TZ_FORM_WRK_T where TZ_APP_INS_ID=?";
-		String bmhID= jdbcTemplate.queryForObject(sqlString, String.class, new Object[] { appIns });
-		String[] result = { "", defalutString };
-		String sql = "select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
-		try {
-			String lcName = jdbcTemplate.queryForObject(sql, String.class, new Object[] { "TZ_XMDX_MSJG" });
-			System.out.println("lcName:" + lcName);
-			if (lcName != null && !"".equals(lcName)) {
-				result = this.analyLcDrInfo(siteId, lcName, type, bmhID, rootPath, isMobile, defalutString);
-			}
-		} catch (Exception e) {
-
-		}
-		return result;
-	}
-	
-  
-	
 
 }
