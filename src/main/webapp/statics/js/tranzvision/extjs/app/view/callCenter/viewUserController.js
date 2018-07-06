@@ -686,6 +686,7 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 				if(oprid==null||oprid==""||oprid==undefined){
 					/*禁用按钮*/
 					me.disabledButton(_this,true);
+					_this.down("button[name=createClue]").removeCls('x-item-disabled x-btn-disabled');
 				}else{
 					var store = Grid.getStore();
 					var tzStoreParams = '{"cfgSrhId":"TZ_CALLCR_USER_COM.TZ_CALLC_USER_STD.TZ_USER_CALL1_VW","condition":{"OPRID-operator": "01","OPRID-value": "'+ oprid+'"}}';
@@ -770,7 +771,7 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 		 form.down("button[name=updatePsw]").disabled=disalbed;		 
 		 form.down("button[name=invalidAccount]").disabled=disalbed;		 
 		 form.down("button[name=addBlackList]").disabled=disalbed;
-		 form.down("button[name=createClue]").disabled=disalbed;
+		 //form.down("button[name=createClue]").disabled=disalbed;
 		 
 		 if(disalbed){
 			 form.down("button[name=viewUserBtn]").addCls('x-item-disabled x-btn-disabled');
