@@ -123,7 +123,7 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
 						 array.push(child.bmrBatch["option"][i]["code"]);
 					 }
 					 
-					 if(array.length != 0){
+					 // if(array.length != 0){
 						 
 						 e += '<div class="item" id="div1">';
 						 e += '<p>'+ child.bmrBatch.title +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
@@ -135,19 +135,19 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
 						 e += '</div>';
 						 e += '</div>';
 						 
-					 }else{
+					 // }else{
 						 
-						 e += '<div class="item" id="div1" style="display:none">';
-						 e += '<p>'+ child.bmrBatch.title +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
-						 e += '<div id="' + data["itemId"]+child.bmrBatch.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
-						 e += '<div class="text-box">';
-						 e += '<select name="' + child.bmrBatch.itemId + '" class="select1" id="' + data["itemId"]+child.bmrBatch.itemId + '" title="' + child.bmrBatch.itemName + '">';
-						 e += opP;
-						 e += '</select>';
-						 e += '</div>';
-						 e += '</div>';
+						//  e += '<div class="item" id="div1" style="display:none">';
+						//  e += '<p>'+ child.bmrBatch.title +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
+						//  e += '<div id="' + data["itemId"]+child.bmrBatch.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
+						//  e += '<div class="text-box">';
+						//  e += '<select name="' + child.bmrBatch.itemId + '" class="select1" id="' + data["itemId"]+child.bmrBatch.itemId + '" title="' + child.bmrBatch.itemName + '">';
+						//  e += opP;
+						//  e += '</select>';
+						//  e += '</div>';
+						//  e += '</div>';
 						 
-					 }
+					 // }
 					
 				 }
 				 
@@ -216,7 +216,7 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
 						 op+= '<option ' + (child.bmrBatch.value == child.bmrBatch["option"][i]["code"] ? "selected='selected'": "") + 'value="' + child.bmrBatch["option"][i]["code"] + '">' + child.bmrBatch["option"][i]["txt"] + '</option>';
 						 array.push(child.bmrBatch["option"][i]["code"]);
 					 }
-					 if(array.length != 0){
+					 // if(array.length != 0){
 						 e += '<div class="input-list" id="div1" style="display:">';
 						 e += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + MsgSet["INTERVIEW_BATCH"] + '</div>';
 						 e += '    <div class="input-list-text left input-edu-select">';
@@ -227,19 +227,19 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
 						 e += '    <div class="input-list-suffix left"><div id="' +data["itemId"]+child.bmrBatch.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
 						 e += '    <div class="clear"></div>';
 						 e += '</div>';
-					 }else{
-						 child.bmrBatch.wzsm = "";
-						 e += '<div class="input-list" id="div1" style="display:none">';
-						 e += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + MsgSet["INTERVIEW_BATCH"] + '</div>';
-						 e += '    <div class="input-list-text left input-edu-select">';
-						 e += '          <select name="' + child.bmrBatch.itemId + '" id="' + data["itemId"]+child.bmrBatch.itemId + '" style="width:100%;" title="' + child.bmrBatch.itemName + '">';
-						 e +=                    op;
-						 e += '          </select>';
-						 e += '    </div>';
-						 e += '    <div class="input-list-suffix left"><div id="' +data["itemId"]+child.bmrBatch.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
-						 e += '    <div class="clear"></div>';
-						 e += '</div>';
-					 }
+					 // }else{
+						//  child.bmrBatch.wzsm = "";
+						//  e += '<div class="input-list" id="div1" style="display:none">';
+						//  e += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + MsgSet["INTERVIEW_BATCH"] + '</div>';
+						//  e += '    <div class="input-list-text left input-edu-select">';
+						//  e += '          <select name="' + child.bmrBatch.itemId + '" id="' + data["itemId"]+child.bmrBatch.itemId + '" style="width:100%;" title="' + child.bmrBatch.itemName + '">';
+						//  e +=                    op;
+						//  e += '          </select>';
+						//  e += '    </div>';
+						//  e += '    <div class="input-list-suffix left"><div id="' +data["itemId"]+child.bmrBatch.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
+						//  e += '    <div class="clear"></div>';
+						//  e += '</div>';
+					 // }
 
 				 }
 
