@@ -86,6 +86,10 @@
 					text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.sendSnselectedPerson","给选中人发送短信"),
 					glyph:'xf003@FontAwesome',
 					handler:'sendSmsSelPers'
+                },{
+					text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.exportApplyInfoExcel","导出未报名人信息"),
+					iconCls:'export',
+					handler:'exportApplyInfoExcel'
                 }]
 			}
 		]

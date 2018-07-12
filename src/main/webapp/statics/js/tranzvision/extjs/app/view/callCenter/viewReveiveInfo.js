@@ -231,6 +231,10 @@ Ext.define('KitchenSink.view.callCenter.viewReveiveInfo', {
 					hidden:true
 				},{
 					xtype: 'textfield',
+					name:'bmrName',
+					hidden:true
+				},{
+					xtype: 'textfield',
 					name:'leadId',
 					hidden:true
 				},{
@@ -518,7 +522,7 @@ Ext.define('KitchenSink.view.callCenter.viewReveiveInfo', {
                              name: 'createClue',
                              flagType: 'positive',
                              setType: 0,
-                             handler: 'createClue',
+                             handler: 'addEnrollmentClue',
                              width: 100
                         }/*,
                         {

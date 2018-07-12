@@ -1,6 +1,7 @@
 package com.tranzvision.gd.TZLeaguerAccountBundle.service.impl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +19,9 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzRegUserT;
 import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzRegUserTMapper;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.encrypt.DESUtil;
+import com.tranzvision.gd.util.poi.excel.ExcelHandle2;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -53,7 +56,8 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 	private TzGdBmglStuClsServiceImpl TzGdBmglStuClsServiceImpl;
 	@Autowired
 	private SqlQuery jdbcTemplate;
-
+	@Autowired
+	private GetSysHardCodeVal getSysHardCodeVal;
 	// @Override
 	public String tzQueryList11(String strParams, int numLimit, int numStart, String[] errorMsg) {
 
@@ -434,6 +438,10 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 			if ("GETVALUE".equals(oprType)) {
 				returnJsonMap.replace("success", "true");
 				returnJsonMap.put("dataStore", this.getSearchTranslateValue());
+			}
+			if("exportApplyInfo".equals(oprType)){
+				returnJsonMap.replace("success", "true");
+				returnJsonMap.put("fileUrl", this.exportApplyInfo());
 			}
 		} catch (Exception e) {
 			errorMsg[0] = "1";
@@ -947,5 +955,82 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 		content = content.replaceAll("\\<.*?>", ""); 
 		
 		return content; 
+	}
+	//导出当前机构所有注册但是未报名的人的基本信息
+	public String exportApplyInfo(){
+		// 获取当前机构;
+		String strJgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+		String sql ="SELECT A.OPRID,B.TZ_REALNAME, B.TZ_MOBILE, B.TZ_EMAIL,	A.TZ_LEN_PROID,A.TZ_GENDER, DATE_FORMAT(A.ROW_ADDED_DTTM,'%Y-%m-%d %h:%i:%s')ROW_ADDED_DTTM FROM 	PS_TZ_REG_USER_T A , PS_TZ_AQ_YHXX_TBL B WHERE A.OPRID = B.OPRID AND B.TZ_JG_ID = ? ORDER BY A.ROW_ADDED_DTTM DESC ";
+//		String countSql = "SELECT COUNT(1) FROM 	PS_TZ_REG_USER_T A JOIN  PS_TZ_AQ_YHXX_TBL B ON (A.OPRID = B.OPRID AND B.TZ_JG_ID = ?) LEFT JOIN PS_TZ_FORM_WRK_T C ON(B.OPRID=C.OPRID) WHERE C.TZ_BATCH_ID IS NULL";
+//		int total = SqlQuery.queryForObject(countSql, new Object[] { strJgid }, "int");
+		List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
+//		if(total>0){
+			String downloadPath = getSysHardCodeVal.getDownloadPath();
+			String expDirPath = downloadPath + "/" + strJgid + "/" + getDateNow() + "/" + "ApplyInfoExpExcel";
+			String absexpDirPath = request.getServletContext().getRealPath(expDirPath);
+			// 表头
+			List<String[]> dataCellKeys = new ArrayList<String[]>();
+			dataCellKeys.add(new String[]{ "NAME", "姓名" });
+			dataCellKeys.add(new String[]{ "GENDER", "性别" });
+			dataCellKeys.add(new String[]{ "PHONE", "手机" });
+			dataCellKeys.add(new String[]{ "EMAIL", "邮箱" });
+			dataCellKeys.add(new String[]{ "PROID", "常驻地" });
+			dataCellKeys.add(new String[]{ "TIME", "注册时间" });
+			List<Map<String, Object>> listData = SqlQuery.queryForList(sql, new Object[] {strJgid});
+			for (Map<String, Object> mapData : listData) {
+				Map<String, Object> mapDataex = new HashMap<String, Object>();
+				String oprid = mapData.get("OPRID")==null?"":String.valueOf(mapData.get("OPRID")) ;
+				String name=mapData.get("TZ_REALNAME")==null?"":String.valueOf(mapData.get("TZ_REALNAME")) ;
+				String mobile=mapData.get("TZ_MOBILE")==null?"":String.valueOf(mapData.get("TZ_MOBILE")) ;
+				String email=mapData.get("TZ_EMAIL")==null?"":String.valueOf(mapData.get("TZ_EMAIL")) ;
+				String priod=mapData.get("TZ_LEN_PROID")==null?"":String.valueOf(mapData.get("TZ_LEN_PROID")) ;
+				String gender = mapData.get("TZ_GENDER")==null?"":String.valueOf(mapData.get("TZ_GENDER")) ;
+				String time = mapData.get("ROW_ADDED_DTTM")==null?"":String.valueOf(mapData.get("ROW_ADDED_DTTM")) ;
+				String sex="";
+				if("M".equals(gender)){
+					sex="男";
+				}else if("F".equals(gender)){
+					sex="女";
+				}
+			String batchId = SqlQuery.queryForObject(
+					"SELECT TZ_BATCH_ID FROM PS_TZ_FORM_WRK_T WHERE OPRID=? ORDER BY ROW_ADDED_DTTM DESC LIMIT 0,1",
+					new Object[] {oprid}, "String");
+				if ("".equals(batchId)||batchId==null){
+					mapDataex.put("NAME", name);
+					mapDataex.put("GENDER", sex);
+					mapDataex.put("PHONE", mobile);
+					mapDataex.put("EMAIL",email);
+					mapDataex.put("PROID", priod);
+					mapDataex.put("TIME", time);
+					dataList.add(mapDataex);
+				}
+			}
+			/* 将文件上传之前，先重命名该文件 */
+			Date dt = new Date();
+			SimpleDateFormat datetimeFormate = new SimpleDateFormat("yyyyMMddHHmmss");
+			String sDttm = datetimeFormate.format(dt);
+			String strUseFileName = "APPLYINFO_"+sDttm + "_" + strJgid + "." + "xlsx"; 
+			
+			ExcelHandle2 excelHandle = new ExcelHandle2(expDirPath, absexpDirPath);
+			boolean rst = excelHandle.export2Excel(strUseFileName, dataCellKeys, dataList);
+			if (rst) {
+				String urlExcel = request.getContextPath() + excelHandle.getExportExcelPath();
+				return urlExcel;
+			}
+//		}
+		
+		return "";
+	}
+	/**
+	 * 创建日期目录名
+	 * 
+	 * @return
+	 */
+	private String getDateNow() {
+		Calendar cal = Calendar.getInstance();
+		int year = cal.get(1);
+		int month = cal.get(2) + 1;
+		int day = cal.get(5);
+		return (new StringBuilder()).append(year).append(month).append(day).toString();
 	}
 }

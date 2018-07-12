@@ -654,6 +654,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                                     name:'interviewStudentGrid',
                                     columnLines: true,
                                     autoHeight: true,
+                                    hidden:true,
                                     listeners:{
                                         activate:'stuListActive'
                                     },
@@ -678,6 +679,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                                     title: '统计信息',
                                     autoHeight:true,
                                     name:'statisticalInfoForm',
+                                    hidden:true,
                                     items:[
                                          Ext.create('Ext.grid.Panel', {
                                             store: Ext.create('Ext.data.ArrayStore', {

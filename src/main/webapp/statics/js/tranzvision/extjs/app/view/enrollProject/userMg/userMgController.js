@@ -2156,8 +2156,25 @@
                 "file": "N"
             });
         });
+    },
+    /*导出申请人基本信息到Excel*/
+    exportApplyInfoExcel: function (btn) {
+    	 var params = {
+    	            "ComID": "TZ_UM_USERMG_COM",
+    	            "PageID": "TZ_UM_USERMG_STD",
+    	            "OperateType": "exportApplyInfo",
+    	            "comParams": {}
+    	        };
+    	var tzParams = Ext.JSON.encode(params);
+ 		Ext.tzLoad(tzParams,function(respData){
+ 			var fileUrl = respData.fileUrl;
+ 			if(fileUrl != ""){
+ 				window.open(fileUrl, "download","status=no,menubar=yes,toolbar=no,location=no");
+ 			}else{
+ 				Ext.Msg.alert("提示","下载失败，文件不存在");
+ 			}
+ 		});
     }
-    
     
     
 });

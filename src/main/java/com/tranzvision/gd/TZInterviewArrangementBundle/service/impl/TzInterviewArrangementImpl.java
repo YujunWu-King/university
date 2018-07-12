@@ -852,21 +852,22 @@ public class TzInterviewArrangementImpl extends FrameworkImpl{
 							mapDataex.put("interview-yyStatus",yyStatus);
 							mapDataex.put("interview-tag", strLabel);
 						}
-						
 						dataList.add(mapDataex);
-						/* 将文件上传之前，先重命名该文件 */
-						Date dt = new Date();
-						SimpleDateFormat datetimeFormate = new SimpleDateFormat("yyyyMMddHHmmss");
-						String sDttm = datetimeFormate.format(dt);
-						String strUseFileName = "MSKSMD_"+sDttm + "_" + classID + batchID + "." + "xlsx"; 
 						
-						ExcelHandle2 excelHandle = new ExcelHandle2(expDirPath, absexpDirPath);
-						boolean rst = excelHandle.export2Excel(strUseFileName, dataCellKeys, dataList);
-						if (rst) {
-							String urlExcel = request.getContextPath() + excelHandle.getExportExcelPath();
-							rtnMap.replace("fileUrl", urlExcel);
-						}
 				}
+					
+					/* 将文件上传之前，先重命名该文件 */
+					Date dt = new Date();
+					SimpleDateFormat datetimeFormate = new SimpleDateFormat("yyyyMMddHHmmss");
+					String sDttm = datetimeFormate.format(dt);
+					String strUseFileName = "MSKSMD_"+sDttm + "_" + classID + batchID + "." + "xlsx"; 
+					
+					ExcelHandle2 excelHandle = new ExcelHandle2(expDirPath, absexpDirPath);
+					boolean rst = excelHandle.export2Excel(strUseFileName, dataCellKeys, dataList);
+					if (rst) {
+						String urlExcel = request.getContextPath() + excelHandle.getExportExcelPath();
+						rtnMap.replace("fileUrl", urlExcel);
+					}
 			}	
 		}catch(Exception e){
 			e.printStackTrace();
