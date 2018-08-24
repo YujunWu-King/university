@@ -294,7 +294,13 @@ $(document).ready(function(){
 					var fieldId = this.id;
 					if(fieldId=="TZ_REALNAME"){//姓名
 						if(val !=''){
-								if(val.length>1){
+								var reg=/^((?!<|>).)*$/;
+								if(!reg.test(val)){
+								$('#' + fieldId + '_status').html("<span>"+"姓名不能包含<>字符"+"</span>");
+								$('#status_' + fieldId).attr("value", 1);
+								$('#' + fieldId + 'Style').removeClass("alert_display_none");
+								}
+								else if(val.length>1&&reg.test(val)){
 									$('#' + fieldId + '_status').html("");
 									$('#status_' + fieldId).attr("value", 0);
 									$('#' + fieldId + 'Style').addClass("alert_display_none");

@@ -883,7 +883,9 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 			// 手机被占用
 			String strPhoneZy = validateUtil.getMessageTextWithLanguageCd(strJgid, strLang, "TZ_SITE_MESSAGE", "49",
 					"手机已注册，建议取回密码", "The mobile phone has been registered, proposed to retrieve Password");
-
+			//姓名格式不对
+			String strNameyz = validateUtil.getMessageTextWithLanguageCd(strJgid, strLang, "TZ_SITE_MESSAGE", "80",
+					"姓名格式不对，不能包含< >", "The name is not in the correct format and cannot contain <>");
 			String strFirstName = "";
 			String strLastName = "";
 			String tzRealName = "";
@@ -958,7 +960,18 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 							updateList.add(schCountryValue);
 						}
 					}
-
+					if("TZ_COMMENT9".equals(regFieldId)){
+						String strTZ_COMMENT = "";
+						if (jacksonUtil.containsKey(regFieldId)) {
+							strTZ_COMMENT = jacksonUtil.getString(regFieldId);
+						}
+						Pattern pattern = Pattern.compile("^((?!<|>).)*$");
+						Boolean booleanInt = pattern.matcher(strTZ_COMMENT).matches();
+						if (!booleanInt) {
+							return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON",
+									regFieldYsmc + " " + strNameyz);
+						}
+					}
 					if ("TZ_EMAIL".equals(regFieldId)) {
 						if (strUserEmail == null || "".equals(strUserEmail)) {
 							return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON",
