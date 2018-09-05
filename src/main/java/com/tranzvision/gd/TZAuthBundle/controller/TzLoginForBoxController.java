@@ -446,8 +446,10 @@ public class TzLoginForBoxController {
 			System.out.println("mobileUrlMenu=" + mobileUrlMenu);
 		} else if ("MEM".equals(id)) {
 			mobileUrlMenu = SqlQuery.queryForObject(strHardSQL, new Object[] { "TZ_MEM_PHONE_USERMENU" }, "String");
-		} else {
+		} else if ("MPACC".equals(id)) {
 			mobileUrlMenu = SqlQuery.queryForObject(strHardSQL, new Object[] { "TZ_MPACC_PHONE_USERMENU" }, "String");
+		} else if ("IMBA".equals(id)) {
+			mobileUrlMenu = SqlQuery.queryForObject(strHardSQL, new Object[] { "TZ_IMBA_PHONE_USERMENU" }, "String");
 		}
 		strUrl = strUrl + "#" + mobileUrlMenu;
 		if (currentDlzhId != null && !currentDlzhId.equals("")) {
