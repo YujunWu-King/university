@@ -187,8 +187,8 @@ public class TzLoginForBoxController {
 				String password = entry.getValue().toString();
 				// password=md5.getMD5(password.getBytes());
 				System.out.println("pass=" + password);
-				String sql = "select PSOPRDEFN.OPERPSWD from PS_TZ_AQ_YHXX_TBL,PSOPRDEFN where PS_TZ_AQ_YHXX_TBL.OPRID=PSOPRDEFN.OPRID and PS_TZ_AQ_YHXX_TBL.TZ_DLZH_ID=?";
-				pwd = SqlQuery.queryForObject(sql, new Object[] { tm.get("username") }, "String");
+				String sql = "select PSOPRDEFN.OPERPSWD from PS_TZ_AQ_YHXX_TBL,PSOPRDEFN where PS_TZ_AQ_YHXX_TBL.OPRID=PSOPRDEFN.OPRID and PS_TZ_AQ_YHXX_TBL.TZ_DLZH_ID=? and  PS_TZ_AQ_YHXX_TBL.TZ_JG_ID=?";
+				pwd = SqlQuery.queryForObject(sql, new Object[] { tm.get("username"), orgid }, "String");
 				System.out.println(pwd);
 				password = DESUtil.encrypt(password, "TZGD_Tranzvision");
 				// System.out.println(s);
