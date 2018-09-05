@@ -680,7 +680,20 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 						return strResult;
 					}
 				}
-
+				//校验姓名中是否含字符'<' '>' '"'
+				String reg = "^((?!<|>|\").)*$";
+				if(!strTZ_REALNAME.matches(reg)){
+					errMsg[0] = "20";
+					errMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgId, strLang, "TZ_SITE_MESSAGE", "55",
+							"填入姓名含非法字符", "invalid character '<>'");
+					return strResult;
+				}
+				if(!strTZ_COMMENT9.matches(reg)){
+					errMsg[0] = "20";
+					errMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgId, strLang, "TZ_SITE_MESSAGE", "55",
+							"填入紧急联系人姓名含非法字符", "invalid character '<>'");
+					return strResult;
+				}
 				// 通过所有校验，开始创建账号;
 				String oprId = "TZ_" + getSeqNum.getSeqNum("PSOPRDEFN", "OPRID");
 				// 生成登录账号;

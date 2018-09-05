@@ -239,6 +239,7 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.clueDetailPanel',{
                     hidden:true
                 },{
                     xtype: 'combo',
+                    id : 'myCombo',
                     fieldLabel: '客户姓名',
                     maxLength: 30,
                     name: 'cusName',
@@ -256,6 +257,9 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.clueDetailPanel',{
                         '</tpl>'
                     ),
                     listeners:{
+                    	load:function(){
+                            Ext.getCmp('myCombo').setValue("小名");
+                         },
                         select:function(combo,record){
                             var form = this.findParentByType('form').getForm();
 

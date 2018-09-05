@@ -600,6 +600,9 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				    if(copmindustry!=null){
 				    	psTzRegUserT.setTzCompIndustry(copmindustry);				    	
 				    }
+				    if(strBeiZhu!=null){
+				    	psTzRegUserT.setTzBeizhu(strBeiZhu);				    	
+				    }
 				    
 				    psTzRegUserT.setRowLastmantDttm(new Date());
 				    psTzRegUserT.setRowLastmantOprid(strCurrentOprid);

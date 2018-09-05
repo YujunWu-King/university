@@ -205,11 +205,13 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 							handler: 'matchStudenSocre'
 						}]
 						*/
-						   [{
-							text: '导入面试考生',
-							iconCls: 'excel',
-							handler: 'importMsStuInfom'
-						},{
+						   [
+//						    {
+//							text: '导入面试考生',
+//							iconCls: 'excel',
+//							handler: 'importMsStuInfom'
+//						},
+						{
 							text:Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.exportExcel","导出考生评议数据"),
     						iconCls: 'excel',
     						menu:[{
