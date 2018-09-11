@@ -595,7 +595,7 @@ Ext.define('KitchenSink.view.callCenter.viewUserInfo', {
 //                          disabled:buttonDisabled,
                             flagType: 'positive',
                             setType: 0,
-                            handler: 'createClue',
+                            handler: 'addEnrollmentClue',
                             width: 100
                         }/*,
                         {
