@@ -85,9 +85,7 @@ SurveyBuild.extend("Select", "baseComponent", {
 	                c += '</select>';  */
 					c += '<div class="input-list">';
 					c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-					c += '  <div class="input-list-text left">' + valDesc ;
-					c += '  <input id="' + data.itemId + '" type="hidden" name="" value="" readonly="" disabled="">';
-					c += '  </div>';
+					c += '  <div class="input-list-text left">' + valDesc + '</div>';
 					c += '  <div class="input-list-suffix left"></div>';
 					c += '  <div class="clear"></div>';
 					c += '</div>';
