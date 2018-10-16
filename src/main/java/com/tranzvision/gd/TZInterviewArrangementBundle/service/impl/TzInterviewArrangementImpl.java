@@ -332,7 +332,12 @@ public class TzInterviewArrangementImpl extends FrameworkImpl{
 					
 					//查询报名表编号
 					String tzAppInsId_ = jdbcTemplate.queryForObject(sql2, new Object[] {oprID, TZ_JG_ID}, "String");
-					tzAppInsId = Long.valueOf(tzAppInsId_);
+					if(tzAppInsId_ != null) {
+						tzAppInsId = Long.valueOf(tzAppInsId_);
+					}else {
+						System.out.println("TZ_MS_PLAN_SEQ:" + TZ_MS_PLAN_SEQ);
+						System.out.println("oprID:" + oprID);
+					}
 					//查询面试安排信息
 					Map<String, Object> map2 = jdbcTemplate.queryForMap(sql3, new Object[] {classID, batchID, TZ_MS_PLAN_SEQ});
 					msDate = map2.get("TZ_MS_DATE") + "";
