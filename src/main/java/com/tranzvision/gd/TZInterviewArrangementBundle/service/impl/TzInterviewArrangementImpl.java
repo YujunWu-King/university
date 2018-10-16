@@ -335,9 +335,6 @@ public class TzInterviewArrangementImpl extends FrameworkImpl{
 					String tzAppInsId_ = jdbcTemplate.queryForObject(sql2, new Object[] {oprID, TZ_JG_ID}, "String");
 					if(tzAppInsId_ != null) {
 						tzAppInsId = Long.valueOf(tzAppInsId_);
-					}else {
-						System.out.println("TZ_MS_PLAN_SEQ:" + TZ_MS_PLAN_SEQ);
-						System.out.println("oprID:" + oprID);
 					}
 					//查询面试安排信息
 					Map<String, Object> map2 = jdbcTemplate.queryForMap(sql3, new Object[] {classID, batchID, TZ_MS_PLAN_SEQ});
