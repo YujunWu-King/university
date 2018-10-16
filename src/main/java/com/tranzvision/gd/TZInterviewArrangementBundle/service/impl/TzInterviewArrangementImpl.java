@@ -298,15 +298,16 @@ public class TzInterviewArrangementImpl extends FrameworkImpl{
 			ptmst.setTzMaterial(material);
 			psTzMsyySetTblMapper.updateByPrimaryKeyWithBLOBs(ptmst);*/
 			
-			//从cookie中获取机构id
+			/*//从cookie中获取机构id
 			Cookie[] cookies = request.getCookies();
 			for (Cookie cookie : cookies) {
 				if(cookie.getName().equals("tzmo")) {
 					TZ_JG_ID = cookie.getValue();
 				}
 			}
-
-		
+			*/
+			TZ_JG_ID = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+			
 			String sql1 = "select TZ_MS_PLAN_SEQ,OPRID from PS_TZ_MSYY_KS_TBL where TZ_CLASS_ID=? and TZ_BATCH_ID=?";
 			
 			String sql2 = "select A.TZ_APP_INS_ID from PS_TZ_FORM_WRK_T A,PS_TZ_CLASS_INF_T B\n" + 
