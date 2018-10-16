@@ -20,7 +20,7 @@ public class TzOnTrialController {
 	@Autowired
 	private TZGDObject tzGDObject;
 	
-	@RequestMapping(value = "tranzvision", produces = "text/html;charset=UTF-8")
+	/*@RequestMapping(value = "tranzvision", produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String trial(HttpServletRequest request, HttpServletResponse response) {
 		//试用申请页面html;
@@ -56,5 +56,5 @@ public class TzOnTrialController {
 			loginHtml = "申请试用访问失败，请于管理员联系";
 		}
 		return loginHtml;
-	}
+	} */
 }

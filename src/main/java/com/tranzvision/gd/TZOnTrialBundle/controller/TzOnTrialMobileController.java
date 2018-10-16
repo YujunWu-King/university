@@ -37,7 +37,7 @@ public class TzOnTrialMobileController {
 	*/
 	
 	//提交
-	@RequestMapping(value = "m/trialSubmit", produces = "text/html;charset=UTF-8")
+	/*@RequestMapping(value = "m/trialSubmit", produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String trialSubmit(HttpServletRequest request, HttpServletResponse response) {
 		return tzOnTrialMobileServiceImpl.applyOnTrialMobileInfo();
@@ -56,5 +56,5 @@ public class TzOnTrialMobileController {
 			loginHtml = "申请试用访问失败，请于管理员联系";
 		}
 		return loginHtml;
-	}
+	} */
 }

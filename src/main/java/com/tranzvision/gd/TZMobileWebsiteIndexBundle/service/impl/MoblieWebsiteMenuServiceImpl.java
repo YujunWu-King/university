@@ -73,6 +73,14 @@ public class MoblieWebsiteMenuServiceImpl extends FrameworkImpl {
 				columnId = sqlQuery.queryForObject(
 						"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?",
 						new Object[] { "TZ_M_WEB_ZSRL_MEM" }, "String");
+			} else if (JGID.equals("IMBA")) {
+				columnId = sqlQuery.queryForObject(
+						"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?",
+						new Object[] { "TZ_M_WEB_ZSRL_IMBA" }, "String");
+			} else if (JGID.equals("MPACC")) {
+				columnId = sqlQuery.queryForObject(
+						"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?",
+						new Object[] { "TZ_M_WEB_ZSRL_MPACC" }, "String");
 			}
 		}
 		String rlUrl = ctxPath + "/dispatcher?classid=mZsrl&siteId=" + siteId + "&columnId=" + columnId;
@@ -88,6 +96,12 @@ public class MoblieWebsiteMenuServiceImpl extends FrameworkImpl {
 			} else if (JGID.equals("MEM")) {
 				lxUrl = sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?",
 						new Object[] { "TZ_M_LXWM_MEM_URL" }, "String");
+			} else if (JGID.equals("MPACC")) {
+				lxUrl = sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?",
+						new Object[] { "TZ_M_LXWM_MPACC_URL" }, "String");
+			} else if (JGID.equals("IMBA")) {
+				lxUrl = sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?",
+						new Object[] { "TZ_M_LXWM_IMBA_URL" }, "String");
 			}
 		}
 		// String lxUrl = sqlQuery.queryForObject("select TZ_HARDCODE_VAL from
