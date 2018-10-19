@@ -74,7 +74,7 @@ public class LabelListClsServiceImpl extends FrameworkImpl {
 				resultlist = sqlQuery.queryForList(sql, new Object[] { orgId });
 			}else{
 				sql = "SELECT TZ_LABEL_ID,TZ_LABEL_NAME,TZ_LABEL_DESC FROM PS_TZ_LABEL_DFN_T WHERE TZ_JG_ID = ? AND TZ_LABEL_STATUS <> 'N' ORDER BY TZ_LABEL_ID LIMIT ?,?";
-				resultlist = sqlQuery.queryForList(sql, new Object[] { orgId, numStart, numStart + numLimit });
+				resultlist = sqlQuery.queryForList(sql, new Object[] { orgId, numStart, numLimit });
 			}
 			
 			for (Object obj : resultlist) {
