@@ -376,7 +376,8 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				    perInfoMap.put("lenProvince", grxxMap.get("TZ_LEN_PROID"));
 				    perInfoMap.put("companyname", grxxMap.get("TZ_COMPANY_NAME"));
 				    if(copmin!=null){
-				    perInfoMap.put("copmindustry", grxxMap.get("TZ_COMP_INDUSTRY")+"-"+copmin);
+				   // perInfoMap.put("copmindustry", grxxMap.get("TZ_COMP_INDUSTRY")+"-"+copmin);
+				    	perInfoMap.put("copmindustry", grxxMap.get("TZ_COMP_INDUSTRY"));
 				    }else{
 				    	 perInfoMap.put("copmindustry","");
 				    }
