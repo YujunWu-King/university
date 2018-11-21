@@ -109,8 +109,13 @@ public class LcSysvarClass {
 								isComplete = "";
 							}
 							if (i == list.size() - 1) {
-								span = "<span class=\"fl width_40\">报名表提交状态</span><span class=\"fl\">" + bmbTjStatusDesc
+								if("87".equals(siteId)){
+								span = "<span class=\"fl width_40\">报名表提交状态 Application Status</span><span class=\"fl\">" + bmbTjStatusDesc
 										+ "</span>";
+								}else{
+									span = "<span class=\"fl width_40\">报名表提交状态</span><span class=\"fl\">" + bmbTjStatusDesc
+											+ "</span>";		
+										}
 
 							} else {
 								span = "<span class=\"fl width_40\">" + TZ_XXX_MC + "</span>";
@@ -176,7 +181,12 @@ public class LcSysvarClass {
 							String td1 = "";
 							if (count == totalnum) {
 								// 最后一列不显示报名表的正式提交列, 直接显示报名表的状态;
-								TZ_XXX_MC = "报名表提交状态";
+								if("87".equals(siteId)){
+									TZ_XXX_MC = "报名表提交状态 Application Status";
+								}else{
+									TZ_XXX_MC = "报名表提交状态";
+								}
+								
 								// 已经提交;
 								td1 = "<td>" + bmbTjStatusDesc + "</td>";
 							} else {

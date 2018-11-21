@@ -1600,7 +1600,7 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
         Ext.tzLoad(Ext.JSON.encode(params),function(audID){
             Ext.tzSendEmail({
                 //发送的邮件模板;
-                "EmailTmpName": ["TZ_EML_N_001"],
+                "EmailTmpName": ["TZ_EML_N"],
                 //创建的需要发送的听众ID;
                 "audienceId": audID,
                 //是否有附件: Y 表示可以发送附件,"N"表示无附件;
