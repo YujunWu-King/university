@@ -110,7 +110,7 @@ public class LcSysvarClass {
 							}
 							if (i == list.size() - 1) {
 								if("87".equals(siteId)){
-								span = "<span class=\"fl width_40\">报名表提交状态 Application Status</span><span class=\"fl\">" + bmbTjStatusDesc
+								span = "<span class=\"fl width_40\">报名表提交状态  Application Status</span><span class=\"fl\">" + bmbTjStatusDesc
 										+ "</span>";
 								}else{
 									span = "<span class=\"fl width_40\">报名表提交状态</span><span class=\"fl\">" + bmbTjStatusDesc
