@@ -83,7 +83,7 @@ public final class RegExpValidatorUtils {
 	 * @return 如果是符合格式的字符串,返回 <b>true </b>,否则为 <b>false </b>
 	 */
 	public static boolean isMobile(String str) {
-		String regex = "^[1]+[3,4,5,7,8]+\\d{9}$";
+		String regex = "^[1]+[3,4,5,7,8,9]+\\d{9}$";
 		return match(regex, str);
 	}
 
