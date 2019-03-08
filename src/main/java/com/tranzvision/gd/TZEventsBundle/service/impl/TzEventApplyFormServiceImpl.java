@@ -375,6 +375,11 @@ public class TzEventApplyFormServiceImpl extends FrameworkImpl {
 					"MSG21", tzSiteLang, "在当前活动您已经报名，不能重复报名！", "You have registered for the event!");
 			String mobileError = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPLICATION_MSG",
 					"MSG22", tzSiteLang, "您输入的手机在当前活动中已经报过名！", "Your mobile phone has been registered!");
+			
+			String unEnableError = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPLICATION_MSG",
+					"MSG23", tzSiteLang, "当前活动尚未启用在线报名！", "Online registration is not currently enabled for the event!");
+			String timeError = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPLICATION_MSG",
+					"MSG24", tzSiteLang, "当前时间不在活动报名报名时间内，在线报名未开始或已结束！", "The online registration has not started or has finished!");
 
 			// 校验验证码
 			Patchca patchca = new Patchca();
@@ -382,6 +387,31 @@ public class TzEventApplyFormServiceImpl extends FrameworkImpl {
 				strResult = "1";
 				strResultMsg = authCodeError;
 			} else {
+				// 获取活动显示模式
+				Date dateNow = new Date();
+				sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventDisplayMode");
+				Map<String, Object> mapData = sqlQuery.queryForMap(sql, new Object[] { dateNow, dateNow, dateNow, dateNow, strApplyId });
+
+				// 是否有效记录,Y-在报名时间内，B-报名为开始，E-报名已结束
+				String validTD = "";
+				// 是否启用在线报名
+				String strQy_zxbm = "";
+				
+				if (mapData != null) {
+					validTD = mapData.get("VALID_TD") == null ? "" : String.valueOf(mapData.get("VALID_TD"));
+					strQy_zxbm = mapData.get("TZ_QY_ZXBM") == null ? "" : String.valueOf(mapData.get("TZ_QY_ZXBM"));
+				}
+				
+				if ("Y".equals(strQy_zxbm)) {
+					//报名时间限制，只有在报名时间内才可报名
+					 if(!"Y".equals(validTD)){
+						 throw new TzException(timeError);
+					 }
+				}else{
+					throw new TzException(unEnableError);
+				}
+				
+				
 				String oprid = tzWebsiteLoginServiceImpl.getLoginedUserOprid(request);
 				
 				//活动发布对象，A-无限制，B-听众
