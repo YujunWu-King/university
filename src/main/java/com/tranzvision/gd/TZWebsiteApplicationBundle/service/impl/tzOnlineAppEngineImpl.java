@@ -458,6 +458,7 @@ public class tzOnlineAppEngineImpl {
 						psTzAppInsT.setRowLastmantDttm(new Date());
 						psTzAppInsT.setTzAppTplId(strTplId);// 当前报名表模板ID
 						psTzAppInsT.setTzAppinsJsonStr(strInsData);// 从历史表中即将推送到前台的json，存入报名表实例表中
+						psTzAppInsT.setTzAppFormSta("S");
 						psTzAppInsTMapper.insertSelective(psTzAppInsT);
 
 						// ---2.将"班级"和"报名表"关系数据 存入 "PS_TZ_FORM_WRK_T"

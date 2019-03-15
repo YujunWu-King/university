@@ -130,7 +130,7 @@ public class TzLoginController {
 			String TZ_JG_LOGIN_INFO = adminOrgName;
 			String TZ_JG_LOGIN_COPR = "";
 			String orgLoginBjImgUrl = adminOrgBjImg;
-
+			ModelAndView mv = null;
 			if (null != mapOrg) {
 				TZ_JG_LOGIN_INFO = String.valueOf(mapOrg.get("TZ_JG_LOGIN_INFO"));
 				TZ_JG_LOGIN_COPR = String.valueOf(mapOrg.get("TZ_JG_LOGIN_COPR"));
@@ -147,13 +147,19 @@ public class TzLoginController {
 				if (!"".equals(TZ_ATT_A_URL) && !"".equals(tzATTACHSYSFILENA)) {
 					orgLoginBjImgUrl = TZ_ATT_A_URL + tzATTACHSYSFILENA;
 				}
+				mv = new ModelAndView("login/managerLogin");
+				mv.addObject("TZ_JG_LOGIN_INFO", TZ_JG_LOGIN_INFO);
+				mv.addObject("TZ_JG_LOGIN_COPR", TZ_JG_LOGIN_COPR);
+				mv.addObject("orgLoginBjImgUrl", orgLoginBjImgUrl);
+				mv.addObject("locationOrgId", locationOrgId);
+			}else {
+				mv = new ModelAndView("login/errorLogin");
+				mv.addObject("TZ_JG_LOGIN_INFO", TZ_JG_LOGIN_INFO);
+				mv.addObject("TZ_JG_LOGIN_COPR", TZ_JG_LOGIN_COPR);
+				mv.addObject("orgLoginBjImgUrl", orgLoginBjImgUrl);
+				mv.addObject("locationOrgId", locationOrgId);
 			}
 
-			ModelAndView mv = new ModelAndView("login/managerLogin");
-			mv.addObject("TZ_JG_LOGIN_INFO", TZ_JG_LOGIN_INFO);
-			mv.addObject("TZ_JG_LOGIN_COPR", TZ_JG_LOGIN_COPR);
-			mv.addObject("orgLoginBjImgUrl", orgLoginBjImgUrl);
-			mv.addObject("locationOrgId", locationOrgId);
 			return mv;
 
 		} catch (TzSystemException e) {
