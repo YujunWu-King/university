@@ -55,6 +55,12 @@ public class Index {
 
 	@RequestMapping(value = {"index"})
 	public String index(HttpServletRequest request, HttpServletResponse response) {
+		String url = "";
+        url = request.getScheme() +"://" + request.getServerName() + ":" +request.getServerPort()+ request.getServletPath();
+        System.out.println(url+"+++++++++++++++++++++++");
+       if(url.toLowerCase().indexOf("jsp")!=-1||url.indexOf("::")!=-1) {
+    	   return "login/errorLogin";
+       }
 		// 获取当前提交的主题编号;
 		String tmpSubmitThemeID = request.getParameter("theme");
 		// 获取当前提交语言环境代码;
