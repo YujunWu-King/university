@@ -667,8 +667,8 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 //				    String tzyyNotes4=(String) map.get("tzyyNotes4");
 //				    String rxqk=(String) map.get("rxqk");
 //				    String rxxm=(String) map.get("rxxm");
-//				    String updatelSFSSql = "UPDATE PS_TZ_REG_USER_T SET TZ_BLACK_NAME=?,TZ_ALLOW_APPLY=?,TZ_BEIZHU=? WHERE OPRID=?";
-//					jdbcTemplate.update(updatelSFSSql, new Object[]{strBlackName,strAllowApply,strBeiZhu, strOprId});
+				    String updatelSFSSql = "UPDATE PS_TZ_REG_USER_T SET TZ_BLACK_NAME=?,TZ_ALLOW_APPLY=?,TZ_BEIZHU=? WHERE OPRID=?";
+					jdbcTemplate.update(updatelSFSSql, new Object[]{strBlackName,strAllowApply,strBeiZhu, strOprId});
 //					//tmt 修改 录取流程信息 
 //					PsTzKshLqlcTbl psTzKshLqlcTbl=new PsTzKshLqlcTbl();
 //					psTzKshLqlcTbl.setOprid(strOprId);
