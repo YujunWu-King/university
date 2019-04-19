@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 /**
  * MPACC专业资格打分
@@ -36,29 +37,31 @@ public class TzMPACCQRZZSServiceImpl extends TzZddfServiceImpl{
 			float Score = 0;
 			String ksMapkey = "";
 			String ksMapvalue = "";
-			String TZ_XXX_BH = "'TZ_6_1'";
+			String TZ_XXX_BH = "TZ_6_1";
 			// 查询报名表信息
-			String ks_valuesql = "SELECT TZ_XXX_BH,TZ_APP_S_TEXT FROM PS_TZ_APP_CC_T WHERE  TZ_APP_INS_ID=? AND TZ_XXX_BH LIKE %"
-					+ TZ_XXX_BH + "%";
+			String ks_valuesql = "SELECT TZ_XXX_BH,TZ_APP_S_TEXT FROM PS_TZ_APP_CC_T WHERE  TZ_APP_INS_ID=? AND TZ_XXX_BH LIKE '%"
+					+ TZ_XXX_BH + "%'";
 			List<Map<String, Object>> listMap = SqlQuery.queryForList(ks_valuesql,
 					new Object[] { TZ_APP_ID});
 
-			String MarkRecord = "专业资格证书、职称证书：";
-			
-			if(listMap == null || listMap.size() == 0) {
-				Score = 0;
+			String MarkRecord = "专业资格证书、职称证书：|";
+			int count = 0;
+			if(listMap != null && listMap.size() >= 0) {
+				for (Map<String, Object> map : listMap) {
+					ksMapkey = map.get("TZ_XXX_BH").toString();
+					ksMapvalue = map.get("TZ_APP_S_TEXT").toString();
+					if(!StringUtils.isBlank(ksMapvalue)) {
+						MarkRecord = MarkRecord.concat(ksMapvalue) + "|";
+						count ++;
+					}
+				}
 			}
 			//有一张证书，就算5分，总分不超过10分
-			Score = listMap.size() * 5;
+			Score = count * 5;
 			if(Score >= 10) {
 				Score = 10;
 			}
-			for (Map<String, Object> map : listMap) {
-				ksMapkey = map.get("TZ_XXX_BH").toString();
-				ksMapvalue = map.get("TZ_APP_S_TEXT").toString();
-				MarkRecord = MarkRecord.concat(ksMapvalue) + "|";
-			}
-
+			MarkRecord = MarkRecord + Score + "分";
 			System.out.println("MPACC全日制专业资格证书、职称证书计算MarkRecord:" + MarkRecord);
 		
 

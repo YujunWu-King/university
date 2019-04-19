@@ -35,7 +35,7 @@ public class TzMPACCQRZXLServiceImpl  extends TzZddfServiceImpl{
 			String ksMapkey = "";
 			String ksMapvalue = "";
 			//学历，学位，院校名称，分类
-			String TZ_XXX_BH = "'TZ_zgjy_3','TZ_zgjy_4','TZ_1sch','TZ_zgjy_11'";
+			String TZ_XXX_BH = "'zgjyTZ_zgjy_3','zgjyTZ_zgjy_4','zgjyTZ_1sch','zgjyTZ_zgjy_11'";
 
 			// 查询报名表信息
 			String ks_valuesql = "SELECT TZ_XXX_BH,TZ_APP_S_TEXT FROM PS_TZ_APP_CC_T WHERE  TZ_APP_INS_ID=? AND TZ_XXX_BH in ("
@@ -47,22 +47,22 @@ public class TzMPACCQRZXLServiceImpl  extends TzZddfServiceImpl{
 				ksMap.put(ksMapkey, ksMapvalue);
 			}
 
-			String xl = ksMap.get("TZ_zgjy_3"); // 最高学历
+			String xl = ksMap.get("zgjyTZ_zgjy_3"); // 最高学历
 			if (xl == null) {
 				xl = "";
 			}
 
-			String xw = ksMap.get("TZ_zgjy_4"); // 最高学位 1 博士 2 硕士 3 学士 4 无
+			String xw = ksMap.get("zgjyTZ_zgjy_4"); // 最高学位 1 博士 2 硕士 3 学士 4 无
 			if (xw == null) {
 				xw = "";
 			}
 
-			String school = ksMap.get("TZ_1sch"); // 院校
+			String school = ksMap.get("zgjyTZ_1sch"); // 院校
 			if (school == null) {
 				school = "";
 			}
 
-			String other = ksMap.get("TZ_zgjy_11"); // 本科类型 1 普通本科 2 自考本科 3
+			String other = ksMap.get("zgjyTZ_zgjy_11"); // 本科类型 1 普通本科 2 自考本科 3
 													// 网络本科 4成教本科 5专升本
 			if (other == null) {
 				other = "";
@@ -190,28 +190,31 @@ public class TzMPACCQRZXLServiceImpl  extends TzZddfServiceImpl{
 				TZ_CSMB_CK3 = "2";
 			}
 			
-			// 只要有硕士以上学位的，都给最高分25分。
+			// 只要有硕士以上学位的，都给最高分25分。 TZ_CSMB_CK1
 			if ("1".equals(xw) || "2".equals(xw)) {
 				TZ_CSMB_CK2 = "*";
 				TZ_CSMB_CK3 = "*";
 			}
-			// 只要有硕士以上学历的，都给最高分25分。
+			// 只要有硕士以上学历的，都给最高分25分。 TZ_CSMB_CK2
 			if ("1".equals(xw) || "2".equals(xw)) {
 				TZ_CSMB_CK1 = "*";
 				TZ_CSMB_CK3 = "*";
+			}
+			//既有硕士以上学位，也有硕士以上学历，随机将一个置为1
+			if("*".equals(TZ_CSMB_CK1) && "*".equals(TZ_CSMB_CK1)) {
+				TZ_CSMB_CK1 = "1";
 			}
 			// 获取分数
 			String SearchSql = "select TZ_CSMB_DESC,TZ_CSMB_SCOR from PS_TZ_CSMB_XLF_T where TZ_CSMB_CK3=? AND TZ_CSMB_CK2= ? AND TZ_CSMB_CK1=? AND TZ_CSMB_DESC LIKE 'MPACC&%'";
 			Map<String, Object> scoreMap= SqlQuery.queryForMap(SearchSql, new Object[] { TZ_CSMB_CK3, TZ_CSMB_CK2, TZ_CSMB_CK1});
 			String StrScore = "0";
 			String TZ_CSMB_DESC = "";
-			if (scoreMap == null) {
-				StrScore = "0";
+			if (scoreMap != null) {
+				StrScore = scoreMap.get("TZ_CSMB_SCOR").toString();
+				TZ_CSMB_DESC = scoreMap.get("TZ_CSMB_DESC").toString();
 			}
-			StrScore = scoreMap.get("TZ_CSMB_SCOR").toString();
-			TZ_CSMB_DESC = scoreMap.get("TZ_CSMB_DESC").toString();
 			score = Float.parseFloat(StrScore);
-			MarkRecord = "毕业院校：".concat(TZ_CSMB_DESC.substring(6));
+			MarkRecord = "教育背景：|".concat(TZ_CSMB_DESC.substring(6));
 			
 			MarkRecord = MarkRecord + "|" + score +"分" ;
 

@@ -56,12 +56,12 @@
             },{ 
                 text: "考生姓名",
 				sortable: true,
-                dataIndex: 'name',
+                dataIndex: 'TZ_REALNAME',
                 width:100
             },{
                 text: "申请班级",
                 sortable: true,
-                dataIndex: 'className',
+                dataIndex: 'TZ_CLASS_NAME',
                 flex: 1
             },{
             	text:"报名表编号",

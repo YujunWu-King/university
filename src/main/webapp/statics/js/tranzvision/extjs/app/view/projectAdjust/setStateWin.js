@@ -45,6 +45,7 @@ Ext.define('KitchenSink.view.projectAdjust.setStateWin', {
 			typeAhead: true,
 			mode:"remote",
 			allowBlank: false,
+			value:0,
 			blankText: '请选择审核状态',
 			emptyText: '请选择审核状态',
 			store: new KitchenSink.view.common.store.appTransStore("TZ_ADJUST_STATE")

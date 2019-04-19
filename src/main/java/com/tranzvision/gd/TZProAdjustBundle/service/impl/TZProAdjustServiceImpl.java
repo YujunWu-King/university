@@ -65,16 +65,12 @@ public class TZProAdjustServiceImpl extends FrameworkImpl {
 
 				// json数据要的结果字段;
 				String[] resultFldArray = { "tz_proadjust_id", "tz_oprid", "classId", "appinsId",
-						"applicationId", "submitState", "apply_date", "state" };
+						"applicationId", "submitState", "apply_date", "state","TZ_REALNAME", "TZ_CLASS_NAME" };
 
 				// 可配置搜索通用函数;
 				Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, strParams, numLimit, numStart,
 						errorMsg);
 
-				String sql = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
-				String sql2 = "select TZ_CLASS_NAME from PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID=?";
-				String name = "";
-				String calssName = "";
 				if (obj != null && obj.length > 0) {
 
 					ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
@@ -84,18 +80,15 @@ public class TZProAdjustServiceImpl extends FrameworkImpl {
 
 						Map<String, Object> mapList = new HashMap<String, Object>();
 						mapList.put("tz_proadjust_id", rowList[0]);
-						name = sqlQuery.queryForObject(sql, new Object[] {rowList[1]}, "String");
 						mapList.put("tz_oprid", rowList[1]);
-						mapList.put("name", name);
 						mapList.put("classId", rowList[2]);
-						calssName = sqlQuery.queryForObject(sql2, new Object[] {rowList[2]}, "String");
-						mapList.put("className", calssName);
-						
 						mapList.put("appinsId", rowList[3]);
 						mapList.put("applicationId", rowList[4]);
 						mapList.put("submitState", rowList[5]);
 						mapList.put("apply_date", rowList[6]);
 						mapList.put("state", rowList[7]);
+						mapList.put("TZ_REALNAME", rowList[8]);
+						mapList.put("TZ_CLASS_NAME", rowList[9]);
 
 
 						listData.add(mapList);
@@ -151,13 +144,13 @@ public class TZProAdjustServiceImpl extends FrameworkImpl {
 				sqlQuery.update(sql,new Object[] {appinsId});
 				//修改审核状态
 				proAdjustT.setState(1);
+				proAdjustT.setSubmitstate("OUT");
 			}else { //拒绝
 				proAdjustT.setState(2);
 			}
 			psTzProAdjustTMapper.updateByPrimaryKeySelective(proAdjustT);
 			//发送站内信
 			String falg = send(oprid);
-			System.out.println("-----:" + falg);
 		} catch (Exception e) {
 			errorMsg[0] = "1";
 			errorMsg[1] = e.getMessage();

@@ -34,13 +34,13 @@ public class TzMPACCQRZWYServiceImpl extends TzZddfServiceImpl{
 	}
 
 	private String chage(String s) {
-		// TZ_TZ_7_2 --> TZ_TZ_7_1 或 TZ_TZ_7_2_1-->TZ_TZ_7_1_1  TZ_TZ_7_2_2-->TZ_TZ_7_1_2
-		if (s.length() == 9) {
+		// TZ_7TZ_TZ_7_2 --> TZ_7TZ_TZ_7_1 或 TZ_7TZ_TZ_7_2_1-->TZ_7TZ_TZ_7_1_1  TZ_7TZ_TZ_7_2_2-->TZ_7TZ_TZ_7_1_2
+		if (s.length() == 13) {
 			return s.substring(0, s.length() - 1) + "1";
 		} else {
-			return s.substring(0, 8) + "1" + s.substring(9, s.length());
+			return s.substring(0, 12) + "1" + s.substring(13, s.length());
 		}
-	}
+	} 
 
 	// 取字符串中的连续数字(包含小数点)
 	private String getScore(String s) {
@@ -99,7 +99,7 @@ public class TzMPACCQRZWYServiceImpl extends TzZddfServiceImpl{
 			String engType = "";
 			String type = "";
 			
-			String valuesql = "SELECT TZ_XXX_BH, TZ_APP_S_TEXT FROM PS_TZ_APP_CC_T WHERE TZ_APP_INS_ID = ? AND TZ_XXX_BH like 'TZ_TZ_7_2%'";
+			String valuesql = "SELECT TZ_XXX_BH, TZ_APP_S_TEXT FROM PS_TZ_APP_CC_T WHERE TZ_APP_INS_ID = ? AND (TZ_XXX_BH like 'TZ_7TZ_TZ_7_2%' or TZ_XXX_BH like 'TZ_7TZ_TZ_7_1%')";
 			List<Map<String, Object>> SqlCon2 = SqlQuery.queryForList(valuesql, new Object[] { TZ_APP_ID });
 			
 			// 定义成绩list
@@ -130,7 +130,7 @@ public class TzMPACCQRZWYServiceImpl extends TzZddfServiceImpl{
 				key = entry.getKey();
 
 				// 如果是值，那么找到他的类型
-				if (key.startsWith("TZ_TZ_7_2")) {
+				if (key.startsWith("TZ_7TZ_TZ_7_2")) {
 					// 得到对应的考试类型
 					keyType = chage(key);
 					// 报名表中的字段 1:GRE 2:GMAT 3:托福TOFEL 4:TOEFL 机考 5:TOFEL IBT(网考）
@@ -190,7 +190,7 @@ public class TzMPACCQRZWYServiceImpl extends TzZddfServiceImpl{
 
 				}
 			}
-			System.out.println(sb.toString());
+			System.out.println("----------------" + sb.toString());
 
 			// 分数校验
 			Score = 0;
@@ -201,7 +201,7 @@ public class TzMPACCQRZWYServiceImpl extends TzZddfServiceImpl{
 			// 报名表里面分数
 			String strScore = "";
 			String SearchSql = "select TZ_CSMB_SCOR from PS_TZ_CSMB_WY_T where TZ_CSMB_DESC=? and  TZ_CSMB_CK3<=? and TZ_CSMB_CK2>=? and TZ_CSMB_FS ='MPACC'";
-			String SearchSql2 = "select TZ_CSMB_SCOR from PS_TZ_CSMB_WY_T where TZ_CSMB_DESC=?";
+			String SearchSql2 = "select TZ_CSMB_SCOR from PS_TZ_CSMB_WY_T where TZ_CSMB_DESC=? and TZ_CSMB_FS ='MPACC'";
 			it = souseMap.entrySet().iterator();
 			while (it.hasNext()) {
 				Map.Entry<String, String> entry = it.next();
@@ -229,7 +229,7 @@ public class TzMPACCQRZWYServiceImpl extends TzZddfServiceImpl{
 			}
 
 
-			System.out.println(MarkRecord);
+			System.out.println("MarkRecord:" + MarkRecord);
 			// 插入表TZ_CJX_TBL
 			PsTzCjxTblWithBLOBs psTzCjxTblWithBLOBs = new PsTzCjxTblWithBLOBs();
 			// 成绩单ID
@@ -256,9 +256,7 @@ public class TzMPACCQRZWYServiceImpl extends TzZddfServiceImpl{
 
 			return Score;
 
-		} catch (
-
-		Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return 0;
 		}

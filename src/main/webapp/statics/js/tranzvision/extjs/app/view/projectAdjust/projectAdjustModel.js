@@ -3,13 +3,13 @@ Ext.define('KitchenSink.view.projectAdjust.projectAdjustModel', {
     fields: [
         {name: 'tz_proadjust_id'},
         {name: 'tz_oprid'},
-        {name: 'name'},
         {name: 'classId'},
-        {name: 'className'},
         {name: 'appinsId'},
         {name: 'applicationId'},
         {name: 'submitState'},
         {name: 'apply_date'},
-        {name: 'state'}
+        {name: 'state'},
+        {name: 'TZ_REALNAME'},
+        {name: 'TZ_CLASS_NAME'}
 	]
 });
