@@ -394,8 +394,9 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					strTplId = psTzAppInsT.getTzAppTplId();
 					strAppInsState = psTzAppInsT.getTzAppFormSta();
 
-					// 如果报名表已提交，则只读显示
-					if ("U".equals(strAppInsState)) {
+					System.out.println("strAppInsState:" + strAppInsState);
+					// 如果报名表已提交或者撤销，则只读显示
+					if ("U".equals(strAppInsState) || "OUT".equals(strAppInsState)) {
 						strAppFormReadOnly = "Y";
 					}
 					strAppInsVersion = psTzAppInsT.getTzAppInsVersion();
@@ -626,8 +627,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 										strMessageError = gdKjComServiceImpl.getMessageText(request, response,
 												"TZGD_APPONLINE_MSGSET", "PARAERROR", "参数错误", "Parameter error");
 									}
-									// 如果报名表已提交，则只读显示
-									if ("U".equals(strAppInsState)) {
+									// 如果报名表已提交或者已撤销，则只读显示
+									if ("U".equals(strAppInsState) || "OUT".equals(strAppInsState)) {
 										strAppFormReadOnly = "Y";
 									}
 								} else {

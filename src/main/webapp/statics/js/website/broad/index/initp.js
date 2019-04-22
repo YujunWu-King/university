@@ -203,6 +203,7 @@ function classSelectCancle(){
 
 
 $(document).ready(function(){
+	
 	/*if ($(".main_mid").height()>760){
 		$("#letf_menu").height($(".main_mid").height());
 	}else{
@@ -261,6 +262,26 @@ $(document).ready(function(){
 			      $(this).find(".triangle_span").show();
 			      $(this).find(".triangle").show();
 			    }); 
+			
+			$("#projectAdjust").click(function(){
+				if (confirm("您确认申请项目调整？")==true){
+					var classId = $("#classId").val();
+					var appinsId = $("#appinsId").val();
+					var applyId = $(".zxj_number>span").text();
+					console.log(applyId);
+					var tzParams = '{"ComID":"TZ_PROADJUST_COM","PageID":"TZ_PROADJUST_STD","OperateType":"projectAdjust","comParams":{"classId":"'+classId +'","appinsId":"'+appinsId+'","applyId":"'+applyId+'"}}';
+					$.ajax({
+						type:"POST",
+						url: TzUniversityContextPath+"/dispatcher",
+						data:{
+							tzParams:tzParams
+						},
+						success:function(response){
+							alert("申请项目调整成功，请等候管理员处理！");
+						}
+					})
+				}
+			})
 		},
 		failure: function () {
 		  	

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZProAdjustBundle.dao.PsTzProAdjustTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZProAdjustBundle.model.PsTzProAdjustT" >
+    <id column="tz_proadjust_id" property="tzProadjustId" jdbcType="INTEGER" />
+    <result column="tz_oprid" property="tzOprid" jdbcType="VARCHAR" />
+    <result column="classId" property="classid" jdbcType="VARCHAR" />
+    <result column="appinsId" property="appinsid" jdbcType="VARCHAR" />
+    <result column="applicationId" property="applicationid" jdbcType="VARCHAR" />
+    <result column="submitState" property="submitstate" jdbcType="CHAR" />
+    <result column="apply_date" property="applyDate" jdbcType="TIMESTAMP" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    tz_proadjust_id, tz_oprid, classId, appinsId, applicationId, submitState, apply_date, 
+    state
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ps_tz_proadjust_t
+    where tz_proadjust_id = #{tzProadjustId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ps_tz_proadjust_t
+    where tz_proadjust_id = #{tzProadjustId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZProAdjustBundle.model.PsTzProAdjustT" >
+    insert into ps_tz_proadjust_t (tz_proadjust_id, tz_oprid, classId, 
+      appinsId, applicationId, submitState, 
+      apply_date, state)
+    values (#{tzProadjustId,jdbcType=INTEGER}, #{tzOprid,jdbcType=VARCHAR}, #{classid,jdbcType=VARCHAR}, 
+      #{appinsid,jdbcType=VARCHAR}, #{applicationid,jdbcType=VARCHAR}, #{submitstate,jdbcType=CHAR}, 
+      #{applyDate,jdbcType=TIMESTAMP}, #{state,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZProAdjustBundle.model.PsTzProAdjustT" >
+    insert into ps_tz_proadjust_t
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzProadjustId != null" >
+        tz_proadjust_id,
+      </if>
+      <if test="tzOprid != null" >
+        tz_oprid,
+      </if>
+      <if test="classid != null" >
+        classId,
+      </if>
+      <if test="appinsid != null" >
+        appinsId,
+      </if>
+      <if test="applicationid != null" >
+        applicationId,
+      </if>
+      <if test="submitstate != null" >
+        submitState,
+      </if>
+      <if test="applyDate != null" >
+        apply_date,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzProadjustId != null" >
+        #{tzProadjustId,jdbcType=INTEGER},
+      </if>
+      <if test="tzOprid != null" >
+        #{tzOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="classid != null" >
+        #{classid,jdbcType=VARCHAR},
+      </if>
+      <if test="appinsid != null" >
+        #{appinsid,jdbcType=VARCHAR},
+      </if>
+      <if test="applicationid != null" >
+        #{applicationid,jdbcType=VARCHAR},
+      </if>
+      <if test="submitstate != null" >
+        #{submitstate,jdbcType=CHAR},
+      </if>
+      <if test="applyDate != null" >
+        #{applyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZProAdjustBundle.model.PsTzProAdjustT" >
+    update ps_tz_proadjust_t
+    <set >
+      <if test="tzOprid != null" >
+        tz_oprid = #{tzOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="classid != null" >
+        classId = #{classid,jdbcType=VARCHAR},
+      </if>
+      <if test="appinsid != null" >
+        appinsId = #{appinsid,jdbcType=VARCHAR},
+      </if>
+      <if test="applicationid != null" >
+        applicationId = #{applicationid,jdbcType=VARCHAR},
+      </if>
+      <if test="submitstate != null" >
+        submitState = #{submitstate,jdbcType=CHAR},
+      </if>
+      <if test="applyDate != null" >
+        apply_date = #{applyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=INTEGER},
+      </if>
+    </set>
+    where tz_proadjust_id = #{tzProadjustId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZProAdjustBundle.model.PsTzProAdjustT" >
+    update ps_tz_proadjust_t
+    set tz_oprid = #{tzOprid,jdbcType=VARCHAR},
+      classId = #{classid,jdbcType=VARCHAR},
+      appinsId = #{appinsid,jdbcType=VARCHAR},
+      applicationId = #{applicationid,jdbcType=VARCHAR},
+      submitState = #{submitstate,jdbcType=CHAR},
+      apply_date = #{applyDate,jdbcType=TIMESTAMP},
+      state = #{state,jdbcType=INTEGER}
+    where tz_proadjust_id = #{tzProadjustId,jdbcType=INTEGER}
+  </update>
+</mapper>

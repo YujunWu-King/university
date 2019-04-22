@@ -87,7 +87,8 @@ public class ApplicationCenter2ServicerImpl extends FrameworkImpl {
 			// 查看历史;
 			String viewHistoryDesc = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_APPCENTER_MESSAGE", "3",
 					language, "查看历史报名", "查看历史报名");
-
+			
+			
 			// 查看报名表;
 			String viewBmbDesc = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_APPCENTER_MESSAGE", "4",
 					language, "查看报名表", "查看报名表");
@@ -331,6 +332,10 @@ public class ApplicationCenter2ServicerImpl extends FrameworkImpl {
 		String viewHistoryDesc = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_APPCENTER_MESSAGE", "3",
 				language, "查看历史报名", "查看历史报名");
 
+		// 申请项目调整;
+		String proAdjustDesc = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_APPCENTER_MESSAGE", "10",
+				language, "申请项目调整", "申请项目调整");
+
 		// 查看报名表;
 		String viewBmbDesc = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_APPCENTER_MESSAGE", "4", language,
 				"查看报名表", "查看报名表");
@@ -484,9 +489,10 @@ public class ApplicationCenter2ServicerImpl extends FrameworkImpl {
 			if (showLcStepNum > 0) {
 				showLcStepString = String.valueOf((showLcStepNum - 1) * 2);
 			}
+			
 			applicationCenterHtml = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_APPCENTER_LC_HTML",
 					ApplicationCenter, viewHistoryDesc, viewBmbDesc, lcContentHtml, stepHtml, applyFromUrl, hisUrl,
-					showLcStepString, className + msPcName);
+					showLcStepString, className + msPcName, proAdjustDesc, classId,String.valueOf(TZ_APP_INS_ID));
 		} catch (Exception e) {
 			e.printStackTrace();
 			applicationCenterHtml = "";
