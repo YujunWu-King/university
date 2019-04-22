@@ -392,6 +392,28 @@ $(document).ready(function(){
 								$('#' + fieldId + 'Style').removeClass("alert_display_none");
 							}
 						}
+					}else if(fieldId=="TZ_COMMENT9"){
+						var reg=/^((?!<|>|\").)*$/;
+						if(!reg.test(val)){
+							$('#' + fieldId + '_status').html("<span>"+"姓名不能包含<>\"字符"+"</span>");
+							$('#status_' + fieldId).attr("value", 1);
+							$('#' + fieldId + 'Style').removeClass("alert_display_none");
+						}else{
+							$('#' + fieldId + '_status').html("");
+							$('#status_' + fieldId).attr("value", 0);
+							$('#' + fieldId + 'Style').addClass("alert_display_none");
+						}
+					}else if(fieldId=="TZ_COMMENT11"){
+						var reg=/^((?!<|>|\").)*$/;
+						if(!reg.test(val)){
+							$('#' + fieldId + '_status').html("<span>"+"号码中不能包含<>\"字符"+"</span>");
+							$('#status_' + fieldId).attr("value", 1);
+							$('#' + fieldId + 'Style').removeClass("alert_display_none");
+						}else{
+							$('#' + fieldId + '_status').html("");
+							$('#status_' + fieldId).attr("value", 0);
+							$('#' + fieldId + 'Style').addClass("alert_display_none");
+						}
 					}else if(fieldId=="TZ_PASSWORD"){//密码
 						$("#J_PwdTip").css("display","none");
 						if(val !=''){
