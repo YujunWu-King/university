@@ -1164,11 +1164,18 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 				String TZ_PRJ_TYPE_NAME = jdbcTemplate.queryForObject(sql, new Object[] {strClassID}, "String");
 				if("全日制".equals(TZ_PRJ_TYPE_NAME)) {
 					if("A".equals(strAuditState)) {
-						PsTzMsPskshTbl psTzMsPskshTbl = new PsTzMsPskshTbl();
-						psTzMsPskshTbl.setTzClassId(strClassID);
-						psTzMsPskshTbl.setTzApplyPcId("");
-						psTzMsPskshTbl.setTzAppInsId(strAppInsID);
-						psTzMsPskshTblMapper.insertSelective(psTzMsPskshTbl);
+						PsTzMsPskshTblKey key = new PsTzMsPskshTblKey();
+						key.setTzClassId(strClassID);
+						key.setTzApplyPcId("");
+						key.setTzAppInsId(strAppInsID);
+						PsTzMsPskshTbl psTzMsPskshTbl = psTzMsPskshTblMapper.selectByPrimaryKey(key);
+						if(psTzMsPskshTbl == null) {
+							psTzMsPskshTbl = new PsTzMsPskshTbl();
+							psTzMsPskshTbl.setTzClassId(strClassID);
+							psTzMsPskshTbl.setTzApplyPcId("");
+							psTzMsPskshTbl.setTzAppInsId(strAppInsID);
+							psTzMsPskshTblMapper.insertSelective(psTzMsPskshTbl);
+						}					
 					}else {
 						PsTzMsPskshTblKey key = new PsTzMsPskshTblKey();
 						key.setTzClassId(strClassID);
@@ -1181,11 +1188,18 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 			//如果是MF机构，审核通过时，向PS_TZ_MSPS_KSH_TBL插入数据,
 			if("MF".equals(orgid.toUpperCase())) {
 				if("A".equals(strAuditState)) {
-					PsTzMsPskshTbl psTzMsPskshTbl = new PsTzMsPskshTbl();
-					psTzMsPskshTbl.setTzClassId(strClassID);
-					psTzMsPskshTbl.setTzApplyPcId("");
-					psTzMsPskshTbl.setTzAppInsId(strAppInsID);
-					psTzMsPskshTblMapper.insertSelective(psTzMsPskshTbl);
+					PsTzMsPskshTblKey key = new PsTzMsPskshTblKey();
+					key.setTzClassId(strClassID);
+					key.setTzApplyPcId("");
+					key.setTzAppInsId(strAppInsID);
+					PsTzMsPskshTbl psTzMsPskshTbl = psTzMsPskshTblMapper.selectByPrimaryKey(key);
+					if(psTzMsPskshTbl == null) {
+						psTzMsPskshTbl = new PsTzMsPskshTbl();
+						psTzMsPskshTbl.setTzClassId(strClassID);
+						psTzMsPskshTbl.setTzApplyPcId("");
+						psTzMsPskshTbl.setTzAppInsId(strAppInsID);
+						psTzMsPskshTblMapper.insertSelective(psTzMsPskshTbl);
+					}
 				}else {
 					PsTzMsPskshTblKey key = new PsTzMsPskshTblKey();
 					key.setTzClassId(strClassID);

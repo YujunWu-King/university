@@ -98,14 +98,14 @@ public class TzMPACCQRZXLServiceImpl  extends TzZddfServiceImpl{
 				TZ_CSMB_CK2 = "1";
 				
 			}else if("3".equals(xl)) { //本科：2
-				TZ_CSMB_CK2 = "2";
-			}else {//专科
-				//专升本、成教、网络本科：3
-				if("3".equals(other) || "4".equals(other) || "5".equals(other)) {
+				// 本科类型 1 普通本科 2 自考本科 3 网络本科 4成教本科 5专升本
+				if("1".equals(other)) {
+					TZ_CSMB_CK2 = "2";
+				}else {
 					TZ_CSMB_CK2 = "3";
-				}else {//专科：4
-					TZ_CSMB_CK2 = "4";
 				}
+			}else {//专科
+				TZ_CSMB_CK2 = "4";
 			}
 			
 			//学位 博士/硕士：1
@@ -203,6 +203,11 @@ public class TzMPACCQRZXLServiceImpl  extends TzZddfServiceImpl{
 			//既有硕士以上学位，也有硕士以上学历，随机将一个置为1
 			if("*".equals(TZ_CSMB_CK1) && "*".equals(TZ_CSMB_CK2)) {
 				TZ_CSMB_CK1 = "1";
+			}
+			//只要有专科
+			if("4".equals(TZ_CSMB_CK2)) {
+				TZ_CSMB_CK1 = "*";
+				TZ_CSMB_CK3 = "*";
 			}
 			System.out.println("TZ_CSMB_CK3:" + TZ_CSMB_CK3);
 			System.out.println("TZ_CSMB_CK1:" + TZ_CSMB_CK1);
