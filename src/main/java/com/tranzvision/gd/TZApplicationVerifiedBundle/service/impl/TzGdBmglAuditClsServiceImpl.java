@@ -29,6 +29,9 @@ import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzMszgTMapper;
 import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzLxfsInfoTbl;
 import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzLxfsInfoTblKey;
 import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzMszgT;
+import com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzMsPskshTblMapper;
+import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPskshTbl;
+import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPskshTblKey;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzAppCcTMapper;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzAppDhccTMapper;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzAppInsTMapper;
@@ -95,6 +98,8 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 	private PsTzAppDhccTMapper psTzAppDhccTMapper;
 	@Autowired
 	private PsTzMszgTMapper pstzMszgTMapper;
+	@Autowired
+	private PsTzMsPskshTblMapper psTzMsPskshTblMapper;
 
 	/* 获取报名人信息 */
 	public String tzQuery(String strParams, String[] errMsg) {
@@ -1132,6 +1137,7 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 		String strRet = "{}";
 
 		try {
+			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 			// 班级编号;
 			String strClassID = (String) infoData.get("classID");
@@ -1151,6 +1157,44 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 				arrTag = (ArrayList<String>) infoData.get("tag");
 			}
 
+			//如果是mpacc机构，项目是全日制的，审核通过时，向PS_TZ_MSPS_KSH_TBL插入数据,
+			if("MPACC".equals(orgid.toUpperCase())) {
+				//查询项目分类
+				String sql = "SELECT A.TZ_PRJ_TYPE_NAME FROM PS_TZ_PRJ_TYPE_T A,PS_TZ_CLASS_INF_T B,PS_TZ_PRJ_INF_T C WHERE A.TZ_PRJ_TYPE_ID = C.TZ_PRJ_TYPE_ID AND C.TZ_PRJ_ID = B.TZ_PRJ_ID AND B.TZ_CLASS_ID=?";
+				String TZ_PRJ_TYPE_NAME = jdbcTemplate.queryForObject(sql, new Object[] {strClassID}, "String");
+				if("全日制".equals(TZ_PRJ_TYPE_NAME)) {
+					if("A".equals(strAuditState)) {
+						PsTzMsPskshTbl psTzMsPskshTbl = new PsTzMsPskshTbl();
+						psTzMsPskshTbl.setTzClassId(strClassID);
+						psTzMsPskshTbl.setTzApplyPcId("");
+						psTzMsPskshTbl.setTzAppInsId(strAppInsID);
+						psTzMsPskshTblMapper.insertSelective(psTzMsPskshTbl);
+					}else {
+						PsTzMsPskshTblKey key = new PsTzMsPskshTblKey();
+						key.setTzClassId(strClassID);
+						key.setTzApplyPcId("");
+						key.setTzAppInsId(strAppInsID);
+						psTzMsPskshTblMapper.deleteByPrimaryKey(key);
+					}
+				}
+			}
+			//如果是MF机构，审核通过时，向PS_TZ_MSPS_KSH_TBL插入数据,
+			if("MF".equals(orgid.toUpperCase())) {
+				if("A".equals(strAuditState)) {
+					PsTzMsPskshTbl psTzMsPskshTbl = new PsTzMsPskshTbl();
+					psTzMsPskshTbl.setTzClassId(strClassID);
+					psTzMsPskshTbl.setTzApplyPcId("");
+					psTzMsPskshTbl.setTzAppInsId(strAppInsID);
+					psTzMsPskshTblMapper.insertSelective(psTzMsPskshTbl);
+				}else {
+					PsTzMsPskshTblKey key = new PsTzMsPskshTblKey();
+					key.setTzClassId(strClassID);
+					key.setTzApplyPcId("");
+					key.setTzAppInsId(strAppInsID);
+					psTzMsPskshTblMapper.deleteByPrimaryKey(key);
+				}
+			}
+			
 			// 备注;
 			String strRemark = (String) infoData.get("remark");
 			// 短备注;
@@ -1289,6 +1333,7 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 			}
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
 		}

@@ -79,6 +79,10 @@ public class ApplicationCenter2ServicerImpl extends FrameworkImpl {
 			// 报名中心;
 			String ApplicationCenter = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_APPCENTER_MESSAGE", "1",
 					language, "面试申请", "面试申请");
+			
+			if("MF".equals(str_jg_id.toUpperCase()) || "MPACC".equals(str_jg_id.toUpperCase())) {
+				ApplicationCenter = "背景审核";
+			}
 
 			// 开始新申请;
 			String addNewSqBtDesc = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_APPCENTER_MESSAGE", "2",
@@ -231,7 +235,7 @@ public class ApplicationCenter2ServicerImpl extends FrameworkImpl {
 				// TZ_APP_INS_ID = 231;
 				// 已经报名了开通的班级，显示报名流程;
 				if (TZ_APP_INS_ID > 0) {
-					applicationCenterHtml = this.getBmlc(TZ_APP_INS_ID, classId, strSiteId, language, msPcName);
+					applicationCenterHtml = this.getBmlc(TZ_APP_INS_ID, classId, strSiteId, language, msPcName, ApplicationCenter);
 				} else {
 					// 没报名当前班级,如果允许报名则显示报名按钮;
 
@@ -239,7 +243,7 @@ public class ApplicationCenter2ServicerImpl extends FrameworkImpl {
 						// 不允许报名，是否有以前的报名表，有则显示报名;
 						if (hasAppIns > 0) {
 							applicationCenterHtml = this.getBmlc(hasAppIns, hasClassId, strSiteId, language,
-									hasMsPcName);
+									hasMsPcName, ApplicationCenter);
 						} else {
 							applicationCenterHtml = tzGDObject.getHTMLText(
 									"HTML.TZApplicationCenterBundle.TZ_APPCENTER_CANTNOT_APPLY", ApplicationCenter,
@@ -297,7 +301,7 @@ public class ApplicationCenter2ServicerImpl extends FrameworkImpl {
 			} else {
 				// 没有开通的班级,有没有历史报名表；
 				if (hasAppIns > 0) {
-					applicationCenterHtml = this.getBmlc(hasAppIns, hasClassId, strSiteId, language, hasMsPcName);
+					applicationCenterHtml = this.getBmlc(hasAppIns, hasClassId, strSiteId, language, hasMsPcName, ApplicationCenter);
 				} else {
 					applicationCenterHtml = tzGDObject.getHTMLText(
 							"HTML.TZApplicationCenterBundle.TZ_APPCENTER_CANTNOT_APPLY", ApplicationCenter,
@@ -314,7 +318,7 @@ public class ApplicationCenter2ServicerImpl extends FrameworkImpl {
 		return applicationCenterHtml;
 	}
 
-	private String getBmlc(long TZ_APP_INS_ID, String classId, String strSiteId, String language, String msPcName) {
+	private String getBmlc(long TZ_APP_INS_ID, String classId, String strSiteId, String language, String msPcName, String ApplicationCenter) {
 
 		Map<String, Object> map = null;
 		String applicationCenterHtml = "";
@@ -326,8 +330,8 @@ public class ApplicationCenter2ServicerImpl extends FrameworkImpl {
 		String ZSGL_URL = request.getContextPath() + "/dispatcher";
 
 		// 报名中心;
-		String ApplicationCenter = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_APPCENTER_MESSAGE", "1",
-				language, "面试申请", "面试申请");
+		/*String ApplicationCenter = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_APPCENTER_MESSAGE", "1",
+				language, "面试申请", "面试申请");*/
 		// 查看历史;
 		String viewHistoryDesc = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_APPCENTER_MESSAGE", "3",
 				language, "查看历史报名", "查看历史报名");

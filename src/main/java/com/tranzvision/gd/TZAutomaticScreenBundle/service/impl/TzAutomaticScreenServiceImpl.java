@@ -762,7 +762,7 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl {
 			String classId = jacksonUtil.getString("classId");
 			String batchId = jacksonUtil.getString("batchId");
 
-			if (!"".equals(classId) && classId != null && !"".equals(batchId) && batchId != null) {
+			if (!"".equals(classId) && classId != null /*&& !"".equals(batchId) && batchId != null*/) {
 				// 当前用户;
 				String currentOprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 				/* 生成运行控制ID */

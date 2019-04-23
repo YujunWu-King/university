@@ -541,7 +541,7 @@ public class TzAutoScreenInfoServiceImpl extends FrameworkImpl{
 								String strUpdateSql = "UPDATE PS_TZ_CJX_TBL SET TZ_SCORE_NUM='" + newSumTotal
 										+ "',TZ_SCORE_BZ='"+bzDsc+"',TZ_SCORE_DFGC='"+scoreDfgc+"' WHERE TZ_SCORE_INS_ID='" + scoreInsId + "'AND TZ_SCORE_ITEM_ID='" + "SumTotal" + "'";
 								jdbcTemplate.update(strUpdateSql, new Object[] {});
-							}else{
+							}else if (scoreInsId!=null && !scoreInsId.equals("")){
 								String strInsertSql = "INSERT INTO PS_TZ_CJX_TBL(TZ_SCORE_INS_ID,TZ_SCORE_ITEM_ID,TZ_SCORE_NUM,TZ_SCORE_BZ,TZ_SCORE_DFGC) VALUES(?,?,?,?,?)";
 								jdbcTemplate.update(strInsertSql, new Object[] { scoreInsId, "SumTotal", newSumTotal,bzDsc,scoreDfgc });
 							}
@@ -642,9 +642,41 @@ public class TzAutoScreenInfoServiceImpl extends FrameworkImpl{
 							newSumTotaldf=newTotal.add(newTotalZj).subtract(numOldTotal);
 							
 							// 评分标准
-							String bzId = jdbcTemplate.queryForObject(
-									"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?",
-									new Object[] { "TZ_MBA_MS_RESULT" }, "String");
+							//String bzId = jdbcTemplate.queryForObject(
+							//		"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?",
+							//		new Object[] { "TZ_MBA_MS_RESULT" }, "String");
+							
+							String bzId = "";
+							if ("MEM".equals(orgId)){
+								bzId=jdbcTemplate.queryForObject(
+										"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?",
+										new Object[] { "TZ_MEM_MS_RESULT" }, "String");
+							}else if ("MPACC".equals(orgId)){
+								//查询项目分类
+								String sql = "SELECT A.TZ_PRJ_TYPE_NAME FROM PS_TZ_PRJ_TYPE_T A,PS_TZ_CLASS_INF_T B,PS_TZ_PRJ_INF_T C WHERE A.TZ_PRJ_TYPE_ID = C.TZ_PRJ_TYPE_ID AND C.TZ_PRJ_ID = B.TZ_PRJ_ID AND B.TZ_CLASS_ID=?";
+								String TZ_PRJ_TYPE_NAME = jdbcTemplate.queryForObject(sql, new Object[] {classId}, "String");
+								//TZ_MPACC_MS_RESULT
+								if("全日制".equals(TZ_PRJ_TYPE_NAME)) {
+									bzId=jdbcTemplate.queryForObject(
+											"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?",
+											new Object[] { "TZ_MPACC_QRZ_RESULT" }, "String");
+								}else {
+									bzId=jdbcTemplate.queryForObject(
+											"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?",
+											new Object[] { "TZ_MPACC_MS_RESULT" }, "String");
+									
+								}
+								
+							}else if ("MF".equals(orgId)){
+								bzId=jdbcTemplate.queryForObject(
+										"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?",
+										new Object[] { "TZ_MF_QRZ_RESULT" }, "String");
+							}else{
+								bzId=jdbcTemplate.queryForObject(
+										"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?",
+										new Object[] { "TZ_MBA_MS_RESULT" }, "String");
+							}
+							
 							String bzsql = "select TZ_M_FBDZ_MX_SM from PS_TZ_FBDZ_MX_TBL where TZ_M_FBDZ_ID=? and TZ_M_FBDZ_MX_SX>=? and TZ_M_FBDZ_MX_XX<=? ";
 							// 计算档次
 							String bzDsc = jdbcTemplate.queryForObject(bzsql, new Object[] { bzId, String.valueOf(newSumTotal), String.valueOf(newSumTotal) }, "String");

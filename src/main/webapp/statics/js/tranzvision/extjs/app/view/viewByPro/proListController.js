@@ -59,12 +59,12 @@ Ext.define('KitchenSink.view.viewByPro.proListController', {
 		cmp.on('afterrender',function(panel){
 			//全日制度不需要面试,隐藏面试列
 			if(projectType == "全日制"){
-				panel.columns[8].setVisible(false);
+				panel.columns[7].setVisible(false);
 			}
            // var tzParams = '{"ComID":"TZ_BY_PRO_COM","PageID":"TZ_CLASS_LIST_PAGE","OperateType":"QF","comParams":{"projectId":"'+projectId+'"}}';
             //Ext.tzLoad(tzParams,function(respData){
                
-            	var tzStoreParams = '{"cfgSrhId": "TZ_BY_PRO_COM.TZ_CLASS_LIST_PAGE.TZ_BMBSH_ECUST_VW","condition":{"TZ_PRJ_ID-operator":"01","TZ_PRJ_ID-value":"'+projectId+'","TZ_DLZH_ID-operator":"01","TZ_DLZH_ID-value":"'+TranzvisionMeikecityAdvanced.Boot.loginUserId+'"}}';
+            	var tzStoreParams = '{"cfgSrhId": "TZ_BY_PRO_COM.TZ_CLASS_LIST_PAGE.TZ_BMBSH_ECUST_VW2","condition":{"TZ_PRJ_ID-operator":"01","TZ_PRJ_ID-value":"'+projectId+'","TZ_DLZH_ID-operator":"01","TZ_DLZH_ID-value":"'+TranzvisionMeikecityAdvanced.Boot.loginUserId+'"}}';
             	panel.store.projectId=projectId;
             	panel.store.tzStoreParams = tzStoreParams;
             	panel.store.load();
@@ -126,15 +126,15 @@ Ext.define('KitchenSink.view.viewByPro.proListController', {
 
         var record = grid.store.getAt(rowIndex);
         var classID = record.data.classID;
-        var batchID = record.data.batchID;
+        //var batchID = record.data.batchID;
         window.classID2=record.data.classID;
-        window.batchID2=record.data.batchID;
+        //window.batchID2=record.data.batchID;
         var render = function(initialData){
         	
             cmp = new ViewClass({
                     initialData:initialData,
-                    classID:classID,
-                    batchID:batchID
+                    classID:classID
+                    //batchID:batchID
                 }
             );
             cmp.on('afterrender',function(panel){
@@ -155,7 +155,7 @@ Ext.define('KitchenSink.view.viewByPro.proListController', {
                         );
                     }
                 });
-                var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_BMGL_STU_STD","OperateType":"QF","comParams":{"classID":"'+classID+'","batchID":"'+batchID+'"}}';
+                var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_BMGL_STU_STD","OperateType":"QF","comParams":{"classID":"'+classID+'"}}';
                 Ext.tzLoad(tzParams,function(respData){
                     var formData = respData.formData;
                     form.setValues(formData);

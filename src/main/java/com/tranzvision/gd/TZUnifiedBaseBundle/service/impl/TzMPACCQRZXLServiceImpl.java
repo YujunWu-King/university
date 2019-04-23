@@ -196,14 +196,17 @@ public class TzMPACCQRZXLServiceImpl  extends TzZddfServiceImpl{
 				TZ_CSMB_CK3 = "*";
 			}
 			// 只要有硕士以上学历的，都给最高分25分。 TZ_CSMB_CK2
-			if ("1".equals(xw) || "2".equals(xw)) {
+			if ("1".equals(xl) || "2".equals(xl)) {
 				TZ_CSMB_CK1 = "*";
 				TZ_CSMB_CK3 = "*";
 			}
 			//既有硕士以上学位，也有硕士以上学历，随机将一个置为1
-			if("*".equals(TZ_CSMB_CK1) && "*".equals(TZ_CSMB_CK1)) {
+			if("*".equals(TZ_CSMB_CK1) && "*".equals(TZ_CSMB_CK2)) {
 				TZ_CSMB_CK1 = "1";
 			}
+			System.out.println("TZ_CSMB_CK3:" + TZ_CSMB_CK3);
+			System.out.println("TZ_CSMB_CK1:" + TZ_CSMB_CK1);
+			System.out.println("TZ_CSMB_CK2:" + TZ_CSMB_CK2);
 			// 获取分数
 			String SearchSql = "select TZ_CSMB_DESC,TZ_CSMB_SCOR from PS_TZ_CSMB_XLF_T where TZ_CSMB_CK3=? AND TZ_CSMB_CK2= ? AND TZ_CSMB_CK1=? AND TZ_CSMB_DESC LIKE 'MPACC&%'";
 			Map<String, Object> scoreMap= SqlQuery.queryForMap(SearchSql, new Object[] { TZ_CSMB_CK3, TZ_CSMB_CK2, TZ_CSMB_CK1});

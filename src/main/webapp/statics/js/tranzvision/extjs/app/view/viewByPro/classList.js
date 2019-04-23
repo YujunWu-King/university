@@ -63,10 +63,6 @@ Ext.define('KitchenSink.view.viewByPro.classList', {
                 dataIndex:'className',
                 flex:1
             },{
-                text:Ext.tzGetResourse("TZ_BY_PRO_COM.TZ_CLASS_LIST_PAGE.applyBatch","批次名称"),
-                dataIndex: 'batchName',
-                width:110
-            },{
                 text:Ext.tzGetResourse("TZ_BY_PRO_COM.TZ_CLASS_LIST_PAGE.admissionDate","入学日期"),
                 dataIndex: 'admissionDate',
                 width:110

@@ -163,7 +163,11 @@ Ext.define('KitchenSink.view.viewByPro.classListController', {
 
         var record = grid.store.getAt(rowIndex);
         var classID = record.data.classID;
+        var className = record.data.className;
         var batchID = record.data.batchID;
+        if(batchID == undefined){
+        	batchID = '';
+        }
         window.classID2=record.data.classID;
         window.batchID2=record.data.batchID;
         var render = function(initialData){
@@ -196,6 +200,7 @@ Ext.define('KitchenSink.view.viewByPro.classListController', {
                 Ext.tzLoad(tzParams,function(respData){
                     var formData = respData.formData;
                     form.setValues(formData);
+                	form.findField('batchName').setVisible(false);
 
                     var tzStoreParams = {
                         "classID":classID,
@@ -2079,7 +2084,6 @@ Ext.define('KitchenSink.view.viewByPro.classListController', {
         var batchID = record.data.batchID;
         var batchName = record.data.batchName;
         var className = record.data.className;
-
         cmp = new ViewClass({
             classId: classID,
             batchId: batchID,

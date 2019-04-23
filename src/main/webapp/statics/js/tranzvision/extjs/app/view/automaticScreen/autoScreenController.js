@@ -223,6 +223,7 @@
 					
 					Ext.tzSubmit(tzParams2,function(respData){
 						var processIns = respData.processIns;
+						console.log("processIns:" + processIns)
 						Ext.tzBatchProcessDetails({
 							//进程实例ID
 							processIns: processIns,

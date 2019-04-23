@@ -627,8 +627,11 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 										strMessageError = gdKjComServiceImpl.getMessageText(request, response,
 												"TZGD_APPONLINE_MSGSET", "PARAERROR", "参数错误", "Parameter error");
 									}
-									// 如果报名表已提交或者已撤销，则只读显示
-									if ("U".equals(strAppInsState) || "OUT".equals(strAppInsState)) {
+									
+									String sql2 = "SELECT TZ_ALLOW_APPLY FROM PS_TZ_REG_USER_T WHERE OPRID = ?";
+									String TZ_ALLOW_APPLY = sqlQuery.queryForObject(sql2, new Object[] {strAppOprId}, "String");
+									// 如果报名表已提交或者已撤销并且不允许考生继续申请，则只读显示
+									if (("U".equals(strAppInsState) || "OUT".equals(strAppInsState)) && "N".equals(TZ_ALLOW_APPLY)) {
 										strAppFormReadOnly = "Y";
 									}
 								} else {

@@ -34,7 +34,11 @@ Ext.define('KitchenSink.view.automaticScreen.autoScreenStore', {
 		var itemsMsParams = 'itemsMs:'+Ext.JSON.encode(itemsMs);
 		var itemsZjParams = 'itemsZj:'+Ext.JSON.encode(itemsZj);
 		
-		this.tzStoreParams = '{'+itemsParams+','+itemsMsParams+','+itemsZjParams+',"cfgSrhId":"TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.TZ_CS_STU_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "'+ classId+'","TZ_BATCH_ID-operator": "01","TZ_BATCH_ID-value": "'+ batchId+'"}}';
+		if(batchId == undefined || batchId == ''){
+			this.tzStoreParams = '{'+itemsParams+','+itemsMsParams+','+itemsZjParams+',"cfgSrhId":"TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.TZ_CS_STU_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "'+ classId+'"}}';
+		}else{
+			this.tzStoreParams = '{'+itemsParams+','+itemsMsParams+','+itemsZjParams+',"cfgSrhId":"TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.TZ_CS_STU_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "'+ classId+'","TZ_BATCH_ID-operator": "01","TZ_BATCH_ID-value": "'+ batchId+'"}}';
+		}
 		
 		this.callParent();	
 	}

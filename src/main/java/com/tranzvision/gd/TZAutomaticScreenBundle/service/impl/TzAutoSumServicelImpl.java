@@ -298,7 +298,7 @@ public class TzAutoSumServicelImpl extends FrameworkImpl {
 			String classId = jacksonUtil.getString("classId");
 			String batchId = jacksonUtil.getString("batchId");
 
-			if (!"".equals(classId) && classId != null && !"".equals(batchId) && batchId != null) {
+			if (!"".equals(classId) && classId != null ) {//&& !"".equals(batchId) && batchId != null) {
 				// 由于是非AE程序，为了效率 ，大部分数据库操作 全部放在循环外面执行
 				PsTzClassInfT psTzClassInfT = psTzClassInfTMapper.selectByPrimaryKey(classId);
 				// 自动打分成绩模型ID
@@ -324,22 +324,25 @@ public class TzAutoSumServicelImpl extends FrameworkImpl {
 
 				// 自动初筛 报名表实例ID和总成绩
 				Map<String, String> autoCSKS = new HashMap<String, String>();
+				if (autoRootMap!=null) {
 				sql = "SELECT A.TZ_APP_INS_ID,B.TZ_SCORE_NUM FROM PS_TZ_CS_KS_TBL A,PS_TZ_CJX_TBL B WHERE A.TZ_CLASS_ID =? AND A.TZ_APPLY_PC_ID =? AND A.TZ_SCORE_INS_ID = B.TZ_SCORE_INS_ID AND B.TZ_SCORE_ITEM_ID =?";
 				List<Map<String, Object>> list = sqlQuery.queryForList(sql,
 						new Object[] { classId, batchId, autoRootMap.get("TREE_NODE").toString() });
 				for (Map<String, Object> map : list) {
 					autoCSKS.put(map.get("TZ_APP_INS_ID").toString(),
 							map.get("TZ_SCORE_NUM") == null ? "" : map.get("TZ_SCORE_NUM").toString());
-				}
+				}}
 
 				// 面试 报名表实例ID和成绩单ID对应表和总成绩
 				Map<String, String> msCSKS = new HashMap<String, String>();
+				if (msRootMap !=null) {
 				sql = "SELECT A.TZ_APP_INS_ID,B.TZ_SCORE_NUM FROM PS_TZ_MSPS_KSH_TBL A,PS_TZ_CJX_TBL B WHERE A.TZ_CLASS_ID =? AND A.TZ_APPLY_PC_ID =? AND A.TZ_SCORE_INS_ID = B.TZ_SCORE_INS_ID AND B.TZ_SCORE_ITEM_ID =?";
-				list = sqlQuery.queryForList(sql,
+				List<Map<String, Object>> list = sqlQuery.queryForList(sql,
 						new Object[] { classId, batchId, msRootMap.get("TREE_NODE").toString() });
 				for (Map<String, Object> map : list) {
 					msCSKS.put(map.get("TZ_APP_INS_ID").toString(),
 							map.get("TZ_SCORE_NUM") == null ? "" : map.get("TZ_SCORE_NUM").toString());
+				}
 				}
 
 				// 专家打分自动去根节点下面第一个
@@ -349,7 +352,7 @@ public class TzAutoSumServicelImpl extends FrameworkImpl {
 				// 专家打分 报名表实例ID和成绩单ID对应表和总成绩
 				Map<String, String> adminCSKS = new HashMap<String, String>();
 				sql = "SELECT A.TZ_APP_INS_ID,B.TZ_SCORE_NUM FROM PS_TZ_MSPS_KSH_TBL A,PS_TZ_CJX_TBL B WHERE A.TZ_CLASS_ID =? AND A.TZ_APPLY_PC_ID =? AND A.TZ_SCORE_INS_ID = B.TZ_SCORE_INS_ID AND B.TZ_SCORE_ITEM_ID =?";
-				list = sqlQuery.queryForList(sql, new Object[] { classId, batchId, itemName });
+				List<Map<String, Object>> list = sqlQuery.queryForList(sql, new Object[] { classId, batchId, itemName });
 				for (Map<String, Object> map : list) {
 					adminCSKS.put(map.get("TZ_APP_INS_ID").toString(),
 							map.get("TZ_SCORE_NUM") == null ? "" : map.get("TZ_SCORE_NUM").toString());
@@ -365,9 +368,25 @@ public class TzAutoSumServicelImpl extends FrameworkImpl {
 							"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?",
 							new Object[] { "TZ_MEM_MS_RESULT" }, "String");
 				}else if ("MPACC".equals(orgId)){
+					//查询项目分类
+					sql = "SELECT A.TZ_PRJ_TYPE_NAME FROM PS_TZ_PRJ_TYPE_T A,PS_TZ_CLASS_INF_T B,PS_TZ_PRJ_INF_T C WHERE A.TZ_PRJ_TYPE_ID = C.TZ_PRJ_TYPE_ID AND C.TZ_PRJ_ID = B.TZ_PRJ_ID AND B.TZ_CLASS_ID=?";
+					String TZ_PRJ_TYPE_NAME = sqlQuery.queryForObject(sql, new Object[] {classId}, "String");
+					//TZ_MPACC_MS_RESULT
+					if("全日制".equals(TZ_PRJ_TYPE_NAME)) {
+						bzId=sqlQuery.queryForObject(
+								"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?",
+								new Object[] { "TZ_MPACC_QRZ_RESULT" }, "String");
+					}else {
+						bzId=sqlQuery.queryForObject(
+								"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?",
+								new Object[] { "TZ_MPACC_MS_RESULT" }, "String");
+						
+					}
+					
+				}else if ("MF".equals(orgId)){
 					bzId=sqlQuery.queryForObject(
 							"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?",
-							new Object[] { "TZ_MPACC_MS_RESULT" }, "String");
+							new Object[] { "TZ_MF_QRZ_RESULT" }, "String");
 				}else{
 					bzId=sqlQuery.queryForObject(
 							"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?",

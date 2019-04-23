@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,10 +55,17 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 				// 获取班级名称，报名表模板ID，批次名称;
 				String sql = "SELECT A.TZ_CLASS_NAME,A.TZ_APP_MODAL_ID,B.TZ_BATCH_NAME FROM PS_TZ_CLASS_INF_T A INNER JOIN PS_TZ_CLS_BATCH_T B ON(A.TZ_CLASS_ID=B.TZ_CLASS_ID AND B.TZ_BATCH_ID=?) WHERE A.TZ_CLASS_ID=?";
 				Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { strBatchID, strClassID });
+				// 批次信息不存在
+				if(StringUtils.isBlank(strBatchID)) {
+					sql = "SELECT A.TZ_CLASS_NAME,A.TZ_APP_MODAL_ID FROM PS_TZ_CLASS_INF_T A WHERE A.TZ_CLASS_ID=?";
+					map = jdbcTemplate.queryForMap(sql, new Object[] { strClassID });
+				}
 				if (map != null) {
 					strClassName = (String) map.get("TZ_CLASS_NAME");
 					strAppModalID = (String) map.get("TZ_APP_MODAL_ID");
-					strBatchName = (String) map.get("TZ_BATCH_NAME");
+					if(map.containsKey("TZ_BATCH_NAME")) {
+						strBatchName = (String) map.get("TZ_BATCH_NAME");
+					}
 
 					Map<String, Object> hMap = new HashMap<>();
 					hMap.put("classID", strClassID);
