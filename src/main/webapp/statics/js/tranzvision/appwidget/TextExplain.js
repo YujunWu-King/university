@@ -13,7 +13,7 @@ SurveyBuild.extend("TextExplain", "baseComponent", {
 		var c = '';
 		if (previewmode) {
 			if(SurveyBuild.accessType == "M"){
-				c += '<div class="item">';
+				c += '<div class="item"  id="' + data.itemId + '">';
 				c += '	<p class="emergency">'+ data.title +'</p>';
 				c += '</div>';	
 			}else{
