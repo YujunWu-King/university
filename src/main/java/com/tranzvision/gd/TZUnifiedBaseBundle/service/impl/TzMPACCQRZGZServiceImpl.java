@@ -40,7 +40,7 @@ public class TzMPACCQRZGZServiceImpl extends TzZddfServiceImpl{
 			// 查询报名表信息
 			String ks_valuesql = "SELECT TZ_XXX_BH,TZ_APP_S_TEXT FROM PS_TZ_APP_CC_T WHERE  TZ_APP_INS_ID=? AND TZ_XXX_BH =? ";
 			Map<String, Object> map = SqlQuery.queryForMap(ks_valuesql,
-					new Object[] { TZ_APP_ID, "TZ_25TZ_TZ_25_1"});
+					new Object[] { TZ_APP_ID, "TZ_25TZ_IS_FULLWORK"});
 
 			//是否全职
 			String isFullTime = "";
@@ -50,7 +50,7 @@ public class TzMPACCQRZGZServiceImpl extends TzZddfServiceImpl{
 			String ksMapvalue = "";
 
 			ksMapkey = map.get("TZ_XXX_BH").toString();
-			if (ksMapkey.equals("TZ_25TZ_TZ_25_1")) {
+			if (ksMapkey.equals("TZ_25TZ_IS_FULLWORK")) {
 				isFullTime = map.get("TZ_APP_S_TEXT").toString();
 			}
 			float workScore = 0;

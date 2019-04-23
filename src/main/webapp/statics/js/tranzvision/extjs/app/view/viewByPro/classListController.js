@@ -209,7 +209,7 @@ Ext.define('KitchenSink.view.viewByPro.classListController', {
                         "condition":{
                             "TZ_CLASS_ID-operator": "01",
                             "TZ_CLASS_ID-value": classID,
-                            "TZ_BATCH_ID-operator": "01",
+                            "TZ_BATCH_ID-operator": "02",
                             "TZ_BATCH_ID-value": batchID
                         }
                     };

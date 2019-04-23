@@ -446,6 +446,10 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl {
 				columnIds = sqlQuery.queryForObject(
 						"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_M_WEB_NOTICE_MPACC'",
 						"String");
+			} else if (orgId.toUpperCase().equals("MF")) {
+				columnIds = sqlQuery.queryForObject(
+						"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_M_WEB_NOTICE_MF'",
+						"String");
 			} else if (orgId.toUpperCase().equals("IMBA")) {
 				columnIds = sqlQuery.queryForObject(
 						"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_M_WEB_NOTICE_IMBA'",
@@ -640,12 +644,12 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl {
 				// 资料专区 对应的栏目id;
 				String zlzqColumnId = sqlQuery.queryForObject(
 						"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?",
-						new Object[] { "TZ_ZLZQ_COLUMN_ID_MPACC" }, "String");
+						new Object[] { "TZ_ZLZQ_COLUMN_ID_MF" }, "String");
 				zlzq = ctxPath + "/dispatcher?classid=mEventNotice&siteId=" + siteId + "&columnId=" + zlzqColumnId;
 				// 常见问题;
 
 				cjwt = sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?",
-						new Object[] { "TZ_M_CJWT_URL_MPACC" }, "String");
+						new Object[] { "TZ_M_CJWT_URL_MF" }, "String");
 			} else if (orgId.toUpperCase().equals("IMBA")) {
 				sqzd = sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?",
 						new Object[] { "TZ_M_SQZD_URL_IMBA" }, "String");
