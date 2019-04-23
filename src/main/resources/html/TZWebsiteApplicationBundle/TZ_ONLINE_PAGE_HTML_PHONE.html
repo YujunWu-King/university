@@ -84,6 +84,73 @@
 		}
 			
 		$(document).ready(function() {
+			
+			
+			//MPACC全日制 以及 MF全日制报名表 特有的控制，用于控制是否有全职工作经验
+			function MPACCMF(op) {
+				
+				
+					
+					var meVal = op.val();
+					console.log("meVal==="+meVal);
+					console.log(typeof(meVal));
+					if (typeof(meVal) != 'undefined') {
+						
+						var $mainlistform = $('#main_list');
+						var $all = $('#TZ_work_1', $mainlistform).parent().parent().parent();
+						var $shixi = $('#TZ_TZ_10_5', $mainlistform).parent().parent().parent();	
+					
+
+				if (meVal == '1') {//大陆
+				//console.log("1111");
+					$all.show();
+					$shixi.hide();
+					$('#TZ_TZ_10_4').val('');
+					$('#TZ_TZ_10_3').val('');
+					$('#TZ_TZ_10_7').val('');
+					$('#TZ_TZ_9_7').chosen({width:"100%"});
+					$('#TZ_work_6').chosen({width:"100%"});
+					$('#TZ_TZ_10_7').chosen({width:"100%"});
+					
+					if (typeof($('#TZ_TZ_10_4_1'))!="undefined") {
+						$('#TZ_TZ_10_4_1').val('');
+						$('#TZ_TZ_10_3_1').val('');
+						$('#TZ_TZ_10_4_2').val('');
+						$('#TZ_TZ_10_3_2').val('');
+					}
+					
+				} else if (meVal == '2') {//HK
+				
+					$all.hide();
+					$shixi.show();
+					$('#TZ_TZ_9_7').chosen({width:"100%"});
+					$('#TZ_work_6').chosen({width:"100%"});
+					$('#TZ_TZ_10_7').chosen({width:"100%"});
+					$('#TZ_TZ_9_2').val('');
+					$('#TZ_TZ_9_4').val('');
+					$('#TZ_work_17').val('');
+
+				} else {
+	
+					$all.hide();
+					$shixi.hide();
+					$('#TZ_TZ_9_2').val('');
+					$('#TZ_TZ_9_4').val('');
+					$('#TZ_work_17').val('');
+					$('#TZ_TZ_10_4').val('');
+					$('#TZ_TZ_10_3').val('');
+					$('#TZ_TZ_9_7').chosen({width:"100%"});
+					$('#TZ_work_6').chosen({width:"100%"});
+					$('#TZ_TZ_10_7').chosen({width:"100%"});
+					if (typeof($('#TZ_TZ_10_4_1'))!="undefined") {
+						$('#TZ_TZ_10_4_1').val('');
+						$('#TZ_TZ_10_4_1').val('');
+						$('#TZ_TZ_10_4_2').val('');
+						$('#TZ_TZ_10_4_2').val('');
+					}
+				}
+			}
+			}
 
 			//点击菜单的动作 手机版本菜单有2个
 			
@@ -96,7 +163,8 @@
 // 					console.log("pagelen:"+pagelen);
 					
 					$(".page" + pageno).show();
-					
+					//MPACC/MF全日制报名表特殊处理 他需要根据下拉框隐藏框架级别的控件
+					MPACCMF($("#TZ_IS_FULLWORK"));
 					for(var i =1;i<= pagelen ;i++){
 						if(i!=pageno) {
 							$(".page"+i).hide();
