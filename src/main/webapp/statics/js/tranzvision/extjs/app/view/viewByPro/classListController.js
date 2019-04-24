@@ -5,7 +5,7 @@ Ext.define('KitchenSink.view.viewByPro.classListController', {
     queryClass:function(btn){
     	//console.log("++++++++++++++++"+btn.findParentByType("panel").store.projectId);
         Ext.tzShowCFGSearch({
-            cfgSrhId: 'TZ_BY_PRO_COM.TZ_CLASS_LIST_PAGE.TZ_BMBSH_ECUST_VW',
+            cfgSrhId: 'TZ_BY_PRO_COM.TZ_CLASS_LIST_PAGE.TZ_BMBSH_ECUST_VW2',
             condition:{
                 /*TZ_DLZH_ID:TranzvisionMeikecityAdvanced.Boot.loginUserId,*/
                 TZ_JG_ID:Ext.tzOrgID,

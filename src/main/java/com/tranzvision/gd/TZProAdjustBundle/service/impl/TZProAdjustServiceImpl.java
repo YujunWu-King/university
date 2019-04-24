@@ -134,10 +134,22 @@ public class TZProAdjustServiceImpl extends FrameworkImpl {
 			}
 			String oprid = proAdjustT.getTzOprid();
 			String appinsId = proAdjustT.getAppinsid();
+			
+			String result = "";
+			String name = "";
+			String project = "";
+			
+			String sql = "SELECT TZ_REALNAME FROM PS_TZ_REG_USER_T WHERE OPRID=?";
+			name = sqlQuery.queryForObject(sql, new Object[] {oprid}, "String");
+			
+			sql = " SELECT TZ_CLASS_NAME FROM PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID=?";
+			project = sqlQuery.queryForObject(sql, new Object[] {proAdjustT.getClassid()}, "String");
+			
 			//同意
 			if(adjustStatus == 1) {
+				result = "同意";
 				//用户表里面的是否继续申请修改成可以
-				String sql = "UPDATE PS_TZ_REG_USER_T SET TZ_ALLOW_APPLY='Y' WHERE OPRID=?";
+				sql = "UPDATE PS_TZ_REG_USER_T SET TZ_ALLOW_APPLY='Y' WHERE OPRID=?";
 				sqlQuery.update(sql,new Object[] {oprid});
 				//把该报名表状态修改成撤销 OUT
 				sql = "UPDATE PS_TZ_APP_INS_T SET TZ_APP_FORM_STA='OUT' WHERE TZ_APP_INS_ID = ?";
@@ -146,11 +158,15 @@ public class TZProAdjustServiceImpl extends FrameworkImpl {
 				proAdjustT.setState(1);
 				proAdjustT.setSubmitstate("OUT");
 			}else { //拒绝
+				result = "拒绝";
 				proAdjustT.setState(2);
 			}
+			
+			
+			
 			psTzProAdjustTMapper.updateByPrimaryKeySelective(proAdjustT);
 			//发送站内信
-			String falg = send(oprid);
+			String falg = send(oprid, name, project, result);
 		} catch (Exception e) {
 			errorMsg[0] = "1";
 			errorMsg[1] = e.getMessage();
@@ -194,10 +210,15 @@ public class TZProAdjustServiceImpl extends FrameworkImpl {
 		return "";
 	}
 	
-	public String send(String oprid){
+	public String send(String oprid, String name, String project, String result){
+		String content = name + " 你好,<br>" + "&emsp;你申请的【"+ project +"】项目的项目调整申请，已经被管理员审核，审核结果是【"+ result +"】。如有疑问请联系管理员<br>"
+				+ "&emsp;咨询电话<br>" + 
+				"021-64252787  " + 
+				"021-64250033 转 8820 或 8839" + 
+				"<br>" + 
+				"&emsp;电子信箱<br>" + 
+				"mpacc@ecust.edu.cn";
         //发送站内信
-            /*tzOnlineAppEngineImpl.sendSiteEmail( strAppInsID, "TZ_BMB_ZT", strOprID,
-                    strAppOrgId, "报名表退回撤销发送站内信", "BMB", strClassID);*/
         // 创建邮件短信发送任务
         String strTaskId = createTaskServiceImpl.createTaskIns("MPACC", "TZ_PRO_ADJUST", "ZNX", "A");
         if (strTaskId == null || "".equals(strTaskId)) {
@@ -209,6 +230,9 @@ public class TZProAdjustServiceImpl extends FrameworkImpl {
         if ("".equals(createAudience) || createAudience == null) {
             return "false2";
         }
+        
+        // 修改内容;
+        boolean bl = createTaskServiceImpl.updateEmailSendContent(strTaskId, content);
         boolean addAudCy = createTaskServiceImpl.addAudCy(createAudience, "", "", "", "", "",
                 "", "", oprid, "", "","");
         if (!addAudCy) {

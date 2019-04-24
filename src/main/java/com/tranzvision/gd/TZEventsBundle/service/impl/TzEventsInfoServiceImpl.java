@@ -228,7 +228,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 			if (null == activityId || "".equals(activityId)) {
 
 				strRet = this.genEventJsonString("", "", "", "08:30", "", "17:30", "", "", "", "", "", "", "", enabledApply, "",
-						"08:30", "", "17:30", "0", "", "A", "", "", defaultSites, "", defaultColums,null,null);
+						"08:30", "", "17:30", "0", "", "A", "", "", null, "", "",null,null);
 				return strRet;
 			}
 
@@ -240,7 +240,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 				errorMsg[0] = "1";
 				errorMsg[1] = "活动数据不存在。";
 				strRet = this.genEventJsonString("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-						"", "", "", "", "", defaultSites, "", defaultColums,null,null);
+						"", "", "", "", "", null, "", "",null,null);
 				return strRet;
 			}
 

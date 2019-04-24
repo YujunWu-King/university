@@ -45,12 +45,37 @@
             }]
         }
     ],
+    constructor:function(){
+    	this.callParent();
+    	var panel = this;
+    	panel.columns[4].setVisible(true);
+		panel.columns[5].setVisible(true);
+		panel.columns[6].setVisible(true);
+    	//如果当前登录人为苏州管理员，则隐藏相关列
+		var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_BMGL_CLASS_STD","OperateType":"getRoleList","comParams":{}}';
+        Ext.tzLoad(tzParams,function(respData){
+        	var roleList = respData.roleList;
+        	if(roleList != null && roleList.length > 0){
+        		for(var i = 0; i < roleList.length; i++){
+        			var roleID = roleList[i].roleID;
+        			var isRole = roleList[i].isRole;
+        			if(roleID == "MPACC_SZGD_JG_GLY" && isRole){
+        				console.log(111)
+        				panel.columns[4].setVisible(false);
+        				panel.columns[5].setVisible(false);
+        				panel.columns[6].setVisible(false);
+        			}
+        		}
+        	}
+        })
+    },
     initComponent: function () {
 		var store = new KitchenSink.view.enrollmentManagement.applicationForm.classStore(),
 			applyStatusStore = new KitchenSink.view.common.store.appTransStore("TZ_BMGL_APPLY_STATUS");
-		
 		applyStatusStore.on('load',function(){
 			store.load();
+			
+			
 		});
         
         Ext.apply(this, {
