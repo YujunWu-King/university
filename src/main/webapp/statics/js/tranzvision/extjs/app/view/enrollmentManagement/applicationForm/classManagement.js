@@ -59,7 +59,8 @@
         		for(var i = 0; i < roleList.length; i++){
         			var roleID = roleList[i].roleID;
         			var isRole = roleList[i].isRole;
-        			if(roleID == "MPACC_SZGD_JG_GLY" && isRole){
+        			//console.log(roleID.lastIndexOf("SZGD_JG_GLY"));
+        			if(roleID.lastIndexOf("SZGD_JG_GLY") != -1 && isRole){
         				console.log(111)
         				panel.columns[4].setVisible(false);
         				panel.columns[5].setVisible(false);

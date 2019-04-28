@@ -574,6 +574,10 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 	 searchCallList: function(btn){
 		 Ext.tzShowCFGSearch({
 			 cfgSrhId: 'TZ_CALLCR_USER_COM.TZ_CALLC_LIST_STD.TZ_CCLIST_VW',
+			 condition:
+	            {
+	                "TZ_DLZH_ID": Ext.tzOrgID     
+	            },  
 			 callback: function(seachCfg){
 				 var store = btn.findParentByType("grid").store;
 				 store.tzStoreParams = seachCfg;
