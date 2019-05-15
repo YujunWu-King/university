@@ -178,6 +178,9 @@
 		var panel = btn.findParentByType('autoScreen');
 		var classId = panel.classId;
 		var batchId = panel.batchId;
+		if(batchId == null || batchId == undefined){
+			batchId = "";
+		}
 		
 		var comParamsObj = {
 			ComID: 'TZ_AUTO_SCREEN_COM',
@@ -240,6 +243,9 @@
 		var panel = btn.findParentByType('autoScreen');
 		var classId = panel.classId;
 		var batchId = panel.batchId;
+		if(batchId == null || batchId == undefined){
+			batchId = "";
+		}
 		var grid = panel.down('grid');
 		var comParamsObj = {
 			ComID: 'TZ_AUTO_SCREEN_COM',
@@ -263,6 +269,9 @@
 		var panel = btn.findParentByType('autoScreen');
 		var classId = panel.classId;
 		var batchId = panel.batchId;
+		if(batchId == null || batchId == undefined){
+			batchId = "";
+		}
 		var grid = panel.down('grid');
 		
 		var comParamsObj = {
@@ -358,7 +367,9 @@
 		var panel = btn.findParentByType('autoScreen');
 		var classId = panel.classId;
 		var batchId = panel.batchId;
-		
+		if(batchId == null || batchId == undefined){
+			batchId = "";
+		}
 		var comParamsObj = {
 			ComID: 'TZ_AUTO_SCREEN_COM',
 			PageID: 'TZ_AUTO_SCREEN_STD',
@@ -467,6 +478,9 @@
 		var rec = grid.getStore().getAt(rowIndex);
 		var classId = rec.get("classId");
 		var batchId = rec.get("batchId");
+		if(batchId == null || batchId == undefined){
+			batchId = "";
+		}
 		var appId = rec.get("appId");
 		var name = rec.get("name");
 		var msApplyId = rec.get("msApplyId");

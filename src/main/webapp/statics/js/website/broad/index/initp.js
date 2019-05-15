@@ -263,6 +263,10 @@ $(document).ready(function(){
 			      $(this).find(".triangle").show();
 			    }); 
 			
+			var jgid = $("#jgid").val();
+			if(jgid != "mpacc" || jgid != "mf" || jgid != "MPACC" || jgid != "MF"){
+				$("#projectAdjust").hide();
+			}
 			$("#projectAdjust").click(function(){
 				if (confirm("您确认申请项目调整？")==true){
 					var classId = $("#classId").val();
@@ -282,6 +286,7 @@ $(document).ready(function(){
 					})
 				}
 			})
+				
 		},
 		failure: function () {
 		  	
