@@ -52,10 +52,10 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolLibMannage.schoolLibManag
             xtype: 'textfield',
 						fieldLabel: Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_INFO_STD.ENGName","英文名称"),
 						name: 'engName',
-						afterLabelTextTpl: [
-                '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
-            ],
-						allowBlank: false
+						//afterLabelTextTpl: [
+                //'<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+            //],
+						//allowBlank: false
         },
         {
             layout: {
@@ -66,9 +66,13 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolLibMannage.schoolLibManag
                 columnWidth:.4,
                 xtype: 'textfield',
                 fieldLabel: Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_INFO_STD.country","国家"),
+              afterLabelTextTpl: [
+                '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+                ],
                 //fieldLabel:'报名流程模版',
                 name: 'country',
                 editable: false,
+                allowBlank: false,
                 triggers: {
                     search: {
                         cls: 'x-form-search-trigger',
@@ -86,10 +90,8 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolLibMannage.schoolLibManag
             xtype: 'textfield',
 						fieldLabel: Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_INFO_STD.maindepartment","主管部门"),
 						name: 'mainDeart',
-						afterLabelTextTpl: [
-                '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
-            ],
-						allowBlank: false
+						
+						//allowBlank: false
         },
          {
             xtype: 'textfield',
@@ -102,7 +104,7 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolLibMannage.schoolLibManag
                     xtype: 'combobox',
                     fieldLabel:Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_INFO_STD.Level","办学层次"),
                     forceSelection: true,
-                    allowBlank: false,
+                    //allowBlank: false,
                     valueField: 'TValue',
                     displayField: 'TSDesc',
                     store: new KitchenSink.view.common.store.appTransStore("TZ_BXCJ_ZH"),
@@ -114,7 +116,7 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolLibMannage.schoolLibManag
                     xtype: 'combobox',
                     fieldLabel: Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_INFO_STD.attribute","属性"),
                     forceSelection: true,
-                    allowBlank: false,
+                    //allowBlank: false,
                     valueField: 'TValue',
                     displayField: 'TSDesc',
                     store: new KitchenSink.view.common.store.appTransStore("TZ_SCH_SX"),
@@ -134,7 +136,7 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolLibMannage.schoolLibManag
                     xtype: 'combobox',
                     fieldLabel:Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_LIST_STD.State","洲"),
                     forceSelection: true,
-                    allowBlank: false,
+                    //allowBlank: false,
                     valueField: 'TValue',
                     displayField: 'TSDesc',
                     store: new KitchenSink.view.common.store.appTransStore("TZ_STATE_CHOSE"),
@@ -146,11 +148,15 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolLibMannage.schoolLibManag
                 },
         {
            	xtype: 'combo',
+           	afterLabelTextTpl: [
+           	                 '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+           	             ],
             fieldLabel: Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_LIST_STD.type","所属类别"),
 			name: 'type',
 			emptyText:Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_LIST_STD.pleaseSelect","请选择..."),
             queryMode: 'remote',
             editable:false,
+            allowBlank: false,
 			valueField: 'TZ_SCHOOL_TYPEID',
     		displayField: 'TZ_SCHOOL_TYPENAME',
 			store:new KitchenSink.view.common.store.comboxStore({
@@ -170,7 +176,7 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolLibMannage.schoolLibManag
                     xtype: 'combobox',
                     fieldLabel:Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_LIST_STD.hemisphere","所在半球"),
                     forceSelection: true,
-                    allowBlank: false,
+                   // allowBlank: false,
                     valueField: 'TValue',
                     displayField: 'TSDesc',
                     store: new KitchenSink.view.common.store.appTransStore("TZ_BQGS_XZ"),

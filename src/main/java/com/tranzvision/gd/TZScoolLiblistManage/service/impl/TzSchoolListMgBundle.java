@@ -126,7 +126,8 @@ public class TzSchoolListMgBundle extends FrameworkImpl {
 					
 					returnJsonMap.put("orgaID", orgaID);
 					returnJsonMap.put("city", PsTzPayLogT.getCity());
-					returnJsonMap.put("country",country);
+					returnJsonMap.put("countryID",country);
+					returnJsonMap.put("country",countryID);
 					returnJsonMap.put("adddec", PsTzPayLogT.getDecstring());
 					returnJsonMap.put("hemiHere", PsTzPayLogT.getTzHemisphere());
 					returnJsonMap.put("level", PsTzPayLogT.getTzSchoolLevel());

@@ -72,19 +72,19 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolLibMannage.schoolLibManag
 				},*/
 				srhConFields:{
 					country:{
-						desc:Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_INFO_STD.country","国家"),
+						desc:Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_INFO_STD.countryID","国家代码"),
 						operator:'01',
 						type:'01'
 					},
 					descr:{
 						desc:Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_INFO_STD.countrydesc","国家描述"),
-						operator:'01',
+						operator:'07',
 						type:'01'
 					}
 				}
 			},
 			srhresult:{
-				country: Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_INFO_STD.countryID","国家"),
+				country: Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_INFO_STD.countryID","国家代码"),
 				descr:Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_INFO_STD.countrydesc","国家描述")
 			},
 			multiselect: false,
