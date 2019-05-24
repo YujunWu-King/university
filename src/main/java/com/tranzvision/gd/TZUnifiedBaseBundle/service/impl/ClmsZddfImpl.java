@@ -71,11 +71,11 @@ public class ClmsZddfImpl {
 				String MarkRecord;
 				
 				//根据考生查询到的学历、学位、学校类型在TZ_CSMB_XLF_T查询对应的得分，如果没有查询到对应得分，得分=0
-				String ExistSql = "select 'Y' from PS_TZ_CSMB_XLF_T where TZ_CSMB_CK3=? and  TZ_CSMB_CK2=? and TZ_CSMB_CK1=?";
+				String ExistSql = "select 'Y' from PS_TZ_CSMB_XLF_T where TZ_CSMB_CK3=? and  TZ_CSMB_CK2=? and TZ_CSMB_CK1=? and TZ_CSMB_DESC not like 'MPACC%'";
 				String isExist = "";
 				isExist = jdbcTemplate.queryForObject(ExistSql, String.class, new Object[] { XXLX,XW,XL });
 				if ("Y".equals(isExist)) {
-					String SearchSql = "select TZ_CSMB_SCOR from PS_TZ_CSMB_XLF_T where TZ_CSMB_CK3=? and  TZ_CSMB_CK2=? and TZ_CSMB_CK1=?";
+					String SearchSql = "select TZ_CSMB_SCOR from PS_TZ_CSMB_XLF_T where TZ_CSMB_CK3=? and  TZ_CSMB_CK2=? and TZ_CSMB_CK1=? and TZ_CSMB_DESC not like 'MPACC%'";
 					String StrScore = jdbcTemplate.queryForObject(SearchSql, String.class, new Object[] { XXLX,XW,XL });
 					Score=Float.parseFloat(StrScore);
 					
@@ -172,14 +172,14 @@ public class ClmsZddfImpl {
 					
 					//上下限类型，查询报名表中的证书成绩字段
 					if(WYLX.equals("GRE")||WYLX.equals("GMAT")||WYLX.equals("TOFEL")||WYLX.equals("IELTS")||WYLX.equals("710E6")||WYLX.equals("710E4")||WYLX.equals("100E6")||WYLX.equals("100E4")||WYLX.equals("TOEIC")){
-						String sql = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_WY_T where TZ_CSMB_DESC =? and TZ_CSMB_CK2>? AND TZ_CSMB_CK3<=?;";
+						String sql = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_WY_T where TZ_CSMB_DESC =? and TZ_CSMB_CK2>? AND TZ_CSMB_CK3<=?   and TZ_CSMB_FS is null";
 						String FSCJ = jdbcTemplate.queryForObject(sql, String.class, new Object[] {WYLX,WYCJ,WYCJ});
 						FSCJF=Float.parseFloat(FSCJ);
 						WYScore.add(FSCJF);
 						
 					//证书类型，查询报名表中的证书等级字段
 					}else if(WYLX.equals("ZYYY")||WYLX.equals("GJKY")||WYLX.equals("ZJKY")||WYLX.equals("BEC")){
-						String sql2 = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_WY_T where TZ_CSMB_DESC =? and TZ_CSMB_CK1=?";
+						String sql2 = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_WY_T where TZ_CSMB_DESC =? and TZ_CSMB_CK1=?   and TZ_CSMB_FS is null";
 						String FSCJ = jdbcTemplate.queryForObject(sql2, String.class, new Object[] {WYLX,WYJB});
 						FSCJF=Float.parseFloat(FSCJ);
 						WYScore.add(FSCJF);

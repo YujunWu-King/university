@@ -14,7 +14,11 @@ import com.tranzvision.gd.TZAutomaticScreenBundle.dao.PsTzCjxTblMapper;
 import com.tranzvision.gd.TZUnifiedBaseBundle.model.PsTzCjxTblKey;
 import com.tranzvision.gd.TZUnifiedBaseBundle.model.PsTzCjxTblWithBLOBs;
 import com.tranzvision.gd.util.sql.SqlQuery;
-
+/**
+ * MPACC非全日制
+ * @author feifei
+ *
+ */
 @Service("com.tranzvision.gd.TZUnifiedBaseBundle.service.impl.TzZddMPACCWYServiceImpl")
 public class TzZddMPACCWYServiceImpl extends TzZddfServiceImpl{
 	@Autowired
@@ -194,8 +198,8 @@ public class TzZddMPACCWYServiceImpl extends TzZddfServiceImpl{
 
 			// 报名表里面分数
 			String strScore = "";
-			String SearchSql = "select TZ_CSMB_SCOR from PS_TZ_CSMB_WY_T where TZ_CSMB_DESC=? and  TZ_CSMB_CK3<=? and TZ_CSMB_CK2>=?";
-			String SearchSql2 = "select TZ_CSMB_SCOR from PS_TZ_CSMB_WY_T where TZ_CSMB_DESC=?";
+			String SearchSql = "select TZ_CSMB_SCOR from PS_TZ_CSMB_WY_T where TZ_CSMB_DESC=? and  TZ_CSMB_CK3<=? and TZ_CSMB_CK2>=?   and TZ_CSMB_FS is null";
+			String SearchSql2 = "select TZ_CSMB_SCOR from PS_TZ_CSMB_WY_T where TZ_CSMB_DESC=?   and TZ_CSMB_FS is null";
 			it = souseMap.entrySet().iterator();
 			while (it.hasNext()) {
 				Map.Entry<String, String> entry = it.next();

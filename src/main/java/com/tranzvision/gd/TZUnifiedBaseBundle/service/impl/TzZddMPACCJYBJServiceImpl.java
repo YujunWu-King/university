@@ -1,7 +1,7 @@
 package com.tranzvision.gd.TZUnifiedBaseBundle.service.impl;
 
 /**
- * 华东理工MPACC教育背景计算
+ * 华东理工MPACC 非全日制教育背景计算
  */
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -274,7 +274,7 @@ public class TzZddMPACCJYBJServiceImpl  extends TzZddfServiceImpl{
 			System.out.println(sb.toString());
 
 			// 获取分数
-			String SearchSql = "select TZ_CSMB_SCOR from PS_TZ_CSMB_XLF_T where TZ_CSMB_CK3=? and  TZ_CSMB_CK2=? and TZ_CSMB_CK1=?";
+			String SearchSql = "select TZ_CSMB_SCOR from PS_TZ_CSMB_XLF_T where TZ_CSMB_CK3=? and  TZ_CSMB_CK2=? and TZ_CSMB_CK1=? and TZ_CSMB_DESC not like 'MPACC%'";
 			String StrScore = SqlQuery.queryForObject(SearchSql, new Object[] { TZ_SCHOOL_TYPE, sl, sw }, "String");
 			if (StrScore == null || StrScore.equals("")) {
 				StrScore = "0";
