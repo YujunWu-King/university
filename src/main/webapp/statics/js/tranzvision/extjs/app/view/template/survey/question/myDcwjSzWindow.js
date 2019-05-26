@@ -1,4 +1,4 @@
-﻿﻿Ext.define('KitchenSink.view.template.survey.question.myDcwjSzWindow', {
+﻿﻿﻿Ext.define('KitchenSink.view.template.survey.question.myDcwjSzWindow', {
     extend: 'Ext.panel.Panel',
     xtype: 'myDcwjSzWindow',
     reference: 'myDcwjSzWindow',
