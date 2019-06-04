@@ -327,7 +327,8 @@
 						if (f.comContent.code == "0") {
 							if (cType == "SUBMIT"){
 								noteing(MsgSet.SAVE_SUCCEED);
-								var tzSuccessParams = '?tzParams={"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_SURVEY_SUCC_STD","OperateType":"HTML","comParams":{"AC":"P","SURVEY_WJ_ID":' + templId + '}}';
+								var tzSuccessParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_SURVEY_SUCC_STD","OperateType":"HTML","comParams":{"AC":"P","SURVEY_WJ_ID":' + templId + '}}';
+								tzSuccessParams = '?tzParams=' + encodeURIComponent(tzSuccessParams);
 								window.location.href = SurveyBuild.tzGeneralURL + tzSuccessParams;
 							}else{
 								/*处理翻页数据加载*/

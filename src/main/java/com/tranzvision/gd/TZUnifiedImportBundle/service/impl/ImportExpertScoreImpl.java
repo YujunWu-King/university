@@ -79,13 +79,18 @@ public class ImportExpertScoreImpl implements UnifiedImportBase {
 					TZ_CLASS_NAME = ((String) data.get(i).get("TZ_CLASS_NAME"));
 					TZ_BATCH_NAME = ((String) data.get(i).get("TZ_BATCH_NAME"));
 					TZ_SCORE_NUM = ((String) data.get(i).get("TZ_SCORE_NUM"));
-
+					System.out.println("TZ_MSH_ID:"+TZ_MSH_ID);
+					System.out.println("TZ_CLASS_NAME:"+TZ_CLASS_NAME);
+					System.out.println("TZ_BATCH_NAME:"+TZ_BATCH_NAME);
 					classID = cls.get(TZ_CLASS_NAME);
-					if (classID != null && classID.equals("")) {
+					System.out.println("classID:"+classID);
+					if (classID != null && !classID.equals("")) {
 						batchID = batch.get(classID + "@" + TZ_BATCH_NAME);
-						if (batchID != null && batchID.equals("")) {
+						System.out.println("batchID:"+batchID);
+						if (batchID != null && !batchID.equals("")) {
 							scoreId = sqlQuery.queryForObject(stuSql, new Object[] { classID, batchID, TZ_MSH_ID },
 									"String");
+							System.out.println("scoreId:"+scoreId);
 							if (scoreId != null && !"".equals(scoreId)) {
 
 								count = sqlQuery.queryForObject(isExist, new Object[] { scoreId }, "Integer");
