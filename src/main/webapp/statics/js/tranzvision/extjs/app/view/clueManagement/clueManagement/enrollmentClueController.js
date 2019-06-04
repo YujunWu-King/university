@@ -1175,6 +1175,22 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.enrollmentClueControl
         win.show();
     },
     
+    //查看活动
+    seeActivity: function(view,rowIndex) {
+        var store = view.findParentByType("grid").store;
+        var selRec = store.getAt(rowIndex);
+        var clueID = selRec.get("clueId");
+    	
+        var winClass = "KitchenSink.view.clueManagement.clueManagement.viewOrAddLxReportWindow";
+        Ext.syncRequire(winClass);
+        var ViewClass = Ext.ClassManager.get(winClass);
+        
+        var win = new ViewClass({
+        	clueID: clueID
+        });
+        
+        win.show();
+    },
     //关闭
     closeEnrollmentClue:function() {
         this.getView().close();

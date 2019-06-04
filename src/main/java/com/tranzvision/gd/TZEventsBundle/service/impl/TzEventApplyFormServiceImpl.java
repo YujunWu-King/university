@@ -16,15 +16,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzWebsiteLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdObjectServiceImpl;
 import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.CreateTaskServiceImpl;
 import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.SendSmsOrMalServiceImpl;
+import com.tranzvision.gd.TZEventsBundle.dao.PsTzHdbmrClueTMapper;
 import com.tranzvision.gd.TZEventsBundle.dao.PsTzLxfsinfoTblMapper;
 import com.tranzvision.gd.TZEventsBundle.dao.PsTzNaudlistTMapper;
+import com.tranzvision.gd.TZEventsBundle.model.PsTzHdbmrClueTKey;
 import com.tranzvision.gd.TZEventsBundle.model.PsTzLxfsinfoTbl;
 import com.tranzvision.gd.TZEventsBundle.model.PsTzNaudlistT;
+import com.tranzvision.gd.TZMyEnrollmentClueBundle.dao.PsTzXsxsBmbTMapper;
+import com.tranzvision.gd.TZMyEnrollmentClueBundle.dao.PsTzXsxsInfoTMapper;
+import com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsBmbT;
+import com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsInfoTWithBLOBs;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzException;
 import com.tranzvision.gd.util.captcha.Patchca;
@@ -69,6 +76,9 @@ public class TzEventApplyFormServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	PsTzNaudlistTMapper psTzNaudlistTMapper;
+	
+	@Autowired
+	private TzLoginServiceImpl tzLoginServiceImpl;
 
 	@Autowired
 	PsTzLxfsinfoTblMapper psTzLxfsinfoTblMapper;
@@ -81,6 +91,15 @@ public class TzEventApplyFormServiceImpl extends FrameworkImpl {
 	
 	@Autowired
 	private SendSmsOrMalServiceImpl sendSmsOrMalServiceImpl;
+	
+	@Autowired
+	private PsTzXsxsInfoTMapper psTzXsxsInfoTMapper;
+	
+	@Autowired
+	private PsTzXsxsBmbTMapper psTzXsxsBmbTMapper;
+	
+	@Autowired
+	private PsTzHdbmrClueTMapper psTzHdbmrClueTMapper;
 	
 	//用于控制访问量的信号变量，避免活动报名席位数过度竞争对服务器造成过大压力
 	private static Semaphore registrationLockCounter = new Semaphore(10,true);
@@ -729,6 +748,9 @@ public class TzEventApplyFormServiceImpl extends FrameworkImpl {
 								if(bl){
 									sendSmsOrMalServiceImpl.send(taskId, "");
 								}
+								
+								//报名成功创建线索
+								tzCreateClue(strApplyId, strBmrId);
 							}catch(NullPointerException nullEx){
 								//没有配置邮件模板
 								nullEx.printStackTrace();
@@ -758,4 +780,95 @@ public class TzEventApplyFormServiceImpl extends FrameworkImpl {
 		return strRet;
 	}
 
+	/**
+	 * 创建线索
+	 * @param strParams
+	 * @param errorMsg
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	private void tzCreateClue(String activityId, String bmrId){
+		System.out.println("activityId：" + activityId);
+		System.out.println("bmrId：" + bmrId);
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		Map<String,Object> rtnMap = new HashMap<String,Object>();
+		
+		String orgId = "";
+		int count = 0;
+		if(jacksonUtil.containsKey("orgId")){
+			orgId = jacksonUtil.getString("orgId");
+		}else{
+			orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+		}
+		
+		String currOprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+		
+		String hasLeadName = "";
+		String sql = "select A.TZ_CYR_NAME,A.OPRID,B.TZ_ZY_SJ,B.TZ_ZY_EMAIL from PS_TZ_NAUDLIST_T A left join PS_TZ_LXFSINFO_TBL B on(B.TZ_LXFS_LY='HDBM' and B.TZ_LYDX_ID=A.TZ_HD_BMR_ID) where TZ_ART_ID=? and TZ_HD_BMR_ID=?";
+		Map<String,Object> bmrMap = sqlQuery.queryForMap(sql, new Object[]{ activityId, bmrId });
+		
+		if(bmrMap != null){
+			String name = bmrMap.get("TZ_CYR_NAME") == null ? "" : bmrMap.get("TZ_CYR_NAME").toString();
+			String oprid = bmrMap.get("OPRID") == null ? "" : bmrMap.get("OPRID").toString();
+			String mobile = bmrMap.get("TZ_ZY_SJ") == null ? "" : bmrMap.get("TZ_ZY_SJ").toString();
+			String email = bmrMap.get("TZ_ZY_EMAIL") == null ? "" : bmrMap.get("TZ_ZY_EMAIL").toString();
+			
+			String leadSql = "select TZ_LEAD_ID from PS_TZ_HDBMR_CLUE_T A where TZ_HD_BMR_ID=? and exists(select 'Y' from PS_TZ_XSXS_INFO_T where TZ_LEAD_ID=A.TZ_LEAD_ID and TZ_JG_ID=?) limit 0,1";
+			String leadId = sqlQuery.queryForObject(leadSql, new Object[]{ bmrId, orgId }, "String");
+			
+			if(leadId != null && !"".equals(leadId)){
+				count ++;
+				if(count < 10){
+					if("".equals(hasLeadName)){
+						hasLeadName = name;
+					}else{
+						hasLeadName += "，" + name;
+					}
+				}
+			}else{
+				String TZ_LEAD_ID = String.valueOf(getSeqNum.getSeqNum("TZ_XSXS_INFO_T", "TZ_LEAD_ID"));
+				
+				PsTzXsxsInfoTWithBLOBs psTzXsxsInfoT = new PsTzXsxsInfoTWithBLOBs();
+				psTzXsxsInfoT.setTzLeadId(TZ_LEAD_ID);
+				psTzXsxsInfoT.setTzJgId(orgId);
+
+				psTzXsxsInfoT.setTzRsfcreateWay("E"); /*营销活动*/
+				psTzXsxsInfoT.setTzLeadStatus("A");
+				
+				psTzXsxsInfoT.setTzRealname(name);
+				psTzXsxsInfoT.setTzKhOprid(oprid);
+				psTzXsxsInfoT.setTzEmail(email);
+				psTzXsxsInfoT.setTzMobile(mobile);
+				psTzXsxsInfoT.setRowAddedDttm(new Date());
+				psTzXsxsInfoT.setRowAddedOprid(currOprid);
+				psTzXsxsInfoT.setRowLastmantDttm(new Date());
+				psTzXsxsInfoT.setRowLastmantOprid(currOprid);
+				
+				int rtn = psTzXsxsInfoTMapper.insert(psTzXsxsInfoT);
+				
+				if(rtn > 0){
+					PsTzHdbmrClueTKey psTzHdbmrClueTKey = new PsTzHdbmrClueTKey();
+					psTzHdbmrClueTKey.setTzHdBmrId(bmrId);
+					psTzHdbmrClueTKey.setTzLeadId(TZ_LEAD_ID);
+					
+					psTzHdbmrClueTMapper.insert(psTzHdbmrClueTKey);
+					
+					//线索关联报名表
+					sql = "select max(TZ_APP_INS_ID) as TZ_APP_INS_ID from PS_TZ_FORM_WRK_T where OPRID=?";
+					Long appInsId = sqlQuery.queryForObject(sql, new Object[]{ oprid }, "Long");
+					if(appInsId != null && appInsId > 0){
+						PsTzXsxsBmbT psTzXsxsBmbT = new PsTzXsxsBmbT(); 
+						psTzXsxsBmbT.setTzLeadId(TZ_LEAD_ID);
+						psTzXsxsBmbT.setTzAppInsId(appInsId);
+						psTzXsxsBmbT.setRowAddedDttm(new Date());
+						psTzXsxsBmbT.setRowAddedOprid(currOprid);
+						psTzXsxsBmbT.setRowLastmantDttm(new Date());
+						psTzXsxsBmbT.setRowLastmantOprid(currOprid);
+						
+						psTzXsxsBmbTMapper.insert(psTzXsxsBmbT);
+					}
+				}
+			}
+		}
+	}
 }

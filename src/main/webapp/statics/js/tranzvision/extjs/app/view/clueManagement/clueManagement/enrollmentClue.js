@@ -214,10 +214,22 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.enrollmentClue',{
         	                    lockable   : false,
         	                    menuDisabled:true,
         	                    width:	80,
+        	                    flex:1,
         	                    xtype:'actioncolumn',
         	                    align:'center',
         	                    items:[
         	                        {iconCls:'audit',tooltip:'查看和添加联系报告',handler:'addContactReport'}
+        	                    ]
+                            },{
+                            	text:'查看活动',
+        	                    lockable   : false,
+        	                    menuDisabled:true,
+        	                    width:	80,
+        	                    flex:1,
+        	                    xtype:'actioncolumn',
+        	                    align:'center',
+        	                    items:[
+        	                        {iconCls:'audit',tooltip:'查看活动',handler:'seeActivity'}
         	                    ]
                             }
                         ]

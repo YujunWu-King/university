@@ -9,6 +9,7 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.clueDetailPanel',{
         'Ext.toolbar.Paging',
         'KitchenSink.view.common.store.comboxStore',
         'KitchenSink.view.clueManagement.clueManagement.clueBmbStore',
+        'KitchenSink.view.clueManagement.clueManagement.clueBmbActStore',
         'KitchenSink.view.clueManagement.clueManagement.clueDetailController'
     ],
     controller:'clueDetailController',
@@ -548,7 +549,84 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.clueDetailPanel',{
                                 TZ_LEAD_ID:clueID
                             }));
                         }
-                    }
+                    },
+                },{
+	            	title:'活动列表',
+	                xtype:'grid',
+	                columnLines:true,
+	                minHeight:170,
+	                name:'bmbActGrid',
+	                reference:'bmbActGrid',
+	                listeners:{
+	                	beforerender:function(panel){
+	                		//线索ID
+							var clueId = panel.findParentByType("tabpanel").previousSibling().getForm().findField("clueId").getValue();
+							var tzParams = '{"ComID":"TZ_XSXS_INFO_COM","PageID":"TZ_XSXS_DETAIL_STD","OperateType":"queryAct","comParams":{"clueId":"'+clueId+'"}}';
+							panel.store.proxy.extraParams.tzParams = tzParams;
+							panel.store.reload();
+	                	}/*,
+                        afterrender:function(panel){
+                        	//线索ID
+							var clueId = panel.findParentByType("tabpanel").previousSibling().getForm().findField("clueId").getValue();
+							var tzParams = '{"ComID":"TZ_XSXS_INFO_COM","PageID":"TZ_XSXS_DETAIL_STD","OperateType":"queryAct","comParams":{"clueId":"'+clueId+'"}}';
+							panel.store.proxy.extraParams.tzParams = tzParams;
+							panel.store.reload();
+                        }*/
+	                },
+	                store:{
+	                    type:'clueBmbActStore'
+	                },
+	                columns:[{
+	                    text:'活动ID',
+	                    dataIndex:'TZ_ART_ID',
+	                    width:100,
+	                    hidden:true,
+	                    flex:1
+	                },{
+	                    text:'活动名称',
+	                    dataIndex:'TZ_NACT_NAME',
+	                    width:100,
+	                    flex:1
+	                },{
+	                    text:'活动地点',
+	                    dataIndex:'TZ_NACT_ADDR',
+	                    width:90,
+	                    sortable:false,
+	                    flex:1
+	                },{
+	                    text:'活动开始日期',
+	                    dataIndex:'TZ_START_DT',
+	                    width:90,
+	                    sortable:false,
+	                    flex:1
+	                },{
+	                    text:'活动结束日期',
+	                    dataIndex:'TZ_END_DT',
+	                    width:110,
+	                    sortable:false,
+	                    flex:1
+	                },{
+	                    text:'报名开始日期',
+	                    dataIndex:'TZ_APPF_DT',
+	                    width:140,
+	                    sortable:false,
+	                    flex:1
+	                },{
+	                    text:'报名结束日期',
+	                    dataIndex:'TZ_APPE_DT',
+	                    sortable:false,
+	                    minWidth:120,
+	                    width: 130,
+	                    flex:1
+	                }]/*,
+	                bbar:{
+	                    xtype:'pagingtoolbar',
+	                    pageSize:10,
+	                    store:{
+		                    type:'clueBmbActStore'
+		                },
+	                    plugins: new Ext.ux.ProgressBarPager()
+	                }*/
                 }]
             }],
             buttons: [{

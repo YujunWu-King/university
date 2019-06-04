@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -892,6 +893,10 @@ public class TzClueDetailServiceImpl extends FrameworkImpl {
 			if("tzIsExist".equals(operateType)) {
 				strRet = isExist(strParams,errorMsg);
 			}
+			//查询报名人已报名的活动
+			if("queryAct".equals(operateType)) {
+				strRet = queryAct(strParams,errorMsg);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			errorMsg[0] = "1";
@@ -901,7 +906,58 @@ public class TzClueDetailServiceImpl extends FrameworkImpl {
 		return strRet;		
 	}
 	
-	
+	/**
+	 * 查看报名人已报名的活动
+	 * @param strParams
+	 * @param errorMsg
+	 * @return
+	 */
+	private String queryAct(String strParams, String[] errorMsg) {
+		String strRet = "";
+		Map<String, Object> mapRet = new HashMap<String,Object>();
+		List<Map<String, Object>> list = new ArrayList<>();
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		try {
+			jacksonUtil.json2Map(strParams);
+			String clueId = jacksonUtil.getString("clueId");
+			if(StringUtils.isBlank(clueId)) {
+				errorMsg[0] = "1";
+				errorMsg[1] = "查询活动失败，线索为空！";
+			}
+			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+			String sql = "select TZ_KH_OPRID from PS_TZ_XSXS_INFO_T where TZ_LEAD_ID = ? and TZ_JG_ID = ?";
+			
+			String oprid = sqlQuery.queryForObject(sql, new Object[] {clueId, orgid}, "String");
+			if(StringUtils.isBlank(oprid)) {
+				mapRet.put("root", list);
+				mapRet.put("total", list.size());
+				return jacksonUtil.Map2json(mapRet);
+			}
+			//查询该人已参加的活动
+			sql = "select TZ_ART_ID from PS_TZ_NAUDLIST_T where OPRID=?";
+			List<Map<String, Object>> actList = sqlQuery.queryForList(sql, new Object[] {oprid});
+			sql = "select TZ_ART_ID,TZ_NACT_NAME,TZ_START_DT,TZ_END_DT,TZ_NACT_ADDR,TZ_APPF_DT,TZ_APPE_DT from PS_TZ_ART_HD_TBL WHERE TZ_ART_ID = ?";
+			if(actList != null && actList.size() > 0) {
+				for (Map<String, Object> map : actList) {
+					if(map != null) {
+						String TZ_ART_ID = map.get("TZ_ART_ID").toString();
+						Map<String, Object> actMap = sqlQuery.queryForMap(sql, new Object[] {TZ_ART_ID});
+						list.add(actMap);
+					}
+				}
+			}
+			mapRet.put("root", list);
+			mapRet.put("total", list.size());
+			strRet = jacksonUtil.Map2json(mapRet);
+		} catch (Exception e) {
+			e.printStackTrace();
+			errorMsg[0] = "1";
+			errorMsg[1] = e.toString();
+		}
+		return strRet;
+	}
+
+
 	/*获取当前登录人信息*/
 	public String getCurrentName(String strParams,String[] errorMsg) {
 		String strRet = "";
@@ -1099,5 +1155,6 @@ public class TzClueDetailServiceImpl extends FrameworkImpl {
 		
 		return strRet;
 	}
-
+	
+	
 }
