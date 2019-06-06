@@ -76,6 +76,7 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.enrollmentClue',{
         					iconCls:'publish',
                             name:'sendEmlSelPers',
         					handler:'sendSmsSelPers'
+        						
                         },{
                             text:'快速处理线索',
                             iconCls:'set',
