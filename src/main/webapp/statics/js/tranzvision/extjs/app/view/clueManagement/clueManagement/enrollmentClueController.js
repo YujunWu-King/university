@@ -1492,5 +1492,72 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.enrollmentClueControl
     //关闭
     closeEnrollmentClue:function() {
         this.getView().close();
+    },
+    /*批量发送短信*/
+    sendSmsSelPers:function(btn) {
+    	var grid = btn.findParentByType("grid");
+        var store = grid.getStore();
+        var selList = grid.getSelectionModel().getSelection();
+        //选中行长度
+        var checkLen = selList.length;
+        if(checkLen==0){
+            Ext.MessageBox.alert('提示','您没有选中任何记录');
+            return;
+        } else {
+            var noMobileName = "";
+            var noMobileCount = 0;
+            var personList = [];
+            for (var i = 0; i < checkLen; i++) {
+                var name = selList[i].get('name');
+                var email = selList[i].get('email');
+                var clueId=selList[i].get("clueId");
+                var mobile = selList[i].get("mobile");
+
+                personList.push({"name": name, "email": email,"clueId":clueId,"mobile":mobile});
+
+                //判断用户有没有电话
+                if(mobile!=null && mobile!="" && mobile!=undefined) {
+                } else {
+                    noMobileCount ++;
+                    if(noMobileName!="") {
+                    	noMobileName += "、" + name;
+                    } else {
+                    	noMobileName = name;
+                    }
+                }
+            }
+
+            if(noMobileCount==checkLen) {
+                //不存在有短信的数据
+                Ext.MessageBox.alert('提示','您选中的记录没有短信');
+                return;
+            } else {
+
+                if(noMobileName!="") {
+                    Ext.MessageBox.alert('提示',noMobileName + '，没有电话');
+                }
+
+                var params = {
+                    "ComID": "TZ_XSXS_MYXS_COM",
+                    "PageID": "TZ_XSXS_MYXS_STD",
+                    "OperateType": "U",
+                    "comParams": {
+                        "add": [
+                            {"type": 'DX', "personList": personList}
+                        ]
+                    }
+                };
+                Ext.tzLoad(Ext.JSON.encode(params), function (responseData) {
+                	Ext.tzSendSms({
+                        //发送的短信模板;
+                        "SmsTmpName": ["TZ_SMS_N_002"],
+                        //创建的需要发送的听众ID;
+                        "audienceId": responseData,
+                        //是否有附件: Y 表示可以发送附件,"N"表示无附件;
+                        "file": "N"
+                    });
+                });
+            }
+        }
     }
 });

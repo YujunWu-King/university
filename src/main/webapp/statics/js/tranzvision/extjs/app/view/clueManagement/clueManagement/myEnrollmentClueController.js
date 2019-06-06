@@ -550,13 +550,13 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.myEnrollmentClueContr
 
                 personList.push({"name": name, "email": email,"clueId":clueId,"mobile":mobile});
                 //判断用户有没有邮箱
-                if(cusEmail!=null && cusEmail!="" && cusEmail!=undefined) {
+                if(email!=null && email!="" && email!=undefined) {
                 } else {
                     noEmailCount ++;
                     if(noEmailName!="") {
-                        noEmailName += "、" + cusName;
+                        noEmailName += "、" + name;
                     } else {
-                        noEmailName = cusName;
+                        noEmailName = name;
                     }
                 }
             }
@@ -609,7 +609,7 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.myEnrollmentClueContr
             Ext.Msg.alert("提示","只能选择一条记录");
             return;
         }
-        var cusEmail = selList[0].get("cusEmail");
+        var cusEmail = selList[0].get("email");
         if(cusEmail!=""){
             Ext.tzSearchMailHistory(cusEmail);
         }else{

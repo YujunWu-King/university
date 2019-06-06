@@ -2,14 +2,17 @@ package com.tranzvision.gd.TZEmailSmsSendBundle.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
+import com.tranzvision.gd.util.sql.SqlQuery;
+import com.tranzvision.gd.util.sql.TZGDObject;
 
 /**
  * 查询短信发送历史 	原PS：TZ_GD_COM_EMLSMS_APP:smsHis
@@ -18,10 +21,13 @@ import com.tranzvision.gd.util.base.JacksonUtil;
  */
 @Service("com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.SmsHisServiceImpl")
 public class SmsHisServiceImpl extends FrameworkImpl {
+	//@Autowired
+	//private FliterForm fliterForm;
 	@Autowired
-	private FliterForm fliterForm;
-
-	@SuppressWarnings("unchecked")
+	private TZGDObject tzGDObject;
+	@Autowired
+	private SqlQuery jdbcTemplate;
+	
 	@Override
 	public String tzQueryList(String strParams, int numLimit, int numStart, String[] errorMsg) {
 
@@ -31,7 +37,42 @@ public class SmsHisServiceImpl extends FrameworkImpl {
 		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
 		mapRet.put("root", listData);
 		JacksonUtil jacksonUtil = new JacksonUtil();
-		try {
+		try {	
+			jacksonUtil.json2Map(strParams);
+			String jgId = "";
+			String tmpId = "";
+			if (jacksonUtil.containsKey("condition")) {
+				Map<String, Object> conditionJson = jacksonUtil.getMap("condition");
+				jgId = conditionJson.get("TZ_JG_ID-value") == null ? "" : String.valueOf(conditionJson.get("TZ_JG_ID-value"));
+				tmpId = conditionJson.get("TZ_TMPL_ID-value") == null ? "" : String.valueOf(conditionJson.get("TZ_TMPL_ID-value"));
+			}
+			String sql = tzGDObject.getSQLText("SQL.TZEmailSmsSendBundle.TzSmsHisTjTotal");
+			int total = jdbcTemplate.queryForObject(sql,new Object[]{jgId,tmpId},"Integer");
+			
+			sql = tzGDObject.getSQLText("SQL.TZEmailSmsSendBundle.TzSmsHisTj");
+			List<Map<String ,Object>> list = null;
+			list = jdbcTemplate.queryForList(sql,new Object[]{jgId,tmpId,numStart,numLimit});
+			
+			if(list != null && list.size() > 0){
+				for(int i = 0; i < list.size();i++){
+					Map<String, Object> map = list.get(i);
+
+					Map<String, Object> mapList = new HashMap<String, Object>();
+					mapList.put("status", map.get("TZ_RWZX_ZT_DESC"));
+					mapList.put("sendNum", map.get("TZ_SEND_COUNT"));
+					mapList.put("sendSucNum", map.get("TZ_SEND_SUC_COUNT"));
+					mapList.put("sendFailNum", map.get("TZ_SEND_FAIL_COUNT"));
+					mapList.put("sendDt", map.get("TZ_RWZX_DT_STR"));
+					mapList.put("sendRptNum", map.get("TZ_SEND_RPT_COUNT"));
+					mapList.put("operator", map.get("TZ_REALNAME"));
+					
+					listData.add(mapList);
+				}
+			}
+			
+			mapRet.replace("total", total);
+			mapRet.replace("root", listData);
+			/*
 			// 排序字段如果没有不要赋值
 			String[][] orderByArr = new String[][] {{"TZ_RWZX_DT_STR", "DESC"}};
 
@@ -64,6 +105,7 @@ public class SmsHisServiceImpl extends FrameworkImpl {
 				mapRet.replace("root", listData);
 
 			}
+			*/
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
