@@ -861,4 +861,5 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.clueDetailController'
             Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"),Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.cantFindAppForm","找不到该报名人的报名表"));
         }
     }
+    
 });

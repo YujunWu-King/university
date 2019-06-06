@@ -268,22 +268,61 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.myEnrollmentClue',{
                         },{
                         	text:'联系报告',
     	                    lockable   : false,
-    	                    menuDisabled:true,
-    	                    width:	80,
+    	                    menuDisabled:false,
+    	                    resizable: true,
+    	                    minwidth:	80,
     	                    xtype:'actioncolumn',
     	                    align:'center',
     	                    items:[
-    	                        {iconCls:'audit',tooltip:'查看和添加联系报告',handler:'addContactReport'}
+    	                        {iconCls:'audit',tooltip:'查看和添加联系报告',handler:'addContactReport',
+                                    isDisabled: function (view, rowIndex, colIndex, item, record) {
+                                    	var clueId = record.data.clueId;
+    		                        	var length;
+    		                        	var tzParams = '{"ComID":"TZ_XSXS_INFO_COM","PageID":"TZ_CONNECT_RPT_STD","OperateType":"QF","comParams":{"leadID":"'+clueId+'"}}';
+    		                            Ext.tzLoadAsync(tzParams, function (responseData) {
+    	                                    length = responseData.reports.length;
+    	                                });
+    		                            if(length == 0){
+    		                            	return true;
+    		                            }
+    		                            return false;
+                                    }}
     	                    ]
                         },{
                         	text:'查看活动',
     	                    lockable   : false,
-    	                    menuDisabled:true,
-    	                    width:	90,
+    	                    menuDisabled:false,
+    	                    minwidth:	80,
     	                    xtype:'actioncolumn',
     	                    align:'center',
     	                    items:[
-    	                        {iconCls:'audit',tooltip:'查看活动',handler:'seeActivity'}
+    	                        {iconCls:'audit',tooltip:'查看活动',handler:'seeActivity'/*,
+    		                        getClass : function(v, metadata, record){
+    		                        	var clueId = record.data.clueId;
+    		                        	var tzParams = '{"ComID":"TZ_XSXS_INFO_COM","PageID":"TZ_XSXS_DETAIL_STD","OperateType":"queryAct","comParams":{"clueId":"'+clueId+'"}}';
+    		                            Ext.tzLoad(tzParams, function (responseData) {
+    	                                    var root = responseData.root;
+    	                                    console.log(root.length)
+    	                                    if(root.length == 0){
+    	                                    	//return 'x-hidden';
+    	                                    }else{
+    	                                    	return 'icon-circle-red';
+    	                                    }
+    	                                });
+    		                        	
+    		                        }*/,
+                                    isDisabled: function (view, rowIndex, colIndex, item, record) {
+                                    	var clueId = record.data.clueId;
+    		                        	var length;
+    		                        	var tzParams = '{"ComID":"TZ_XSXS_INFO_COM","PageID":"TZ_XSXS_DETAIL_STD","OperateType":"queryAct","comParams":{"clueId":"'+clueId+'"}}';
+    		                            Ext.tzLoadAsync(tzParams, function (responseData) {
+    	                                    length = responseData.total;
+    	                                });
+    		                            if(length == 0){
+    		                            	return true;
+    		                            }
+    		                            return false;
+                                    }}
     	                    ]
                         }
                     ]

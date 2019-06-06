@@ -218,7 +218,19 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.enrollmentClue',{
         	                    xtype:'actioncolumn',
         	                    align:'center',
         	                    items:[
-        	                        {iconCls:'audit',tooltip:'查看和添加联系报告',handler:'addContactReport'}
+        	                        {iconCls:'audit',tooltip:'查看和添加联系报告',handler:'addContactReport',
+                                        isDisabled: function (view, rowIndex, colIndex, item, record) {
+                                        	var clueId = record.data.clueId;
+        		                        	var length;
+        		                        	var tzParams = '{"ComID":"TZ_XSXS_INFO_COM","PageID":"TZ_CONNECT_RPT_STD","OperateType":"QF","comParams":{"leadID":"'+clueId+'"}}';
+        		                            Ext.tzLoadAsync(tzParams, function (responseData) {
+        	                                    length = responseData.reports.length;
+        	                                });
+        		                            if(length == 0){
+        		                            	return true;
+        		                            }
+        		                            return false;
+                                        }}
         	                    ]
                             },{
                             	text:'查看活动',
@@ -229,7 +241,19 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.enrollmentClue',{
         	                    xtype:'actioncolumn',
         	                    align:'center',
         	                    items:[
-        	                        {iconCls:'audit',tooltip:'查看活动',handler:'seeActivity'}
+        	                        {iconCls:'audit',tooltip:'查看活动',handler:'seeActivity',
+                                        isDisabled: function (view, rowIndex, colIndex, item, record) {
+                                        	var clueId = record.data.clueId;
+        		                        	var length;
+        		                        	var tzParams = '{"ComID":"TZ_XSXS_INFO_COM","PageID":"TZ_XSXS_DETAIL_STD","OperateType":"queryAct","comParams":{"clueId":"'+clueId+'"}}';
+        		                            Ext.tzLoadAsync(tzParams, function (responseData) {
+        	                                    length = responseData.total;
+        	                                });
+        		                            if(length == 0){
+        		                            	return true;
+        		                            }
+        		                            return false;
+                                        }}
         	                    ]
                             }
                         ]
