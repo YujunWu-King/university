@@ -111,7 +111,8 @@ public class TZMyEnrollmentClueServiceImpl extends FrameworkImpl {
 		if (actData.length == 0) {
 			return audID;
 		}
-		String str_jg_id = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+		String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		try {
 			for (int num = 0; num < actData.length; num++) {
 				// 表单内容;
@@ -119,32 +120,37 @@ public class TZMyEnrollmentClueServiceImpl extends FrameworkImpl {
 				jacksonUtil.json2Map(strForm);
 				String strType = jacksonUtil.getString("type");
 				boolean bMultiType = false;
+				boolean dxType = false;
 			      
-				
 				if("MULTI".equals(strType)){
-					audID = createTaskServiceImpl.createAudience("",str_jg_id,"我的招生线索批量发送邮件", "XSXS");
+					audID = createTaskServiceImpl.createAudience("",orgId,"招生线索管理批量发送邮件", "XSXS");
 					bMultiType = true;
 				}
-				String sOprID = tzLoginServiceImpl.getLoginedManagerOprid(request);
 				
-				if(bMultiType){
-					//群发邮件添加听众;
+				if("DX".equals(strType)){
+					audID = createTaskServiceImpl.createAudience("",orgId,"招生线索管理批量发送短信", "XSXS");
+					dxType = true;
+				}
+								
+				if(bMultiType||dxType){
+					//添加听众;
 					@SuppressWarnings("unchecked")
 					List<Map<String, Object>> list = (List<Map<String, Object>>) jacksonUtil.getList("personList");
 					if(list != null && list.size() > 0){
 						for(int num_1 = 0; num_1 < list.size(); num_1 ++){
 							Map<String, Object> map = list.get(num_1);
-							String cusName = (String)map.get("cusName");
-				            String cusEmail = (String)map.get("cusEmail");
+							String name = (String)map.get("name");
+				            String email = (String)map.get("email");
 				            String clueId=(String)map.get("clueId");
-				            if(sOprID != null && !"".equals(sOprID)
-				            		&& cusEmail!=null&&!"".equals(cusEmail)){
-				                createTaskServiceImpl.addAudCy(audID,cusName, "", "", "", cusEmail, cusEmail, "", sOprID, "", "", clueId);
+				            String mobile=(String)map.get("mobile");
+				            if(oprid != null && !"".equals(oprid)
+				            		&& email!=null&&!"".equals(email)){
+				                createTaskServiceImpl.addAudCy(audID,name, "", mobile, mobile, email, email, "", oprid, "", "", clueId);
 				            }
 						}
 					}
-			        
 				}
+				
 			}
 		}catch(Exception e){
 			e.printStackTrace();

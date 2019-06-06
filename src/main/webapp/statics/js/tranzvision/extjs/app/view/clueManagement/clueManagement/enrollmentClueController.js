@@ -644,8 +644,9 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.enrollmentClueControl
                 var name = selList[i].get('name');
                 var email = selList[i].get('email');
                 var clueId=selList[i].get("clueId");
+                var mobile = selList[i].get("mobile");
 
-                personList.push({"name": name, "email": email,"clueId":clueId});
+                personList.push({"name": name, "email": email,"clueId":clueId,"mobile":mobile});
 
                 //判断用户有没有邮箱
                 if(email!=null && email!="" && email!=undefined) {

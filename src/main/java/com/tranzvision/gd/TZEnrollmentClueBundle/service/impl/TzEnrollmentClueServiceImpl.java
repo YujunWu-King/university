@@ -116,7 +116,7 @@ public class TzEnrollmentClueServiceImpl extends FrameworkImpl {
 	}
 	
 	
-	/* 批量发送邮件添加听众 */
+	/* 添加听众 */
 	@Override
 	public String tzAdd(String[] actData, String[] errMsg) {
 		// 返回值;
@@ -134,14 +134,20 @@ public class TzEnrollmentClueServiceImpl extends FrameworkImpl {
 				jacksonUtil.json2Map(strForm);
 				String strType = jacksonUtil.getString("type");
 				boolean bMultiType = false;
+				boolean dxType = false;
 			      
 				if("MULTI".equals(strType)){
 					audID = createTaskServiceImpl.createAudience("",orgId,"招生线索管理批量发送邮件", "XSXS");
 					bMultiType = true;
 				}
+				
+				if("DX".equals(strType)){
+					audID = createTaskServiceImpl.createAudience("",orgId,"招生线索管理批量发送短信", "XSXS");
+					dxType = true;
+				}
 								
-				if(bMultiType){
-					//群发邮件添加听众;
+				if(bMultiType||dxType){
+					//添加听众;
 					@SuppressWarnings("unchecked")
 					List<Map<String, Object>> list = (List<Map<String, Object>>) jacksonUtil.getList("personList");
 					if(list != null && list.size() > 0){
@@ -150,13 +156,15 @@ public class TzEnrollmentClueServiceImpl extends FrameworkImpl {
 							String name = (String)map.get("name");
 				            String email = (String)map.get("email");
 				            String clueId=(String)map.get("clueId");
+				            String mobile=(String)map.get("mobile");
 				            if(oprid != null && !"".equals(oprid)
 				            		&& email!=null&&!"".equals(email)){
-				                createTaskServiceImpl.addAudCy(audID,name, "", "", "", email, email, "", oprid, "", "", clueId);
+				                createTaskServiceImpl.addAudCy(audID,name, "", mobile, mobile, email, email, "", oprid, "", "", clueId);
 				            }
 						}
 					}
 				}
+				
 			}
 		}catch(Exception e){
 			e.printStackTrace();
