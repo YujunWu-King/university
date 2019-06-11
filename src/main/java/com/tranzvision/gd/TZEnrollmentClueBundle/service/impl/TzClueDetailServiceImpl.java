@@ -97,6 +97,13 @@ public class TzClueDetailServiceImpl extends FrameworkImpl {
 					String TZ_BZ = mapData.get("TZ_BZ") == null ? "" : mapData.get("TZ_BZ").toString();
 					String TZ_BMR_STATUS = mapData.get("TZ_BMR_STATUS") == null ? "" : mapData.get("TZ_BMR_STATUS").toString();
 				
+					String TZ_AGE = mapData.get("TZ_AGE") == null ? "" : mapData.get("TZ_AGE").toString();
+					String TZ_SEX = mapData.get("TZ_SEX") == null ? "" : mapData.get("TZ_SEX").toString();
+					String TZ_TJR = mapData.get("TZ_TJR") == null ? "" : mapData.get("TZ_TJR").toString();
+					String TZ_FDB = mapData.get("TZ_FDB") == null ? "" : mapData.get("TZ_FDB").toString();
+					String TZ_ZGXL = mapData.get("TZ_ZGXL") == null ? "" : mapData.get("TZ_ZGXL").toString();
+					String TZ_GZNX = mapData.get("TZ_GZNX") == null ? "" : mapData.get("TZ_GZNX").toString();
+					String TZ_GLNX = mapData.get("TZ_GLNX") == null ? "" : mapData.get("TZ_GLNX").toString();
 					
 					// 线索标签;
 					ArrayList<String> strTagList = new ArrayList<>();
@@ -139,6 +146,14 @@ public class TzClueDetailServiceImpl extends FrameworkImpl {
 					mapFormData.put("memo", TZ_BZ);
 					mapFormData.put("clueTags", strTagList);
 					mapFormData.put("otherCharge", otherCharge);
+					
+					mapFormData.put("age", TZ_AGE);
+					mapFormData.put("sex", TZ_SEX);
+					mapFormData.put("tjr", TZ_TJR);
+					mapFormData.put("fdb", TZ_FDB);
+					mapFormData.put("zgxl", TZ_ZGXL);
+					mapFormData.put("gznx", TZ_GZNX);
+					mapFormData.put("glnx", TZ_GLNX);
 					
 					
 					mapRet.put("formData", mapFormData);
@@ -289,6 +304,14 @@ public class TzClueDetailServiceImpl extends FrameworkImpl {
 		String fromType="";
 		String createWay="";
 		
+		String age="";
+		String sex="";
+		String tjr="";
+		String fdb="";
+		String zgxl="";
+		String gznx="";
+		String glnx="";
+		
 		// 标签;
 		ArrayList<String> arrTag = new ArrayList<>();
 		//其他责任人
@@ -317,6 +340,14 @@ public class TzClueDetailServiceImpl extends FrameworkImpl {
 				refereeName=dataMap.get("refereeName")==null?"":dataMap.get("refereeName").toString();
 				memo=dataMap.get("memo")==null?"":dataMap.get("memo").toString();
 				fromType=dataMap.get("fromType")==null?"":dataMap.get("fromType").toString();
+				
+				age=dataMap.get("age")==null?"":dataMap.get("age").toString();
+				sex=dataMap.get("sex")==null?"":dataMap.get("sex").toString();
+				tjr=dataMap.get("tjr")==null?"":dataMap.get("tjr").toString();
+				fdb=dataMap.get("fdb")==null?"":dataMap.get("fdb").toString();
+				zgxl=dataMap.get("zgxl")==null?"":dataMap.get("zgxl").toString();
+				gznx=dataMap.get("gznx")==null?"":dataMap.get("gznx").toString();
+				glnx=dataMap.get("glnx")==null?"":dataMap.get("glnx").toString();
 				//标签
 				if (dataMap.get("clueTags") != null && !"".equals(dataMap.get("clueTags"))) {
 					arrTag = (ArrayList<String>) dataMap.get("clueTags");
@@ -362,6 +393,14 @@ public class TzClueDetailServiceImpl extends FrameworkImpl {
 					PsTzXsxsInfoT.setRowLastmantOprid(oprid);
 					PsTzXsxsInfoT.setRowAddedDttm(new java.util.Date());
 					PsTzXsxsInfoT.setRowLastmantDttm(new java.util.Date());
+					
+					PsTzXsxsInfoT.setTzAge(age);
+					PsTzXsxsInfoT.setTzSex(sex);
+					PsTzXsxsInfoT.setTzTjr(tjr);
+					PsTzXsxsInfoT.setTzFdb(fdb);
+					PsTzXsxsInfoT.setTzZgxl(zgxl);
+					PsTzXsxsInfoT.setTzGznx(gznx);
+					PsTzXsxsInfoT.setTzGlnx(glnx);
 					psTzXsxsInfoTMapper.insert(PsTzXsxsInfoT);
 					map.put("clueId", clueId);
 					map.put("bkStatus", "A");
@@ -409,6 +448,14 @@ public class TzClueDetailServiceImpl extends FrameworkImpl {
 				PsTzXsxsInfoT.setTzColourSortId(colorType);
 				PsTzXsxsInfoT.setRowLastmantOprid(oprid);
 				PsTzXsxsInfoT.setRowLastmantDttm(new java.util.Date());
+				
+				PsTzXsxsInfoT.setTzAge(age);
+				PsTzXsxsInfoT.setTzSex(sex);
+				PsTzXsxsInfoT.setTzTjr(tjr);
+				PsTzXsxsInfoT.setTzFdb(fdb);
+				PsTzXsxsInfoT.setTzZgxl(zgxl);
+				PsTzXsxsInfoT.setTzGznx(gznx);
+				PsTzXsxsInfoT.setTzGlnx(glnx);
 				psTzXsxsInfoTMapper.updateByPrimaryKeySelective(PsTzXsxsInfoT);
 				
 				map.put("clueId", clueId);

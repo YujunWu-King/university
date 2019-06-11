@@ -2,6 +2,10 @@ package com.tranzvision.gd.TZMyEnrollmentClueBundle.model;
 
 import java.util.Date;
 
+/**
+ * @author admin
+ *
+ */
 public class PsTzXsxsInfoT {
     private String tzLeadId;
 
@@ -80,6 +84,18 @@ public class PsTzXsxsInfoT {
     private String tzXsquId;
 
     private String tzWtxsGbyy;
+    
+    private String tzAge;
+    
+    private String tzTjr;
+    
+    private String tzFdb;
+    
+    private String tzZgxl;
+    
+    private String tzGznx;
+    
+    private String tzGlnx;
 
     public String getTzLeadId() {
         return tzLeadId;
@@ -392,4 +408,53 @@ public class PsTzXsxsInfoT {
     public void setTzWtxsGbyy(String tzWtxsGbyy) {
         this.tzWtxsGbyy = tzWtxsGbyy == null ? null : tzWtxsGbyy.trim();
     }
+
+	public String getTzAge() {
+		return tzAge;
+	}
+
+	public void setTzAge(String tzAge) {
+		this.tzAge = tzAge;
+	}
+
+	public String getTzTjr() {
+		return tzTjr;
+	}
+
+	public void setTzTjr(String tzTjr) {
+		this.tzTjr = tzTjr;
+	}
+
+	public String getTzFdb() {
+		return tzFdb;
+	}
+
+	public void setTzFdb(String tzFdb) {
+		this.tzFdb = tzFdb;
+	}
+
+	public String getTzZgxl() {
+		return tzZgxl;
+	}
+
+	public void setTzZgxl(String tzZgxl) {
+		this.tzZgxl = tzZgxl;
+	}
+
+	public String getTzGznx() {
+		return tzGznx;
+	}
+
+	public void setTzGznx(String tzGznx) {
+		this.tzGznx = tzGznx;
+	}
+
+	public String getTzGlnx() {
+		return tzGlnx;
+	}
+
+	public void setTzGlnx(String tzGlnx) {
+		this.tzGlnx = tzGlnx;
+	}
+	
 }

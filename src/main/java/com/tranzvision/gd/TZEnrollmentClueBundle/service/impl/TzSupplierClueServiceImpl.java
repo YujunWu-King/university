@@ -143,6 +143,14 @@ public class TzSupplierClueServiceImpl extends FrameworkImpl {
 			String phone = jacksonUtil.getString("phone");
 			String cusEmail = jacksonUtil.getString("cusEmail");
 			String memo = jacksonUtil.getString("memo");
+			
+			String age = jacksonUtil.getString("age");
+			String sex = jacksonUtil.getString("sex");
+			String tjr = jacksonUtil.getString("tjr");
+			String fdb = jacksonUtil.getString("fdb");
+			String zgxl = jacksonUtil.getString("zgxl");
+			String gznx = jacksonUtil.getString("gznx");
+			String glnx = jacksonUtil.getString("glnx");
 		
 			if("".equals(clueId)||clueId==null){
 				//根据手机或邮箱查询是否已存在线索	
@@ -167,6 +175,14 @@ public class TzSupplierClueServiceImpl extends FrameworkImpl {
 					PsTzXsxsInfoT.setTzEmail(cusEmail);
 					PsTzXsxsInfoT.setTzPosition(position);
 					PsTzXsxsInfoT.setTzBz(memo);
+					
+					PsTzXsxsInfoT.setTzAge(age);
+					PsTzXsxsInfoT.setTzSex(sex);
+					PsTzXsxsInfoT.setTzTjr(tjr);
+					PsTzXsxsInfoT.setTzFdb(fdb);
+					PsTzXsxsInfoT.setTzZgxl(zgxl);
+					PsTzXsxsInfoT.setTzGznx(gznx);
+					PsTzXsxsInfoT.setTzGlnx(glnx);
 
 					PsTzXsxsInfoT.setRowAddedOprid(oprid);
 					PsTzXsxsInfoT.setRowLastmantOprid(oprid);
@@ -195,6 +211,15 @@ public class TzSupplierClueServiceImpl extends FrameworkImpl {
 				PsTzXsxsInfoT.setTzEmail(cusEmail);
 				PsTzXsxsInfoT.setTzPosition(position);
 				PsTzXsxsInfoT.setTzBz(memo);
+				
+				PsTzXsxsInfoT.setTzAge(age);
+				PsTzXsxsInfoT.setTzSex(sex);
+				PsTzXsxsInfoT.setTzTjr(tjr);
+				PsTzXsxsInfoT.setTzFdb(fdb);
+				PsTzXsxsInfoT.setTzZgxl(zgxl);
+				PsTzXsxsInfoT.setTzGznx(gznx);
+				PsTzXsxsInfoT.setTzGlnx(glnx);
+				
 				PsTzXsxsInfoT.setRowLastmantOprid(oprid);
 				PsTzXsxsInfoT.setRowLastmantDttm(new Date());
 				psTzXsxsInfoTMapper.updateByPrimaryKeySelective(PsTzXsxsInfoT);

@@ -41,6 +41,12 @@
     <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
     <result column="TZ_XSQU_ID" property="tzXsquId" jdbcType="VARCHAR" />
     <result column="TZ_WTXS_GBYY" property="tzWtxsGbyy" jdbcType="VARCHAR" />
+    <result column="TZ_AGE" property="tzAge" jdbcType="VARCHAR" />
+    <result column="TZ_TJR" property="tzTjr" jdbcType="VARCHAR" />
+    <result column="TZ_FDB" property="tzFdb" jdbcType="VARCHAR" />
+    <result column="TZ_ZGXL" property="tzZgxl" jdbcType="VARCHAR" />
+    <result column="TZ_GZNX" property="tzGznx" jdbcType="VARCHAR" />
+    <result column="TZ_GLNX" property="tzGlnx" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsInfoTWithBLOBs" extends="BaseResultMap" >
     <result column="TZ_CATA_LONG" property="tzCataLong" jdbcType="LONGVARCHAR" />
@@ -53,7 +59,7 @@
     TZ_MOBILE, TZ_PHONE, TZ_ADDRESS, TZ_REFEREE_OPRID, TZ_REFEREE_NAME, TZ_REFEREE_MOBILE, 
     TZ_ZXLB_ID, TZ_CREATE_MEDIA, TZ_CHANNEL_ID, TZ_SOURCE_ID, TZ_KEY_ID, TZ_IDEA_ID, 
     TZ_PLAN_ID, TZ_REFER_URL, ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, 
-    TZ_XSQU_ID, TZ_WTXS_GBYY
+    TZ_XSQU_ID, TZ_WTXS_GBYY, TZ_AGE, TZ_TJR, TZ_FDB, TZ_ZGXL, TZ_GZNX, TZ_GLNX
   </sql>
   <sql id="Blob_Column_List" >
     TZ_CATA_LONG, TZ_BZ
@@ -84,7 +90,7 @@
       TZ_IDEA_ID, TZ_PLAN_ID, TZ_REFER_URL, 
       ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, 
       ROW_LASTMANT_OPRID, TZ_XSQU_ID, TZ_WTXS_GBYY, 
-      TZ_CATA_LONG, TZ_BZ)
+      TZ_CATA_LONG, TZ_BZ, TZ_AGE, TZ_TJR, TZ_FDB, TZ_ZGXL, TZ_GZNX, TZ_GLNX)
     values (#{tzLeadId,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, #{tzLeadDescr254,jdbcType=VARCHAR}, 
       #{tzRsfcreateWay,jdbcType=VARCHAR}, #{tzLeadStatus,jdbcType=VARCHAR}, #{tzJyGjRq,jdbcType=DATE}, 
       #{tzThyyId,jdbcType=VARCHAR}, #{tzGbyyId,jdbcType=VARCHAR}, #{tzLeadImportance,jdbcType=VARCHAR}, 
@@ -98,7 +104,9 @@
       #{tzIdeaId,jdbcType=VARCHAR}, #{tzPlanId,jdbcType=VARCHAR}, #{tzReferUrl,jdbcType=VARCHAR}, 
       #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, 
       #{rowLastmantOprid,jdbcType=VARCHAR}, #{tzXsquId,jdbcType=VARCHAR}, #{tzWtxsGbyy,jdbcType=VARCHAR}, 
-      #{tzCataLong,jdbcType=LONGVARCHAR}, #{tzBz,jdbcType=LONGVARCHAR})
+      #{tzCataLong,jdbcType=LONGVARCHAR}, #{tzBz,jdbcType=LONGVARCHAR},#{tzAge,jdbcType=VARCHAR}),
+      #{tzTjr,jdbcType=VARCHAR}, #{tzFdb,jdbcType=VARCHAR},#{tzZgxl,jdbcType=VARCHAR}),
+      #{tzGznx,jdbcType=VARCHAR}, #{tzGlnx,jdbcType=VARCHAR}
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsInfoTWithBLOBs" >
     insert into PS_TZ_XSXS_INFO_T
@@ -226,6 +234,24 @@
       <if test="tzBz != null" >
         TZ_BZ,
       </if>
+      <if test="tzAge != null" >
+        TZ_AGE,
+      </if>
+      <if test="tzTjr != null" >
+        TZ_TJR,
+      </if>
+      <if test="tzFdb != null" >
+        TZ_FDB,
+      </if>
+      <if test="tzZgxl != null" >
+        TZ_ZGXL,
+      </if>
+      <if test="tzGznx != null" >
+        TZ_GZNX,
+      </if>
+      <if test="tzGlnx != null" >
+        TZ_GLNX,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="tzLeadId != null" >
@@ -350,6 +376,24 @@
       </if>
       <if test="tzBz != null" >
         #{tzBz,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzAge != null" >
+        #{tzAge,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTjr != null" >
+        #{tzTjr,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFdb != null" >
+        #{tzFdb,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZgxl != null" >
+        #{tzZgxl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzGznx != null" >
+        #{tzGznx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzGlnx != null" >
+        #{tzGlnx,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -476,6 +520,24 @@
       <if test="tzBz != null" >
         TZ_BZ = #{tzBz,jdbcType=LONGVARCHAR},
       </if>
+      <if test="tzAge != null" >
+        TZ_AGE = #{tzAge,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTjr != null" >
+        TZ_TJR = #{tzTjr,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFdb != null" >
+        TZ_FDB = #{tzFdb,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZgxl != null" >
+        TZ_ZGXL = #{tzZgxl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzGznx != null" >
+        TZ_GZNX= #{tzGznx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzGlnx != null" >
+        TZ_GLNX = #{tzGlnx,jdbcType=VARCHAR},
+      </if>
     </set>
     where TZ_LEAD_ID = #{tzLeadId,jdbcType=VARCHAR}
   </update>
@@ -520,7 +582,13 @@
       TZ_XSQU_ID = #{tzXsquId,jdbcType=VARCHAR},
       TZ_WTXS_GBYY = #{tzWtxsGbyy,jdbcType=VARCHAR},
       TZ_CATA_LONG = #{tzCataLong,jdbcType=LONGVARCHAR},
-      TZ_BZ = #{tzBz,jdbcType=LONGVARCHAR}
+      TZ_BZ = #{tzBz,jdbcType=LONGVARCHAR},
+      TZ_AGE = #{tzAge,jdbcType=VARCHAR},
+      TZ_TJR = #{tzTjr,jdbcType=VARCHAR},
+      TZ_FDB = #{tzFdb,jdbcType=VARCHAR},
+      TZ_ZGXL = #{tzZgxl,jdbcType=VARCHAR},
+      TZ_GZNX = #{tzGznx,jdbcType=VARCHAR},
+      TZ_GLNX = #{tzGlnx,jdbcType=VARCHAR}
     where TZ_LEAD_ID = #{tzLeadId,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsInfoT" >

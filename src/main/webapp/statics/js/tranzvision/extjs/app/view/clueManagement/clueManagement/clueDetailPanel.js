@@ -433,6 +433,40 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.clueDetailPanel',{
                     fieldLabel: '推荐人姓名',
                     name: 'refereeName'
                 }, */{
+                    xtype: 'numberfield',
+                    fieldLabel: '年龄',
+                    name: 'age'
+                },{
+            		xtype: 'combobox',
+                    fieldLabel: '性别',
+                    editable:false,
+                    emptyText:'请选择',
+                    queryMode: 'remote',
+            	    	name: 'sex',
+            	    	valueField: 'TValue',
+                		displayField: 'TSDesc',
+                		store: new KitchenSink.view.common.store.appTransStore("TZ_GENDER")
+                },{
+                    xtype: 'textfield',
+                    fieldLabel: '推荐人',
+                    name: 'tjr'
+                },{
+                    xtype: 'textfield',
+                    fieldLabel: '辅导班',
+                    name: 'fdb'
+                },{
+                    xtype: 'textfield',
+                    fieldLabel: '最高学历',
+                    name: 'zgxl'
+                },{
+                    xtype: 'numberfield',
+                    fieldLabel: '工作年限',
+                    name: 'gznx'
+                },{
+                    xtype: 'numberfield',
+                    fieldLabel: '管理年限',
+                    name: 'glnx'
+                },{
                     xtype: 'textareafield',
                     grow: true,
                     fieldLabel: '备注',

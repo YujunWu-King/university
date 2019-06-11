@@ -48,7 +48,14 @@ SELECT
         C.TZ_LABEL_NAME,
         IF(A.TZ_LEAD_STATUS = 'G',
             D.TZ_LABEL_NAME,
-            '')) TZ_REASON
+            '')) TZ_REASON,
+    A.TZ_AGE,
+    A.TZ_SEX,
+    A.TZ_TJR,
+    A.TZ_FDB,
+    A.TZ_ZGXL,
+    A.TZ_GZNX,
+    A.TZ_GLNX
 FROM
     PS_TZ_XSXS_INFO_T A
         LEFT JOIN
