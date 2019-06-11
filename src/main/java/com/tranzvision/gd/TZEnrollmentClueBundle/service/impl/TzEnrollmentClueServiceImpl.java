@@ -56,7 +56,7 @@ public class TzEnrollmentClueServiceImpl extends FrameworkImpl {
 			// json数据要的结果字段;
 			String[] resultFldArray = { "TZ_LEAD_ID","TZ_JG_ID","TZ_REALNAME", "TZ_MOBILE", "TZ_COMP_CNAME", "TZ_POSITION","TZ_BMR_STATUS_DESC",
 					"TZ_BZ","TZ_LEAD_STATUS","TZ_LEAD_STATUS_DESC","TZ_ZR_OPRID","TZ_ZRR_NAME","ROW_ADDED_DTTM",
-					"TZ_RSFCREATE_WAY_DESC","TZ_THYY_DESC","TZ_GBYY_DESC","TZ_REASON","TZ_EMAIL"};
+					"TZ_RSFCREATE_WAY_DESC","TZ_THYY_DESC","TZ_GBYY_DESC","TZ_REASON","TZ_EMAIL","TZ_KH_OPRID","TZ_BATCH_NAME"};
 			// 默认显示当前机构下，责任人是当前登录人或没有责任人的线索	
 			jacksonUtil.json2Map(strParams);
 			if(jacksonUtil.containsKey("defaultFlag")) {
@@ -96,6 +96,9 @@ public class TzEnrollmentClueServiceImpl extends FrameworkImpl {
 					mapList.put("createWayDesc", rowList[13]);
 					mapList.put("reason", rowList[16]);
 					mapList.put("email", rowList[17]);
+					//mapList.put("batchId", rowList[18]);
+					mapList.put("ksoprid", rowList[18]);
+					mapList.put("batchName", rowList[19]);
 					
 					listData.add(mapList);
 				}

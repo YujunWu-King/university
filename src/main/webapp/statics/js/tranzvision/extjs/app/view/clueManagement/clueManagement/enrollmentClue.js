@@ -208,6 +208,14 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.enrollmentClue',{
                                     type:'string'
                                 }
                             },{
+                                text:'面试批次',
+                                lockable   : false,
+                                dataIndex:'batchName',
+                                width:85,
+                                filter:{
+                                    type:'string'
+                                }
+                            },{
                                 text:'备注',
                                 lockable   : false,
                                 dataIndex:'memo',

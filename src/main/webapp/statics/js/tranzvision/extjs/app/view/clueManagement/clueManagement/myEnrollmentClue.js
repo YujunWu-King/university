@@ -264,6 +264,14 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.myEnrollmentClue',{
                                 options:bkStatusFilterOptions
                             }
                         },{
+                            text:'面试批次',
+                            lockable   : false,
+                            dataIndex:'batchName',
+                            width:85,
+                            filter:{
+                                type:'string'
+                            }
+                        },{
                             text:'备注',
                             dataIndex:'cusBz',
                             width:100,

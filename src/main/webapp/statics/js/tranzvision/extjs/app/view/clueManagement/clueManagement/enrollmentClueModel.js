@@ -17,6 +17,8 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.enrollmentClueModel',
         {name:'createDttm',type:'date',dateFormat:'Y-m-d H:i'},
         {name:'createWayDesc'},
         {name:'reason'},
-        {name:'email'}
+        {name:'email'},
+        {name:'batchId'},
+        {name:'batchName'}
     ]
 });
