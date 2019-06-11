@@ -154,6 +154,7 @@ public class TzClueExportEngineCls extends BaseEngine {
 					bkStateDesc="未报名";
 				}
 				
+				
 				//其他责任人
 				String qtZrrSql = "select group_concat(TZ_REALNAME SEPARATOR '，') from TZ_XS_QTZRR_V A where TZ_LEAD_ID=? and not exists(select 'Y' from PS_TZ_XSXS_INFO_T where TZ_LEAD_ID=A.TZ_LEAD_ID and TZ_ZR_OPRID=A.TZ_ZRR_OPRID)";
 				String qtZrrName = sqlQuery.queryForObject(qtZrrSql, new Object[]{clueId}, "String");
