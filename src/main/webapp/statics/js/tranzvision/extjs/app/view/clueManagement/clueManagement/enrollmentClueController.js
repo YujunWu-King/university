@@ -716,7 +716,7 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.enrollmentClueControl
             return;
         }
     },
-  //更多操作-查看短信发送历史
+    //更多操作-查看短信发送历史
     viewSmsHistory: function(btn) {
     	Ext.tzSetCompResourses("TZ_XSXS_ZSXS_COM");
         var grid=btn.findParentByType("grid");
@@ -775,15 +775,15 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.enrollmentClueControl
         
         var mobile = selList[0].get("mobile");
         if(mobile!=""){
-        	cmp = new ViewClass();
+        	cmp = new ViewClass(mobile);
             cmp.on('afterrender',function(panel){
-
-            	 var store=panel.getStore();
-                 var tzStoreParams ='{"mobile":"'+mobile+'"}';
-                 store.tzStoreParams = tzStoreParams;
-                 store.load({
-
-                 });
+            	var store  = panel.lookupReference("smsHistoryGrid").store;
+//            	var store=panel.getStore();
+                var tzStoreParams ='{"mobile":"'+mobile+'"}';
+                store.tzStoreParams = tzStoreParams;
+                store.load({
+                	
+                });
             });
 
             tab = contentPanel.add(cmp);

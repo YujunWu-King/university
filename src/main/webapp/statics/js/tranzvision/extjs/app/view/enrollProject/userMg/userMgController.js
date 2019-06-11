@@ -1133,7 +1133,90 @@
 
         }, "", true, this);
     },
+    //更多操作-查看短信发送历史
+    viewSmsHistory: function(btn) {
+    	Ext.tzSetCompResourses("TZ_XSXS_ZSXS_COM");
+        var grid=btn.findParentByType("grid");
+        var store = grid.getStore();
+        var selList = grid.getSelectionModel().getSelection();
 
+        //选中行长度
+        var checkLen = selList.length;
+        if(checkLen == 0){
+            Ext.Msg.alert("提示","您没有选中任何记录");
+            return;
+        }else if(checkLen >1){
+            Ext.Msg.alert("提示","只能选择一条记录");
+            return;
+        }
+        //是否有访问权限
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_XSXS_ZSXS_COM"]["TZ_XSXS_SMSHIS_STD"];
+        if( pageResSet == "" || pageResSet == undefined){
+            Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+            return;
+        }
+        //该功能对应的JS类
+        var className = pageResSet["jsClassName"];
+        if(className == "" || className == undefined){
+            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_XSXS_SMSHIS_STD，请检查配置。');
+            return;
+        }
+        var cmp, ViewClass,contentPanel,clsProto;
+        
+        contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+        contentPanel.body.addCls('kitchensink-example');
+        if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+        ViewClass = Ext.ClassManager.get(className);
+        clsProto = ViewClass.prototype;
+        if (clsProto.themes) {
+            clsProto.themeInfo = clsProto.themes[themeName];
+
+            if (themeName === 'gray') {
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
+            } else if (themeName !== 'neptune' && themeName !== 'classic') {
+                if (themeName === 'crisp-touch') {
+                    clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
+                }
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
+            }
+            // <debug warn>
+            // Sometimes we forget to include allowances for other themes, so issue a warning as a reminder.
+            if (!clsProto.themeInfo) {
+                Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
+                    themeName + '\'. Is this intentional?');
+            }
+            // </debug>
+        }
+        
+        var mobile = selList[0].get("userPhone");
+        if(mobile!=""){
+        	cmp = new ViewClass(mobile);
+            cmp.on('afterrender',function(panel){
+            	var store  = panel.lookupReference("smsHistoryGrid").store;
+//            	var store=panel.getStore();
+                var tzStoreParams ='{"mobile":"'+mobile+'"}';
+                store.tzStoreParams = tzStoreParams;
+                store.load({
+                	
+                });
+            });
+
+            tab = contentPanel.add(cmp);
+
+            contentPanel.setActiveTab(tab);
+
+            Ext.resumeLayouts(true);
+
+            if (cmp.floating) {
+                cmp.show();
+            }
+        }else{
+            Ext.Msg.alert("提示","您选中的记录没有短信");
+            return;
+        }
+    },
 
     savePageRegInfo: function (win, view) {
 

@@ -37,29 +37,41 @@ public class TzClueSmsHistoryServiceImpl extends FrameworkImpl {
 			if (jacksonUtil.containsKey("mobile")) {
 				String mobile = jacksonUtil.getString("mobile");
 				int count = 0;
-				String sql = "SELECT A.TZ_RWSL_ID,A.TZ_SJ_HM,A.TZ_FS_ZT,A.TZ_FS_DT"
-						+ " FROM PS_TZ_DXFSLSHI_TBL A WHERE A.TZ_SJ_HM = ?";
+				String sql = "SELECT A.TZ_RWSL_ID,A.TZ_SJ_HM,A.TZ_FS_ZT,A.TZ_FS_DT,B.ROW_ADDED_OPRID"
+						+ " FROM PS_TZ_DXFSLSHI_TBL A,PS_TZ_DXYJFSRW_TBL B"
+						+ " WHERE A.TZ_EML_SMS_TASK_ID = B.TZ_EML_SMS_TASK_ID"
+						+ " AND A.TZ_SJ_HM = ?";
 				List<Map<String, Object>> list = jdbcTemplate.queryForList(sql,
 						new Object[] { mobile});
 				if (list != null && list.size() > 0) {
 					for (int i = 0; i < list.size(); i++) {
 						count++;
-						/*String oprid = (String) list.get(i).get("ROW_ADDED_OPRID");
-						String sql2 = "SELECT B.TZ_REALNAME"
-								+ " FROM PS_TZ_DXFSLSHI_TBL A,PS_TZ_AQ_YHXX_TBL B"
-								+ " WHERE A.ROW_ADDED_OPRID = B.OPRID";
-						String operator= jdbcTemplate.queryForObject(sql2,
-								new Object[] { oprid},"String");*/
-						
 						String slid = (String) list.get(i).get("TZ_RWSL_ID");
-						String status = (String) list.get(i).get("TZ_FS_ZT");
-						String phone = (String) list.get(i).get("TZ_SJ_HM");
+						
 						String sendDt = formatter.format(list.get(i).get("TZ_FS_DT"));
+						String phone = (String) list.get(i).get("TZ_SJ_HM");
+						String status = (String) list.get(i).get("TZ_FS_ZT");
+						String operator = (String) list.get(i).get("ROW_ADDED_OPRID");
+						
 						Map<String, Object> jsonMap = new HashMap<String, Object>();
 						jsonMap.put("slid", slid);
+						if("SUC".equals(status)){
+							status = "成功";
+						}
+						if("FAIL".equals(status)){
+							status = "失败";						
+						}
+						if("RPT".equals(status)){
+							status = "重发";
+						}
 						jsonMap.put("status", status);
 						jsonMap.put("phone", phone);
-						//jsonMap.put("operator", operator);
+						
+						if(operator != null && !"".equals(operator) && !"TZ_GUEST".equals(operator)){
+							String relNameSQL = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
+							operator = jdbcTemplate.queryForObject(relNameSQL,new Object[]{operator},"String");
+						}
+						jsonMap.put("operator", operator);
 						jsonMap.put("sendDt", sendDt);
 						
 						arraylist.add(jsonMap);
@@ -68,10 +80,7 @@ public class TzClueSmsHistoryServiceImpl extends FrameworkImpl {
 					returnJsonMap.replace("total", count);
 					returnJsonMap.replace("root", arraylist);
 				}
-			} else {
-				errorMsg[0] = "1";
-				errorMsg[1] = "参数错误";
-			}
+			} 
 		} catch (Exception e) {
 			errorMsg[0] = "1";
 			errorMsg[1] = e.toString();
