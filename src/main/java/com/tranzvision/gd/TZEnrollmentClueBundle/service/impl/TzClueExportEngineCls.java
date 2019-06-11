@@ -51,6 +51,7 @@ public class TzClueExportEngineCls extends BaseEngine {
 				/******************************1、生成标题行---开始**************************************/
 				dataCellKeys.add(new String[] { "name", "姓名" });
 				dataCellKeys.add(new String[] { "mobile", "手机" });
+				dataCellKeys.add(new String[] { "email", "邮箱" });
 				dataCellKeys.add(new String[] { "companyName", "公司" });
 				dataCellKeys.add(new String[] { "position", "职位" });
 				dataCellKeys.add(new String[] { "bkStateDesc", "报考状态" });
@@ -115,12 +116,12 @@ public class TzClueExportEngineCls extends BaseEngine {
 	private void tzExportData(SqlQuery sqlQuery,String clueId,List<Map<String, Object>> dataList,String exportType){
 			
 		String name = "", mobile = "", companyName = "", position = "", bkStateDesc = "", memo = "", 
-			   leadStateDesc = "", chargeName = "",  createDttm = "", createWayDesc = "", colorType = "", closeReason = "", reason = "";
+			   leadStateDesc = "", chargeName = "",  createDttm = "", createWayDesc = "", colorType = "", closeReason = "", reason = "", email = "";
 			  
 		try {
 			String sql = "SELECT A.TZ_LEAD_STATUS,(SELECT M.TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL M WHERE M.TZ_ZHZ_ID=A.TZ_LEAD_STATUS AND M.TZ_ZHZJH_ID='TZ_LEAD_STATUS') TZ_LEAD_STATUS_DESC,A.TZ_JY_GJ_RQ,A.TZ_THYY_ID,C.TZ_LABEL_NAME TZ_THYY_DESC,A.TZ_GBYY_ID,D.TZ_LABEL_NAME TZ_GBYY_DESC,";
 			sql += "A.TZ_COLOUR_SORT_ID,E.TZ_COLOUR_NAME,A.TZ_ZR_OPRID,B.TZ_REALNAME TZ_ZRR_NAME,A.TZ_KH_OPRID,A.TZ_REALNAME,A.TZ_COMP_CNAME,A.TZ_POSITION,A.TZ_MOBILE,A.TZ_PHONE,A.TZ_BZ,date_format(A.ROW_ADDED_DTTM,'%Y-%m-%d %H:%i') ROW_ADDED_DTTM,A.TZ_RSFCREATE_WAY,";
-			sql += "(SELECT M.TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL M WHERE M.TZ_ZHZ_ID=A.TZ_RSFCREATE_WAY AND M.TZ_ZHZJH_ID='TZ_RSFCREATE_WAY') TZ_RSFCREATE_WAY_DESC,IF(A.TZ_LEAD_STATUS='F',C.TZ_LABEL_NAME,IF(A.TZ_LEAD_STATUS='G',D.TZ_LABEL_NAME,'')) TZ_REASON";
+			sql += "(SELECT M.TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL M WHERE M.TZ_ZHZ_ID=A.TZ_RSFCREATE_WAY AND M.TZ_ZHZJH_ID='TZ_RSFCREATE_WAY') TZ_RSFCREATE_WAY_DESC,IF(A.TZ_LEAD_STATUS='F',C.TZ_LABEL_NAME,IF(A.TZ_LEAD_STATUS='G',D.TZ_LABEL_NAME,'')) TZ_REASON,A.TZ_EMAIL";
 			sql += " FROM PS_TZ_XSXS_INFO_T A LEFT JOIN PS_TZ_AQ_YHXX_TBL B ON A.TZ_ZR_OPRID=B.OPRID";
 			sql += " LEFT JOIN PS_TZ_THYY_XSGL_T C ON A.TZ_THYY_ID=C.TZ_THYY_ID";
 			sql += " LEFT JOIN PS_TZ_GBYY_XSGL_T D ON A.TZ_GBYY_ID=D.TZ_GBYY_ID";
@@ -142,6 +143,7 @@ public class TzClueExportEngineCls extends BaseEngine {
 				colorType = mapClue.get("TZ_COLOUR_NAME") == null ? "" : mapClue.get("TZ_COLOUR_NAME").toString();
 				closeReason = mapClue.get("TZ_GBYY_DESC") == null ? "" : mapClue.get("TZ_GBYY_DESC").toString();
 				reason = mapClue.get("TZ_REASON") == null ? "" : mapClue.get("TZ_REASON").toString();
+				email = mapClue.get("TZ_EMAIL") == null ? "" : mapClue.get("TZ_EMAIL").toString();
 				
 				//报考状态
 				String bkStateSql = "select 'Y' from PS_TZ_XSXS_BMB_T WHERE TZ_LEAD_ID=? limit 0,1";
@@ -167,6 +169,7 @@ public class TzClueExportEngineCls extends BaseEngine {
 				Map<String, Object> mapData = new HashMap<String, Object>();
 				mapData.put("name", name);
 				mapData.put("mobile", mobile);
+				mapData.put("email", email);
 				mapData.put("companyName", companyName);
 				mapData.put("position", position);
 				mapData.put("bkStateDesc", bkStateDesc);
