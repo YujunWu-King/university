@@ -83,6 +83,10 @@
 					glyph:'xf1d8@FontAwesome',
 					handler:'sendEmlSelPers'
                 },{
+                    text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.viewSmsHistory","查看短信发送历史"),
+                    glyph:'xf1da@FontAwesome',
+                    handler:'viewSmsHistory'
+                },{
 					text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.sendSnselectedPerson","给选中人发送短信"),
 					glyph:'xf003@FontAwesome',
 					handler:'sendSmsSelPers'

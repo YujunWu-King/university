@@ -1,0 +1,9 @@
+Ext.define('KitchenSink.view.clueManagement.clueManagement.enrollmentClueSmsHistoryModel',{
+    extend:'Ext.data.Model',
+    fields:[
+        {name:'sendDt'},
+        {name:'phone'},
+        {name:'status'},
+        {name:'operator'}
+    ]
+});

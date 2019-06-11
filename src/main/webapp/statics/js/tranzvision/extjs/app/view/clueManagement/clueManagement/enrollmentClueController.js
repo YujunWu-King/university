@@ -716,6 +716,90 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.enrollmentClueControl
             return;
         }
     },
+    //更多操作-查看短信发送历史
+    viewSmsHistory: function(btn) {
+    	Ext.tzSetCompResourses("TZ_XSXS_ZSXS_COM");
+        var grid=btn.findParentByType("grid");
+        var store = grid.getStore();
+        var selList = grid.getSelectionModel().getSelection();
+
+        //选中行长度
+        var checkLen = selList.length;
+        if(checkLen == 0){
+            Ext.Msg.alert("提示","您没有选中任何记录");
+            return;
+        }else if(checkLen >1){
+            Ext.Msg.alert("提示","只能选择一条记录");
+            return;
+        }
+        //是否有访问权限
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_XSXS_ZSXS_COM"]["TZ_XSXS_SMSHIS_STD"];
+        if( pageResSet == "" || pageResSet == undefined){
+            Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+            return;
+        }
+        //该功能对应的JS类
+        var className = pageResSet["jsClassName"];
+        if(className == "" || className == undefined){
+            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_XSXS_SMSHIS_STD，请检查配置。');
+            return;
+        }
+        var cmp, ViewClass,contentPanel,clsProto;
+        
+        contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+        contentPanel.body.addCls('kitchensink-example');
+        if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+        ViewClass = Ext.ClassManager.get(className);
+        clsProto = ViewClass.prototype;
+        if (clsProto.themes) {
+            clsProto.themeInfo = clsProto.themes[themeName];
+
+            if (themeName === 'gray') {
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
+            } else if (themeName !== 'neptune' && themeName !== 'classic') {
+                if (themeName === 'crisp-touch') {
+                    clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
+                }
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
+            }
+            // <debug warn>
+            // Sometimes we forget to include allowances for other themes, so issue a warning as a reminder.
+            if (!clsProto.themeInfo) {
+                Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
+                    themeName + '\'. Is this intentional?');
+            }
+            // </debug>
+        }
+        
+        var mobile = selList[0].get("mobile");
+        if(mobile!=""){
+        	cmp = new ViewClass(mobile);
+            cmp.on('afterrender',function(panel){
+            	var store  = panel.lookupReference("smsHistoryGrid").store;
+//            	var store=panel.getStore();
+                var tzStoreParams ='{"mobile":"'+mobile+'"}';
+                store.tzStoreParams = tzStoreParams;
+                store.load({
+                	
+                });
+            });
+
+            tab = contentPanel.add(cmp);
+
+            contentPanel.setActiveTab(tab);
+
+            Ext.resumeLayouts(true);
+
+            if (cmp.floating) {
+                cmp.show();
+            }
+        }else{
+            Ext.Msg.alert("提示","您选中的记录没有短信");
+            return;
+        }
+    },
     //更多操作-快速处理线索-过往状态
     viewClueOldState: function(btn) {
         var grid = btn.findParentByType("grid");
@@ -1492,5 +1576,116 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.enrollmentClueControl
     //关闭
     closeEnrollmentClue:function() {
         this.getView().close();
-    }
+    },
+    /*批量发送短信*/
+    sendSmsSelPers:function(btn) {
+    	var grid = btn.findParentByType("grid");
+        var store = grid.getStore();
+        var selList = grid.getSelectionModel().getSelection();
+        //选中行长度
+        var checkLen = selList.length;
+        if(checkLen==0){
+            Ext.MessageBox.alert('提示','您没有选中任何记录');
+            return;
+        } else {
+            var noMobileName = "";
+            var noMobileCount = 0;
+            var personList = [];
+            for (var i = 0; i < checkLen; i++) {
+                var name = selList[i].get('name');
+                var email = selList[i].get('email');
+                var clueId=selList[i].get("clueId");
+                var mobile = selList[i].get("mobile");
+
+                personList.push({"name": name, "email": email,"clueId":clueId,"mobile":mobile});
+
+                //判断用户有没有电话
+                if(mobile!=null && mobile!="" && mobile!=undefined) {
+                } else {
+                    noMobileCount ++;
+                    if(noMobileName!="") {
+                    	noMobileName += "、" + name;
+                    } else {
+                    	noMobileName = name;
+                    }
+                }
+            }
+
+            if(noMobileCount==checkLen) {
+                //不存在有短信的数据
+                Ext.MessageBox.alert('提示','您选中的记录没有短信');
+                return;
+            } else {
+
+                if(noMobileName!="") {
+                    Ext.MessageBox.alert('提示',noMobileName + '，没有电话');
+                }
+
+                var params = {
+                    "ComID": "TZ_XSXS_ZSXS_COM",
+                    "PageID": "TZ_XSXS_ZSXS_STD",
+                    "OperateType": "U",
+                    "comParams": {
+                        "add": [
+                            {"type": 'DX', "personList": personList}
+                        ]
+                    }
+                };
+                Ext.tzLoad(Ext.JSON.encode(params), function (responseData) {
+                	Ext.tzSendSms({
+                        //发送的短信模板;
+                        "SmsTmpName": ["TZ_SMS_N_002"],
+                        //创建的需要发送的听众ID;
+                        "audienceId": responseData,
+                        //是否有附件: Y 表示可以发送附件,"N"表示无附件;
+                        "file": "N"
+                    });
+                });
+            }
+        }
+    },
+    editZw:function(view, rowIndex){
+    	//是否有访问权限
+		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_XSXS_ZSXS_COM"]["TZ_XSXS_SMSZW_STD"];
+		if( pageResSet == "" || pageResSet == undefined){
+			Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+			return;
+		}
+		//该功能对应的JS类
+		var className = pageResSet["jsClassName"];
+		if(className == "" || className == undefined){
+			Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_XSXS_SMSZW_STD，请检查配置。');
+			return;
+		}
+
+		var win = this.lookupReference('enrollmentClueSmsHistoryZw');
+
+		if (!win) {
+			Ext.syncRequire(className);
+			ViewClass = Ext.ClassManager.get(className);
+			//新建类
+			win = new ViewClass();
+			this.getView().add(win);
+		}
+
+		var store = view.findParentByType("grid").store;
+		var selRec = store.getAt(rowIndex);
+		var slid = selRec.get("slid");
+		//参数
+		var tzParams = '{"ComID":"TZ_XSXS_ZSXS_COM","PageID":"TZ_XSXS_SMSZW_STD","OperateType":"QF","comParams":{"slid":"'+slid +'"}}';
+		var form = win.child("form").getForm();
+		Ext.tzLoad(tzParams,function(responseData){
+			form.setValues(responseData);
+			form.findField("zw").setReadOnly(true);
+		});
+		win.show();
+    },
+    //关闭
+    smsHisClose: function(btn){
+		//获取窗口
+		var win = btn.findParentByType("window");
+		//页面注册信息表单
+		var form = win.child("form").getForm();
+		win.close();
+	},
 });

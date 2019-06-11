@@ -87,6 +87,7 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 		}
 		return jacksonUtil.Map2json(returnJsonMap);
 	}
+	
 
 	/* 获取学生信息列表 */
 	@Override
@@ -408,6 +409,9 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 		}
 		if ("tzGetEmail".equals(oprType)) {
 			reString = this.tzGetEmail(strParams, errorMsg);
+		}
+		if ("tzGetSms".equals(oprType)) {
+			reString = this.tzGetSms(strParams, errorMsg);
 		}
 		// 将搜索结果批量打包，此处只返回报名表编号
 		if ("tzExportAll".equals(oprType)) {
@@ -734,6 +738,32 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 			strEmail = "";
 		}
 		returnMap.put("email", strEmail);
+		return jacksonUtil.Map2json(returnMap);
+	}
+	
+	private String tzGetSms(String comParams, String[] errorMsg) {
+		// 返回值;
+		Map<String, Object> returnMap = new HashMap<>();
+
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		String mobile = "";
+		try {
+			jacksonUtil.json2Map(comParams);
+			// 班级编号;
+			String strAppInsID = jacksonUtil.getString("appInsID");
+			// 查询邮件地址;
+			mobile = jdbcTemplate.queryForObject(
+					"SELECT TZ_ZY_SJ FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='ZSBM' AND TZ_LYDX_ID=?",
+					new Object[] { strAppInsID }, "String");
+			if (mobile == null) {
+				mobile = "";
+			}
+		} catch (Exception e) {
+			errorMsg[0] = "1";
+			errorMsg[1] = e.toString();
+			mobile = "";
+		}
+		returnMap.put("mobile", mobile);
 		return jacksonUtil.Map2json(returnMap);
 	}
 

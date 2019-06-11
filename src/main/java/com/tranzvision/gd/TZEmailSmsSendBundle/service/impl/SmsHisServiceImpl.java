@@ -20,8 +20,7 @@ import com.tranzvision.gd.util.base.JacksonUtil;
 public class SmsHisServiceImpl extends FrameworkImpl {
 	@Autowired
 	private FliterForm fliterForm;
-
-	@SuppressWarnings("unchecked")
+	
 	@Override
 	public String tzQueryList(String strParams, int numLimit, int numStart, String[] errorMsg) {
 
@@ -31,7 +30,8 @@ public class SmsHisServiceImpl extends FrameworkImpl {
 		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
 		mapRet.put("root", listData);
 		JacksonUtil jacksonUtil = new JacksonUtil();
-		try {
+		try {	
+			
 			// 排序字段如果没有不要赋值
 			String[][] orderByArr = new String[][] {{"TZ_RWZX_DT_STR", "DESC"}};
 
