@@ -301,6 +301,13 @@ public class TzClassInfoServiceImpl extends FrameworkImpl {
 				if(psTzClassInfT.getTzAppEndTm() != null){
 					str_bmend_tm = timeFormat.format(psTzClassInfT.getTzAppEndTm());
 				}
+				String surveyId = "";
+				String surveyName = "";
+				if(psTzClassInfT.getTzSurveyId() != null){
+					surveyId = psTzClassInfT.getTzSurveyId();
+					sql = "select TZ_DC_WJBT from PS_TZ_DC_WJ_DY_T WHERE TZ_DC_WJ_ID=?";
+					surveyName = sqlQuery.queryForObject(sql, new Object[] {surveyId}, "String");
+				}
 
 				Map<String, Object> mapJson = new HashMap<>();
 				mapJson.put("bj_id", str_bj_id);
@@ -334,6 +341,8 @@ public class TzClassInfoServiceImpl extends FrameworkImpl {
 				mapJson.put("fmqd_desc", str_fmqd_desc);
 				mapJson.put("csmb_id", str_csmb_id);
 				mapJson.put("csmb_desc", str_csmb_desc);
+				mapJson.put("surveyId", surveyId);
+				mapJson.put("surveyName", surveyName);
 				mapJson.put("ttbl", ins_ttbl);
 				mapJson.put("ttbl2", "%");
 				/*20170118-end*/
@@ -451,6 +460,7 @@ public class TzClassInfoServiceImpl extends FrameworkImpl {
 					psTzClassInfT.setTzZlpsScorMdId(jacksonUtil.getString("clps_cj_modal"));
 					psTzClassInfT.setTzMscjScorMdId(jacksonUtil.getString("msps_cj_modal"));
 					psTzClassInfT.setTzClassDesc(jacksonUtil.getString("bj_desc"));
+					psTzClassInfT.setTzSurveyId(jacksonUtil.getString("surveyId"));
 
 					psTzClassInfT.setRowAddedDttm(dateNow);
 					psTzClassInfT.setRowAddedOprid(oprid);
@@ -707,7 +717,8 @@ public class TzClassInfoServiceImpl extends FrameworkImpl {
 					psTzClassInfT.setTzCsFmbqzId(
 							mapData.get("fmqd_id") == null ? "" : String.valueOf(mapData.get("fmqd_id")));
 					psTzClassInfT.setTzCsKsbqzId(
-							mapData.get("zdbq_id") == null ? "" : String.valueOf(mapData.get("zdbq_id")));					
+							mapData.get("zdbq_id") == null ? "" : String.valueOf(mapData.get("zdbq_id")));
+					psTzClassInfT.setTzSurveyId(mapData.get("surveyId") == null ? "" : String.valueOf(mapData.get("surveyId")));
 					
 					String strTtbl = (mapData.get("ttbl")==null ? "0" :mapData.get("ttbl").toString());	
 					

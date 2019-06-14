@@ -5,7 +5,6 @@
     <id column="TZ_APP_INS_ID" property="tzAppInsId" jdbcType="BIGINT" />
     <id column="TZ_XXX_BH" property="tzXxxBh" jdbcType="VARCHAR" />
     <id column="TZ_INDEX" property="tzIndex" jdbcType="INTEGER" />
-    <result column="TZ_ACCESS_PATH" property="tzAccessPath" jdbcType="VARCHAR" />
     <result column="ATTACHSYSFILENAME" property="attachsysfilename" jdbcType="VARCHAR" />
     <result column="ATTACHUSERFILE" property="attachuserfile" jdbcType="VARCHAR" />
     <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
@@ -14,10 +13,13 @@
     <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
     <result column="SYNCID" property="syncid" jdbcType="INTEGER" />
     <result column="SYNCDTTM" property="syncdttm" jdbcType="TIMESTAMP" />
+    <result column="TZ_ACCESS_PATH" property="tzAccessPath" jdbcType="VARCHAR" />
+    <result column="FILETYPE" property="filetype" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    TZ_APP_INS_ID, TZ_XXX_BH, TZ_INDEX, TZ_ACCESS_PATH, ATTACHSYSFILENAME, ATTACHUSERFILE, 
-    ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
+    TZ_APP_INS_ID, TZ_XXX_BH, TZ_INDEX, ATTACHSYSFILENAME, ATTACHUSERFILE, ROW_ADDED_DTTM, 
+    ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, TZ_ACCESS_PATH, 
+    FILETYPE
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzFormAttTKey" >
     select 
@@ -35,15 +37,15 @@
   </delete>
   <insert id="insert" parameterType="com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzFormAttT" >
     insert into PS_TZ_FORM_ATT_T (TZ_APP_INS_ID, TZ_XXX_BH, TZ_INDEX, 
-      TZ_ACCESS_PATH, ATTACHSYSFILENAME, ATTACHUSERFILE, 
-      ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, 
-      ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
-      )
+      ATTACHSYSFILENAME, ATTACHUSERFILE, ROW_ADDED_DTTM, 
+      ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, 
+      SYNCID, SYNCDTTM, TZ_ACCESS_PATH, 
+      FILETYPE)
     values (#{tzAppInsId,jdbcType=BIGINT}, #{tzXxxBh,jdbcType=VARCHAR}, #{tzIndex,jdbcType=INTEGER}, 
-      #{tzAccessPath,jdbcType=VARCHAR}, #{attachsysfilename,jdbcType=VARCHAR}, #{attachuserfile,jdbcType=VARCHAR}, 
-      #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, 
-      #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}
-      )
+      #{attachsysfilename,jdbcType=VARCHAR}, #{attachuserfile,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, 
+      #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, 
+      #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}, #{tzAccessPath,jdbcType=VARCHAR}, 
+      #{filetype,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzFormAttT" >
     insert into PS_TZ_FORM_ATT_T
@@ -56,9 +58,6 @@
       </if>
       <if test="tzIndex != null" >
         TZ_INDEX,
-      </if>
-      <if test="tzAccessPath != null" >
-        TZ_ACCESS_PATH,
       </if>
       <if test="attachsysfilename != null" >
         ATTACHSYSFILENAME,
@@ -84,6 +83,12 @@
       <if test="syncdttm != null" >
         SYNCDTTM,
       </if>
+      <if test="tzAccessPath != null" >
+        TZ_ACCESS_PATH,
+      </if>
+      <if test="filetype != null" >
+        FILETYPE,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="tzAppInsId != null" >
@@ -94,9 +99,6 @@
       </if>
       <if test="tzIndex != null" >
         #{tzIndex,jdbcType=INTEGER},
-      </if>
-      <if test="tzAccessPath != null" >
-        #{tzAccessPath,jdbcType=VARCHAR},
       </if>
       <if test="attachsysfilename != null" >
         #{attachsysfilename,jdbcType=VARCHAR},
@@ -122,14 +124,17 @@
       <if test="syncdttm != null" >
         #{syncdttm,jdbcType=TIMESTAMP},
       </if>
+      <if test="tzAccessPath != null" >
+        #{tzAccessPath,jdbcType=VARCHAR},
+      </if>
+      <if test="filetype != null" >
+        #{filetype,jdbcType=INTEGER},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzFormAttT" >
     update PS_TZ_FORM_ATT_T
     <set >
-      <if test="tzAccessPath != null" >
-        TZ_ACCESS_PATH = #{tzAccessPath,jdbcType=VARCHAR},
-      </if>
       <if test="attachsysfilename != null" >
         ATTACHSYSFILENAME = #{attachsysfilename,jdbcType=VARCHAR},
       </if>
@@ -154,6 +159,12 @@
       <if test="syncdttm != null" >
         SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
       </if>
+      <if test="tzAccessPath != null" >
+        TZ_ACCESS_PATH = #{tzAccessPath,jdbcType=VARCHAR},
+      </if>
+      <if test="filetype != null" >
+        FILETYPE = #{filetype,jdbcType=INTEGER},
+      </if>
     </set>
     where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
       and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
@@ -161,15 +172,16 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzFormAttT" >
     update PS_TZ_FORM_ATT_T
-    set TZ_ACCESS_PATH = #{tzAccessPath,jdbcType=VARCHAR},
-      ATTACHSYSFILENAME = #{attachsysfilename,jdbcType=VARCHAR},
+    set ATTACHSYSFILENAME = #{attachsysfilename,jdbcType=VARCHAR},
       ATTACHUSERFILE = #{attachuserfile,jdbcType=VARCHAR},
       ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
       ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
       ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
       ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
       SYNCID = #{syncid,jdbcType=INTEGER},
-      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP}
+      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      TZ_ACCESS_PATH = #{tzAccessPath,jdbcType=VARCHAR},
+      FILETYPE = #{filetype,jdbcType=INTEGER}
     where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
       and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
       and TZ_INDEX = #{tzIndex,jdbcType=INTEGER}

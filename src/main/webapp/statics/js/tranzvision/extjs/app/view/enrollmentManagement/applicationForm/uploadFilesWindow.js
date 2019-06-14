@@ -42,6 +42,11 @@
                 name: 'stuName',
                 hidden:true
             },{
+                xtype: 'textfield',
+                fieldLabel: '',
+                name: 'fileType',
+                hidden:true
+            },{
 					xtype: 'textfield',
 					fieldLabel: '',
 					name: 'currentRowIndex',

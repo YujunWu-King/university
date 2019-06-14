@@ -727,9 +727,26 @@ public class TzEventApplyFormServiceImpl extends FrameworkImpl {
 							
 							registrationLockCounter.release();
 						}
-						
 						//报名成功发送站内信
 						if("3".equals(strResult)){
+							String TZ_COLU_ID = "";
+							//查询该活动的栏目
+							String queryColuSql = " SELECT TZ_COLU_ID FROM PS_TZ_LM_NR_GL_T where TZ_ART_ID=?";
+							List<Map<String, Object>> list = sqlQuery.queryForList(queryColuSql, new Object[] {strApplyId});
+							if(list != null && list.size() > 0) {
+								Map<String, Object> map = list.get(0);
+								if(map != null) {
+									TZ_COLU_ID = map.get("TZ_COLU_ID").toString();
+								}
+							}
+							//非考生栏目
+							String fksColu = sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?", new Object[] {"TZ_FKS_COLU"}, "String");
+							//非考生栏目活动报名不创建线索
+							if(!TZ_COLU_ID.equals(fksColu)) {
+								//报名成功创建线索
+								tzCreateClue(strApplyId, strBmrId);
+							}
+							
 							//发送报名成功站内信
 							try{
 								sql = "SELECT TZ_REALNAME FROM PS_TZ_REG_USER_T WHERE OPRID=?";
@@ -749,8 +766,7 @@ public class TzEventApplyFormServiceImpl extends FrameworkImpl {
 									sendSmsOrMalServiceImpl.send(taskId, "");
 								}
 								
-								//报名成功创建线索
-								tzCreateClue(strApplyId, strBmrId);
+								
 							}catch(NullPointerException nullEx){
 								//没有配置邮件模板
 								nullEx.printStackTrace();

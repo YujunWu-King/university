@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -325,7 +326,7 @@ public class ApplicationCenter2ServicerImpl extends FrameworkImpl {
 		AnalysisLcResult analysisLcResult = new AnalysisLcResult();
 		// 项目跟目录;
 		String rootPath = request.getContextPath();
-
+		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		// 通用链接;
 		String ZSGL_URL = request.getContextPath() + "/dispatcher";
 
@@ -388,6 +389,9 @@ public class ApplicationCenter2ServicerImpl extends FrameworkImpl {
 						}
 						String TZ_SYSVAR = "";
 
+						
+						
+						
 						// 没有发布回复短语则统一取默认的
 						// update by caoy @2018-3-14 回复短语如果有配置系统变量
 						// 就显示内容，有系统变量就显示 系统变量获取的东西
@@ -406,6 +410,8 @@ public class ApplicationCenter2ServicerImpl extends FrameworkImpl {
 							//	TZ_APPPRO_RST = "";
 							//}
 						}
+						
+						
 						//有系统变量 优先显示系统变量，如果没有，显示内容
 						if (TZ_SYSVAR != null && !"".equals(TZ_SYSVAR)) {
 							String type = "A";
@@ -419,6 +425,51 @@ public class ApplicationCenter2ServicerImpl extends FrameworkImpl {
 							}
 						} 
 
+						//是否在听众列表中
+						boolean flag1 = false;
+						//是否已经填写在线调查
+						boolean flag2 = true;
+						//查询该班级的在线调查
+						String sql = "SELECT TZ_SURVEY_ID FROM PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID=?";
+						//如果是面试结果流程，需要判断该班级是否需要在线调查
+						if("GD_DT_102".equals(TZ_APPPRO_ID)) {
+							String TZ_SURVEY_ID = jdbcTemplate.queryForObject(sql, new Object[] {classId}, "String");
+							if(StringUtils.isNotBlank(TZ_SURVEY_ID)) {
+								//查询听众信息
+								sql = "Select TZ_AUD_ID from PS_TZ_SURVEY_AUD_T where TZ_DC_WJ_ID=?";
+								List<Map<String, Object>> audiList = jdbcTemplate.queryForList(sql, new Object[] {TZ_SURVEY_ID});
+								String TZ_AUD_ID = "";
+								
+								if(audiList != null && audiList.size() > 0) {
+									sql = "select count(*) from PS_TZ_AUD_LIST_T where TZ_AUD_ID = ? and OPRID = ?"; 
+									for (Map<String, Object> map2 : audiList) {
+										if(map2 != null) {
+											TZ_AUD_ID = map2.get("TZ_AUD_ID") == null ? "" : map2.get("TZ_AUD_ID").toString();
+											int count = jdbcTemplate.queryForObject(sql, new Object[] {TZ_AUD_ID , oprid}, "int");
+											if(count > 0) {
+												flag1 = true;
+												break;
+											}
+										}
+									}
+								}
+								
+								sql = "select count(*) from PS_TZ_DC_INS_T where TZ_DC_WJ_ID = ? and PERSON_ID = ?";
+								int count2 = jdbcTemplate.queryForObject(sql, new Object[] {TZ_SURVEY_ID, oprid}, "int");
+								if(count2 > 0) {
+									flag2 = false;
+								}
+								
+								sql = "select TZ_DC_WJ_URL from PS_TZ_DC_WJ_DY_T where TZ_DC_WJ_ID = ?";
+								String url = jdbcTemplate.queryForObject(sql, new Object[] {TZ_SURVEY_ID }, "String");
+								
+								//该学生在调查问卷的听众中，且未完成在线调查，需要完成在线调查才能查看面试结果
+								if(flag1 && flag2) {
+									TZ_APPPRO_RST = "<p><a class=\"zxj_more1\" href='"+url+"'>填写在线调查</a></p>";
+								}
+							}
+						}
+						
 						// 流程发布内容;
 						if (lcContentHtml == null || "".equals(lcContentHtml)) {
 							// lcContentHtml =

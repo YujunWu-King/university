@@ -3,8 +3,6 @@ package com.tranzvision.gd.TZWebsiteApplicationBundle.model;
 import java.util.Date;
 
 public class PsTzFormAttT extends PsTzFormAttTKey {
-    private String tzAccessPath;
-
     private String attachsysfilename;
 
     private String attachuserfile;
@@ -21,13 +19,9 @@ public class PsTzFormAttT extends PsTzFormAttTKey {
 
     private Date syncdttm;
 
-    public String getTzAccessPath() {
-        return tzAccessPath;
-    }
+    private String tzAccessPath;
 
-    public void setTzAccessPath(String tzAccessPath) {
-        this.tzAccessPath = tzAccessPath == null ? null : tzAccessPath.trim();
-    }
+    private Integer filetype;
 
     public String getAttachsysfilename() {
         return attachsysfilename;
@@ -91,5 +85,21 @@ public class PsTzFormAttT extends PsTzFormAttTKey {
 
     public void setSyncdttm(Date syncdttm) {
         this.syncdttm = syncdttm;
+    }
+
+    public String getTzAccessPath() {
+        return tzAccessPath;
+    }
+
+    public void setTzAccessPath(String tzAccessPath) {
+        this.tzAccessPath = tzAccessPath == null ? null : tzAccessPath.trim();
+    }
+
+    public Integer getFiletype() {
+        return filetype;
+    }
+
+    public void setFiletype(Integer filetype) {
+        this.filetype = filetype;
     }
 }

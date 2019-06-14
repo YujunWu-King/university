@@ -100,6 +100,7 @@
             }
         });
     },
+    
   //选择标签组 20170118 ZXW
     choiceBqzModal: function(btn){
         var fieldName = btn.name;
@@ -146,6 +147,46 @@
             callback: function(selection){
                 form.findField(modal).setValue(selection[0].data.TZ_BIAOQZ_ID);
                 form.findField(modal_desc).setValue(selection[0].data.TZ_BIAOQZ_NAME);
+            }
+        });
+    },
+    //选择在线调查
+    choiceSurveyModal: function(btn){
+        var fieldName = btn.name;
+
+        var form = this.getView().child("form").getForm();
+        Ext.tzShowPromptSearch({
+            recname: 'PS_TZ_DC_WJ_DY_T',
+            searchDesc: "搜索在线调查",
+            maxRow:20,
+            condition:{
+                presetFields:{
+                    TZ_JG_ID:{
+                        value: Ext.tzOrgID,
+                        type: '01'
+                    }
+                },
+                srhConFields:{
+                	TZ_DC_WJ_ID:{
+                        desc:"在线调查ID",
+                        operator:'07',
+                        type:'01'
+                    },
+                    TZ_DC_WJBT:{
+                        desc:"在线调查名称",
+                        operator:'07',
+                        type:'01'
+                    }
+                }
+            },
+            srhresult:{
+            	TZ_DC_WJ_ID: "在线调查ID",
+            	TZ_DC_WJBT: "在线调查名称"
+            },
+            multiselect: false,
+            callback: function(selection){
+                form.findField("surveyId").setValue(selection[0].data.TZ_DC_WJ_ID);
+                form.findField("surveyName").setValue(selection[0].data.TZ_DC_WJBT);
             }
         });
     },

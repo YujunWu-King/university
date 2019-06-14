@@ -320,6 +320,12 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 					returnString = this.tzQueryAttachmentList(strClassID, strOprID, numLimit, numStart, errorMsg);
 					bl = true;
 				}
+				if ("ATTACHMENT2".equals(strQueryType)) {
+					// FILETYPE;
+					int FILETYPE = jacksonUtil.getInt("FILETYPE");
+					returnString = this.tzQueryAttachmentList2(strClassID, strOprID,FILETYPE, numLimit, numStart, errorMsg);
+					bl = true;
+				}
 				if (bl == false) {
 					errorMsg[0] = "1";
 					errorMsg[1] = "请求错误";
@@ -332,6 +338,139 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 			}
 
 		} catch (Exception e) {
+			e.printStackTrace();
+			errorMsg[0] = "1";
+			errorMsg[1] = e.toString();
+		}
+		return jacksonUtil.Map2json(mapRet);
+	}
+	
+	//查询复试资料
+	private String tzQueryAttachmentList2(String strClassID, String strOprID, int fILETYPE, int numLimit, int numStart,
+			String[] errorMsg) {
+		Map<String, Object> mapRet = new HashMap<String, Object>();
+		mapRet.put("total", 0);
+		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
+		mapRet.put("root", listData);
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		int total = 0;
+		try {
+
+			// 报名表编号;
+			long appInsId = 0L;
+			appInsId = jdbcTemplate.queryForObject(
+					"SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID=? AND OPRID=?",
+					new Object[] { strClassID, strOprID }, "Long");
+
+			String TZ_TITLE = "", TZ_COM_LMC = "";
+
+			String strfileDate = "";
+			int numFileID = 0;
+			
+			numFileID = numFileID + 1;
+
+			String fileSql = "SELECT ATTACHUSERFILE,ATTACHSYSFILENAME,TZ_ACCESS_PATH FROM PS_TZ_FORM_ATT_T WhERE TZ_APP_INS_ID =? and FILETYPE=? ORDER BY TZ_INDEX";
+			List<Map<String, Object>> list2 = jdbcTemplate.queryForList(fileSql,
+					new Object[] { appInsId, fILETYPE});
+			if (list2 != null && list2.size() > 0) {
+				String fileName = "", sysFileName = "", accessUrl = "";
+				strfileDate = "";
+				//int fileNum = 1;
+				for (int j = 0; j < list2.size(); j++) {
+					fileName = (String) list2.get(j).get("ATTACHUSERFILE");
+					sysFileName = (String) list2.get(j).get("ATTACHSYSFILENAME");
+					accessUrl = (String) list2.get(j).get("TZ_ACCESS_PATH");
+
+					if (fileName != null && !"".equals(fileName) && sysFileName != null
+							&& !"".equals(sysFileName) && accessUrl != null && !"".equals(accessUrl)) {
+						if (accessUrl.lastIndexOf("/") + 1 == accessUrl.length()) {
+							accessUrl = request.getContextPath() + accessUrl + sysFileName;
+						} else {
+							accessUrl = request.getContextPath() + accessUrl + "/" + sysFileName;
+						}
+					} else {
+						accessUrl = "";
+					}
+					if (fileName == null) {
+						fileName = "";
+					}
+
+					//if (fileNum == 1) {
+						strfileDate = tzGdObject.getHTMLText(
+								"HTML.TZApplicationVerifiedBundle.TZ_GD_IMAGELINK_HTML",fileName,
+								accessUrl, String.valueOf(numFileID));
+					/*} else {
+						strfileDate = strfileDate + "<br>"
+								+ tzGdObject.getHTMLText(
+										"HTML.TZApplicationVerifiedBundle.TZ_GD_IMAGELINK_HTML",fileName,
+										accessUrl, String.valueOf(numFileID));
+					}*/
+
+					// xuhao = xuhao + 1;
+					//fileNum = fileNum + 1;
+					Map<String, Object> jsonmap = new HashMap<>();
+					jsonmap.put("appInsId", appInsId);
+					jsonmap.put("strfileDate", strfileDate);
+					jsonmap.put("xuhao", numFileID);
+					jsonmap.put("TZ_XXX_BH", sysFileName);
+					jsonmap.put("TZ_XXX_MC", TZ_TITLE);
+					jsonmap.put("fileLinkName", "");
+					jsonmap.put("TZ_COM_LMC", TZ_COM_LMC);
+					total++;
+					listData.add(jsonmap);
+				}
+			}
+
+			strfileDate = "";
+			String fileName = "", sysFileName = "", accessUrl = "";
+			/* 后台管理员上传的附件lastIndexOf */
+			/*TZ_COM_LMC = "imagesUpload";
+			String fileSql2 = "SELECT A.TZ_XXX_BH,ATTACHUSERFILE,ATTACHSYSFILENAME,C.TZ_XXX_MC,A.TZ_ACCESS_PATH FROM PS_TZ_FORM_ATT_T A ,PS_TZ_FORM_ATT2_T C WhERE A.TZ_APP_INS_ID =? AND A.TZ_XXX_BH NOT IN (SELECT TEMP.TZ_XXX_BH FROM PS_TZ_TEMP_FIELD_T TEMP left join PS_TZ_APP_XXXPZ_T APP on TEMP.TZ_APP_TPL_ID = APP.TZ_APP_TPL_ID AND TEMP.TZ_XXX_NO = APP.TZ_XXX_BH AND TEMP.TZ_APP_TPL_ID = ?) AND A.TZ_XXX_BH=C.TZ_XXX_BH AND C.TZ_APP_INS_ID = ? ORDER BY A.TZ_XXX_BH";
+			List<Map<String, Object>> list3 = jdbcTemplate.queryForList(fileSql2,
+					new Object[] { appInsId, TZ_APP_TPL_ID, appInsId });
+			if (list3 != null && list3.size() > 0) {
+				for (int k = 0; k < list3.size(); k++) {
+					TZ_XXX_BH = (String) list3.get(k).get("TZ_XXX_BH");
+					fileName = (String) list3.get(k).get("ATTACHUSERFILE");
+					sysFileName = (String) list3.get(k).get("ATTACHSYSFILENAME");
+					TZ_TITLE = (String) list3.get(k).get("TZ_XXX_MC");
+					accessUrl = (String) list3.get(k).get("TZ_ACCESS_PATH");
+
+					if (fileName == null) {
+						fileName = "";
+					}
+
+					if (fileName != null && !"".equals(fileName) && sysFileName != null && !"".equals(sysFileName)
+							&& accessUrl != null && !"".equals(accessUrl)) {
+						if (accessUrl.lastIndexOf("/") + 1 == accessUrl.length()) {
+							accessUrl = request.getContextPath() + accessUrl + sysFileName;
+						} else {
+							accessUrl = request.getContextPath() + accessUrl + "/" + sysFileName;
+						}
+					} else {
+						accessUrl = "";
+					}
+
+					strfileDate = tzGdObject.getHTMLText("HTML.TZApplicationVerifiedBundle.TZ_GD_IMAGELINK_HTML", fileName, accessUrl, String.valueOf(numFileID));
+
+					Map<String, Object> jsonmap = new HashMap<>();
+					jsonmap.put("appInsId", appInsId);
+					jsonmap.put("strfileDate", strfileDate);
+					jsonmap.put("xuhao", numFileID);
+					jsonmap.put("TZ_XXX_BH", TZ_XXX_BH);
+					jsonmap.put("TZ_XXX_MC", TZ_TITLE);
+					jsonmap.put("fileLinkName", "");
+					jsonmap.put("TZ_COM_LMC", TZ_COM_LMC);
+					total++;
+					listData.add(jsonmap);
+				}
+			}*/
+			/* 后台管理员上传的附件end */
+			mapRet.replace("total", total);
+			mapRet.replace("root", listData);
+
+		} catch (Exception e) {
+			e.printStackTrace();
 			errorMsg[0] = "1";
 			errorMsg[1] = e.toString();
 		}
@@ -673,7 +812,7 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 					int fileNum = 1;
 					// int xuhao = 1;
 
-					String fileSql = "SELECT ATTACHUSERFILE,ATTACHSYSFILENAME,TZ_ACCESS_PATH FROM PS_TZ_FORM_ATT_T WhERE TZ_APP_INS_ID =? AND TZ_XXX_BH IN (SELECT TZ_XXX_BH FROM PS_TZ_TEMP_FIELD_T WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_NO=?) ORDER BY TZ_INDEX";
+					String fileSql = "SELECT ATTACHUSERFILE,ATTACHSYSFILENAME,TZ_ACCESS_PATH FROM PS_TZ_FORM_ATT_T WhERE TZ_APP_INS_ID =? AND FILETYPE <> 1 AND TZ_XXX_BH IN (SELECT TZ_XXX_BH FROM PS_TZ_TEMP_FIELD_T WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_NO=?) ORDER BY TZ_INDEX";
 					List<Map<String, Object>> list2 = jdbcTemplate.queryForList(fileSql,
 							new Object[] { appInsId, TZ_APP_TPL_ID, TZ_XXX_BH });
 					if (list2 != null && list2.size() > 0) {
@@ -729,7 +868,7 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 			String fileName = "", sysFileName = "", accessUrl = "";
 			/* 后台管理员上传的附件lastIndexOf */
 			TZ_COM_LMC = "imagesUpload";
-			String fileSql2 = "SELECT A.TZ_XXX_BH,ATTACHUSERFILE,ATTACHSYSFILENAME,C.TZ_XXX_MC,A.TZ_ACCESS_PATH FROM PS_TZ_FORM_ATT_T A ,PS_TZ_FORM_ATT2_T C WhERE A.TZ_APP_INS_ID =? AND A.TZ_XXX_BH NOT IN (SELECT TEMP.TZ_XXX_BH FROM PS_TZ_TEMP_FIELD_T TEMP left join PS_TZ_APP_XXXPZ_T APP on TEMP.TZ_APP_TPL_ID = APP.TZ_APP_TPL_ID AND TEMP.TZ_XXX_NO = APP.TZ_XXX_BH AND TEMP.TZ_APP_TPL_ID = ?) AND A.TZ_XXX_BH=C.TZ_XXX_BH AND C.TZ_APP_INS_ID = ? ORDER BY A.TZ_XXX_BH";
+			String fileSql2 = "SELECT A.TZ_XXX_BH,ATTACHUSERFILE,ATTACHSYSFILENAME,C.TZ_XXX_MC,A.TZ_ACCESS_PATH FROM PS_TZ_FORM_ATT_T A ,PS_TZ_FORM_ATT2_T C WhERE A.TZ_APP_INS_ID =? AND FILETYPE <> 1 AND A.TZ_XXX_BH NOT IN (SELECT TEMP.TZ_XXX_BH FROM PS_TZ_TEMP_FIELD_T TEMP left join PS_TZ_APP_XXXPZ_T APP on TEMP.TZ_APP_TPL_ID = APP.TZ_APP_TPL_ID AND TEMP.TZ_XXX_NO = APP.TZ_XXX_BH AND TEMP.TZ_APP_TPL_ID = ?) AND A.TZ_XXX_BH=C.TZ_XXX_BH AND C.TZ_APP_INS_ID = ? ORDER BY A.TZ_XXX_BH";
 			List<Map<String, Object>> list3 = jdbcTemplate.queryForList(fileSql2,
 					new Object[] { appInsId, TZ_APP_TPL_ID, appInsId });
 			if (list3 != null && list3.size() > 0) {

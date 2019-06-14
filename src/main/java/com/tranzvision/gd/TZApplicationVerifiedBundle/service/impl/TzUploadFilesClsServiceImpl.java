@@ -57,6 +57,8 @@ public class TzUploadFilesClsServiceImpl extends FrameworkImpl {
 				String strSysFile = jacksonUtil.getString("strSysFile");
 				// 附件文件名&stuName | "_" |;
 				String refLetterFile = jacksonUtil.getString("refLetterFile");
+				// 文件类型 0：普通附件 1：复试资料;
+				int fileType = jacksonUtil.getInt("fileType");
 				
 				PsTzFormAtt2T psTzFormAtt2T = new PsTzFormAtt2T();
 				psTzFormAtt2T.setTzAppInsId(Long.parseLong(strAppId));
@@ -77,6 +79,7 @@ public class TzUploadFilesClsServiceImpl extends FrameworkImpl {
 				psTzFormAttT.setRowAddedOprid(oprid);
 				psTzFormAttT.setRowLastmantDttm(new Date());
 				psTzFormAttT.setRowLastmantOprid(oprid);
+				psTzFormAttT.setFiletype(fileType);
 				psTzFormAttTMapper.insert(psTzFormAttT);
 
 			}

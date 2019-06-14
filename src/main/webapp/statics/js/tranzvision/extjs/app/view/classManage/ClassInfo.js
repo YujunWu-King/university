@@ -585,7 +585,32 @@
                                 name: 'fmqd_desc',
                                 style:'margin-left:8px'
                             }]
-                        }/*20170118-end*/,{
+                        },{
+                            layout: {
+                                type: 'column'
+                            },
+                            //bodyStyle:'padding:0 0 10px 0',
+                            items:[{
+                                columnWidth:.5,
+                                xtype: 'textfield',
+                                fieldLabel: "在线调查",
+                                name: 'surveyId',
+                                editable: false,
+                                triggers: {
+                                    search: {
+                                        cls: 'x-form-search-trigger',
+                                        handler: "choiceSurveyModal"
+                                    }
+                                }
+                            },{
+                                columnWidth:.5,
+                                xtype: 'displayfield',
+                                hideLabel: true,
+                                name: 'surveyName',
+                                style:'margin-left:8px'
+                            }]
+                        }
+                        /*20170118-end*/,{
                             xtype : 'tabpanel',
                             activeTab: 0,
                             plain:false,

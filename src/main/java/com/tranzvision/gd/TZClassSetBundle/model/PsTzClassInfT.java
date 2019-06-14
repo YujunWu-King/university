@@ -59,6 +59,8 @@ public class PsTzClassInfT {
 
     private Date tzRxDt;
 
+    private String tzSurveyId;
+
     private String tzClassDesc;
 
     public String getTzClassId() {
@@ -283,6 +285,14 @@ public class PsTzClassInfT {
 
     public void setTzRxDt(Date tzRxDt) {
         this.tzRxDt = tzRxDt;
+    }
+
+    public String getTzSurveyId() {
+        return tzSurveyId;
+    }
+
+    public void setTzSurveyId(String tzSurveyId) {
+        this.tzSurveyId = tzSurveyId == null ? null : tzSurveyId.trim();
     }
 
     public String getTzClassDesc() {

@@ -37,6 +37,10 @@
                         if(fileStore.isLoaded()){
                             fileStore.reload();
                         };
+                        var fileStore = tabpanel.down('grid[name=fileGrid2]').getStore();
+                        if(fileStore.isLoaded()){
+                        	fileStore.reload();
+                        };
                     }
                     if(btn.name=='auditAppFormEnsureBtn'){
                         panel.close();
@@ -178,6 +182,30 @@
             }
         }
         /*附件删除end*/
+        
+        /*复试资料删除*/
+        //删除json字符串
+        var removeJson2 = "";
+        var fileGrid2 = this.getView().down('grid[name=fileGrid2]');
+        var fileStore2 = fileGrid2.getStore();
+        //删除记录
+        var removeRecs2 = fileStore2.getRemovedRecords();
+        //console.log(fileStore,removeRecs);
+        for(var i=0;i<removeRecs2.length;i++){
+            if(removeJson2 == ""){
+                removeJson2 = Ext.JSON.encode(removeRecs2[i].data);
+            }else{
+                removeJson2 = removeJson2 + ','+Ext.JSON.encode(removeRecs2[i].data);
+            }
+        }
+        if(removeJson2 != ""){
+            if(comParams == ""){
+                comParams = '"delete":[' + removeJson2 + "]";
+            }else{
+                comParams = comParams + ',"delete":[' + removeJson2 + "]";
+            }
+        }
+        /*复试资料删除end*/
         //提交参数
         var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_BMGL_AUDIT_STD","OperateType":"U","comParams":{'+comParams+'}}';
         return tzParams;
@@ -863,6 +891,46 @@
         //winForm.findField("FileName").setValue(filePath);
         winForm.findField("stuName").setValue(stuName);
         winForm.findField("appInsID").setValue(appInsID);
+        winForm.findField("fileType").setValue(0);
+        win.show();
+
+    },
+    uploadFiles2:function(btn){
+        //是否有访问权限
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_BMGL_BMBSH_COM"]["TZ_UPLOADFILES_STD"];
+        if( pageResSet == "" || pageResSet == undefined){
+            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"),Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.nmyqx","您没有权限"));
+            return;
+        }
+        //该功能对应的JS类
+        var className = pageResSet["jsClassName"];
+        if(className == "" || className == undefined){
+            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"),Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.wjsl","未找到该功能页面对应的JS类，页面ID为：TZ_UPLOADFILES_STD，请检查配置。"));
+            return;
+        }
+
+
+        var win = this.lookupReference('uploadFilesWindow');
+        //var form = win.child("form").getForm();
+        var form = this.getView().child("form").getForm();
+        if (!win) {
+            Ext.syncRequire(className);
+            ViewClass = Ext.ClassManager.get(className);
+            //新建类
+            win = new ViewClass();
+            this.getView().add(win);
+        }
+        win.actType = "add";
+        var winForm = win.child("form").getForm();
+        //winForm.findField("currentRowIndex").setValue(rowIndex);
+        //var filePath = grid.getStore().getAt(rowIndex).get("refLetterPurl");
+        var appInsID = form.findField("appInsID").getValue();
+        var stuName = form.findField("stuName").getValue();
+        //winForm.findField("filePurl").setValue(filePath);
+        //winForm.findField("FileName").setValue(filePath);
+        winForm.findField("stuName").setValue(stuName);
+        winForm.findField("appInsID").setValue(appInsID);
+        winForm.findField("fileType").setValue(1);
         win.show();
 
     },
@@ -882,6 +950,7 @@
         var FileName = form.findField("FileName").getValue();
         var strAppId = form.findField("appInsID").getValue();
         var stuName = form.findField("stuName").getValue();
+        var fileType = form.findField("fileType").getValue();
         //文件名称
         //var refLetterFile = form.findField("refLetterFile").getValue();
         var refLetterFile = form.findField("orguploadfile").getValue();
@@ -940,7 +1009,8 @@
                     					"refLetterFile":scFileName,
                     					"FileName":FileName,
                     					"strSysFile":sysfile,
-                    					"fileUrl":accessPath
+                    					"fileUrl":accessPath,
+                    					"fileType":fileType
                     				}]
                     			} 
                     	};
@@ -950,10 +1020,15 @@
                         Ext.tzSubmit(tzParams,function(responseData){
                             //form.reset();
                             //var fileGrid =  btn.findParentByType('grid');
-                            var fileGrid = btn.findParentByType("auditApplicationForm").down('grid[name=fileGrid]');
-                            var fileStore = fileGrid.getStore();
-                            fileStore.reload();
-                            win.close();
+                        	var fileGrid;
+                        	if(fileType == 1){
+                        		fileGrid = btn.findParentByType("auditApplicationForm").down('grid[name=fileGrid2]');
+                        	}else{
+                        		fileGrid = btn.findParentByType("auditApplicationForm").down('grid[name=fileGrid]');
+                        	}
+                        	var fileStore = fileGrid.getStore();
+                        	fileStore.reload();
+                        	win.close();
                         },"",true,this);
                     }
                     myMask.hide();
@@ -983,6 +1058,15 @@
         } else{
             Ext.Msg.alert("",Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.deleteerror","不能删除"));
         }
+    },
+    deleteFiles2: function(view,rowIndex){
+		Ext.MessageBox.confirm(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.confirm","确认"), Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.deleteConfirm","您确定要删除所选记录吗?"), function (btnId) {
+			if (btnId == 'yes') {
+				var store = view.findParentByType("grid").store;
+				store.removeAt(rowIndex);
+			}
+		}, this);
+    	
     },
 	resetTjxPassword: function(grid,rowIndex){
 	
