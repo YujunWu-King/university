@@ -104,9 +104,9 @@
       #{tzIdeaId,jdbcType=VARCHAR}, #{tzPlanId,jdbcType=VARCHAR}, #{tzReferUrl,jdbcType=VARCHAR}, 
       #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, 
       #{rowLastmantOprid,jdbcType=VARCHAR}, #{tzXsquId,jdbcType=VARCHAR}, #{tzWtxsGbyy,jdbcType=VARCHAR}, 
-      #{tzCataLong,jdbcType=LONGVARCHAR}, #{tzBz,jdbcType=LONGVARCHAR},#{tzAge,jdbcType=VARCHAR}),
-      #{tzTjr,jdbcType=VARCHAR}, #{tzFdb,jdbcType=VARCHAR},#{tzZgxl,jdbcType=VARCHAR}),
-      #{tzGznx,jdbcType=VARCHAR}, #{tzGlnx,jdbcType=VARCHAR}
+      #{tzCataLong,jdbcType=LONGVARCHAR}, #{tzBz,jdbcType=LONGVARCHAR},#{tzAge,jdbcType=VARCHAR},
+      #{tzTjr,jdbcType=VARCHAR}, #{tzFdb,jdbcType=VARCHAR},#{tzZgxl,jdbcType=VARCHAR},
+      #{tzGznx,jdbcType=VARCHAR}, #{tzGlnx,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsInfoTWithBLOBs" >
     insert into PS_TZ_XSXS_INFO_T

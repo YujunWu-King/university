@@ -234,17 +234,35 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.supplierClueDetailPan
                     fieldLabel: '辅导班',
                     name: 'fdb'
                 },{
-                    xtype: 'textfield',
+                	xtype: 'combobox',
                     fieldLabel: '最高学历',
-                    name: 'zgxl'
+                    editable:false,
+                    emptyText:'请选择',
+                    queryMode: 'remote',
+            	    	name: 'zgxl',
+            	    	valueField: 'TValue',
+                		displayField: 'TSDesc',
+                		store: new KitchenSink.view.common.store.appTransStore("TZ_XL")
                 },{
-                    xtype: 'numberfield',
+                	xtype: 'combobox',
                     fieldLabel: '工作年限',
-                    name: 'gznx'
+                    editable:false,
+                    emptyText:'请选择',
+                    queryMode: 'remote',
+            	    	name: 'gznx',
+            	    	valueField: 'TValue',
+                		displayField: 'TSDesc',
+                		store: new KitchenSink.view.common.store.appTransStore("TZ_NX")
                 },{
-                    xtype: 'numberfield',
+                	xtype: 'combobox',
                     fieldLabel: '管理年限',
-                    name: 'glnx'
+                    editable:false,
+                    emptyText:'请选择',
+                    queryMode: 'remote',
+            	    	name: 'glnx',
+            	    	valueField: 'TValue',
+                		displayField: 'TSDesc',
+                		store: new KitchenSink.view.common.store.appTransStore("TZ_NX")
                 },{
                     xtype: 'textareafield',
                     grow: true,
