@@ -183,6 +183,12 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 					mapList.put("classID", strClassID);
 					mapList.put("oprID", rowList[0]);
 					mapList.put("stuName", rowList[1]);
+					
+					String sqlClue = "select TZ_LEAD_ID from PS_TZ_XSXS_BMB_T where TZ_APP_INS_ID = ?";
+					String clueId = jdbcTemplate.queryForObject(sqlClue,
+							new Object[] { rowList[2] },"String");
+					mapList.put("clueID", clueId);
+					
 					mapList.put("appInsID", rowList[2]);
 					mapList.put("interviewApplicationID", rowList[3]);
 					mapList.put("nationalID", rowList[4]);
