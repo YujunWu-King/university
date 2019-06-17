@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta http-equiv="x-ua-compatible" content="IE=edge">
+		<title>在线咨询</title>
+		<script type="text/javascript">
+			var TzUniversityContextPath = "";
+		</script>
+		<script type="text/javascript"
+			src="%bind(:1)/statics/js/lib/jquery/jquery.min.js"></script>
+		<script type="text/javascript"
+			src="%bind(:1)/statics/js/tranzvision/util/layer.js"></script>
+		<script type="text/javascript"
+			src="%bind(:1)/statics/js/tranzvision/extjs/app/view/website/set/js/pagefunc.js"></script>
+		
+		<link rel="stylesheet" href="%bind(:1)/statics/css/website/chosen.css">
+		<script type="text/javascript">
+			var TzUniversityContextPath = "";
+		</script>
+		<script type="text/javascript"
+			src="%bind(:1)/statics/js/tranzvision/util/checkExplorer.js" charset="utf-8"></script>
+		
+		
+		<script type="text/javascript">
+			$(document).ready(function() {
+				checkExplorer($("#lang").val());
+		
+			});
+		</script>
+		<style>
+			.btn-i {
+			    display: block;
+			    cursor: pointer;
+			    color: #fff;
+			    height: 1.12rem;
+			    line-height: 1.12rem;
+			    text-align: center;
+			    -webkit-box-sizing: border-box;
+			    box-sizing: border-box;
+			    text-decoration: none;
+			    font-size: 1.5rem;
+			    padding: 0;
+			    border: none;
+			    border-radius: 0.107rem;
+			    -webkit-user-select: none;
+			    -moz-user-select: none;
+			    -ms-user-select: none;
+			    user-select: none;
+			    margin: 0 auto;
+			}
+			input:hover {
+			    border: 1px solid #f85959 !important;
+			}
+			input:focus {
+			    border: 1px solid #f85959 !important;
+			}
+		</style>
+		<link
+			href="%bind(:1)/statics/css/website/orgs/sem/38/style_sem.css"
+			rel="stylesheet" type="text/css" /> 
+	</head>
+	<body style="background: #fff" onkeydown="BindEnter(event)">
+		<div id="all">
+			<script src="%bind(:1)/statics/js/lib/jquery/chosen.jquery.js"
+				type="text/javascript"></script>
+			<script type="text/javascript"
+				src="%bind(:1)/statics/js/tranzvision/func/register.js"></script>
+			<script type="text/javascript"
+				src="%bind(:1)/statics/js/tranzvision/util/layer.js"></script>
+			<script type="text/javascript"
+				src="%bind(:1)/statics/js/lib/laydate/laydate.js"></script>
+			<script type="text/javascript">
+				var strJgid = "SEM";
+				var strSiteId = "72";
+	
+				jQuery(function() {
+	
+				});
+			</script>
+	
+			<div id="main">
+				<form action="" method="post" enctype="multipart/form-data"
+					name="signupForm" id="signupForm">
+					<div class="main_full_top"></div>
+					<div class="main_full">
+						<div class="main_full_line">
+							<div class="main_full_line_title" style="color:#f85959;">在线咨询</div>
+						</div>
+						<div class="main_full_lines"></div>
+						<div class="search_icodiv">
+							<div class="main_full_line">
+								<div class="main_full_line_left">
+									<span class="reg_title_star">*</span>姓名：
+								</div>
+								<div class="main_full_line_right">
+									<input name="xm" type="text" class="input_351px"
+										id="xm" value="" /> 
+									<span id="xmSpan"> 
+										
+									</span>
+								</div>
+							</div>
+						</div>
+						<div class="main_full_line">
+							<div class="main_full_line_left">
+								性别：
+							</div>
+							<div class="main_full_line_right">
+	
+								<select name='xb' id='xb' class='chosen-select combox_351px'
+									style='width: 351px;'>
+									<option value='F'>男</option>
+									<option value='M'>女</option>
+								</select> 
+							</div>
+						</div>
+						<div class="search_icodiv">
+							<div class="main_full_line">
+								<div class="main_full_line_left">
+									年龄：
+								</div>
+								<div class="main_full_line_right">
+									<input name="nl" type="text" class="input_351px"
+										id="nl" value="" /> 
+									<span id="nlSpan">
+									
+									</span>
+								</div>
+							</div>
+						</div>
+						<div class="search_icodiv">
+							<div class="main_full_line">
+								<div class="main_full_line_left">
+									<span class="reg_title_star">*</span>手机：
+								</div>
+								<div class="main_full_line_right">
+									<input name="sj" type="text" class="input_351px"
+										id="sj" value="" /> 
+									<span id="sjSpan">  
+									</span>
+								</div>
+							</div>
+						</div>
+						<div class="search_icodiv">
+							<div class="main_full_line">
+								<div class="main_full_line_left">
+									<span class="reg_title_star">*</span>电子邮箱：
+								</div>
+								<div class="main_full_line_right">
+									<input name="yx" type="text" class="input_351px"
+										id="yx" value="" /> 
+									<span id="yxSpan">
+									</span>
+								</div>
+							</div>
+						</div>
+						<!-- <div class="search_icodiv">
+							<div class="main_full_line">
+								<div class="main_full_line_left">
+									<span class="reg_title_star">*</span>手机：
+								</div>
+								<div class="main_full_line_right">
+									<input name="TZ_MOBILE" type="text" class="input_351px"
+										id="TZ_MOBILE" value="" /> <span id="TZ_MOBILEStyle"
+										class="alert_display_none"> <img
+										src="/statics/images/website/skins/23/alert.png" width="16"
+										height="16" class="alert_img" /> <label id="TZ_MOBILE_status"></label>
+									</span>
+								</div>
+							</div>
+						</div> -->
+						<div class="main_full_line">
+							<div class="main_full_line_left">
+								最高学历：
+							</div>
+							<div class="main_full_line_right">
+	
+								<select name='zgxl' id='zgxl' class='chosen-select combox_351px'
+									style='width: 351px;'>
+									<option value='A'>专科</option>
+									<option value='B'>本科</option>
+									<option value='C'>研究生</option>
+									<option value='D'>博士</option>
+								</select> 
+								<span id="zgxlSpan"> 
+								</span>
+							</div>
+						</div>
+						<div class="search_icodiv">
+							<div class="main_full_line">
+								<div class="main_full_line_left">
+									工作单位：
+								</div>
+								<div class="main_full_line_right">
+									<input name="gzdw" type="text" class="input_351px"
+										id="gzdw" value="" /> 
+									<span id="gzdwSpan"> 
+									</span>
+								</div>
+							</div>
+						</div>
+						<div class="search_icodiv">
+							<div class="main_full_line">
+								<div class="main_full_line_left">
+									现任职务：
+								</div>
+								<div class="main_full_line_right">
+									<input name="xrzw" type="text" class="input_351px"
+										id="xrzw" value="" /> 
+									<span id="xrzwSpan">
+									</span>
+								</div>
+							</div>
+						</div>
+						<div class="main_full_line">
+							<div class="main_full_line_left">
+								工作年限/年：
+							</div>
+							<div class="main_full_line_right">
+	
+								<select name='gznx' id='gznx' class='chosen-select combox_351px'
+									style='width: 351px;'>
+									<option value='A'>1-3年</option>
+									<option value='B'>3-5年</option>
+									<option value='C'>5-10年</option>
+									<option value='D'>10年以上</option>
+								</select> 
+								<span id="gznxSpan"> 
+								</span>
+							</div>
+						</div>
+						<div class="main_full_line">
+							<div class="main_full_line_left">
+								管理年限/：
+							</div>
+							<div class="main_full_line_right">
+	
+								<select name='glnx' id='glnx' class='chosen-select combox_351px'
+									style='width: 351px;'>
+									<option value='A'>1-3年</option>
+									<option value='B'>3-5年</option>
+									<option value='C'>5-10年</option>
+									<option value='D'>10年以上</option>
+								</select> 
+								<span id="glnxSpan"> 
+								</span>
+							</div>
+						</div>
+						<div class="search_icodiv">
+							<div class="main_full_line">
+								<div class="main_full_line_left">
+									<span class="reg_title_star">*</span>咨询内容(长文本)：
+								</div>
+								<div class="main_full_line_right">
+									<textarea id="zxnr" rows="3" cols="20" class="textarea_351px" style="width:330px;height:150px;max-width: 330px;max-height: 150px;
+									min-width: 330px;min-height: 150px;overflow-x:scroll;overflow-y:scroll;font-size:20px;"></textarea>
+									<span id="zxnrSpan"> 
+									</span>
+								</div>
+							</div>
+						</div>
+						<br>
+						<br>
+						<br>
+						<br>
+						<br>
+						<br>
+						<br>
+						<div class="main_full_lines"></div>
+						<div class="main_full_line">
+							
+							<input id="sub" type="button" style="border-radius:0.667rem;background-color:#f85959 !important;color:#FFF;height:3rem;line-height:2rem;width:30%;" class="btn-i" value="提交申请">
+						</div>
+					</div>
+					<div class="main_full_foot">
+					</div>
+					<div style="clear: both;"></div>
+				</form>
+			</div>
+			<div>
+				<input id="jgId" name="jgId" type="hidden" value="SEM"> 
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+	    var config = {
+	      '.chosen-select'           : {},
+	      '.chosen-select-deselect'  : {allow_single_deselect:true},
+	      '.chosen-select-no-single' : {disable_search_threshold:10},
+	      '.chosen-select-no-results': {no_results_text:'Oops, nothing found!'},
+	      '.chosen-select-width'     : {width:"95%"}
+	    };
+	
+	    for (var selector in config) {
+	      $(selector).chosen(config[selector]);
+	    }
+	</script>
+	<script type="text/javascript">
+	    var xmCheckB = false;
+	    var ageCheckB = false;
+	    var phoneCheckB = false;
+	    var emailCheckB = false;
+	    var zxnrCheckB = false;
+		function init() { 
+			$("#xm").blur(function(){
+				var id = "xm";
+				xmCheck(id);
+			});
+			
+			$("#nl").blur(function(){
+				var id = "nl";
+				ageCheck(id);
+			});
+			
+			$("#sj").blur(function(){
+				var id = "sj";
+				phoneCheck(id);
+			});
+			
+			$("#yx").blur(function(){
+				var id = "yx";
+				emailCheck(id);
+			});
+			
+			$("#zxnr").blur(function(){
+				var id = "zxnr";
+				zxnrCheck(id);
+			});
+			
+			$("#sub").click(function(){
+				xmCheck("xm");
+				ageCheck("nl");
+				phoneCheck("sj");
+				emailCheck("yx");
+				zxnrCheck("zxnr");
+				if(xmCheckB&&ageCheckB&&phoneCheckB&&emailCheckB&&zxnrCheck){
+					var xmV = $("#xm").val();
+					var xbV = $("#xb").val();
+					var nlV = $("#nl").val();
+					var sjV = $("#sj").val();
+					var yxV = $("#yx").val();
+					var zgxlV = $("#zgxl").val();
+					var gzdwV = $("#gzdw").val();
+					var xrzwV = $("#xrzw").val();
+					var gznxV = $("#gznx").val();
+					var glnxV = $("#glnx").val();
+					var jgIdV = $("#jgId").val();
+					var zxnrV = $("#zxnr").val().trim();
+					
+					var tzParams = '{"ComID":"TZ_CLUE_COMMON_COM","PageID":"TZ_CLUE_STD","OperateType":"submitAll","comParams":'+
+					'{"xm":"'+xmV+'",'+
+					'"xb":"'+xbV+'",'+
+					'"nl":"'+nlV+'",'+
+					'"sj":"'+sjV+'",'+
+					'"yx":"'+yxV+'",'+
+					'"zgxl":"'+zgxlV+'",'+
+					'"gzdw":"'+gzdwV+'",'+
+					'"xrzw":"'+xrzwV+'",'+
+					'"gznx":"'+gznxV+'",'+
+					'"glnx":"'+glnxV+'",'+
+					'"jgId":"'+jgIdV+'",'+
+					'"zxnr":"'+zxnrV+'"}}';
+					
+					$.ajax({
+						type:"post",
+						dataType:"json",
+						async:false,
+						data:{tzParams:tzParams},
+						url:"%bind(:1)/dispatcher",
+						success:function(res){	
+							alert(res.comContent.msg);
+							window.location.reload();
+						}
+					});
+				} 
+				
+			});
+			
+			function xmCheck(id){
+				var ts = ''
+				if($("#"+id+"").val().trim().length<=0){
+					ts = '<img src="/statics/images/website/skins/23/alert.png" width="16" height="16" class="alert_img" />'
+					+'必填项！';
+					xmCheckB = false;
+				}else{
+					xmCheckB = true;
+				}
+				$("#xmSpan").html(ts);
+				
+			}
+			
+			function ageCheck(id){
+				var ts = ''
+				var regu =/^([1-9]\d|\d)$/;
+				var re = new RegExp(regu);
+				if(re.test($("#"+id+"").val())||$("#"+id+"").val().trim().length<=0){
+					ageCheckB = true;
+				}else{
+					ts = '<img src="/statics/images/website/skins/23/alert.png" width="16" height="16" class="alert_img" />'
+						+'请输入0-99范围内的数字！';
+					ageCheckB = false;
+				}
+				$("#nlSpan").html(ts);
+			}
+			
+			function phoneCheck(id){
+				var ts = ''
+				var regu =/^[1][2,3,4,5,6,7,8,9][0-9]{9}$/;
+				var re = new RegExp(regu);
+				if($("#"+id+"").val().trim().length<=0){
+					ts = '<img src="/statics/images/website/skins/23/alert.png" width="16" height="16" class="alert_img" />'
+					+'必填项！';
+					phoneCheckB = false;
+				}else{
+					if(!re.test($("#"+id+"").val())){
+						ts = '<img src="/statics/images/website/skins/23/alert.png" width="16" height="16" class="alert_img" />'
+							+'手机格式不正确！';
+						phoneCheckB = false;
+					}else{
+						phoneCheckB = true;
+					}
+					
+				}
+				$("#sjSpan").html(ts);
+			}
+			
+			function emailCheck(id){
+				var ts = ''
+				var regu =/^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
+				var re = new RegExp(regu);
+				if($("#"+id+"").val().trim().length<=0){
+					ts = '<img src="/statics/images/website/skins/23/alert.png" width="16" height="16" class="alert_img" />'
+					+'必填项！';
+					emailCheckB = false;
+				}else{
+					if(!re.test($("#"+id+"").val())){
+						ts = '<img src="/statics/images/website/skins/23/alert.png" width="16" height="16" class="alert_img" />'
+							+'邮箱格式不正确！';
+						emailCheckB = false;
+					}else{
+						emailCheckB = true;
+					}
+					
+				}
+				$("#yxSpan").html(ts);
+			}
+			
+			function zxnrCheck(id){
+				var ts = ''
+				if($("#"+id+"").val().trim().length<=0){
+					ts = '<img src="/statics/images/website/skins/23/alert.png" width="16" height="16" class="alert_img" />'
+					+'必填项！';
+					zxnrCheckB = false;
+				}else{
+					zxnrCheckB = true;
+				}
+				$("#zxnrSpan").html(ts);
+				
+			}
+	    }; 
+	    init(); 
+	</script>
+</html>
