@@ -203,8 +203,84 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		System.out.println("tzQuery");
 		try {
-			// 排序字段如果没有不要赋值
-			String[][] orderByArr = new String[][] {{ "TZ_FILL_PROPORTION", "ASC" }};
+			String[][] orderByArr;
+			
+			String sort = request.getParameter("sort");
+			if (sort != null && !"".equals(sort)) {
+				sort = "{\"sort\":" + sort + "}";
+				jacksonUtil.json2Map(sort);
+				List<Map<String, String>> sortlist = (List<Map<String, String>>) jacksonUtil.getList("sort");
+				List<String[]> orderList = new ArrayList<String[]>();
+				for (Map<String, String> sortMap : sortlist) {
+					String columnField = sortMap.get("property");
+					String sortMethod = sortMap.get("direction");
+					if ("OPRID".equals(columnField)) {
+						orderList.add(new String[] { "OPRID", sortMethod });
+					}
+					if ("userName".equals(columnField)) {
+						orderList.add(new String[] { "TZ_REALNAME", sortMethod });
+					}
+					if ("userSex".equals(columnField)) {
+						orderList.add(new String[] { "TZ_GENDER", sortMethod });
+					}
+					if ("userEmail".equals(columnField)) {
+						orderList.add(new String[] { "TZ_EMAIL", sortMethod });
+					}
+					if ("userPhone".equals(columnField)) {
+						orderList.add(new String[] { "TZ_MOBILE", sortMethod });
+					}
+					if ("jihuoZt".equals(columnField)) {
+						orderList.add(new String[] { "TZ_JIHUO_ZT", sortMethod });
+					}
+					if ("zcTime".equals(columnField)) {
+						orderList.add(new String[] { "TZ_ZHCE_DT", sortMethod });
+					}
+					if ("acctlock".equals(columnField)) {
+						orderList.add(new String[] { "ACCTLOCK", sortMethod });
+					}
+					if ("hmdUser".equals(columnField)) {
+						orderList.add(new String[] { "TZ_BLACK_NAME", sortMethod });
+					}
+					if ("nationId".equals(columnField)) {
+						orderList.add(new String[] { "NATIONAL_ID", sortMethod });
+					}
+					if ("mshId".equals(columnField)) {
+						orderList.add(new String[] { "TZ_MSH_ID", sortMethod });
+					}
+					if ("applyInfo".equals(columnField)) {
+						orderList.add(new String[] { "TZ_CLASS_NAME", sortMethod });
+					}
+					if ("classID".equals(columnField)) {
+						orderList.add(new String[] { "TZ_CLASS_ID", sortMethod });
+					}
+					if ("appInsID".equals(columnField)) {
+						orderList.add(new String[] { "TZ_APP_INS_ID", sortMethod });
+					}
+					if ("fillProportion".equals(columnField)) {
+						orderList.add(new String[] { "TZ_FILL_PROPORTION", sortMethod });
+					}
+					if ("bitch".equals(columnField)) {
+						orderList.add(new String[] { "TZ_BATCH_NAME", sortMethod });
+					}
+					if ("ms_result".equals(columnField)) {
+						orderList.add(new String[] { "TZ_RESULT_CODE", sortMethod });
+					}
+					if("tj_zt".equals(columnField)){
+						orderList.add(new String[]{"TZ_APP_FORM_STA",sortMethod});
+					}
+					if("remark".equals(columnField)){
+						orderList.add(new String[]{"TZ_REMARK",sortMethod});
+					}
+				}
+				orderByArr = new String[orderList.size()][2];
+				for (int i = 0; i < orderList.size(); i++) {
+					orderByArr[i] = orderList.get(i);
+				}
+
+			} else {
+				orderByArr = new String[][] {{ "TZ_FILL_PROPORTION", "ASC" }};
+			}
+			
 
 			// json数据要的结果字段;
 			String[] resultFldArray = { "OPRID", "TZ_REALNAME", "TZ_GENDER", "TZ_EMAIL", "TZ_MOBILE", "TZ_JIHUO_ZT",
