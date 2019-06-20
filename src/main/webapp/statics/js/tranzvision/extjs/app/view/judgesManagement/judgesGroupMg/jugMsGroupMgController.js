@@ -248,5 +248,41 @@
             }
         });
 
-    }
+    },
+  //放大镜搜索秘书名称
+	searchRoleName: function(btn){
+//		var form = btn.findParentByType("panel").child("form");
+		var form = this.getView().child("form").getForm();
+		Ext.tzShowPromptSearch({
+			recname: 'PS_TZ_MSZHGL_VW',
+			searchDesc: '搜索秘书名称',
+			maxRow:50,
+			condition:{
+				presetFields:{
+					
+				},
+				srhConFields:{
+					TZ_DLZH_ID:{
+						desc:'秘书名称',
+						operator:'07',
+						type:'01'	
+					},
+					TZ_REALNAME:{
+						desc:'描述',
+						operator:'07',
+						type:'01'		
+					}	
+				}	
+			},
+			srhresult:{
+				TZ_DLZH_ID: '秘书名称',
+				TZ_REALNAME: '描述'
+			},
+			multiselect: false,
+			callback: function(selection){
+				form.findField("roleName").setValue(selection[0].data.TZ_DLZH_ID);
+				form.findField("roleNameDesc").setValue(selection[0].data.TZ_REALNAME);
+			}
+		});	
+	}
 });

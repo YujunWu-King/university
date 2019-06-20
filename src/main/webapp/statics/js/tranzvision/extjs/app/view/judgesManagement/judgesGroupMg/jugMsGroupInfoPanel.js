@@ -47,6 +47,31 @@
             fieldLabel: '面试评审组名称',
 			maxLength: 125,
 			name: 'jugGroupName'
+        },{
+        	layout: {
+                type: 'column'
+            },
+            items:[{
+            	columnWidth:.25,
+            	xtype: 'textfield',
+                fieldLabel: '面试秘书',
+    			name: 'roleName',
+    			editable: false,
+    			value:'msmsE',
+                triggers: {
+                    search: {
+                        cls: 'x-form-search-trigger',
+                        handler: "searchRoleName"
+                    }
+                }
+            },{
+            	columnWidth:.75,
+            	xtype: 'displayfield',
+                hideLabel: true,
+                name: 'roleNameDesc',
+                value:'面试秘书E'
+            }]
+            
         }]
     }],
     buttons: [{

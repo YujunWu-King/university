@@ -54,6 +54,8 @@ public class JudgesGroupMsInfoServiceImpl extends FrameworkImpl {
 					returnJsonMap.put("jgID", psTzMspsGrTbl.getTzJgId());
 					returnJsonMap.put("jugGroupId", psTzMspsGrTbl.getTzClpsGrId());
 					returnJsonMap.put("jugGroupName", psTzMspsGrTbl.getTzClpsGrName());
+					returnJsonMap.put("roleName", psTzMspsGrTbl.getTzRolename());
+					returnJsonMap.put("roleNameDesc", psTzMspsGrTbl.getTzDescr());
 					
 				} else {
 					errMsg[0] = "1";
@@ -94,6 +96,10 @@ public class JudgesGroupMsInfoServiceImpl extends FrameworkImpl {
 				String jugGroupId = (String) infoData.get("jugGroupId");
 				// 面试评委组名称;
 				String jugGroupName = (String) infoData.get("jugGroupName");
+				// 角色名称
+				String roleName =  infoData.get("roleName")==null?"":(String)infoData.get("roleName");
+				// 角色描述
+				String roleNameDesc = infoData.get("roleNameDesc")==null?"":(String) infoData.get("roleNameDesc");
 				PsTzMspsGrTbl psTzMspsGrTbl;
 				
 				if ("NEXT".equals(jugGroupId)) {
@@ -103,6 +109,8 @@ public class JudgesGroupMsInfoServiceImpl extends FrameworkImpl {
 					psTzMspsGrTbl.setTzJgId(orgid);
 					psTzMspsGrTbl.setTzClpsGrId(jugGroupId);
 					psTzMspsGrTbl.setTzClpsGrName(jugGroupName);
+					psTzMspsGrTbl.setTzRolename(roleName);
+					psTzMspsGrTbl.setTzDescr(roleNameDesc);
 					int i = PsTzMspsGrTblMapper.insert(psTzMspsGrTbl);
 					if (i > 0) {
 						returnJsonMap.replace("jugGroupId", jugGroupId);
@@ -118,6 +126,8 @@ public class JudgesGroupMsInfoServiceImpl extends FrameworkImpl {
 						psTzMspsGrTbl.setTzJgId(orgid);
 						psTzMspsGrTbl.setTzClpsGrId(jugGroupId);
 						psTzMspsGrTbl.setTzClpsGrName(jugGroupName);
+						psTzMspsGrTbl.setTzRolename(roleName);
+						psTzMspsGrTbl.setTzDescr(roleNameDesc);
 						int i = PsTzMspsGrTblMapper.updateByPrimaryKey(psTzMspsGrTbl);
 						if (i > 0) {
 							returnJsonMap.replace("jugGroupId", jugGroupId);

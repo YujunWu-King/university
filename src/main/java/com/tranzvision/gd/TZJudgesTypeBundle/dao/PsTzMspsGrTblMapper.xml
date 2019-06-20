@@ -5,9 +5,11 @@
     <id column="TZ_CLPS_GR_ID" property="tzClpsGrId" jdbcType="VARCHAR" />
     <result column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
     <result column="TZ_CLPS_GR_NAME" property="tzClpsGrName" jdbcType="VARCHAR" />
+    <result column="TZ_ROLENAME" property="tzRolename" jdbcType="VARCHAR" />
+    <result column="TZ_DESCR" property="tzDescr" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    TZ_CLPS_GR_ID, TZ_JG_ID, TZ_CLPS_GR_NAME
+    TZ_CLPS_GR_ID, TZ_JG_ID, TZ_CLPS_GR_NAME,TZ_ROLENAME,TZ_DESCR
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -20,9 +22,10 @@
     where TZ_CLPS_GR_ID = #{tzClpsGrId,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.tranzvision.gd.TZJudgesTypeBundle.model.PsTzMspsGrTbl" >
-    insert into PS_TZ_MSPS_GR_TBL (TZ_CLPS_GR_ID, TZ_JG_ID, TZ_CLPS_GR_NAME
+    insert into PS_TZ_MSPS_GR_TBL (TZ_CLPS_GR_ID, TZ_JG_ID, TZ_CLPS_GR_NAME,TZ_ROLENAME,TZ_DESCR
       )
-    values (#{tzClpsGrId,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, #{tzClpsGrName,jdbcType=VARCHAR}
+    values (#{tzClpsGrId,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, #{tzClpsGrName,jdbcType=VARCHAR},
+     #{tzRolename,jdbcType=VARCHAR}, #{tzDescr,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZJudgesTypeBundle.model.PsTzMspsGrTbl" >
@@ -37,6 +40,12 @@
       <if test="tzClpsGrName != null" >
         TZ_CLPS_GR_NAME,
       </if>
+      <if test="tzRolename != null" >
+        TZ_ROLENAME,
+      </if>
+      <if test="tzDescr != null" >
+        TZ_DESCR,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="tzClpsGrId != null" >
@@ -47,6 +56,12 @@
       </if>
       <if test="tzClpsGrName != null" >
         #{tzClpsGrName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRolename != null" >
+        #{tzRolename,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDescr != null" >
+        #{tzDescr,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -59,13 +74,21 @@
       <if test="tzClpsGrName != null" >
         TZ_CLPS_GR_NAME = #{tzClpsGrName,jdbcType=VARCHAR},
       </if>
+      <if test="tzRolename != null" >
+        TZ_ROLENAME = #{tzRolename,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDescr != null" >
+        TZ_DESCR = #{tzDescr,jdbcType=VARCHAR},
+      </if>
     </set>
     where TZ_CLPS_GR_ID = #{tzClpsGrId,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZJudgesTypeBundle.model.PsTzMspsGrTbl" >
     update PS_TZ_MSPS_GR_TBL
     set TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
-      TZ_CLPS_GR_NAME = #{tzClpsGrName,jdbcType=VARCHAR}
+      TZ_CLPS_GR_NAME = #{tzClpsGrName,jdbcType=VARCHAR},
+      TZ_ROLENAME = #{tzRolename,jdbcType=VARCHAR},
+      TZ_DESCR = #{tzDescr,jdbcType=VARCHAR}
     where TZ_CLPS_GR_ID = #{tzClpsGrId,jdbcType=VARCHAR}
   </update>
 </mapper>
