@@ -254,7 +254,7 @@
 								</div>
 								<div class="main_full_line_right">
 									<textarea id="zxnr" rows="3" cols="20" class="textarea_351px" style="width:330px;height:150px;max-width: 330px;max-height: 150px;
-									min-width: 330px;min-height: 150px;overflow-x:scroll;overflow-y:scroll;font-size:20px;"></textarea>
+									min-width: 330px;min-height: 150px;overflow-x:scroll;overflow-y:scroll;font-size: 18px;color: #666;"></textarea>
 									<span id="zxnrSpan"> 
 									</span>
 								</div>
@@ -380,7 +380,7 @@
 			function xmCheck(id){
 				var ts = ''
 				if($("#"+id+"").val().trim().length<=0){
-					ts = '<img src="/statics/images/website/skins/23/alert.png" width="16" height="16" class="alert_img" />'
+					ts = '<img src="%bind(:1)/statics/images/website/skins/23/alert.png" width="16" height="16" class="alert_img" />'
 					+'必填项！';
 					xmCheckB = false;
 				}else{
@@ -397,7 +397,7 @@
 				if(re.test($("#"+id+"").val())||$("#"+id+"").val().trim().length<=0){
 					ageCheckB = true;
 				}else{
-					ts = '<img src="/statics/images/website/skins/23/alert.png" width="16" height="16" class="alert_img" />'
+					ts = '<img src="%bind(:1)/statics/images/website/skins/23/alert.png" width="16" height="16" class="alert_img" />'
 						+'请输入0-99范围内的数字！';
 					ageCheckB = false;
 				}
@@ -409,7 +409,7 @@
 				var regu =/^[1][2,3,4,5,6,7,8,9][0-9]{9}$/;
 				var re = new RegExp(regu);
 				if($("#"+id+"").val().trim().length<=0){
-					ts = '<img src="/statics/images/website/skins/23/alert.png" width="16" height="16" class="alert_img" />'
+					ts = '<img src="%bind(:1)/statics/images/website/skins/23/alert.png" width="16" height="16" class="alert_img" />'
 					+'必填项！';
 					phoneCheckB = false;
 				}else{
@@ -430,12 +430,12 @@
 				var regu =/^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
 				var re = new RegExp(regu);
 				if($("#"+id+"").val().trim().length<=0){
-					ts = '<img src="/statics/images/website/skins/23/alert.png" width="16" height="16" class="alert_img" />'
+					ts = '<img src="%bind(:1)/statics/images/website/skins/23/alert.png" width="16" height="16" class="alert_img" />'
 					+'必填项！';
 					emailCheckB = false;
 				}else{
 					if(!re.test($("#"+id+"").val())){
-						ts = '<img src="/statics/images/website/skins/23/alert.png" width="16" height="16" class="alert_img" />'
+						ts = '<img src="%bind(:1)/statics/images/website/skins/23/alert.png" width="16" height="16" class="alert_img" />'
 							+'邮箱格式不正确！';
 						emailCheckB = false;
 					}else{
@@ -449,7 +449,7 @@
 			function zxnrCheck(id){
 				var ts = ''
 				if($("#"+id+"").val().trim().length<=0){
-					ts = '<img src="/statics/images/website/skins/23/alert.png" width="16" height="16" class="alert_img" />'
+					ts = '<img src="%bind(:1)/statics/images/website/skins/23/alert.png" width="16" height="16" class="alert_img" />'
 					+'必填项！';
 					zxnrCheckB = false;
 				}else{

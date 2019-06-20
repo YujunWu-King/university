@@ -189,7 +189,7 @@
 						<div class="register_body">
 							<p id="xmT">
 								姓名*<img class='reg_right'
-									src='/statics/css/website/m/images/reg_warm.png'>
+									src='%bind(:1)/statics/css/website/m/images/reg_warm.png'>
 							</p>
 							<div class="overhidden">
 								<input type="text" name="xm" id="xm"
@@ -218,7 +218,7 @@
 						<div class="register_body">
 							<p id="sjT">
 								手机*<img class='reg_right'
-									src='/statics/css/website/m/images/reg_warm.png'>
+									src='%bind(:1)/statics/css/website/m/images/reg_warm.png'>
 							</p>
 							<div class="overhidden">
 								<input type="text" name="sj" id="sj"
@@ -229,7 +229,7 @@
 						<div class="register_body">
 							<p id="yxT">
 								电子邮箱*<img class='reg_right'
-									src='/statics/css/website/m/images/reg_warm.png'>
+									src='%bind(:1)/statics/css/website/m/images/reg_warm.png'>
 							</p>
 							<div class="overhidden">
 								<input type="text" name="yx" id="yx"
@@ -292,11 +292,11 @@
 							<p id="zxnrT">
 								咨询内容(长文本)*
 								<img class='reg_right'
-								src='/statics/css/website/m/images/reg_warm.png'>
+								src='%bind(:1)/statics/css/website/m/images/reg_warm.png'>
 							</p>
 							<div class="overhidden" style="height:100%;">
 								<textarea id="zxnr" style="margin-top:3%;border:1px solid #ddd;margin-bottom:2%;
-								width:99%;height:70%;" placeholder="请输入咨询内容"></textarea>
+								width:99%;height:70%;font-size: 0.54rem;" placeholder="请输入咨询内容"></textarea>
 							</div>
 						</div>
 						<p id="zxnrSpan" class="reg_tips"></p>
@@ -401,10 +401,10 @@
 			var tsyj = '';
 			if($("#"+id+"").val().trim().length<=0){
 				tsyj = '必填项！';
-				ts = '姓名*<img class="reg_right" src="/statics/css/website/m/images/reg_wrong.png">';
+				ts = '姓名*<img class="reg_right" src="%bind(:1)/statics/css/website/m/images/reg_wrong.png">';
 				xmCheckB = false;
 			}else{
-				ts = '姓名*<img class="reg_right" src="/statics/css/website/m/images/reg_right.png">';
+				ts = '姓名*<img class="reg_right" src="%bind(:1)/statics/css/website/m/images/reg_right.png">';
 				xmCheckB = true;
 			}
 			$("#xmT").html(ts);
@@ -420,11 +420,11 @@
 			if(re.test($("#"+id+"").val())||$("#"+id+"").val().trim().length<=0){
 				ts = '年龄';
 				if($("#"+id+"").val().trim().length>0){
-					ts = '年龄<img class="reg_right" src="/statics/css/website/m/images/reg_right.png">';
+					ts = '年龄<img class="reg_right" src="%bind(:1)/statics/css/website/m/images/reg_right.png">';
 				}
 				ageCheckB = true;
 			}else{
-				ts = '年龄<img class="reg_right" src="/statics/css/website/m/images/reg_wrong.png">';
+				ts = '年龄<img class="reg_right" src="%bind(:1)/statics/css/website/m/images/reg_wrong.png">';
 				tsyj = '请输入0-99范围内的数字！';
 				ageCheckB = false;
 			}
@@ -438,16 +438,16 @@
 			var regu =/^[1][2,3,4,5,6,7,8,9][0-9]{9}$/;
 			var re = new RegExp(regu);
 			if($("#"+id+"").val().trim().length<=0){
-				ts = '手机*<img class="reg_right" src="/statics/css/website/m/images/reg_wrong.png">';
+				ts = '手机*<img class="reg_right" src="%bind(:1)/statics/css/website/m/images/reg_wrong.png">';
 				tsyj = '必填项！';
 				phoneCheckB = false;
 			}else{
 				if(!re.test($("#"+id+"").val())){
-					ts = '手机*<img class="reg_right" src="/statics/css/website/m/images/reg_wrong.png">';
+					ts = '手机*<img class="reg_right" src="%bind(:1)/statics/css/website/m/images/reg_wrong.png">';
 					tsyj = '手机格式不正确！';
 					phoneCheckB = false;
 				}else{
-					ts = '手机*<img class="reg_right" src="/statics/css/website/m/images/reg_right.png">';
+					ts = '手机*<img class="reg_right" src="%bind(:1)/statics/css/website/m/images/reg_right.png">';
 					phoneCheckB = true;
 				}
 				
@@ -462,16 +462,16 @@
 			var regu =/^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
 			var re = new RegExp(regu);
 			if($("#"+id+"").val().trim().length<=0){
-				ts = '电子邮箱*<img class="reg_right" src="/statics/css/website/m/images/reg_wrong.png">';
+				ts = '电子邮箱*<img class="reg_right" src="%bind(:1)/statics/css/website/m/images/reg_wrong.png">';
 				tsyj = '必填项！';
 				emailCheckB = false;
 			}else{
 				if(!re.test($("#"+id+"").val())){
-					ts = '电子邮箱*<img class="reg_right" src="/statics/css/website/m/images/reg_wrong.png">';
+					ts = '电子邮箱*<img class="reg_right" src="%bind(:1)/statics/css/website/m/images/reg_wrong.png">';
 					tsyj = '邮箱格式不正确！';
 					emailCheckB = false;
 				}else{
-					ts = '电子邮箱*<img class="reg_right" src="/statics/css/website/m/images/reg_right.png">';
+					ts = '电子邮箱*<img class="reg_right" src="%bind(:1)/statics/css/website/m/images/reg_right.png">';
 					emailCheckB = true;
 				}
 				
@@ -484,11 +484,11 @@
 			var ts = '';
 			var tsyj = '';
 			if($("#"+id+"").val().trim().length<=0){
-				ts = '咨询内容(长文本)*<img class="reg_right" src="/statics/css/website/m/images/reg_wrong.png">';
+				ts = '咨询内容(长文本)*<img class="reg_right" src="%bind(:1)/statics/css/website/m/images/reg_wrong.png">';
 				tsyj = '必填项！';
 				zxnrCheckB = false;
 			}else{
-				ts = '咨询内容(长文本)*<img class="reg_right" src="/statics/css/website/m/images/reg_right.png">';
+				ts = '咨询内容(长文本)*<img class="reg_right" src="%bind(:1)/statics/css/website/m/images/reg_right.png">';
 				zxnrCheckB = true;
 			}
 			$("#zxnrT").html(ts);
