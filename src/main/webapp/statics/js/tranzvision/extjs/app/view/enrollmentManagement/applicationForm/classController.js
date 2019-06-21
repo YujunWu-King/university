@@ -2066,6 +2066,71 @@
             cmp.show();
         }
     },
+    onInterviewClose: function(btn){
+        //关闭窗口
+        this.getView().close();
+    },
+    //查看面试情况
+    interviewCheck: function(view, rowIndex){
+    	Ext.tzSetCompResourses("TZ_BMGL_BMBSH_COM");
+        //是否有访问权限
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_BMGL_BMBSH_COM"]["TZ_INTERVIEW_STD"];
+		if( pageResSet == "" || pageResSet == undefined){
+			Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+			return;
+		}
+		//该功能对应的JS类
+		var className = pageResSet["jsClassName"];
+		if(className == "" || className == undefined){
+			Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_INTERVIEW_STD，请检查配置。');
+			return;
+		}
+		
+		var contentPanel,cmp, className, ViewClass, clsProto;
+		var themeName = Ext.themeName;
+		
+		contentPanel = Ext.getCmp('tranzvision-framework-content-panel');			
+		contentPanel.body.addCls('kitchensink-example');
+
+		if(!Ext.ClassManager.isCreated(className)){
+			Ext.syncRequire(className);
+		}	
+		ViewClass = Ext.ClassManager.get(className);
+
+		clsProto = ViewClass.prototype;
+
+		if (clsProto.themes) {
+			clsProto.themeInfo = clsProto.themes[themeName];
+
+			if (themeName === 'gray') {
+				clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
+			} else if (themeName !== 'neptune' && themeName !== 'classic') {
+				if (themeName === 'crisp-touch') {
+					clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
+				}
+				clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
+			}
+			if (!clsProto.themeInfo) {
+				Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
+					themeName + '\'. Is this intentional?');
+			}
+		}
+
+		cmp = new ViewClass();
+		cmp.on('afterrender',function(panel){
+			
+		});
+		
+		tab = contentPanel.add(cmp);     
+		
+		contentPanel.setActiveTab(tab);
+
+		Ext.resumeLayouts(true);
+
+		if (cmp.floating) {
+			cmp.show();
+		}
+	},
     transValues:function(){
         var transvalueCollection = {},
             self = this;
