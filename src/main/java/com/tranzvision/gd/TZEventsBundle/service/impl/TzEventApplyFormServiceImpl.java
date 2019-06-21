@@ -744,7 +744,7 @@ public class TzEventApplyFormServiceImpl extends FrameworkImpl {
 							//非考生栏目活动报名不创建线索
 							if(!TZ_COLU_ID.equals(fksColu)) {
 								//报名成功创建线索
-								tzCreateClue(strApplyId, strBmrId);
+								tzCreateClue(strApplyId, strBmrId, str_bmr_phone);
 							}
 							
 							//发送报名成功站内信
@@ -803,7 +803,7 @@ public class TzEventApplyFormServiceImpl extends FrameworkImpl {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	private void tzCreateClue(String activityId, String bmrId){
+	private void tzCreateClue(String activityId, String bmrId, String phone){
 		System.out.println("activityId：" + activityId);
 		System.out.println("bmrId：" + bmrId);
 		JacksonUtil jacksonUtil = new JacksonUtil();
@@ -823,25 +823,34 @@ public class TzEventApplyFormServiceImpl extends FrameworkImpl {
 		String sql = "select A.TZ_CYR_NAME,A.OPRID,B.TZ_ZY_SJ,B.TZ_ZY_EMAIL from PS_TZ_NAUDLIST_T A left join PS_TZ_LXFSINFO_TBL B on(B.TZ_LXFS_LY='HDBM' and B.TZ_LYDX_ID=A.TZ_HD_BMR_ID) where TZ_ART_ID=? and TZ_HD_BMR_ID=?";
 		Map<String,Object> bmrMap = sqlQuery.queryForMap(sql, new Object[]{ activityId, bmrId });
 		
+		
 		if(bmrMap != null){
 			String name = bmrMap.get("TZ_CYR_NAME") == null ? "" : bmrMap.get("TZ_CYR_NAME").toString();
 			String oprid = bmrMap.get("OPRID") == null ? "" : bmrMap.get("OPRID").toString();
 			String mobile = bmrMap.get("TZ_ZY_SJ") == null ? "" : bmrMap.get("TZ_ZY_SJ").toString();
 			String email = bmrMap.get("TZ_ZY_EMAIL") == null ? "" : bmrMap.get("TZ_ZY_EMAIL").toString();
 			
-			String leadSql = "select TZ_LEAD_ID from PS_TZ_HDBMR_CLUE_T A where TZ_HD_BMR_ID=? and exists(select 'Y' from PS_TZ_XSXS_INFO_T where TZ_LEAD_ID=A.TZ_LEAD_ID and TZ_JG_ID=?) limit 0,1";
-			String leadId = sqlQuery.queryForObject(leadSql, new Object[]{ bmrId, orgId }, "String");
 			
-			if(leadId != null && !"".equals(leadId)){
-				count ++;
-				if(count < 10){
-					if("".equals(hasLeadName)){
-						hasLeadName = name;
-					}else{
-						hasLeadName += "，" + name;
-					}
-				}
-			}else{
+			//根据手机号查询是否存在未关闭的线索
+			sql = "select TZ_LEAD_ID from PS_TZ_XSXS_INFO_T where TZ_JG_ID=? and TZ_MOBILE<>' ' and TZ_MOBILE=? and TZ_LEAD_STATUS<>'G' order by ROW_ADDED_DTTM desc limit 0,1";
+			String existsClueId = sqlQuery.queryForObject(sql, new Object[]{ orgId, phone }, "String");
+			//更新线索
+			if(existsClueId != null){
+				PsTzXsxsInfoTWithBLOBs psTzXsxsInfoT = psTzXsxsInfoTMapper.selectByPrimaryKey(existsClueId);
+				psTzXsxsInfoT.setTzKhOprid(oprid);
+				
+				psTzXsxsInfoT.setTzRealname(name);
+				psTzXsxsInfoT.setTzKhOprid(oprid);
+				psTzXsxsInfoT.setRowLastmantOprid(oprid);
+				psTzXsxsInfoT.setRowLastmantDttm(new Date());
+				psTzXsxsInfoTMapper.updateByPrimaryKeySelective(psTzXsxsInfoT);
+				
+				PsTzHdbmrClueTKey psTzHdbmrClueTKey = new PsTzHdbmrClueTKey();
+				psTzHdbmrClueTKey.setTzHdBmrId(bmrId);
+				psTzHdbmrClueTKey.setTzLeadId(existsClueId);
+				
+				psTzHdbmrClueTMapper.insert(psTzHdbmrClueTKey);
+			}else {//创建线索
 				String TZ_LEAD_ID = String.valueOf(getSeqNum.getSeqNum("TZ_XSXS_INFO_T", "TZ_LEAD_ID"));
 				
 				PsTzXsxsInfoTWithBLOBs psTzXsxsInfoT = new PsTzXsxsInfoTWithBLOBs();
@@ -885,6 +894,63 @@ public class TzEventApplyFormServiceImpl extends FrameworkImpl {
 					}
 				}
 			}
+			
+			/*String leadSql = "select TZ_LEAD_ID from PS_TZ_HDBMR_CLUE_T A where TZ_HD_BMR_ID=? and exists(select 'Y' from PS_TZ_XSXS_INFO_T where TZ_LEAD_ID=A.TZ_LEAD_ID and TZ_JG_ID=?) limit 0,1";
+			String leadId = sqlQuery.queryForObject(leadSql, new Object[]{ bmrId, orgId }, "String");
+			
+			if(leadId != null && !"".equals(leadId)){
+				count ++;
+				if(count < 10){
+					if("".equals(hasLeadName)){
+						hasLeadName = name;
+					}else{
+						hasLeadName += "，" + name;
+					}
+				}
+			}else{
+				String TZ_LEAD_ID = String.valueOf(getSeqNum.getSeqNum("TZ_XSXS_INFO_T", "TZ_LEAD_ID"));
+				
+				PsTzXsxsInfoTWithBLOBs psTzXsxsInfoT = new PsTzXsxsInfoTWithBLOBs();
+				psTzXsxsInfoT.setTzLeadId(TZ_LEAD_ID);
+				psTzXsxsInfoT.setTzJgId(orgId);
+
+				psTzXsxsInfoT.setTzRsfcreateWay("E"); 营销活动
+				psTzXsxsInfoT.setTzLeadStatus("A");
+				
+				psTzXsxsInfoT.setTzRealname(name);
+				psTzXsxsInfoT.setTzKhOprid(oprid);
+				psTzXsxsInfoT.setTzEmail(email);
+				psTzXsxsInfoT.setTzMobile(mobile);
+				psTzXsxsInfoT.setRowAddedDttm(new Date());
+				psTzXsxsInfoT.setRowAddedOprid(currOprid);
+				psTzXsxsInfoT.setRowLastmantDttm(new Date());
+				psTzXsxsInfoT.setRowLastmantOprid(currOprid);
+				
+				int rtn = psTzXsxsInfoTMapper.insert(psTzXsxsInfoT);
+				
+				if(rtn > 0){
+					PsTzHdbmrClueTKey psTzHdbmrClueTKey = new PsTzHdbmrClueTKey();
+					psTzHdbmrClueTKey.setTzHdBmrId(bmrId);
+					psTzHdbmrClueTKey.setTzLeadId(TZ_LEAD_ID);
+					
+					psTzHdbmrClueTMapper.insert(psTzHdbmrClueTKey);
+					
+					//线索关联报名表
+					sql = "select max(TZ_APP_INS_ID) as TZ_APP_INS_ID from PS_TZ_FORM_WRK_T where OPRID=?";
+					Long appInsId = sqlQuery.queryForObject(sql, new Object[]{ oprid }, "Long");
+					if(appInsId != null && appInsId > 0){
+						PsTzXsxsBmbT psTzXsxsBmbT = new PsTzXsxsBmbT(); 
+						psTzXsxsBmbT.setTzLeadId(TZ_LEAD_ID);
+						psTzXsxsBmbT.setTzAppInsId(appInsId);
+						psTzXsxsBmbT.setRowAddedDttm(new Date());
+						psTzXsxsBmbT.setRowAddedOprid(currOprid);
+						psTzXsxsBmbT.setRowLastmantDttm(new Date());
+						psTzXsxsBmbT.setRowLastmantOprid(currOprid);
+						
+						psTzXsxsBmbTMapper.insert(psTzXsxsBmbT);
+					}
+				}
+			}*/
 		}
 	}
 }

@@ -201,6 +201,179 @@ function classSelectCancle(){
     $(".sq_pop").hide();
 }
 
+//复试资料删除
+function deleteAttachment(appins,sysfileName,layero){
+	var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_UPLOADFILES_STD","OperateType":"U","comParams":{ "delete":[{"appins":"'+appins+'","sysfileName":"'+sysfileName+'"}]}}';
+	var layerIndex = layer.load(1,{
+		  shade: [0.3,'#000'] 
+	});
+	$.ajax({
+		type: "post",
+		url: "/dispatcher", 									
+		data:{
+			tzParams:tzParams
+		},
+		dataType: "json",
+		success: function(response){
+			layer.close(layerIndex);
+			queryFszl()
+		}
+	});
+}
+
+//查询复试资料
+function queryFszl(){
+	var classId = $("#classId").val();
+	  var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_BMGL_AUDIT_STD","OperateType":"queryFile","comParams":{"classId":"'+classId+'"}}';
+	  $.ajax({
+			type: "POST",
+			url: "/dispatcher",
+			data: {
+				tzParams: tzParams
+			},
+			dataType:"JSON",
+	        xhrFields:{
+	        	withCredentials:true
+	        },
+			success: function (response) {
+	           var html = "";
+	           var fileList = response.comContent.root;
+	           if(fileList != null && fileList.length > 0){
+	        	   for(var i = 0;i < fileList.length;i++){
+	        		   var fileName = fileList[i].fileName;
+	        		   var TZ_XXX_BH = fileList[i].TZ_XXX_BH;
+	        		   var xuhao = fileList[i].xuhao;
+	        		   var strfileDate = fileList[i].strfileDate;
+	        		   var appInsId = fileList[i].appInsId;
+	        		   var TZ_XXX_BH = fileList[i].TZ_XXX_BH;
+	        		   
+	        		   html += "<tr id='"+TZ_XXX_BH+"'>";
+	        		   html += "<td>"+(i+1)+"</td>";
+	        		   html += "<td>"+strfileDate+"</td>";
+	        		   html += "<td>";
+	        		   html += "<button type='button' class='layui-btn layui-btn-sm' onclick=deleteAttachment('"+appInsId+"','"+TZ_XXX_BH+"')><i class='layui-icon'>删除</i></button>";
+	        		   html += "</td>";
+	        		   html += "</tr>";
+	        	   }
+	           }
+	           $("#myTbody").html(html);
+			},
+			failure: function (e) {
+				console.log(e)
+			}
+		});
+}
+
+//打开复试资料上传窗口
+function openFszl(){
+	$('.layui-btn').click(function(){
+		var strVar = "";
+	    strVar += "<table class=\"layui-table\">\n";
+	    strVar += "  <thead>\n";
+	    strVar += "    <tr>\n";
+	    strVar += "      <th>序号<\/th>\n";
+	    strVar += "      <th>附件名称<\/th>\n";
+	    strVar += "      <th>操作<\/th>\n";
+	    strVar += "    <\/tr> \n";
+	    strVar += "  <\/thead>\n";
+	    strVar += "  <tbody id='myTbody'>\n";
+	    strVar += "  <\/tbody>\n";
+	    strVar += "<\/table>\n";
+		layer.open({
+			  title: '补充资料上传',
+			  area: ['500px', '300px'],
+			  content: '<button type="button" class="layui-btn" id="test1">'
+				  		+'<i class="layui-icon"></i>上传文件'
+				  		+'</button>' + strVar,
+				  		
+			  yes: function(index, layero){
+				    //do something
+				    layer.close(index); //如果设定了yes回调，需进行手工关闭
+				  },
+			  success: function(layero, index){
+				  queryFszl();
+				  
+				  var date = new Date();
+				  var dateStr = date.getFullYear() +""+ (date.getMonth() + 1) +""+ date.getDate();
+				  layui.use('upload', function(){
+					  var index;
+					  var upload = layui.upload;
+					  //执行实例
+					  var uploadInst = upload.render({
+					    elem: '#test1', //绑定元素
+					    url: '/UpdServlet', //上传接口
+					    accept: 'file', //允许上传的文件类型
+					    exts: 'docx|jpg|xlsx|doc|pdf|jpeg',
+					    field:'orguploadfile',
+					    multiple: true,//多附件上传
+					    drag:true,
+					    data: {
+						    	//filePath:'/enrollment/' + dateStr,
+						    	//orguploadfile: '213'
+					    	},
+					    before: function(){
+	                            index = layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
+	                            //loading层
+	                            index = top.layer.load(1, {
+	                                shade: [0.5,'#ccc'],//0.1透明度的白色背景
+	                            });
+	                            //setTimeout(function () {
+	                                //layer.close(index)
+	                            //}, 2000)
+	                    },
+	                    allDone: function(obj){ //当文件全部被提交后，才触发
+	                        console.log(obj.total); //得到总文件数
+	                        console.log(obj.successful); //请求成功的文件数
+	                        console.log(obj.aborted); //请求失败的文件数
+	                    },
+					    done: function(res){
+					    	layer.close(index)
+					    	//上传完毕回调
+					    	var accessPath = res.msg.accessPath;
+					    	var filename = res.msg.filename;
+					    	var sysFileName = res.msg.sysFileName;
+					    	var appinsId = $("#appinsId").val();
+					    	var tzParams = {
+		                    		"ComID":"TZ_BMGL_BMBSH_COM",
+		                    		"PageID":"TZ_UPLOADFILES_STD",
+		                    		"OperateType":"U",
+		                    		"comParams":
+		                    			{ "add":
+		                    				[{
+		                    					"strAppId":appinsId,
+		                    					"refLetterFile":sysFileName,
+		                    					"FileName":filename,
+		                    					"strSysFile":sysFileName,
+		                    					"fileUrl":accessPath,
+		                    					"fileType":1
+		                    				}]
+		                    			}
+					    			};
+					    	tzParams = JSON.stringify(tzParams);
+					    	$.ajax({
+					    		type: "post",
+					    		url: "/dispatcher", 									
+					    		data:{
+					    			tzParams:tzParams
+					    		},
+					    		dataType: "json",
+					    		success: function(response){
+					    			//layer.close(layerIndex);
+					    			queryFszl()
+					    		}
+					    	});
+					    	
+					    },
+					    error: function(){
+					      //请求异常回调
+					    	alert("上传失败!");
+					    }
+					  });
+					});
+				  }
+		});
+	})
+}
 
 $(document).ready(function(){
 	
@@ -286,7 +459,10 @@ $(document).ready(function(){
 					})
 				}
 			})
-				
+			
+			//打开复试资料上传窗口
+			openFszl();
+			
 		},
 		failure: function () {
 		  	

@@ -389,8 +389,12 @@ public class ApplicationCenter2ServicerImpl extends FrameworkImpl {
 						}
 						String TZ_SYSVAR = "";
 
-						
-						
+						String fszlHtml = "";
+						//如果是复试阶段，增加复试资料上传按钮
+						if("GD_DT_104".equals(TZ_APPPRO_ID)) {
+							fszlHtml = "<p><button type=\"button\" class=\"layui-btn\">资料补充上传</button></p><br/><br/><br/>";
+									
+						}
 						
 						// 没有发布回复短语则统一取默认的
 						// update by caoy @2018-3-14 回复短语如果有配置系统变量
@@ -424,7 +428,8 @@ public class ApplicationCenter2ServicerImpl extends FrameworkImpl {
 								TZ_APPPRO_RST = result[1];
 							}
 						} 
-
+						TZ_APPPRO_RST = fszlHtml + TZ_APPPRO_RST;
+						
 						//是否在听众列表中
 						boolean flag1 = false;
 						//是否已经填写在线调查
@@ -466,6 +471,7 @@ public class ApplicationCenter2ServicerImpl extends FrameworkImpl {
 								//该学生在调查问卷的听众中，且未完成在线调查，需要完成在线调查才能查看面试结果
 								if(flag1 && flag2) {
 									TZ_APPPRO_RST = "<p><a class=\"zxj_more1\" href='"+url+"'>填写在线调查</a></p>";
+									TZ_APPPRO_RST = "<table class=\"table_style1\"><thead><tr><td width=\"16.6%\">是否有在线调查</td></tr></thead><tbody><tr><td style=\"word-break:break-all\">是，在线调查请<a href='"+url+"'>点击此处</a></td></tr></tbody></table>";
 								}
 							}
 						}

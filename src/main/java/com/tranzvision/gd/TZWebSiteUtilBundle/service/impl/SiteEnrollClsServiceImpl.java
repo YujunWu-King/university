@@ -858,7 +858,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				//String sql = "select TZ_LEAD_ID from PS_TZ_XSXS_INFO_T where TZ_JG_ID=? and ((TZ_MOBILE<>' ' and TZ_MOBILE=?) or (TZ_EMAIL<>' ' and TZ_EMAIL=?)) and TZ_LEAD_STATUS<>'G' order by ROW_ADDED_DTTM desc limit 0,1";
 				//根据手机号查询是否存在未关闭的线索
 				String sql = "select TZ_LEAD_ID from PS_TZ_XSXS_INFO_T where TZ_JG_ID=? and TZ_MOBILE<>' ' and TZ_MOBILE=? and TZ_LEAD_STATUS<>'G' order by ROW_ADDED_DTTM desc limit 0,1";
-				String existsClueId = jdbcTemplate.queryForObject(sql, new Object[]{ strOrgId, strTZ_MOBILE, strTZ_EMAIL }, "String");
+				String existsClueId = jdbcTemplate.queryForObject(sql, new Object[]{ strOrgId, strTZ_MOBILE }, "String");
 				if(existsClueId != null){
 					PsTzXsxsInfoTWithBLOBs psTzXsxsInfoT = psTzXsxsInfoTMapper.selectByPrimaryKey(existsClueId);
 					psTzXsxsInfoT.setTzKhOprid(oprId);
@@ -874,6 +874,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 						}
 					}
 					
+					psTzXsxsInfoT.setTzKhOprid(oprId);
 					psTzXsxsInfoT.setRowLastmantOprid(oprId);
 					psTzXsxsInfoT.setRowLastmantDttm(new Date());
 					psTzXsxsInfoTMapper.updateByPrimaryKeySelective(psTzXsxsInfoT);

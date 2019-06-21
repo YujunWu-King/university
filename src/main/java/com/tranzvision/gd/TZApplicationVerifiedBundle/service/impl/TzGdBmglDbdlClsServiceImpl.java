@@ -182,6 +182,8 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 					String strDbProgressName = "TZGD_DBDL_PROC_01";
 					if("B".equals(strPackageType)){
 						strDbProgressName = "TZGD_DBDL_PROC_02";
+					}else if("C".equals(strPackageType)) {	//复试资料打包下载
+						strDbProgressName = "TZGD_DBDL_PROC_03";
 					}
 					BaseEngine tmpEngine = tZGDObject.createEngineProcess(currentOrgId, strDbProgressName);
 					

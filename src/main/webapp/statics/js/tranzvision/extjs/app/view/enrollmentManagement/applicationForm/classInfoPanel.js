@@ -142,6 +142,11 @@
                             handler:"packageAllAndDownload"
                         },'-',
                         {
+                            text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.packageFszlAll","将搜索结果考生复试材料批量打包"),
+                            iconCls:"zip",
+                            handler:"packageFSZL"
+                        },'-',
+                        {
                             text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.downloadPackages","查看打包结果并下载"),
                             iconCls:"download",
                             handler:"viewAndDownload"
