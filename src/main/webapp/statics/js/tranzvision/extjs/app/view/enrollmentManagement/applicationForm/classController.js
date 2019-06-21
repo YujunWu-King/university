@@ -847,6 +847,58 @@
         form.setValues({appInsID:"'"+strAppId+"'",packageType:"A"});
         win.show();
     },
+    /*将搜索结果考生复试材料批量打包*/
+    packageFSZL:function(btn){
+        var grid = btn.findParentByType("grid");
+        var store = grid.getStore();
+        var data = store.getData();
+        var dataLen = data.length;
+
+        if(dataLen.length<1) {
+            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"), Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.youSelectedNothing","您没有选中任何记录"));
+            return;
+        }else{
+            var strAppId;
+            var totalCount = store.totalCount;
+
+            var classId = this.getView().classID;
+            var batchId = this.getView().batchID;
+
+            var tzStoreParams = store.tzStoreParams;
+            var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_BMGL_STU_STD","OperateType":"tzExportAll","comParams":{"classId":"' + classId + '","batchId":"' + batchId + '","tzStoreParams":' + Ext.JSON.encode(tzStoreParams) + ',"totalCount":"' + totalCount + '"}}';
+            Ext.tzLoadAsync(tzParams,function(responseData){
+                strAppId = responseData.result;
+            });
+        }
+        // Ext.MessageBox.alert('测试',strAppId);
+        //是否有访问权限
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_BMGL_BMBSH_COM"]["TZ_BMGL_DBDL_STD"];
+        if( pageResSet == "" || pageResSet == undefined){
+            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"),Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.nmyqx","您没有权限"));
+            return;
+        }
+        //该功能对应的JS类
+        var className = pageResSet["jsClassName"];
+        if(className == "" || className == undefined){
+            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"),Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.wzdgjs","未找到该功能页面对应的JS类，请检查配置。"));
+            return;
+        }
+        var win = this.lookupReference('cldbForm');
+        if (!win) {
+            Ext.syncRequire(className);
+            ViewClass = Ext.ClassManager.get(className);
+            //新建类
+            win = new ViewClass();
+            this.getView().add(win);
+        }
+
+        //操作类型设置为新增
+        win.actType = "add";
+        var form = win.child("form").getForm();
+        form.reset();
+        form.setValues({appInsID:"'"+strAppId+"'",packageType:"C"});
+        win.show();
+    },
     viewAndDownload:function(btn){
         //是否有访问权限
         var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_BMGL_BMBSH_COM"]["TZ_BMGL_DBDL_STD"];
