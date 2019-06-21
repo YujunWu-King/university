@@ -938,6 +938,13 @@ public class tzOnlineAppEngineImpl {
 						sb.append("ROW_LASTMANT_OPRID=? where TZ_CLASS_ID = ? AND OPRID = ?");
 						sqlQuery.update(sb.toString(), new Object[] { newClassId, strAppOprId, numAppInsId, strBathId,
 								new Date(), oprid, new Date(), oprid, strClassId, strAppOprId });
+						
+						//判断更新操作后报名表是否关联线索表，没有则关联线索--张斌
+						if(checkXSXSByAppINSId(numAppInsId.toString())==0) {
+							//进行销售线索关联
+							System.out.println("ADD XSXS");
+							this.addXSXS2(strAppOprId, String.valueOf(numAppInsId), jgID, isWeChart);
+						}
 					} else {
 						PsTzFormWrkT psTzFormWrkT = new PsTzFormWrkT();
 						psTzFormWrkT.setTzClassId(newClassId);
@@ -966,6 +973,13 @@ public class tzOnlineAppEngineImpl {
 						psTzFormWrkT.setRowLastmantDttm(new Date());
 						psTzFormWrkT.setTzBatchId(strBathId);
 						psTzFormWrkTMapper.updateByPrimaryKeySelective(psTzFormWrkT);
+						
+						//判断更新操作后报名表是否关联线索表，没有则关联线索--张斌
+						if(checkXSXSByAppINSId(numAppInsId.toString())==0) {
+							//进行销售线索关联
+							System.out.println("ADD XSXS");
+							this.addXSXS2(strAppOprId, String.valueOf(numAppInsId), jgID, isWeChart);
+						}
 					} else {
 						PsTzFormWrkT psTzFormWrkT = new PsTzFormWrkT();
 						psTzFormWrkT.setTzClassId(strClassId);
@@ -1224,13 +1238,15 @@ public class tzOnlineAppEngineImpl {
 		boolean falge = false;
 
 		// 先按照OprId 检查，如果存在，并且未关联报名表,去关联报名表，创建方式为D(会员注册)的优先
+		String TZ_LEAD_ID_temp="";
 		for (Object object : list) {
 			map = (Map<String, Object>) object;
-			TZ_LEAD_ID = map.get("TZ_LEAD_ID") == null ? "" : String.valueOf(map.get("TZ_LEAD_ID"));
-			if (checkXSXS(TZ_LEAD_ID) != 0) {
+			TZ_LEAD_ID_temp = map.get("TZ_LEAD_ID") == null ? "" : String.valueOf(map.get("TZ_LEAD_ID"));
+			if (checkXSXS(TZ_LEAD_ID_temp) != 0) {
 				continue;
 			} else {
-				falge = true;
+				//falge = true;
+				TZ_LEAD_ID = TZ_LEAD_ID_temp;
 				TZ_RSFCREATE_WAY = map.get("TZ_RSFCREATE_WAY") == null ? "" : String.valueOf(map.get("TZ_RSFCREATE_WAY"));
 				if (TZ_RSFCREATE_WAY.equals("D")) {
 					break;
@@ -1240,7 +1256,7 @@ public class tzOnlineAppEngineImpl {
 
 		System.out.println("按OprId查询结果：" + falge);
 
-		if (falge) {
+		if (!TZ_LEAD_ID.equals("")) {
 			// 按OprId找到符合条件的线索 绑定报名表
 			System.out.println("绑定报名表");
 			bangdBMB(TZ_LEAD_ID, AppInsId, strAppOprId);
@@ -1274,6 +1290,7 @@ public class tzOnlineAppEngineImpl {
 
 			// 按照手机来判断，如果存在，TZ_KH_OPRID为空
 			// 或和strAppOprId相等,并且未关联报名表,去关联报名表，创建方式为D(会员注册)的优先
+			String TZ_LEAD_ID_temp2="";
 			for (Object object : list) {
 				map = (Map<String, Object>) object;
 				TZ_KH_OPRID = map.get("TZ_KH_OPRID") == null ? "" : String.valueOf(map.get("TZ_KH_OPRID"));
@@ -1281,11 +1298,12 @@ public class tzOnlineAppEngineImpl {
 				if (!TZ_KH_OPRID.equals("") && !TZ_KH_OPRID.equals(strAppOprId)) {
 					continue;
 				} else {
-					TZ_LEAD_ID = map.get("TZ_LEAD_ID") == null ? "" : String.valueOf(map.get("TZ_LEAD_ID"));
-					if (checkXSXS(TZ_LEAD_ID) != 0) {
+					TZ_LEAD_ID_temp2 = map.get("TZ_LEAD_ID") == null ? "" : String.valueOf(map.get("TZ_LEAD_ID"));
+					if (checkXSXS(TZ_LEAD_ID_temp2) != 0) {
 						continue;
 					} else {
-						falge = true;
+						//falge = true;
+						TZ_LEAD_ID = TZ_LEAD_ID_temp2;
 						TZ_RSFCREATE_WAY = map.get("TZ_RSFCREATE_WAY") == null ? ""
 								: String.valueOf(map.get("TZ_RSFCREATE_WAY"));
 						if (TZ_RSFCREATE_WAY.equals("D")) {
@@ -1297,7 +1315,7 @@ public class tzOnlineAppEngineImpl {
 
 			System.out.println("按手机查询结果：" + falge);
 
-			if (falge) {
+			if (!TZ_LEAD_ID.equals("")) {
 				// 按手机找到符合条件的线索 绑定报名表
 				System.out.println("绑定报名表");
 				bangdBMB(TZ_LEAD_ID, AppInsId, strAppOprId);
@@ -1743,6 +1761,8 @@ public class tzOnlineAppEngineImpl {
 					psTzFormWrkT.setRowLastmantOprid(oprid);
 					psTzFormWrkT.setRowLastmantDttm(new Date());
 					psTzFormWrkTMapper.updateByPrimaryKeySelective(psTzFormWrkT);
+					
+					
 				} else {
 					returnMsg = "failed";
 
@@ -3844,5 +3864,10 @@ public class tzOnlineAppEngineImpl {
 		}
 		return b_flag;
 	}
-
+	//检查切换班级保存后是否关联线索
+		private int checkXSXSByAppINSId(String TZ_APP_INS_ID) {
+			String sql = "select count(TZ_LEAD_ID) from PS_TZ_XSXS_BMB_T where TZ_APP_INS_ID=?";
+			int i=sqlQuery.queryForObject(sql, new Object[] { TZ_APP_INS_ID }, "Integer");
+			return i;
+		}
 }

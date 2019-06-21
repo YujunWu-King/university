@@ -981,8 +981,10 @@ public class TzClueDetailServiceImpl extends FrameworkImpl {
 				return jacksonUtil.Map2json(mapRet);
 			}
 			//查询该人已参加的活动
-			sql = "select TZ_ART_ID from PS_TZ_NAUDLIST_T where OPRID=?";
-			List<Map<String, Object>> actList = sqlQuery.queryForList(sql, new Object[] {oprid});
+			//sql = "select TZ_ART_ID from PS_TZ_NAUDLIST_T where OPRID=?";
+			sql = "select TZ_ART_ID from PS_TZ_NAUDLIST_T WHERE TZ_HD_BMR_ID IN (select TZ_HD_BMR_ID from PS_TZ_HDBMR_CLUE_T where TZ_LEAD_ID = ?)";
+			
+			List<Map<String, Object>> actList = sqlQuery.queryForList(sql, new Object[] {clueId});
 			sql = "select TZ_ART_ID,TZ_NACT_NAME,TZ_START_DT,TZ_END_DT,TZ_NACT_ADDR,TZ_APPF_DT,TZ_APPE_DT from PS_TZ_ART_HD_TBL WHERE TZ_ART_ID = ?";
 			if(actList != null && actList.size() > 0) {
 				for (Map<String, Object> map : actList) {

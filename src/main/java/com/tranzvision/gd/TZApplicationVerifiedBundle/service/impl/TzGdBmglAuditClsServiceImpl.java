@@ -369,7 +369,7 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 			
 			numFileID = numFileID + 1;
 
-			String fileSql = "SELECT ATTACHUSERFILE,ATTACHSYSFILENAME,TZ_ACCESS_PATH FROM PS_TZ_FORM_ATT_T WhERE TZ_APP_INS_ID =? and FILETYPE=? ORDER BY TZ_INDEX";
+			String fileSql = "SELECT A.ATTACHUSERFILE,A.ATTACHSYSFILENAME,A.TZ_ACCESS_PATH,B.TZ_XXX_MC FROM PS_TZ_FORM_ATT_T A,PS_TZ_FORM_ATT2_T B WhERE A.TZ_APP_INS_ID=B.TZ_APP_INS_ID AND B.TZ_XXX_BH =A.ATTACHSYSFILENAME AND A.TZ_APP_INS_ID =? and A.FILETYPE=? ORDER BY A.ROW_ADDED_DTTM";
 			List<Map<String, Object>> list2 = jdbcTemplate.queryForList(fileSql,
 					new Object[] { appInsId, fILETYPE});
 			if (list2 != null && list2.size() > 0) {
@@ -377,7 +377,7 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 				strfileDate = "";
 				//int fileNum = 1;
 				for (int j = 0; j < list2.size(); j++) {
-					fileName = (String) list2.get(j).get("ATTACHUSERFILE");
+					fileName = (String) list2.get(j).get("TZ_XXX_MC");
 					sysFileName = (String) list2.get(j).get("ATTACHSYSFILENAME");
 					accessUrl = (String) list2.get(j).get("TZ_ACCESS_PATH");
 
@@ -1056,8 +1056,9 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 				errorMsg[0] = "1";
 				errorMsg[1] = e.toString();
 			}
-		}else {
-			if ("PWD".equals(oprType)) {
+		}
+			
+		if ("PWD".equals(oprType)) {
 				try {
 					jacksonUtil.json2Map(strParams);
 					// 报名表实例编号
@@ -1082,12 +1083,104 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 					errorMsg[1] = "修改密码失败" + e.toString();
 				}
 			}
+		if("queryFile".equals(oprType)) {
+			return queryFile(strParams);
 		}
 
 		Map<String, Object> mapRet2 = new HashMap<String, Object>();
 		mapRet2.put("formData", mapRet);
 
 		return jacksonUtil.Map2json(mapRet2);
+	}
+
+	//学生端查询复试资料
+	private String queryFile(String strParams) {
+		Map<String, Object> mapRet = new HashMap<String, Object>();
+		mapRet.put("total", 0);
+		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
+		mapRet.put("root", listData);
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		int total = 0;
+		try {
+			jacksonUtil.json2Map(strParams);
+			String classId = jacksonUtil.getString("classId");
+			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+
+			// 报名表编号;
+			long appInsId = 0L;
+			appInsId = jdbcTemplate.queryForObject(
+					"SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID=? AND OPRID=?",
+					new Object[] { classId, oprid }, "Long");
+
+			String TZ_TITLE = "", TZ_COM_LMC = "";
+
+			String strfileDate = "";
+			int numFileID = 0;
+			
+			numFileID = numFileID + 1;
+
+			String fileSql = "SELECT A.ATTACHUSERFILE,A.ATTACHSYSFILENAME,A.TZ_ACCESS_PATH,B.TZ_XXX_MC FROM PS_TZ_FORM_ATT_T A,PS_TZ_FORM_ATT2_T B WhERE A.TZ_APP_INS_ID=B.TZ_APP_INS_ID AND B.TZ_XXX_BH =A.ATTACHSYSFILENAME AND A.TZ_APP_INS_ID =? and A.FILETYPE=1 ORDER BY A.ROW_ADDED_DTTM";
+			List<Map<String, Object>> list2 = jdbcTemplate.queryForList(fileSql,
+					new Object[] { appInsId});
+			if (list2 != null && list2.size() > 0) {
+				String fileName = "", sysFileName = "", accessUrl = "";
+				strfileDate = "";
+				//int fileNum = 1;
+				for (int j = 0; j < list2.size(); j++) {
+					fileName = (String) list2.get(j).get("TZ_XXX_MC");
+					sysFileName = (String) list2.get(j).get("ATTACHSYSFILENAME");
+					accessUrl = (String) list2.get(j).get("TZ_ACCESS_PATH");
+
+					if (fileName != null && !"".equals(fileName) && sysFileName != null
+							&& !"".equals(sysFileName) && accessUrl != null && !"".equals(accessUrl)) {
+						if (accessUrl.lastIndexOf("/") + 1 == accessUrl.length()) {
+							accessUrl = request.getContextPath() + accessUrl + sysFileName;
+						} else {
+							accessUrl = request.getContextPath() + accessUrl + "/" + sysFileName;
+						}
+					} else {
+						accessUrl = "";
+					}
+					if (fileName == null) {
+						fileName = "";
+					}
+
+					//if (fileNum == 1) {
+						strfileDate = tzGdObject.getHTMLText(
+								"HTML.TZApplicationVerifiedBundle.TZ_GD_IMAGELINK_HTML",fileName,
+								accessUrl, String.valueOf(numFileID));
+					/*} else {
+						strfileDate = strfileDate + "<br>"
+								+ tzGdObject.getHTMLText(
+										"HTML.TZApplicationVerifiedBundle.TZ_GD_IMAGELINK_HTML",fileName,
+										accessUrl, String.valueOf(numFileID));
+					}*/
+
+					// xuhao = xuhao + 1;
+					//fileNum = fileNum + 1;
+					Map<String, Object> jsonmap = new HashMap<>();
+					jsonmap.put("appInsId", appInsId);
+					jsonmap.put("strfileDate", strfileDate);
+					jsonmap.put("xuhao", numFileID);
+					jsonmap.put("TZ_XXX_BH", sysFileName);
+					jsonmap.put("TZ_XXX_MC", TZ_TITLE);
+					jsonmap.put("fileLinkName", "");
+					jsonmap.put("TZ_COM_LMC", TZ_COM_LMC);
+					jsonmap.put("fileName", fileName);
+					total++;
+					listData.add(jsonmap);
+				}
+			}
+
+			strfileDate = "";
+
+			mapRet.replace("total", total);
+			mapRet.replace("root", listData);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return jacksonUtil.Map2json(mapRet);
 	}
 
 	// 流程预览;
