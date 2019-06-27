@@ -796,7 +796,7 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.enrollmentClueControl
                 cmp.show();
             }
         }else{
-            Ext.Msg.alert("提示","您选中的记录没有短信");
+            Ext.Msg.alert("提示","您选中的记录没有手机号码");
             return;
         }
     },
@@ -1613,12 +1613,12 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.enrollmentClueControl
 
             if(noMobileCount==checkLen) {
                 //不存在有短信的数据
-                Ext.MessageBox.alert('提示','您选中的记录没有短信');
+                Ext.MessageBox.alert('提示','您选中的记录没有手机号码');
                 return;
             } else {
 
                 if(noMobileName!="") {
-                    Ext.MessageBox.alert('提示',noMobileName + '，没有电话');
+                    Ext.MessageBox.alert('提示',noMobileName + '，没有手机号码');
                 }
 
                 var params = {
