@@ -640,36 +640,53 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.clueDetailPanel',{
 	                    width:100,
 	                    flex:1
 	                },{
-	                    text:'活动地点',
-	                    dataIndex:'TZ_NACT_ADDR',
+	                    text:'报名时间',
+	                    dataIndex:'TZ_REG_TIME',
 	                    width:90,
 	                    sortable:false,
-	                    flex:1
+	                    flex:1,
+	                    renderer:function(v){
+	                    	return Ext.Date.format(new Date(v),"Y-m-d H:i:s");
+	                    }
+	                    
 	                },{
-	                    text:'活动开始日期',
-	                    dataIndex:'TZ_START_DT',
+	                    text:'报名渠道',
+	                    dataIndex:'TZ_ZXBM_LY',
 	                    width:90,
 	                    sortable:false,
-	                    flex:1
+	                    flex:1,
+	                    renderer:function(v){
+	                    	if(v == 'A'){
+	                    		return '手机'
+	                    	}else if(v == 'B'){
+	                    		return '网站'
+	                    	}else if(v == 'C'){
+	                    		return '短信'
+	                    	}else if(v == 'D'){
+	                    		return '邮件'
+	                    	}else{
+	                    		return v
+	                    	}
+	                    }
 	                },{
-	                    text:'活动结束日期',
-	                    dataIndex:'TZ_END_DT',
+	                    text:'签到状态',
+	                    dataIndex:'TZ_BMCY_ZT',
 	                    width:110,
 	                    sortable:false,
-	                    flex:1
-	                },{
-	                    text:'报名开始日期',
-	                    dataIndex:'TZ_APPF_DT',
-	                    width:140,
-	                    sortable:false,
-	                    flex:1
-	                },{
-	                    text:'报名结束日期',
-	                    dataIndex:'TZ_APPE_DT',
-	                    sortable:false,
-	                    minWidth:120,
-	                    width: 130,
-	                    flex:1
+	                    flex:1,
+	                    renderer:function(v){
+	                    	if(v == 'A'){
+	                    		return '已参与'
+	                    	}else if(v == 'B'){
+	                    		return '其他原因为参与'
+	                    	}else if(v == 'C'){
+	                    		return '无故缺席'
+	                    	}else if(v == 'D'){
+	                    		return '请假'
+	                    	}else{
+	                    		return v
+	                    	}
+	                    }
 	                }]/*,
 	                bbar:{
 	                    xtype:'pagingtoolbar',

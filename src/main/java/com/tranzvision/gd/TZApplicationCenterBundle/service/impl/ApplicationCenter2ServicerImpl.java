@@ -459,9 +459,9 @@ public class ApplicationCenter2ServicerImpl extends FrameworkImpl {
 									}
 								}
 								
-								sql = "select count(*) from PS_TZ_DC_INS_T where TZ_DC_WJ_ID = ? and PERSON_ID = ?";
-								int count2 = jdbcTemplate.queryForObject(sql, new Object[] {TZ_SURVEY_ID, oprid}, "int");
-								if(count2 > 0) {
+								sql = "select TZ_APP_INS_ID from PS_TZ_DC_INS_T where TZ_DC_WJ_ID = ? and PERSON_ID = ?";
+								int insId = jdbcTemplate.queryForObject(sql, new Object[] {TZ_SURVEY_ID, oprid}, "int");
+								if(insId != -1) {
 									flag2 = false;
 								}
 								
@@ -472,6 +472,8 @@ public class ApplicationCenter2ServicerImpl extends FrameworkImpl {
 								if(flag1 && flag2) {
 									TZ_APPPRO_RST = "<p><a class=\"zxj_more1\" href='"+url+"'>填写在线调查</a></p>";
 									TZ_APPPRO_RST = "<table class=\"table_style1\"><thead><tr><td width=\"16.6%\">是否有在线调查</td></tr></thead><tbody><tr><td style=\"word-break:break-all\">是，在线调查请<a href='"+url+"'>点击此处</a></td></tr></tbody></table>";
+								}else if(flag1 && !flag2) {
+									TZ_APPPRO_RST += "<table class=\"table_style1\"><thead><tr><td width=\"16.6%\">查看在线调查</td></tr></thead><tbody><tr><td style=\"word-break:break-all\"><a href='"+url+"'>查看在线调查</a></td></tr></tbody></table>";
 								}
 							}
 						}

@@ -23,14 +23,14 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
 /**
- * 材料面试评审系统前端控制器
+ * 面试秘书评审系统前端控制器
  * 
  * @author ShaweYet
  * @since 2017/02/22
  */
 @Controller
 @RequestMapping(value = { "/evaluation" })
-public class EvaluationSystemController {
+public class SecretaryEvaluationController {
 	@Autowired
 	private TZGDObject tzGdObject;
 	@Autowired
@@ -44,70 +44,8 @@ public class EvaluationSystemController {
 	
 	private final String cookieOrgId = "tzmo";
 	
-	@RequestMapping(value = { "/material/{orgid}" }, produces = "text/html;charset=UTF-8")
-	@ResponseBody
-	public String materialEvaluationLogin(HttpServletRequest request, HttpServletResponse response,
-			@PathVariable(value = "orgid") String orgid) {
 		
-		/*登录页面内容*/
-		String loginHtml = "";
-		try {
-			orgid = tzFilterIllegalCharacter.filterDirectoryIllegalCharacter(orgid).toUpperCase();
-
-			String sql = "select 'Y' from PS_TZ_JG_BASE_T where TZ_JG_EFF_STA='Y' AND upper(TZ_JG_ID)=?";
-
-			String orgExist = sqlQuery.queryForObject(sql,new Object[]{orgid},"String");
-			
-			if("Y".equals(orgExist)){
-				loginHtml = tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_METERIAL_EVALUATION_LOGIN",request.getContextPath(),orgid);
-			}else{
-				loginHtml = "无效的机构："+orgid+"，请确认您输入的浏览器地址是否正确！";
-			}
-
-			
-		} catch (TzSystemException e) {
-			e.printStackTrace();
-			loginHtml = "";
-		}
-		return loginHtml;
-	}
-	
-	
-	@RequestMapping(value = { "/material/index" }, produces = "text/html;charset=UTF-8")
-	@ResponseBody
-	public String materialEvaluationIndex(HttpServletRequest request, HttpServletResponse response) {
-
-		String indexHtml = "";
-		try {
-			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
-			String zhid = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
-			String userName = sqlQuery.queryForObject("SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?", new Object[]{oprid}, "String");
-			String timeOut = "false";
-			
-			// 判断下用户有没有登录;
-			if (oprid == null || "".equals(oprid) || orgid == null || "".equals(orgid) || zhid == null
-					|| "".equals(zhid)) {
-				timeOut = "true";
-				
-				if(orgid==null||"".equals(orgid)){
-					orgid = tzCookie.getStringCookieVal(request, cookieOrgId);
-				}
-			}
-						
-			String contactUrl = sqlQuery.queryForObject("SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?", new Object[]{"TZ_EVALUATION_CONTACT_URL"}, "String");
-			String evaluationDescriptionUrl = sqlQuery.queryForObject("SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?", new Object[]{"TZ_EVALUATION_M_DESCRIPTION_URL"}, "String");
-			indexHtml = tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_METERIAL_EVALUATION_INDEX",request.getContextPath(),orgid,timeOut,userName,contactUrl==null?"javascript:void(0)":contactUrl,evaluationDescriptionUrl==null?"javascript:void(0)":evaluationDescriptionUrl);
-			
-		} catch (TzSystemException e) {
-			e.printStackTrace();
-			indexHtml = e.toString();
-		}
-		return indexHtml;
-	}
-	
-	
-	@RequestMapping(value = { "/interview/{orgid}" }, produces = "text/html;charset=UTF-8")
+	@RequestMapping(value = { "/secretary/{orgid}" }, produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String interviewEvaluationLogin(HttpServletRequest request, HttpServletResponse response,
 			@PathVariable(value = "orgid") String orgid) {
@@ -122,7 +60,7 @@ public class EvaluationSystemController {
 			String orgExist = sqlQuery.queryForObject(sql,new Object[]{orgid},"String");
 			
 			if("Y".equals(orgExist)){
-				loginHtml = tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_INTERVIEW_EVALUATION_LOGIN",request.getContextPath(),orgid);
+				loginHtml = tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_SECRETARY_EVALUATION_LOGIN",request.getContextPath(),orgid);
 			}else{
 				loginHtml = "无效的机构："+orgid+"，请确认您输入的浏览器地址是否正确！";
 			}
@@ -136,7 +74,7 @@ public class EvaluationSystemController {
 	}
 	
 	
-	@RequestMapping(value = { "/interview/index" }, produces = "text/html;charset=UTF-8")
+	@RequestMapping(value = { "/secretary/index" }, produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String interviewEvaluationTouchIndex(HttpServletRequest request, HttpServletResponse response) {
 
@@ -148,6 +86,8 @@ public class EvaluationSystemController {
 			String contactUrl = sqlQuery.queryForObject("SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?", new Object[]{"TZ_EVALUATION_CONTACT_URL"}, "String");
 			
 			String page = request.getParameter("page");
+			
+			System.out.println("page:" + page);
 			if("batch".equals(page)||"evaluation".equals(page)){
 				String classId = request.getParameter("classId");
 				String batchId = request.getParameter("batchId");
@@ -175,12 +115,14 @@ public class EvaluationSystemController {
 				if("batch".equals(page)) {
 					List<Map<String,Object>> list_msgroup= new ArrayList<Map<String,Object>>();
 				
-					String sqlMsGroup= "SELECT DISTINCT A.TZ_PWEI_GRPID,B.TZ_GROUP_ID,B.TZ_GROUP_NAME";
+					/*String sqlMsGroup= "SELECT DISTINCT A.TZ_PWEI_GRPID,B.TZ_GROUP_ID,B.TZ_GROUP_NAME";
 					sqlMsGroup += " FROM PS_TZ_MSPS_KSH_TBL C,PS_TZ_MSPS_PW_TBL A,PS_TZ_INTEGROUP_T B";
 					sqlMsGroup += " WHERE A.TZ_PWEI_GRPID=B.TZ_CLPS_GR_ID AND A.TZ_CLASS_ID=B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=B.TZ_APPLY_PC_ID";
 					sqlMsGroup += " AND B.TZ_GROUP_ID=C.TZ_GROUP_ID AND A.TZ_CLASS_ID=B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=B.TZ_APPLY_PC_ID";
 					sqlMsGroup += " AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_PWEI_OPRID=? AND A.TZ_PWEI_ZHZT<>'B'";
-					sqlMsGroup += " ORDER BY B.TZ_GROUP_ID";
+					sqlMsGroup += " ORDER BY B.TZ_GROUP_ID";*/
+					
+					String sqlMsGroup = "SELECT DISTINCT A.TZ_PWEI_GRPID, B.TZ_GROUP_ID, B.TZ_GROUP_NAME FROM PS_TZ_MSPS_KSH_TBL C, PS_TZ_MSPS_PW_TBL A, PS_TZ_INTEGROUP_T B, PS_TZ_MSPS_GR_TBL E, PS_TZ_AQ_YHXX_TBL F WHERE A.TZ_PWEI_GRPID = B.TZ_CLPS_GR_ID AND A.TZ_CLASS_ID = B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID = B.TZ_APPLY_PC_ID AND B.TZ_GROUP_ID = C.TZ_GROUP_ID AND A.TZ_CLASS_ID = B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID = B.TZ_APPLY_PC_ID AND A.TZ_CLASS_ID =? AND A.TZ_APPLY_PC_ID =? AND A.TZ_PWEI_GRPID = E.TZ_CLPS_GR_ID AND E.TZ_ROLENAME = F.TZ_DLZH_ID AND F.OPRID = ? AND A.TZ_PWEI_ZHZT <> 'B' ORDER BY B.TZ_GROUP_ID;";
 				
 					List<Map<String, Object>> listMsGroup = sqlQuery.queryForList(sqlMsGroup, new Object[]{classId,batchId,oprid});
 					for(Map<String, Object> mapMsGroup : listMsGroup) {
@@ -208,10 +150,10 @@ public class EvaluationSystemController {
 				*/
 				
 				indexHtml = "batch".equals(page)?
-						tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_INTERVIEW_EVALUATION_TOUCH_BATCH",request.getContextPath(),orgid,userName,classId,batchId,className,batchName,contactUrl,pwzzFlag,mszOption)
+						tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_SECRETARY_EVALUATION_TOUCH_BATCH",request.getContextPath(),orgid,userName,classId,batchId,className,batchName,contactUrl,pwzzFlag,mszOption)
 						:tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_INTERVIEW_EVALUATION_TOUCH_GRADE",request.getContextPath(),orgid,userName,classId,batchId,appInsId,className,batchName,contactUrl,appTplId,msGroupId,pwzzFlag);
 			}else{
-				indexHtml = tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_INTERVIEW_EVALUATION_TOUCH_INDEX",request.getContextPath(),orgid,userName,contactUrl);
+				indexHtml = tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_SECRETARY_EVALUATION_TOUCH_INDEX",request.getContextPath(),orgid,userName,contactUrl);
 			}
 			
 		} catch (TzSystemException e) {
@@ -221,7 +163,7 @@ public class EvaluationSystemController {
 		return indexHtml;
 	}
 	
-	@RequestMapping(value = { "/login" }, produces = "text/html;charset=UTF-8")
+	@RequestMapping(value = { "/secretary/login" }, produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String doLogin(HttpServletRequest request, HttpServletResponse response) {
 		
@@ -233,10 +175,6 @@ public class EvaluationSystemController {
 		String code = request.getParameter("yzm");
 		String type = request.getParameter("type");
 		String judgeType = "interview".equals(type)?"1":"2";
-		//面试秘书账号
-		if("secretary".equals(type)) {
-			judgeType = "3";
-		}
 		String device = request.getParameter("device");
 		
 		ArrayList<String> aryErrorMsg = new ArrayList<String>();
@@ -259,18 +197,17 @@ public class EvaluationSystemController {
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
 		jsonMap.put("success", loginStatus);
 		jsonMap.put("error", errorMsg);
-		jsonMap.put("indexUrl", "/evaluation/"+type+"/index");		
+		jsonMap.put("indexUrl", "/evaluation/secretary/index");		
 
 		return jacksonUtil.Map2json(jsonMap);
 	}
 	
 	
-	@RequestMapping(value = { "/logout" })
+	@RequestMapping(value = { "/secretary/logout" })
 	public String doLogout(HttpServletRequest request, HttpServletResponse response) {
 		
 		String type = request.getParameter("type");
-		
-		//type = "interview".equals(type)?type:"material";
+		type = "interview".equals(type)?type:"material";
 		
 		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 		
@@ -284,7 +221,7 @@ public class EvaluationSystemController {
 			orgid = orgid.toLowerCase();
 		}
 
-		String redirect = "redirect:" + "/evaluation/"+type+"/"+orgid;
+		String redirect = "redirect:" + "/secretary/"+type+"/"+orgid;
 
 		return redirect;
 	}

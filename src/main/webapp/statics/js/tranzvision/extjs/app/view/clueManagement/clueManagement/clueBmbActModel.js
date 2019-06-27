@@ -3,10 +3,8 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.clueBmbActModel', {
     fields: [
         {name: 'TZ_ART_ID'},
         {name: 'TZ_NACT_NAME'},
-        {name: 'TZ_NACT_ADDR'},
-        {name: 'TZ_START_DT'},
-        {name: 'TZ_END_DT'},
-        {name: 'TZ_APPF_DT'},
-        {name: 'TZ_APPE_DT'}
+        {name: 'TZ_BMCY_ZT'},
+        {name: 'TZ_ZXBM_LY'},
+        {name: 'TZ_REG_TIME'}
     ]
 });

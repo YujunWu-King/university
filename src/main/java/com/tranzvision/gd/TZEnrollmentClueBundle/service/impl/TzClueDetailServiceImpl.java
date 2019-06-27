@@ -974,27 +974,29 @@ public class TzClueDetailServiceImpl extends FrameworkImpl {
 			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 			String sql = "select TZ_KH_OPRID from PS_TZ_XSXS_INFO_T where TZ_LEAD_ID = ? and TZ_JG_ID = ?";
 			
-			String oprid = sqlQuery.queryForObject(sql, new Object[] {clueId, orgid}, "String");
+			/*String oprid = sqlQuery.queryForObject(sql, new Object[] {clueId, orgid}, "String");
 			if(StringUtils.isBlank(oprid)) {
 				mapRet.put("root", list);
 				mapRet.put("total", list.size());
 				return jacksonUtil.Map2json(mapRet);
-			}
+			}*/
 			//查询该人已参加的活动
 			//sql = "select TZ_ART_ID from PS_TZ_NAUDLIST_T where OPRID=?";
-			sql = "select TZ_ART_ID from PS_TZ_NAUDLIST_T WHERE TZ_HD_BMR_ID IN (select TZ_HD_BMR_ID from PS_TZ_HDBMR_CLUE_T where TZ_LEAD_ID = ?)";
-			
+			sql = "select TZ_ART_ID,TZ_HD_BMR_ID from PS_TZ_NAUDLIST_T WHERE TZ_HD_BMR_ID IN (select TZ_HD_BMR_ID from PS_TZ_HDBMR_CLUE_T where TZ_LEAD_ID = ?)";
+			 
 			List<Map<String, Object>> actList = sqlQuery.queryForList(sql, new Object[] {clueId});
-			sql = "select TZ_ART_ID,TZ_NACT_NAME,TZ_START_DT,TZ_END_DT,TZ_NACT_ADDR,TZ_APPF_DT,TZ_APPE_DT from PS_TZ_ART_HD_TBL WHERE TZ_ART_ID = ?";
+			sql = "select A.TZ_ART_ID,A.TZ_NACT_NAME,B.TZ_ZXBM_LY,B.TZ_BMCY_ZT,B.TZ_REG_TIME from PS_TZ_ART_HD_TBL A,PS_TZ_NAUDLIST_T B WHERE A.TZ_ART_ID=B.TZ_ART_ID AND A.TZ_ART_ID = ? AND B.TZ_HD_BMR_ID=?";
 			if(actList != null && actList.size() > 0) {
 				for (Map<String, Object> map : actList) {
 					if(map != null) {
 						String TZ_ART_ID = map.get("TZ_ART_ID").toString();
-						Map<String, Object> actMap = sqlQuery.queryForMap(sql, new Object[] {TZ_ART_ID});
+						String TZ_HD_BMR_ID = map.get("TZ_HD_BMR_ID").toString();
+						Map<String, Object> actMap = sqlQuery.queryForMap(sql, new Object[] {TZ_ART_ID, TZ_HD_BMR_ID});
 						list.add(actMap);
 					}
 				}
 			}
+			
 			mapRet.put("root", list);
 			mapRet.put("total", list.size());
 			strRet = jacksonUtil.Map2json(mapRet);

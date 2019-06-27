@@ -271,7 +271,7 @@ function openFszl(){
 	    strVar += "<table class=\"layui-table\">\n";
 	    strVar += "  <thead>\n";
 	    strVar += "    <tr>\n";
-	    strVar += "      <th>序号<\/th>\n";
+	    strVar += "      <th style='min-width: 28px;'>序号<\/th>\n";
 	    strVar += "      <th>附件名称<\/th>\n";
 	    strVar += "      <th>操作<\/th>\n";
 	    strVar += "    <\/tr> \n";
