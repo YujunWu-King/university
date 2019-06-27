@@ -1139,9 +1139,7 @@
 	},
 	//查看招生线索
     clueDetailForm:function(btn){
-    	/*var panel = btn.findParentByType("auditApplicationForm");
-    	var form = panel.child('form').getForm();*/
-    	
+  
     	var form = this.getView().child("form").getForm();
     	var clueID = form.findField('clueID').getValue(); 
         this.editClueInfoByID(clueID);
