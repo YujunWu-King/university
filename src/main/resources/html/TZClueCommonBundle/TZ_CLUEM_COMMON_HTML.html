@@ -9,8 +9,8 @@
 <title>在线咨询</title>
 <script type="text/javascript">
 	var TzUniversityContextPath = "";
-	var strJgid = "SEM";
-	var strSiteId = "72";
+	/* var strJgid = "SEM";
+	var strSiteId = "72"; */
 </script>
 <script type="text/javascript"
 	src="%bind(:1)/statics/js/lib/jquery/jquery.min.js"></script>
@@ -201,8 +201,8 @@
 							<p>性别</p>
 							<div class="overhidden">
 								<select name='xb' id='xb' class='select_pros'><option
-										value='F'>男</option>
-									<option value='M'>女</option></select>
+										value='M'>男</option>
+									<option value='F'>女</option></select>
 							</div>
 						</div>
 						<div class="register_body">
@@ -307,7 +307,7 @@
 		</div>
 
 		<div>
-			<input id="jgId" name="jgId" type="hidden" value="SEM">
+			<!-- <input id="jgId" name="jgId" type="hidden" value="SEM"> -->
 			<!-- <input id="pagetype" name="pagetype" value="enrollpage" type="hidden" />
 			<input id="siteid"	name="siteid" type="hidden" /> 
 			<input id="lang" name="lang" type="hidden" value="ZHS"> 
@@ -378,7 +378,7 @@
 				'"xrzw":"'+xrzwV+'",'+
 				'"gznx":"'+gznxV+'",'+
 				'"glnx":"'+glnxV+'",'+
-				'"jgId":"'+jgIdV+'",'+
+				'"jgId":"%bind(:2)",'+
 				'"zxnr":"'+zxnrV+'"}}';
 				
 				$.ajax({
@@ -386,7 +386,7 @@
 					dataType:"json",
 					async:false,
 					data:{tzParams:tzParams},
-					url:"%bind(:1)/dispatcher",
+					url:"%bind(:2)/dispatcher",
 					success:function(res){	
 						alert(res.comContent.msg);
 						window.location.reload();

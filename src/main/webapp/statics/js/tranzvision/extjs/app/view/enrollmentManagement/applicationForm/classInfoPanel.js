@@ -484,14 +484,6 @@
                                     }
                                 }
                             },{
-                                text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.clueID","线索编号"),
-                                dataIndex: 'clueID',
-                                width:110,
-                                lockable   : false,
-                                filter: {
-                                    type: 'string'
-                                }
-                            },{
                                 text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.fillProportion","填写比例"),
                                 dataIndex: 'fillProportion',
                                 width:110,
@@ -524,12 +516,6 @@
                                 tooltip:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.auditApplicationForm","报名表审核"),
                                 sortable:false,
                                 handler: "auditApplicationForm",
-                                iconCls:'audit'
-                            },
-                            {
-                                tooltip:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.clueDetailForm","查看招生线索"),
-                                sortable:false,
-                                handler: "clueDetailForm",
                                 iconCls:'audit'
                             }
                         ]

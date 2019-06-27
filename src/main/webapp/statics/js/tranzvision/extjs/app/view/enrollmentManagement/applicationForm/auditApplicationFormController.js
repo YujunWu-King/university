@@ -1136,5 +1136,318 @@
 			Ext.Msg.alert("提示","重置密码失败。");   
 			return;
 		}
-	}
+	},
+	//查看招生线索
+    clueDetailForm:function(btn){
+    	/*var panel = btn.findParentByType("auditApplicationForm");
+    	var form = panel.child('form').getForm();*/
+    	
+    	var form = this.getView().child("form").getForm();
+    	var clueID = form.findField('clueID').getValue(); 
+        this.editClueInfoByID(clueID);
+    },
+    //根据线索ID进行编辑
+    editClueInfoByID:function(clueId) {
+        Ext.tzSetCompResourses("TZ_XSXS_INFO_COM");
+        //是否有访问权限
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_XSXS_INFO_COM"]["TZ_XSXS_DETAIL_STD"];
+        if (pageResSet == "" || pageResSet == undefined) {
+            Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+            return;
+        }
+        //该功能对应的JS类
+        var className = pageResSet["jsClassName"];
+        if (className == "" || className == undefined) {
+            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_XSXS_DETAIL_STD，请检查配置。');
+            return;
+        }
+
+        var contentPanel, cmp, className, ViewClass, clsProto;
+        var themeName = Ext.themeName;
+
+        contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+        contentPanel.body.addCls('kitchensink-example');
+        if (!Ext.ClassManager.isCreated(className)) {
+            Ext.syncRequire(className);
+        }
+        ViewClass = Ext.ClassManager.get(className);
+
+        //获取线索信息中的下拉框值
+        var backReasonId, backReasonName, closeReasonId, closeReasonName, colorTypeId, colorTypeName, colorTypeCode;
+        var backReasonFlag, closeReasonFlag, colorTypeFlag;
+        var i, j, m, n;
+        var backReasonData = [],
+            closeReasonData = [],
+            colorSortData = [],
+            customerNameData = [],
+            companyNameData = [];
+        var tzDropDownParams = '{"ComID":"TZ_XSXS_INFO_COM","PageID":"TZ_XSXS_DETAIL_STD","OperateType":"tzGetDropDownInfo","comParams":{"clueId":"' + clueId + '"}}';
+        Ext.tzLoad(tzDropDownParams, function (respData) {
+            backReasonId = respData.backReasonId;
+            backReasonName = respData.backReasonName;
+            closeReasonId = respData.closeReasonId;
+            closeReasonName = respData.closeReasonName;
+            colorTypeId = respData.colorTypeId;
+            colorTypeName = respData.colorTypeName;
+            colorTypeCode = respData.colorTypeCode;
+
+
+            var myMask = new Ext.LoadMask(
+                {
+                    msg    : TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00022"),
+                    target : Ext.getCmp('tranzvision-framework-content-panel')
+                });
+
+            myMask.show();
+
+
+            //退回原因
+            var validBackReasonStore = new KitchenSink.view.common.store.comboxStore({
+                recname: 'TZ_XS_THYY_V',
+                condition: {
+                    TZ_JG_ID: {
+                        value: Ext.tzOrgID,
+                        operator: '01',
+                        type: '01'
+                    }
+                },
+                result: 'TZ_THYY_ID,TZ_LABEL_NAME',
+                listeners: {
+                    load: function (store, records, successful, eOpts) {
+                        for (i = 0; i < records.length; i++) {
+                            backReasonData.push(records[i].data);
+                            if (backReasonId.length == 0 || records[i].data["TZ_THYY_ID"] == backReasonId) {
+                                backReasonFlag = "Y";
+                            }
+                        }
+                        if (backReasonFlag == "Y") {
+
+                        } else {
+                            backReasonData.push({
+                                TZ_THYY_ID: backReasonId,
+                                TZ_LABEL_NAME: backReasonName
+                            });
+                        }
+
+                        //关闭原因
+                        var validCloseReasonStore = new KitchenSink.view.common.store.comboxStore({
+                            recname: 'TZ_XS_GBYY_V',
+                            condition: {
+                                TZ_JG_ID: {
+                                    value: Ext.tzOrgID,
+                                    operator: '01',
+                                    type: '01'
+                                }
+                            },
+                            result: 'TZ_GBYY_ID,TZ_LABEL_NAME',
+                            listeners: {
+                                load: function (store, records, successful, eOpts) {
+                                    for (j = 0; j < records.length; j++) {
+                                        closeReasonData.push(records[j].data);
+                                        if (closeReasonId.length == 0 || records[j].data["TZ_GBYY_ID"] == closeReasonId) {
+                                            closeReasonFlag = "Y";
+                                        }
+                                    }
+                                    if (closeReasonFlag == "Y") {
+
+                                    } else {
+                                        closeReasonData.push({
+                                            TZ_GBYY_ID: closeReasonId,
+                                            TZ_LABEL_NAME: closeReasonName
+                                        });
+                                    }
+
+                                    //类别
+                                    var validColorSortStore = new KitchenSink.view.common.store.comboxStore({
+                                        recname: 'TZ_XS_XSLB_V',
+                                        condition: {
+                                            TZ_JG_ID: {
+                                                value: Ext.tzOrgID,
+                                                operator: '01',
+                                                type: '01'
+                                            }
+                                        },
+                                        result: 'TZ_COLOUR_SORT_ID,TZ_COLOUR_NAME,TZ_COLOUR_CODE',
+                                        listeners: {
+                                            load: function (store, records, successful, eOpts) {
+                                                for (k = 0; k < records.length; k++) {
+                                                    colorSortData.push(records[k].data);
+                                                    if (colorTypeId.length == 0 || records[k].data["TZ_COLOUR_SORT_ID"] == colorTypeId) {
+                                                        colorTypeFlag = "Y";
+                                                    }
+                                                }
+                                                if (colorTypeFlag == "Y") {
+
+                                                } else {
+                                                    colorSortData.push({
+                                                        TZ_COLOUR_SORT_ID: colorTypeId,
+                                                        TZ_COLOUR_NAME: colorTypeName,
+                                                        TZ_COLOUR_CODE: colorTypeCode
+                                                    });
+                                                }
+
+
+                                                //姓名
+                                                var customerNameStore = new KitchenSink.view.common.store.comboxStore({
+                                                    pageSize: 0,
+                                                    recname: 'TZ_XS_CUSNM_V',
+                                                    condition: {
+                                                        TZ_JG_ID: {
+                                                            value: Ext.tzOrgID,
+                                                            operator: '01',
+                                                            type: '01'
+                                                        }
+                                                    },
+                                                    result: 'TZ_KH_OPRID,TZ_REALNAME,TZ_DESCR_254',
+                                                    listeners: {
+                                                        load: function (store, records, successful, eOpts) {
+                                                            for (m = 0; m < records.length; m++) {
+                                                                customerNameData.push(records[m].data);
+                                                            }
+
+
+                                                            //公司
+                                                            var companyNameStore = new KitchenSink.view.common.store.comboxStore({
+                                                                pageSize: 0,
+                                                                recname: 'TZ_XS_COMNM_V',
+                                                                condition: {
+                                                                    TZ_JG_ID: {
+                                                                        value: Ext.tzOrgID,
+                                                                        operator: '01',
+                                                                        type: '01'
+                                                                    }
+                                                                },
+                                                                result: 'TZ_COMP_CNAME',
+                                                                listeners: {
+                                                                    load: function (store, records, successful, eOpts) {
+                                                                        for (n = 0; n < records.length; n++) {
+                                                                            companyNameData.push(records[n].data);
+                                                                        }
+
+                                                                        //线索标签
+                                                                        var clueTagStore= new KitchenSink.view.common.store.comboxStore({
+                                                                            recname:'TZ_LABEL_DFN_T',
+                                                                            condition:{
+                                                                            	TZ_JG_ID:{
+                                                                                    value: Ext.tzOrgID,
+                                                                                    operator:'01',
+                                                                                    type:'01'
+                                                                                },
+                                                                                TZ_LABEL_STATUS:{
+                                                                                    value: 'Y',
+                                                                                    operator:'01',
+                                                                                    type:'01'
+                                                                                }
+                                                                            },
+                                                                            result:'TZ_LABEL_ID,TZ_LABEL_NAME'
+                                                                        });
+                                                                        clueTagStore.load({
+                                                                        	callback: function(){
+                                                                        		
+                                                                        		var otherZrrStore= new KitchenSink.view.common.store.comboxStore({
+                                                                                    recname:'TZ_XS_QTZRR_V',
+                                                                                    condition:{
+                                                                                    	TZ_LEAD_ID:{
+                                                                                            value: clueId,
+                                                                                            operator:'01',
+                                                                                            type:'01'
+                                                                                        }
+                                                                                    },
+                                                                                    result:'TZ_ZRR_OPRID,TZ_REALNAME'
+                                                                                });
+                                                                        		otherZrrStore.load({
+                                                                                	callback: function(){
+                                                                                		myMask.hide();
+
+                                                                                        cmp = new ViewClass({
+                                                                                            clueID: clueId,
+                                                                                            backReasonData: backReasonData,
+                                                                                            closeReasonData: closeReasonData,
+                                                                                            colorSortData: colorSortData,
+                                                                                            customerNameData: customerNameData,
+                                                                                            companyNameData: companyNameData,
+                                                                                            clueTagStore: clueTagStore,
+                                                                                            otherZrrStore: otherZrrStore,
+                                                                                            zrrEditFalg: 'Y'
+                                                                                        });
+
+                                                                                        cmp.on('afterrender', function (panel) {
+                                                                                            var form = panel.child('form').getForm();
+                                                                                            var tabpanel = panel.child('tabpanel');
+                                                                                            var store = tabpanel.child("grid").store;
+                                                                                            var glBmbBut = panel.down("button[name=glBmbBut]");
+                                                                                            //参数
+                                                                                            var tzParams = '{"ComID":"TZ_XSXS_INFO_COM","PageID":"TZ_XSXS_DETAIL_STD","OperateType":"QF","comParams":{"clueId":"' + clueId + '"}}';
+                                                                                            Ext.tzLoad(tzParams, function (respData) {
+                                                                                                var formData = respData.formData;
+                                                                                                //基本信息
+                                                                                                form.setValues(formData);
+
+                                                                                                //根据显示状态显示相应的其他字段
+                                                                                                var clueState = form.findField('clueState').getValue();
+
+                                                                                                form.findField('backReasonId').setVisible(false);
+                                                                                                form.findField('closeReasonId').setVisible(false);
+                                                                                                form.findField('contactDate').setVisible(false);
+                                                                                                form.findField('backReasonId').allowBlank = true;
+                                                                                                form.findField('closeReasonId').allowBlank = true;
+                                                                                                form.findField('contactDate').allowBlank = true;
+
+                                                                                                //退回原因
+                                                                                                if (clueState == "F") {
+                                                                                                    form.findField('backReasonId').setVisible(true);
+                                                                                                    form.findField('backReasonId').allowBlank = false;
+                                                                                                }
+                                                                                                //关闭原因
+                                                                                                if (clueState == "G") {
+                                                                                                    form.findField('closeReasonId').setVisible(true);
+                                                                                                    form.findField('closeReasonId').allowBlank = false;
+                                                                                                }
+                                                                                                //建议跟进日期
+                                                                                                if (clueState == "D") {
+                                                                                                    form.findField('contactDate').setVisible(true);
+                                                                                                    form.findField('contactDate').allowBlank = false;
+                                                                                                }
+
+
+                                                                                                //线索状态为关闭或者报考状态不是未报名，关联报名表按钮隐藏
+                                                                                                var bkStatus = form.findField("bkStatus").getValue();
+                                                                                                if (clueState == "G" || bkStatus != "A") {
+                                                                                                    glBmbBut.setVisible(false);
+                                                                                                }
+
+                                                                                                //加载报名表信息
+                                                                                                var clueId = form.findField("clueId").getValue();
+                                                                                                store.tzStoreParams = '{"clueId":"' + clueId + '"}';
+                                                                                                store.load();
+                                                                                            });
+                                                                                        });
+
+                                                                                        var tab = contentPanel.add(cmp);
+                                                                                        contentPanel.setActiveTab(tab);
+                                                                                        Ext.resumeLayouts(true);
+                                                                                        if (cmp.floating) {
+                                                                                            cmp.show();
+                                                                                        }
+                                                                                	}
+                                                                                });
+                                                                        	}
+                                                                        });
+                                                                    }
+                                                                }
+                                                            });
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        });
+    }
 });
