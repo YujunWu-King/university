@@ -7,6 +7,7 @@
         'Ext.toolbar.Paging',
         'Ext.ux.ProgressBarPager',
         'KitchenSink.view.enrollmentManagement.applicationForm.classStore',
+        'KitchenSink.view.enrollmentManagement.applicationForm.interviewCheckStore',
         'KitchenSink.view.enrollmentManagement.applicationForm.classController',
         'tranzvision.extension.grid.column.Link'
     ],
@@ -168,7 +169,8 @@
                 items:[
                     {iconCls: 'set',tooltip: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.clmspsSet","设置评审规则"),handler:'setInterviewReviewRule'},"-",
                     {iconCls: 'people',tooltip: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.clmspsPeople","查看考生名单"),handler:'viewInterviewStuApplicants'},"-",
-                    {iconCls: 'schedule',tooltip: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.clmspsSchedule","评审进度管理"),handler:'msReviewScheduleMg'}
+                    {iconCls: 'schedule',tooltip: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.clmspsSchedule","评审进度管理"),handler:'msReviewScheduleMg'},"-",
+                    {iconCls: 'view',tooltip: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.interviewCheck","查看面试情况"),handler:'interviewCheck'}
                 ]
             },{
                 menuDisabled: true,

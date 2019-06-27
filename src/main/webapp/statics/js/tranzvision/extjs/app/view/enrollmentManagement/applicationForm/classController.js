@@ -2120,10 +2120,16 @@
     },
     onInterviewClose: function(btn){
         //关闭窗口
-        this.getView().close();
+    	var panel = btn.findParentByType("appFormClass");
+		panel.commitChanges(panel);
+		panel.close();
+		
     },
     //查看面试情况
-    interviewCheck: function(view, rowIndex){
+    interviewCheck: function(grid, rowIndex){
+    	var record = grid.store.getAt(rowIndex);
+        var classID = record.get('classID');
+        var batchID = record.get('batchID');
     	Ext.tzSetCompResourses("TZ_BMGL_BMBSH_COM");
         //是否有访问权限
         var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_BMGL_BMBSH_COM"]["TZ_INTERVIEW_STD"];
@@ -2168,7 +2174,7 @@
 			}
 		}
 
-		cmp = new ViewClass();
+		cmp = new ViewClass(classID,batchID);
 		cmp.on('afterrender',function(panel){
 			
 		});
