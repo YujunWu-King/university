@@ -995,11 +995,14 @@
                     ///export/home/PT852/webserv/ALTZDEV/applications/peoplesoft/PORTAL.war/linkfile/FileUpLoad/appFormAttachment/20150827
                     //var path = action.result.msg.path;
                     
-                    
+                    var PageID = "TZ_UPLOADFILES_STD";
+                    if(fileType == 1){
+                    	PageID = "TZ_UPLOADFSZL_STD";
+                    }
                     if (strAppId!=""){
                     	var tzparamsVar = {
                     		"ComID":"TZ_BMGL_BMBSH_COM",
-                    		"PageID":"TZ_UPLOADFILES_STD",
+                    		"PageID":PageID,
                     		"OperateType":"U",
                     		"comParams":
                     			{ "add":

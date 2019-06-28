@@ -1539,9 +1539,9 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.enrollmentClueControl
                                                                                                 }
 
                                                                                                 //加载报名表信息
-                                                                                                /*var clueId = form.findField("clueId").getValue();
+                                                                                                var clueId = form.findField("clueId").getValue();
                                                                                                 store.tzStoreParams = '{"clueId":"' + clueId + '"}';
-                                                                                                store.load();*/
+                                                                                                store.load();
                                                                                                 tabpanel.setActiveTab(2);
                                                                                             });
                                                                                         });
