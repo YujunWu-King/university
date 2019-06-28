@@ -44,21 +44,33 @@ public class TzClueCommonServiceImpl extends FrameworkImpl {
 	@Override
 	public String tzGetHtmlContent(String comParams) {
 		String contextUrl = request.getContextPath();
+		String jgId = request.getParameter("jgId");
 		String str_appform_main_html = "";
-		JacksonUtil jacksonUtil = new JacksonUtil();
-		jacksonUtil.json2Map(comParams);
 		boolean isMobile = CommonUtils.isMobile(request);
+		String sql = "SELECT COUNT(*) FROM PS_TZ_JG_BASE_T WHERE TZ_JG_ID=?";
 		try {
-			if(isMobile){
-				System.out.println("手机端");
-				str_appform_main_html = tzGdObject.getHTMLTextForDollar(
-						"HTML.TZClueCommonBundle.TZ_CLUEM_COMMON_HTML", true,contextUrl);
+			if(!"".equals(jgId)&&jgId!=null){
+				int res = sqlQuery.queryForObject(sql, new Object[]{ jgId }, "Integer");
+				if(res>0){
+					if(isMobile){
+						System.out.println("手机端");
+						str_appform_main_html = tzGdObject.getHTMLTextForDollar(
+								"HTML.TZClueCommonBundle.TZ_CLUEM_COMMON_HTML", true,contextUrl,jgId);
+					}else{
+						System.out.println("PC端");
+						str_appform_main_html = tzGdObject.getHTMLTextForDollar(
+								"HTML.TZClueCommonBundle.TZ_CLUE_COMMON_HTML", true,contextUrl,jgId);
+					}
+				}else{
+					System.out.println("错误");
+					str_appform_main_html = tzGdObject.getHTMLTextForDollar(
+							"HTML.TZClueCommonBundle.TZ_ERROR_CLUE_HTML", true);
+				}
 			}else{
-				System.out.println("PC端");
+				System.out.println("错误");
 				str_appform_main_html = tzGdObject.getHTMLTextForDollar(
-						"HTML.TZClueCommonBundle.TZ_CLUE_COMMON_HTML", true,contextUrl);
+						"HTML.TZClueCommonBundle.TZ_ERROR_CLUE_HTML", true);
 			}
-			
 			
 		} catch (TzSystemException e) {
 			e.printStackTrace();

@@ -110,8 +110,8 @@
 	
 								<select name='xb' id='xb' class='chosen-select combox_351px'
 									style='width: 351px;'>
-									<option value='F'>男</option>
-									<option value='M'>女</option>
+									<option value='M'>男</option>
+									<option value='F'>女</option>
 								</select> 
 							</div>
 						</div>
@@ -279,7 +279,7 @@
 				</form>
 			</div>
 			<div>
-				<input id="jgId" name="jgId" type="hidden" value="SEM"> 
+				<!-- <input id="jgId" name="jgId" type="hidden" value="SEM">  -->
 			</div>
 		</div>
 	</body>
@@ -359,7 +359,7 @@
 					'"xrzw":"'+xrzwV+'",'+
 					'"gznx":"'+gznxV+'",'+
 					'"glnx":"'+glnxV+'",'+
-					'"jgId":"'+jgIdV+'",'+
+					'"jgId":"%bind(:2)",'+
 					'"zxnr":"'+zxnrV+'"}}';
 					
 					$.ajax({

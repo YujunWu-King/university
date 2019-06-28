@@ -139,6 +139,11 @@ public class TZMyEnrollmentClueServiceImpl extends FrameworkImpl {
 					//添加听众;
 					@SuppressWarnings("unchecked")
 					List<Map<String, Object>> list = (List<Map<String, Object>>) jacksonUtil.getList("personList");
+					Map<String, Object> lxfsMap = sqlQuery.queryForMap("SELECT TZ_ZY_SJ,TZ_CY_SJ,TZ_ZY_DH,TZ_CY_DH,TZ_ZY_EMAIL,TZ_CY_EMAIL,TZ_ZY_TXDZ,TZ_CY_TXDZ,TZ_WEIXIN,TZ_SKYPE FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='ZCYH' AND TZ_LYDX_ID=?", new Object[]{oprid});
+					String wechat = "";
+					if(lxfsMap != null){
+	                	wechat = (String)lxfsMap.get("TZ_WEIXIN");
+	                }
 					if(list != null && list.size() > 0){
 						for(int num_1 = 0; num_1 < list.size(); num_1 ++){
 							Map<String, Object> map = list.get(num_1);
@@ -146,9 +151,8 @@ public class TZMyEnrollmentClueServiceImpl extends FrameworkImpl {
 				            String email = (String)map.get("email");
 				            String clueId=(String)map.get("clueId");
 				            String mobile=(String)map.get("mobile");
-				            if(oprid != null && !"".equals(oprid)
-				            		&& email!=null&&!"".equals(email)){
-				                createTaskServiceImpl.addAudCy(audID,name, "", mobile, mobile, email, email, "", oprid, "", "", clueId);
+				            if(oprid != null && !"".equals(oprid)){
+				                createTaskServiceImpl.addAudCy(audID,name, "", mobile, mobile, email, email, wechat, oprid, "", "", clueId);
 				            }
 						}
 					}

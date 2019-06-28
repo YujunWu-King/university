@@ -238,7 +238,13 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 					}
 				}
 
+				String sqlClue = "select TZ_LEAD_ID from PS_TZ_XSXS_BMB_T where TZ_APP_INS_ID = ?";
+				String clueId = jdbcTemplate.queryForObject(sqlClue,
+						new Object[] { strAppInsID },"String");
+				
 				Map<String, Object> jsonMap = new HashMap<>();
+				jsonMap.put("clueID", clueId);
+				
 				jsonMap.put("classID", strClassID);
 				jsonMap.put("oprID", strOprID);
 				jsonMap.put("stuName", strStuName);

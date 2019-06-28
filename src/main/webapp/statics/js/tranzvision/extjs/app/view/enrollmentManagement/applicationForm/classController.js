@@ -1504,7 +1504,7 @@
 		            cmp.show();
 		        }
             }else{
-            	Ext.Msg.alert("提示","您选中的记录没有短信");
+            	Ext.Msg.alert("提示","您选中的记录没有手机号码");
                 return;
             }
         });

@@ -20,9 +20,9 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.enrollmentClueSmsHist
                 {
                     minWidth:80,text:"关闭",iconCls:"close",handler: function(btn){
                     //获取窗口
-                    var win = btn.findParentByType("enrollmentClueSmsHistory");
-                    //关闭窗口
-                    win.close();
+                	var panel = btn.findParentByType("enrollmentClueSmsHistoryStore");
+            		panel.commitChanges(panel);
+            		panel.close();
                 }
                 }]
         }
@@ -62,7 +62,7 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.enrollmentClueSmsHist
 						allowBlank:false,
 						hideLabel: true,
 						ignoreChangesFlag: true,
-						blankText:Ext.tzGetResourse("TZ_XSXS_ZSXS_COM.TZ_XSXS_SMSHIS_STD.emptyMobile","电话不能为空"),
+						blankText:Ext.tzGetResourse("TZ_XSXS_ZSXS_COM.TZ_XSXS_SMSHIS_STD.emptyMobile","手机号码不能为空"),
 						value: this.mobile
 					},{
 						xtype: 'button',
@@ -81,7 +81,7 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.enrollmentClueSmsHist
 								smsHisGrid.store.tzStoreParams = tzStoreParams;
 								smsHisGrid.store.load();
 							} else {
-								Ext.Msg.alert("提示","请输入要查询的电话号码！");
+								Ext.Msg.alert("提示","请输入要查询的手机号码！");
 							}
 						}
 					}]
@@ -102,12 +102,12 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.enrollmentClueSmsHist
 	                dataIndex: 'sendDt',
 	                minWidth: 200,
 	                flex: 1	
-				},{
+				}/*,{
 	                text: '发送对象',
 	                dataIndex: 'phone',
 	                minWidth: 200,
 	                flex: 1
-	            },{
+	            }*/,{
 	                text: '发送状态',
 	                dataIndex: 'status',
 	                minWidth: 200,
