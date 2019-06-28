@@ -40,7 +40,8 @@ public class TzClueSmsHistoryServiceImpl extends FrameworkImpl {
 				String sql = "SELECT A.TZ_RWSL_ID,A.TZ_SJ_HM,A.TZ_FS_ZT,A.TZ_FS_DT,B.ROW_ADDED_OPRID"
 						+ " FROM PS_TZ_DXFSLSHI_TBL A,PS_TZ_DXYJFSRW_TBL B"
 						+ " WHERE A.TZ_EML_SMS_TASK_ID = B.TZ_EML_SMS_TASK_ID"
-						+ " AND A.TZ_SJ_HM = ?";
+						+ " AND A.TZ_SJ_HM = ?"
+						+ " ORDER BY A.TZ_FS_DT DESC";
 				List<Map<String, Object>> list = jdbcTemplate.queryForList(sql,
 						new Object[] { mobile});
 				if (list != null && list.size() > 0) {

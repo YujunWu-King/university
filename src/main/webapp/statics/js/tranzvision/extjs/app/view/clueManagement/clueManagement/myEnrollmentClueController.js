@@ -1143,7 +1143,12 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.myEnrollmentClueContr
                     }
                 }
             }
-
+            var temp=[personList[0]]
+            for(var i = 1;i<personList.length;i++){
+            	if( personList[i].mobile !== temp[temp.length-1].mobile){
+		            temp.push(personList[i]);
+		        }
+            }
             if(noMobileCount==checkLen) {
                 //不存在有短信的数据
                 Ext.MessageBox.alert('提示','您选中的记录没有手机号码');
@@ -1160,7 +1165,7 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.myEnrollmentClueContr
                     "OperateType": "U",
                     "comParams": {
                         "add": [
-                            {"type": 'DX', "personList": personList}
+                            {"type": 'DX', "personList": temp}
                         ]
                     }
                 };
