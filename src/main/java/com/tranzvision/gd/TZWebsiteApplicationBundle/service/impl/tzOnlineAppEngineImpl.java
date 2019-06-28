@@ -1412,7 +1412,7 @@ public class tzOnlineAppEngineImpl {
 			isAutoAssign = this.getIsAutoAssign(JGID);
 			System.out.println("isAutoAssign：" + isAutoAssign);
 			System.out.println("JGID：" + JGID);
-			if (isAutoAssign.equals("Y")) {
+			if ("Y".equals(isAutoAssign)) {
 				// 分配线索
 				System.out.println("分配线索");
 				// String orgId：机构ID
@@ -1501,7 +1501,7 @@ public class tzOnlineAppEngineImpl {
 				isAutoAssign = this.getIsAutoAssign(JGID);
 				System.out.println("isAutoAssign：" + isAutoAssign);
 				System.out.println("JGID：" + JGID);
-				if (isAutoAssign.equals("Y")) {
+				if ("Y".equals(isAutoAssign)) {
 					System.out.println("分配线索");
 					tzClueAutoAssign.autoAssign(JGID, strAppOprId, TZ_LEAD_ID, country, TZ_XSQU_ID, null);
 				}
@@ -1566,7 +1566,7 @@ public class tzOnlineAppEngineImpl {
 				isAutoAssign = this.getIsAutoAssign(JGID);
 				System.out.println("isAutoAssign：" + isAutoAssign);
 				System.out.println("JGID：" + JGID);
-				if (isAutoAssign.equals("Y")) {
+				if ("Y".equals(isAutoAssign)) {
 					System.out.println("分配线索");
 					tzClueAutoAssign.autoAssign(JGID, strAppOprId, TZ_LEAD_ID, country, city, null);
 				}

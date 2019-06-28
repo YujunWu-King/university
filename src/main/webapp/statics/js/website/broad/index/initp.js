@@ -203,7 +203,7 @@ function classSelectCancle(){
 
 //复试资料删除
 function deleteAttachment(appins,sysfileName,layero){
-	var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_UPLOADFILES_STD","OperateType":"U","comParams":{ "delete":[{"appins":"'+appins+'","sysfileName":"'+sysfileName+'"}]}}';
+	var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_UPLOADFSZL_STD","OperateType":"U","comParams":{ "delete":[{"appins":"'+appins+'","sysfileName":"'+sysfileName+'"}]}}';
 	var layerIndex = layer.load(1,{
 		  shade: [0.3,'#000'] 
 	});
@@ -335,7 +335,7 @@ function openFszl(){
 					    	var appinsId = $("#appinsId").val();
 					    	var tzParams = {
 		                    		"ComID":"TZ_BMGL_BMBSH_COM",
-		                    		"PageID":"TZ_UPLOADFILES_STD",
+		                    		"PageID":"TZ_UPLOADFSZL_STD",
 		                    		"OperateType":"U",
 		                    		"comParams":
 		                    			{ "add":
