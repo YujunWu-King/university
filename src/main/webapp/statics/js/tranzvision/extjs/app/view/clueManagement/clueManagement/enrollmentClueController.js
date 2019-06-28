@@ -1610,21 +1610,12 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.enrollmentClueControl
                     }
                 }
             }
-            console.log(personList)
-          /*  var AddresseeSmsData = personList.formData.AddresseeSms
-			var AddresseeSmsA = AddresseeSmsData.split(";");
-			var temp=[personList[0].mobile];
-			for(var i = 1; i < personList.length; i++){
-		        if( personList[i].mobile !== temp[temp.length-1]){
-		            temp.push(personList[i].mobile);
+            var temp=[personList[0]]
+            for(var i = 1;i<personList.length;i++){
+            	if( personList[i].mobile !== temp[temp.length-1].mobile){
+		            temp.push(personList[i]);
 		        }
-		    }
-			var data = temp[0];
-			for(var i = 1;i<temp.length;i++){
-				data = data + ';' + temp[i]
-			}
-			personList.formData.AddresseeSms = data;*/
-
+            }
             if(noMobileCount==checkLen) {
                 //不存在有短信的数据
                 Ext.MessageBox.alert('提示','您选中的记录没有手机号码');
@@ -1641,7 +1632,7 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.enrollmentClueControl
                     "OperateType": "U",
                     "comParams": {
                         "add": [
-                            {"type": 'DX', "personList": personList}
+                            {"type": 'DX', "personList": temp}
                         ]
                     }
                 };
