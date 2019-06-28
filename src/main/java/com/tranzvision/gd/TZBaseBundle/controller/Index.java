@@ -81,8 +81,13 @@ public class Index {
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 		String zhid = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
+		
+		//查询注册类型，如果是ZCYH类型，视为未登录,NBYH才允许
+		String queryRylxSql = "select TZ_RYLX from PS_TZ_AQ_YHXX_TBL where OPRID = ? and TZ_JG_ID = ? and TZ_DLZH_ID=?";
+		String TZ_RYLX = jdbcTemplate.queryForObject(queryRylxSql, new Object[] {oprid, orgid, zhid}, "String");
+		
 		if (oprid != null && !"".equals(oprid) && orgid != null && !"".equals(orgid) && zhid != null
-				&& !"".equals(zhid)) {
+				&& !"".equals(zhid) && "NBYH".equals(TZ_RYLX)) {
 			// 记住当前登录用户的主题设置;
 			gdKjComService.setUserGxhTheme(request, response, tmpSubmitThemeID);
 			// 记住当前登录用户的语言环境设置;

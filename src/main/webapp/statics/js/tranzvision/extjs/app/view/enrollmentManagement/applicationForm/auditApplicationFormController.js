@@ -892,6 +892,8 @@
         winForm.findField("stuName").setValue(stuName);
         winForm.findField("appInsID").setValue(appInsID);
         winForm.findField("fileType").setValue(0);
+        winForm.findField("FileName").setValue('');
+        winForm.findField("FileName").setVisible(true);
         win.show();
 
     },
@@ -931,6 +933,8 @@
         winForm.findField("stuName").setValue(stuName);
         winForm.findField("appInsID").setValue(appInsID);
         winForm.findField("fileType").setValue(1);
+        winForm.findField("FileName").setValue(1);
+        winForm.findField("FileName").setVisible(false);
         win.show();
 
     },
@@ -998,6 +1002,7 @@
                     var PageID = "TZ_UPLOADFILES_STD";
                     if(fileType == 1){
                     	PageID = "TZ_UPLOADFSZL_STD";
+                    	scFileName = usefile;
                     }
                     if (strAppId!=""){
                     	var tzparamsVar = {
@@ -1010,7 +1015,7 @@
                     					"strAppId":strAppId,
                     					"stuName":stuName,
                     					"refLetterFile":scFileName,
-                    					"FileName":FileName,
+                    					"FileName":scFileName,
                     					"strSysFile":sysfile,
                     					"fileUrl":accessPath,
                     					"fileType":fileType

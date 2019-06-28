@@ -177,7 +177,7 @@ public class TzGdBmglFSZLEngineCls extends BaseEngine {
 
 				// 将考生的材料复制;
 				String str_attachfilename = "", str_attachfile = "";
-				String sqlPackage = "SELECT A.ATTACHUSERFILE,A.ATTACHSYSFILENAME,A.TZ_ACCESS_PATH,B.TZ_XXX_MC FROM PS_TZ_FORM_ATT_T A,PS_TZ_FORM_ATT2_T B WhERE A.TZ_APP_INS_ID=B.TZ_APP_INS_ID AND B.TZ_XXX_BH =A.ATTACHSYSFILENAME AND A.TZ_APP_INS_ID =? and A.FILETYPE=1 ORDER BY A.ROW_ADDED_DTTM";
+				String sqlPackage = "SELECT A.ATTACHUSERFILE,A.ATTACHSYSFILENAME,A.TZ_ACCESS_PATH,B.TZ_XXX_MC FROM PS_TZ_FSZL_T A,PS_TZ_FORM_ATT2_T B WhERE A.TZ_APP_INS_ID=B.TZ_APP_INS_ID AND B.TZ_XXX_BH =A.ATTACHSYSFILENAME AND A.TZ_APP_INS_ID =? ORDER BY A.ROW_ADDED_DTTM";
 				List<Map<String, Object>> packList = jdbcTemplate.queryForList(sqlPackage,
 						new Object[] { appInsID});
 				if (packList != null && packList.size() > 0) {

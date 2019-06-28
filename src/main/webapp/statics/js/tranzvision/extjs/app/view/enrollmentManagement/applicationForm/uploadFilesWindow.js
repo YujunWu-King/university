@@ -107,8 +107,8 @@ function addAttach(bt, value, eOpts){
 	if(value != "")
 	{
 		var fix = value.substring(value.lastIndexOf(".") + 1,value.length);
-		if(fix.toLowerCase() != "doc" && fix.toLowerCase() != "docx" && fix.toLowerCase() != "pdf" && fix.toLowerCase() != "jpg" && fix.toLowerCase() != "png"&& fix.toLowerCase() != "gif" && fix.toLowerCase() != "bmp"){
-			Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","浏览"),Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.qsczdgsdwj","请上传docx|docx|pdf|jpg|png|gif|bmp格式的文件。"));
+		if(fix.toLowerCase() != "doc" && fix.toLowerCase() != "docx" && fix.toLowerCase() != "pdf" && fix.toLowerCase() != "jpg" && fix.toLowerCase() != "docx"&& fix.toLowerCase() != "gif" && fix.toLowerCase() != "bmp" && fix.toLowerCase() != "xlsx"){
+			Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","浏览"),Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.qsczdgsdwj","请上传docx|docx|pdf|jpg|png|gif|bmp|xlsx格式的文件。"));
 			form.reset();
 			return;
 		};

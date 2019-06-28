@@ -985,7 +985,7 @@ public class TzClueDetailServiceImpl extends FrameworkImpl {
 			sql = "select TZ_ART_ID,TZ_HD_BMR_ID from PS_TZ_NAUDLIST_T WHERE TZ_HD_BMR_ID IN (select TZ_HD_BMR_ID from PS_TZ_HDBMR_CLUE_T where TZ_LEAD_ID = ?)";
 			 
 			List<Map<String, Object>> actList = sqlQuery.queryForList(sql, new Object[] {clueId});
-			sql = "select A.TZ_ART_ID,A.TZ_NACT_NAME,B.TZ_ZXBM_LY,B.TZ_BMCY_ZT,B.TZ_REG_TIME from PS_TZ_ART_HD_TBL A,PS_TZ_NAUDLIST_T B WHERE A.TZ_ART_ID=B.TZ_ART_ID AND A.TZ_ART_ID = ? AND B.TZ_HD_BMR_ID=?";
+			sql = "select A.TZ_ART_ID,A.TZ_NACT_NAME,B.TZ_ZXBM_LY,B.TZ_BMCY_ZT,B.TZ_REG_TIME,B.TZ_NREG_STAT from PS_TZ_ART_HD_TBL A,PS_TZ_NAUDLIST_T B WHERE A.TZ_ART_ID=B.TZ_ART_ID AND A.TZ_ART_ID = ? AND B.TZ_HD_BMR_ID=?";
 			if(actList != null && actList.size() > 0) {
 				for (Map<String, Object> map : actList) {
 					if(map != null) {

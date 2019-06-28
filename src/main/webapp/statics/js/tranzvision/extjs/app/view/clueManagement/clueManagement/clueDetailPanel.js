@@ -513,20 +513,6 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.clueDetailPanel',{
 	                minHeight:170,
 	                name:'bmbInfoGrid',
 	                reference:'bmbInfoGrid',
-	                listeners:{
-	                	afterrender:function(panel){
-	                		//线索ID
-							//var clueId = panel.findParentByType("tabpanel").previousSibling().getForm().findField("clueId").getValue();
-	                		var clueId = panel.findParentByType("tabpanel").findParentByType("panel").clueID;
-							//加载报名表信息
-							var tzParams = '{"ComID":"TZ_XSXS_INFO_COM","PageID":"TZ_XSXS_DETAIL_STD","OperateType":"QG","comParams":{"clueId":"'+clueId+'"}}';
-                            //var clueId = form.findField("clueId").getValue();
-                            //panel.store.tzStoreParams = '{"clueId":"' + clueId + '"}';
-                            //panel.store.reload()
-							panel.store.proxy.extraParams.tzParams = tzParams;
-							panel.store.reload();
-	                	}
-	                },
 	                store:{
 	                    type:'clueBmbStore'
 	                },
@@ -701,7 +687,25 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.clueDetailPanel',{
 	                    		return v
 	                    	}
 	                    }
-	                }]/*,
+	                },{
+	                    text:'报名状态',
+	                    dataIndex:'TZ_NREG_STAT',
+	                    width:110,
+	                    sortable:false,
+	                    flex:1,
+	                    renderer:function(v){
+	                    	if(v == '1'){
+	                    		return '已报名'
+	                    	}else if(v == '3'){
+	                    		return '已撤销'
+	                    	}else if(v == '4'){
+	                    		return '等待'
+	                    	}else{
+	                    		return v
+	                    	}
+	                    }
+                    }
+	                ]/*,
 	                bbar:{
 	                    xtype:'pagingtoolbar',
 	                    pageSize:10,

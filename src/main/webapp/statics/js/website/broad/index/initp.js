@@ -282,6 +282,7 @@ function openFszl(){
 		layer.open({
 			  title: '补充资料上传',
 			  area: ['500px', '300px'],
+			  btn:[],
 			  content: '<button type="button" class="layui-btn" id="test1">'
 				  		+'<i class="layui-icon"></i>上传文件'
 				  		+'</button>' + strVar,
@@ -303,7 +304,7 @@ function openFszl(){
 					    elem: '#test1', //绑定元素
 					    url: '/UpdServlet', //上传接口
 					    accept: 'file', //允许上传的文件类型
-					    exts: 'docx|jpg|xlsx|doc|pdf|jpeg',
+					    exts: 'docx|jpg|xlsx|doc|pdf|gif|bmp',
 					    field:'orguploadfile',
 					    multiple: true,//多附件上传
 					    drag:true,

@@ -1360,6 +1360,8 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 			jdbcTemplate.update("DELETE FROM PS_TZ_APPFATTACH_T WHERE ATTACHSYSFILENAME=?", new Object[] { TZ_XXX_BH });
 			jdbcTemplate.update("DELETE FROM PS_TZ_FORM_ATT2_T WHERE TZ_XXX_BH=?", new Object[] { TZ_XXX_BH });
 			jdbcTemplate.update("DELETE FROM PS_TZ_FORM_ATT_T WHERE ATTACHSYSFILENAME=?", new Object[] { TZ_XXX_BH });
+			//删除复试资料
+			jdbcTemplate.update("DELETE FROM PS_TZ_FSZL_T WHERE ATTACHSYSFILENAME=?", new Object[] { TZ_XXX_BH });
 		} catch (Exception e) {
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
