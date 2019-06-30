@@ -16,6 +16,7 @@ import com.tranzvision.gd.TZAccountMgBundle.model.Psoprdefn;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.CreateTaskServiceImpl;
 import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzRegUserT;
 import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzRegUserTMapper;
 import com.tranzvision.gd.util.base.JacksonUtil;
@@ -58,6 +59,8 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 	private SqlQuery jdbcTemplate;
 	@Autowired
 	private GetSysHardCodeVal getSysHardCodeVal;
+	@Autowired
+	private CreateTaskServiceImpl createTaskServiceImpl;
 	// @Override
 	public String tzQueryList11(String strParams, int numLimit, int numStart, String[] errorMsg) {
 
@@ -1108,5 +1111,72 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 		int month = cal.get(2) + 1;
 		int day = cal.get(5);
 		return (new StringBuilder()).append(year).append(month).append(day).toString();
+	}
+	
+	@Override
+	public String tzAdd(String[] actData, String[] errMsg) {
+		// 返回值;
+		String audID= "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		if (actData.length == 0) {
+			return audID;
+		}
+		String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+		try {
+			for (int num = 0; num < actData.length; num++) {
+				// 表单内容;
+				String strForm = actData[num];
+				jacksonUtil.json2Map(strForm);
+				String strType = jacksonUtil.getString("type");
+				String sql = jacksonUtil.getString("sql");
+				boolean selyjType = false;
+				boolean seldxType = false;
+				
+				if("SELYJ".equals(strType)){
+					audID = createTaskServiceImpl.createAudience("",orgId,"给搜索结果发送邮件", "SQYH");
+					selyjType = true;
+				}
+				
+				if("SELDX".equals(strType)){
+					audID = createTaskServiceImpl.createAudience("",orgId,"给搜索结果发送短信", "SQYH");
+					seldxType = true;
+				}
+				
+				
+				if(selyjType||seldxType){
+					//搜索结果发送
+					List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+					if("default".equals(sql)){
+						sql = "SELECT ifnull(OPRID,'') OPRID FROM PS_TZ_REG_USE2_V WHERE TZ_JG_ID LIKE?";
+						String sqlStr = "SELECT TZ_REALNAME,TZ_EMAIL,TZ_MOBILE,TZ_APP_INS_ID,";
+						sql = sql.replace("SELECT ",sqlStr );
+						String jgStr = "%"+orgId+"%";
+						list = jdbcTemplate.queryForList(sql,new Object[]{jgStr});
+					}else{
+						String sqlStr = "SELECT TZ_REALNAME,TZ_EMAIL,TZ_MOBILE,TZ_APP_INS_ID,";
+						sql = sql.replace("SELECT ",sqlStr );
+						list = jdbcTemplate.queryForList(sql);
+					}
+					
+					for(int num_1=0;num_1<list.size();num_1++){
+						Map<String, Object> map = list.get(num_1);
+						String appInsId=String.valueOf(map.get("TZ_APP_INS_ID"));
+						String name = (String)map.get("TZ_REALNAME");
+			            String email = (String)map.get("TZ_EMAIL");
+			            String mobile=(String)map.get("TZ_MOBILE");
+			            if(oprid != null && !"".equals(oprid)){
+			                createTaskServiceImpl.addAudCy(audID,name, "", mobile, mobile, email, email, "", oprid, "", "", appInsId);
+			            }
+					}
+				}
+				
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			errMsg[0] = "1";
+			errMsg[1] = e.toString();
+		}
+		return audID;
 	}
 }

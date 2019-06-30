@@ -91,6 +91,14 @@
 					glyph:'xf003@FontAwesome',
 					handler:'sendSmsSelPers'
                 },{
+					text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.sendEmlSelPersAll","给搜索结果发送邮件"),
+					glyph:'xf1d8@FontAwesome',
+					handler:'sendEmlSelPersAll'
+                },{
+					text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.sendSmsSelPersAll","给搜索结果发送短信"),
+					glyph:'xf003@FontAwesome',
+					handler:'sendSmsSelPersAll'
+                },{
 					text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.exportApplyInfoExcel","导出未报名人信息"),
 					iconCls:'export',
 					handler:'exportApplyInfoExcel'

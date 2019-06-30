@@ -38,39 +38,50 @@ public class TzInterviewCheckServiceImpl extends FrameworkImpl {
 			jacksonUtil.json2Map(comParams);
 			String classID = jacksonUtil.getString("classID");
 			String batchID = jacksonUtil.getString("batchID");
-			String selOne = "";
-			if(classID!=null&&batchID!=null){
-				String sql = "Select B.TZ_GROUP_NAME" +
-						" From PS_TZ_MSPS_KSH_TBL A,PS_TZ_INTEGROUP_T B"+
-						" Where A.TZ_GROUP_ID=B.TZ_GROUP_ID"+
-						" AND B.TZ_CLASS_ID=?"+
-						" AND B.TZ_APPLY_PC_ID=?"+
-						" AND A.TZ_GROUP_ID IS NOT NULL" +
-						" AND A.TZ_GROUP_ID != ''"+
-						" GROUP BY B.TZ_GROUP_NAME";
-				List<Map<String, Object>> dataList = sqlQuery.queryForList(sql, new Object[] { classID,batchID });
-				if(dataList!=null&&!"".equals(dataList)){
-					String sqlRq = "SELECT A.TZ_MS_DATE"+
-							" From PS_TZ_MSSJ_ARR_TBL A,PS_TZ_MSYY_KS_TBL B,PS_TZ_FORM_WRK_T C,PS_TZ_MSPS_KSH_TBL D,PS_TZ_INTEGROUP_T E"+
-							" Where A.TZ_CLASS_ID=B.TZ_CLASS_ID"+
-							" AND A.TZ_BATCH_ID=B.TZ_BATCH_ID"+
-							" AND A.TZ_MS_PLAN_SEQ=B.TZ_MS_PLAN_SEQ"+
-							" AND A.TZ_CLASS_ID=D.TZ_CLASS_ID"+
-							" AND A.TZ_BATCH_ID=D.TZ_APPLY_PC_ID"+
-							" AND B.OPRID=C.OPRID"+
-							" AND C.TZ_APP_INS_ID=D.TZ_APP_INS_ID"+
-							" AND D.TZ_CLASS_ID=E.TZ_CLASS_ID"+
-							" AND D.TZ_APPLY_PC_ID=E.TZ_APPLY_PC_ID"+
-							" AND D.TZ_GROUP_ID=E.TZ_GROUP_ID"+
-							" AND E.TZ_GROUP_NAME=?"+
-							" AND E.TZ_CLASS_ID=?"+
-							" AND E.TZ_APPLY_PC_ID=?"+
-							" LIMIT 1";
-					if(dataList.size()>0){
-						for(int i =0;i<dataList.size();i++){
+			String sel = jacksonUtil.getString("selOne");
+			if(sel!=null){
+				return queryColumns(comParams,errorMsg);
+			}else{
+				String selOne = "";
+				if(classID!=null&&batchID!=null){
+					String sql = "Select B.TZ_GROUP_NAME" +
+							" From PS_TZ_MSPS_KSH_TBL A,PS_TZ_INTEGROUP_T B"+
+							" Where A.TZ_GROUP_ID=B.TZ_GROUP_ID"+
+							" AND B.TZ_CLASS_ID=?"+
+							" AND B.TZ_APPLY_PC_ID=?"+
+							" AND A.TZ_GROUP_ID IS NOT NULL" +
+							" AND A.TZ_GROUP_ID != ''"+
+							" GROUP BY B.TZ_GROUP_NAME";
+					List<Map<String, Object>> dataList = sqlQuery.queryForList(sql, new Object[] { classID,batchID });
+					if(dataList!=null&&!"".equals(dataList)){
+						String sqlRq = "SELECT A.TZ_MS_DATE"+
+								" From PS_TZ_MSSJ_ARR_TBL A,PS_TZ_MSYY_KS_TBL B,PS_TZ_FORM_WRK_T C,PS_TZ_MSPS_KSH_TBL D,PS_TZ_INTEGROUP_T E"+
+								" Where A.TZ_CLASS_ID=B.TZ_CLASS_ID"+
+								" AND A.TZ_BATCH_ID=B.TZ_BATCH_ID"+
+								" AND A.TZ_MS_PLAN_SEQ=B.TZ_MS_PLAN_SEQ"+
+								" AND A.TZ_CLASS_ID=D.TZ_CLASS_ID"+
+								" AND A.TZ_BATCH_ID=D.TZ_APPLY_PC_ID"+
+								" AND B.OPRID=C.OPRID"+
+								" AND C.TZ_APP_INS_ID=D.TZ_APP_INS_ID"+
+								" AND D.TZ_CLASS_ID=E.TZ_CLASS_ID"+
+								" AND D.TZ_APPLY_PC_ID=E.TZ_APPLY_PC_ID"+
+								" AND D.TZ_GROUP_ID=E.TZ_GROUP_ID"+
+								" AND E.TZ_GROUP_NAME=?"+
+								" AND E.TZ_CLASS_ID=?"+
+								" AND E.TZ_APPLY_PC_ID=?"+
+								" LIMIT 1";
+						if(dataList.size()>0){
+							for(int i =0;i<dataList.size();i++){
+								Map<String, Object> mapList = new HashMap<String, Object>();
+								String rq = sqlQuery.queryForObject(sqlRq, new Object[] { dataList.get(i).get("TZ_GROUP_NAME"),classID,batchID },"String");
+								selOne = rq + " 第"+dataList.get(i).get("TZ_GROUP_NAME")+"面试情况一览表";
+								mapList.put("selOne", selOne);
+								mapList.put("classID", classID);
+								mapList.put("batchID", batchID);
+								listData.add(mapList);
+							}
+						}else{
 							Map<String, Object> mapList = new HashMap<String, Object>();
-							String rq = sqlQuery.queryForObject(sqlRq, new Object[] { dataList.get(i).get("TZ_GROUP_NAME"),classID,batchID },"String");
-							selOne = rq + " 第"+dataList.get(i).get("TZ_GROUP_NAME")+"面试情况一览表";
 							mapList.put("selOne", selOne);
 							mapList.put("classID", classID);
 							mapList.put("batchID", batchID);
@@ -83,18 +94,14 @@ public class TzInterviewCheckServiceImpl extends FrameworkImpl {
 						mapList.put("batchID", batchID);
 						listData.add(mapList);
 					}
+					
+					
 				}else{
-					Map<String, Object> mapList = new HashMap<String, Object>();
-					mapList.put("selOne", selOne);
-					mapList.put("classID", classID);
-					mapList.put("batchID", batchID);
-					listData.add(mapList);
+					errorMsg[0] = "1";
+					errorMsg[1] = "参数有问题";
 				}
-				
-			}else{
-				errorMsg[0] = "1";
-				errorMsg[1] = "参数有问题";
 			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			errorMsg[0] = "1";
@@ -105,22 +112,6 @@ public class TzInterviewCheckServiceImpl extends FrameworkImpl {
 		return strRet;
 	}
 	
-	@Override
-	public String tzOther(String strType, String strParams, String[] errorMsg) {
-		String strRet = "{}";
-		try {
-			switch (strType) {
-			case "queryColumns":
-				strRet = this.queryColumns(strParams, errorMsg);
-				break;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			errorMsg[0] = "1";
-			errorMsg[1] = "操作异常。" + e.getMessage();
-		}
-		return strRet;
-	}
 	
 	//获取列
 	private String queryColumns(String strParams, String[] errorMsg) {
@@ -137,7 +128,10 @@ public class TzInterviewCheckServiceImpl extends FrameworkImpl {
 			String classID = jacksonUtil.getString("classID");
 			String batchID = jacksonUtil.getString("batchID");
 			String selOne = jacksonUtil.getString("selOne");
-			String groupName = selOne.substring(12, 14);
+			String groupName = "";
+			if(!"".equals(selOne)){
+				groupName = selOne.substring(12, selOne.length()-7);
+			}	
 			if(classID!=null&&batchID!=null){
 				//横轴
 				String sqlX = "SELECT distinct A.TZ_ORDER"+
@@ -227,9 +221,6 @@ public class TzInterviewCheckServiceImpl extends FrameworkImpl {
 					}
 				}
 				
-			}else{
-				errorMsg[0] = "1";
-				errorMsg[1] = "参数有问题";
 			}
 			
 			

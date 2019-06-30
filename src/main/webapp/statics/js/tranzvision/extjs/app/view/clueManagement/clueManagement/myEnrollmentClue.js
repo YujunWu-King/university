@@ -71,6 +71,11 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.myEnrollmentClue',{
                             name:'viewEnrollClueEmailsHis',
                             handler:'viewEnrollClueEmailsHis'
                         },{
+                            text:'给搜索结果发送邮件',
+                            iconCls:'email',
+                            name:'sendEmlSelPersAll',
+                            handler:'sendEmlSelPersAll'
+                        },{
         					text:'批量发送短信',
         					iconCls:'publish',
                             name:'sendEmlSelPers',
@@ -80,6 +85,11 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.myEnrollmentClue',{
         					iconCls:'publish',
                             name:'viewSmsHistory',
         					handler:'viewSmsHistory'
+                        },{
+                            text:'给搜索结果发送短信',
+                            iconCls:'publish',
+                            name:'sendSmsSelPersAll',
+                            handler:'sendSmsSelPersAll'
                         },{
                             text:'快速处理线索',
                             iconCls:'set',
