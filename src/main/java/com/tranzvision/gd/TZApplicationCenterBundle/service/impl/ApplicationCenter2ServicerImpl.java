@@ -469,10 +469,10 @@ public class ApplicationCenter2ServicerImpl extends FrameworkImpl {
 								String url = jdbcTemplate.queryForObject(sql, new Object[] {TZ_SURVEY_ID }, "String");
 								
 								//该学生在调查问卷的听众中，且未完成在线调查，需要完成在线调查才能查看面试结果
-								if(flag1 && flag2) {
+								if(flag1 && flag2 && "Y".equals(isFb)) {
 									TZ_APPPRO_RST = "<p><a class=\"zxj_more1\" href='"+url+"'>填写在线调查</a></p>";
 									TZ_APPPRO_RST = "<table class=\"table_style1\"><thead><tr><td width=\"16.6%\">是否有在线调查</td></tr></thead><tbody><tr><td style=\"word-break:break-all\">是，在线调查请<a href='"+url+"'>点击此处</a>，填写完在线调查后才可以查看面试结果</td></tr></tbody></table>";
-								}else if(flag1 && !flag2) {
+								}else if(flag1 && !flag2 && "Y".equals(isFb)) {
 									TZ_APPPRO_RST += "<table class=\"table_style1\"><thead><tr><td width=\"16.6%\">查看在线调查</td></tr></thead><tbody><tr><td style=\"word-break:break-all\"><a href='"+url+"' target='_blank'>查看在线调查</a></td></tr></tbody></table>";
 								}
 							}
