@@ -1143,12 +1143,12 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.myEnrollmentClueContr
                     }
                 }
             }
-            var temp=[personList[0]]
+           /* var temp=[personList[0]]
             for(var i = 1;i<personList.length;i++){
             	if( personList[i].mobile !== temp[temp.length-1].mobile){
 		            temp.push(personList[i]);
 		        }
-            }
+            }*/
             if(noMobileCount==checkLen) {
                 //不存在有短信的数据
                 Ext.MessageBox.alert('提示','您选中的记录没有手机号码');
@@ -1165,7 +1165,7 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.myEnrollmentClueContr
                     "OperateType": "U",
                     "comParams": {
                         "add": [
-                            {"type": 'DX', "personList": temp}
+                            {"type": 'DX', "personList": personList}
                         ]
                     }
                 };
@@ -1494,6 +1494,96 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.myEnrollmentClueContr
                 }
             });
         });
-    }
+    },
+	//搜索结果发送邮件
+	sendEmlSelPersAll : function(btn) {
+		var personList = [];
+		var panel = btn.findParentByType('grid');
+		var sql = panel.getedSQL;
+		console.log(sql)
+		if ((typeof sql) == "undefined") {
+			sql = "default";
+			var params = {
+				"ComID": "TZ_XSXS_MYXS_COM",
+                "PageID": "TZ_XSXS_MYXS_STD",
+				"OperateType" : "U",
+				"comParams" : {
+					"add" : [ {
+						"type" : 'SELYJ',
+						"sql" : sql
+					} ]
+				}
+			};
+		} else {
+			var params = {
+				"ComID" : "TZ_XSXS_MYXS_COM",
+				"PageID" : "TZ_XSXS_MYXS_STD",
+				"OperateType" : "U",
+				"comParams" : {
+					"add" : [ {
+						"type" : 'SELYJ',
+						"sql" : sql
+					} ]
+				}
+			};
+		}
+
+		Ext.tzLoad(Ext.JSON.encode(params), function(
+				responseData) {
+			Ext.tzSendEmail({
+				//发送的邮件模板;
+				"EmailTmpName" : [ "TZ_EML_N" ],
+				//创建的需要发送的听众ID;
+				"audienceId" : responseData,
+				//是否有附件: Y 表示可以发送附件,"N"表示无附件;
+				"file" : "N"
+			});
+		});
+	},
+	//搜索结果发送短信
+	sendSmsSelPersAll : function(btn) {
+		var personList = [];
+		var panel = btn.findParentByType('grid');
+		var sql = panel.getedSQL;
+		console.log(sql)
+		if ((typeof sql) == "undefined") {
+			sql = "default";
+			var params = {
+				"ComID" : "TZ_XSXS_MYXS_COM",
+				"PageID" : "TZ_XSXS_MYXS_STD",
+				"OperateType" : "U",
+				"comParams" : {
+					"add" : [ {
+						"type" : 'SELDX',
+						"sql" : sql
+					} ]
+				}
+			};
+		} else {
+			var params = {
+				"ComID" : "TZ_XSXS_MYXS_COM",
+				"PageID" : "TZ_XSXS_MYXS_STD",
+				"OperateType" : "U",
+				"comParams" : {
+					"add" : [ {
+						"type" : 'SELDX',
+						"sql" : sql
+					} ]
+				}
+			};
+		}
+
+		Ext.tzLoad(Ext.JSON.encode(params), function(
+				responseData) {
+			Ext.tzSendSms({
+				//发送的邮件模板;
+				"SmsTmpName" : [ "TZ_SMS_N_002" ],
+				//创建的需要发送的听众ID;
+				"audienceId" : responseData,
+				//是否有附件: Y 表示可以发送附件,"N"表示无附件;
+				"file" : "N"
+			});
+		});
+	}
 });
 

@@ -2257,7 +2257,91 @@
  				Ext.Msg.alert("提示","下载失败，文件不存在");
  			}
  		});
-    }
-    
-    
+    },
+  //搜索结果发送邮件
+	sendEmlSelPersAll : function(btn) {
+		var sql = window.getedSQL2;
+		console.log(sql)
+		if ((typeof sql) == "undefined") {
+			sql = "default";
+			var params = {
+				"ComID" : "TZ_UM_USERMG_COM",
+				"PageID" : "TZ_UM_USERMG_STD",
+				"OperateType" : "U",
+				"comParams" : {
+					"add" : [ {
+						"type" : 'SELYJ',
+						"sql" : sql
+					} ]
+				}
+			};
+		} else {
+			var params = {
+				"ComID" : "TZ_UM_USERMG_COM",
+				"PageID" : "TZ_UM_USERMG_STD",
+				"OperateType" : "U",
+				"comParams" : {
+					"add" : [ {
+						"type" : 'SELYJ',
+						"sql" : sql
+					} ]
+				}
+			};
+		}
+
+		Ext.tzLoad(Ext.JSON.encode(params), function(
+				responseData) {
+			Ext.tzSendEmail({
+				//发送的邮件模板;
+				"EmailTmpName" : [ "TZ_EML_N" ],
+				//创建的需要发送的听众ID;
+				"audienceId" : responseData,
+				//是否有附件: Y 表示可以发送附件,"N"表示无附件;
+				"file" : "N"
+			});
+		});
+	},
+	//搜索结果发送短信
+	sendSmsSelPersAll : function(btn) {
+		var sql = window.getedSQL2;
+		console.log(sql)
+		if ((typeof sql) == "undefined") {
+			sql = "default";
+			var params = {
+				"ComID" : "TZ_UM_USERMG_COM",
+				"PageID" : "TZ_UM_USERMG_STD",
+				"OperateType" : "U",
+				"comParams" : {
+					"add" : [ {
+						"type" : 'SELDX',
+						"sql" : sql
+					} ]
+				}
+			};
+		} else {
+			var params = {
+				"ComID" : "TZ_UM_USERMG_COM",
+				"PageID" : "TZ_UM_USERMG_STD",
+				"OperateType" : "U",
+				"comParams" : {
+					"add" : [ {
+						"type" : 'SELDX',
+						"sql" : sql
+					} ]
+				}
+			};
+		}
+
+		Ext.tzLoad(Ext.JSON.encode(params), function(
+				responseData) {
+			Ext.tzSendSms({
+				//发送的邮件模板;
+				"SmsTmpName" : [ "TZ_SMS_N_002" ],
+				//创建的需要发送的听众ID;
+				"audienceId" : responseData,
+				//是否有附件: Y 表示可以发送附件,"N"表示无附件;
+				"file" : "N"
+			});
+		});
+	}
 });

@@ -105,7 +105,7 @@ public class TZMyEnrollmentClueServiceImpl extends FrameworkImpl {
 		return jacksonUtil.Map2json(mapRet);
 	}
 	
-	/* 批量发送邮件添加听众 */
+	/* 添加听众 */
 	@Override
 	public String tzAdd(String[] actData, String[] errMsg) {
 		// 返回值;
@@ -122,28 +122,61 @@ public class TZMyEnrollmentClueServiceImpl extends FrameworkImpl {
 				String strForm = actData[num];
 				jacksonUtil.json2Map(strForm);
 				String strType = jacksonUtil.getString("type");
+				String sql = jacksonUtil.getString("sql");
 				boolean bMultiType = false;
 				boolean dxType = false;
+				boolean selyjType = false;
+				boolean seldxType = false;
 			      
 				if("MULTI".equals(strType)){
-					audID = createTaskServiceImpl.createAudience("",orgId,"招生线索管理批量发送邮件", "XSXS");
+					audID = createTaskServiceImpl.createAudience("",orgId,"我的招生线索管理批量发送邮件", "XSXS");
 					bMultiType = true;
 				}
 				
 				if("DX".equals(strType)){
-					audID = createTaskServiceImpl.createAudience("",orgId,"招生线索管理批量发送短信", "XSXS");
+					audID = createTaskServiceImpl.createAudience("",orgId,"我的招生线索管理批量发送短信", "XSXS");
 					dxType = true;
 				}
-								
-				if(bMultiType||dxType){
+				
+				if("SELYJ".equals(strType)){
+					audID = createTaskServiceImpl.createAudience("",orgId,"给搜索结果发送邮件", "XSXS");
+					selyjType = true;
+				}
+				
+				if("SELDX".equals(strType)){
+					audID = createTaskServiceImpl.createAudience("",orgId,"给搜索结果发送短信", "XSXS");
+					seldxType = true;
+				}
+				
+				
+				if(selyjType||seldxType){
+					//搜索结果发送
+					List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+					if("default".equals(sql)){
+						sql = "SELECT ifnull(TZ_LEAD_ID,'') TZ_LEAD_ID FROM PS_TZ_XSXS_INFO_VW WHERE TZ_JG_ID=? AND TZ_LEAD_STATUS<>'G'";
+						String sqlStr = "SELECT TZ_REALNAME,TZ_EMAIL,TZ_MOBILE,";
+						sql = sql.replace("SELECT ", sqlStr)+" AND TZ_ZR_OPRID2 =?";
+						list = sqlQuery.queryForList(sql,new Object[]{orgId,oprid});
+					}else{
+						String sqlStr = "SELECT TZ_REALNAME,TZ_EMAIL,TZ_MOBILE,";
+						sql = sql.replace("SELECT ", sqlStr)+" AND TZ_ZR_OPRID2 =?";
+						list = sqlQuery.queryForList(sql,new Object[]{oprid});
+					}
+					for(int num_1=0;num_1<list.size();num_1++){
+						Map<String, Object> map = list.get(num_1);
+						String clueId=(String)map.get("TZ_LEAD_ID");
+						String name = (String)map.get("TZ_REALNAME");
+			            String email = (String)map.get("TZ_EMAIL");
+			            String mobile=(String)map.get("TZ_MOBILE");
+			            if(oprid != null && !"".equals(oprid)){
+			                createTaskServiceImpl.addAudCy(audID,name, "", mobile, mobile, email, email, "", oprid, "", "", clueId);
+			            }
+					}
+				}else{
 					//添加听众;
+					//选择发送
 					@SuppressWarnings("unchecked")
 					List<Map<String, Object>> list = (List<Map<String, Object>>) jacksonUtil.getList("personList");
-					Map<String, Object> lxfsMap = sqlQuery.queryForMap("SELECT TZ_ZY_SJ,TZ_CY_SJ,TZ_ZY_DH,TZ_CY_DH,TZ_ZY_EMAIL,TZ_CY_EMAIL,TZ_ZY_TXDZ,TZ_CY_TXDZ,TZ_WEIXIN,TZ_SKYPE FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='ZCYH' AND TZ_LYDX_ID=?", new Object[]{oprid});
-					String wechat = "";
-					if(lxfsMap != null){
-	                	wechat = (String)lxfsMap.get("TZ_WEIXIN");
-	                }
 					if(list != null && list.size() > 0){
 						for(int num_1 = 0; num_1 < list.size(); num_1 ++){
 							Map<String, Object> map = list.get(num_1);
@@ -152,7 +185,7 @@ public class TZMyEnrollmentClueServiceImpl extends FrameworkImpl {
 				            String clueId=(String)map.get("clueId");
 				            String mobile=(String)map.get("mobile");
 				            if(oprid != null && !"".equals(oprid)){
-				                createTaskServiceImpl.addAudCy(audID,name, "", mobile, mobile, email, email, wechat, oprid, "", "", clueId);
+				                createTaskServiceImpl.addAudCy(audID,name, "", mobile, mobile, email, email, "", oprid, "", "", clueId);
 				            }
 						}
 					}

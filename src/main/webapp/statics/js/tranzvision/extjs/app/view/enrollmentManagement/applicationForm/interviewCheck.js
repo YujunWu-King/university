@@ -13,11 +13,14 @@
 	controller: 'appFormClass',
     classID:'',
     batchID:'',
+    search1:'',
 	initComponent: function(){
 		var interviewCheckStore = new KitchenSink.view.enrollmentManagement.applicationForm.interviewCheckStore();
 		interviewCheckStore.tzStoreParams = '{"classID":"'+this.classID+'","batchID":"'+this.batchID+'"}';
-		interviewCheckStore.load();
+		//interviewCheckStore.load();
 		var store = new KitchenSink.view.enrollmentManagement.applicationForm.interviewCheckStore();
+		//var search1 = "";
+		store.tzStoreParams ='{"classID":"'+this.classID+'","batchID":"'+this.batchID+'","selOne":"'+'2019-03-16 第1组面试情况一览表'+'"}';
 		var column = [{
 			text: '',
 			width:80
@@ -90,8 +93,10 @@
 							var batchID = form.findField('batchID').getValue();
 							if(search != ""&&search != null){
 								store = new KitchenSink.view.enrollmentManagement.applicationForm.interviewCheckStore();
-								var tzParams ='{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_INTERVIEW_STD","OperateType":"queryColumns","comParams":{"classID":"'+classID+'","batchID":"'+batchID+
+								var tzParams ='{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_INTERVIEW_STD","OperateType":"QG","comParams":{"classID":"'+classID+'","batchID":"'+batchID+
 								'","selOne":"'+search+'"}}';
+								//search1 = search;
+								panel.search1=search;
 								Ext.tzLoadAsync(tzParams,function(respData){
 									//store.proxy.extraParams.tzParams = tzParams;
 									var size = respData.size;
@@ -146,14 +151,20 @@
 				reference:'smsHistoryGrid',
 				style: "margin:10px",
 		        store: store,
-	            columns: column
+	            columns: column,
+				/*bbar: {
+	                xtype: 'pagingtoolbar',
+	                pageSize: 500,
+	                store: store,
+	                plugins: new Ext.ux.ProgressBarPager()
+	            }*/
 	        }],
 	        buttons: [{
 			 	text: "关闭",
 				iconCls:"close",
-				ignoreChangesFlag: true,
+				displayInfo: true,
 				handler: 'onInterviewClose'
-			}]	
+			}]
 		});
 		this.callParent();
 	},
