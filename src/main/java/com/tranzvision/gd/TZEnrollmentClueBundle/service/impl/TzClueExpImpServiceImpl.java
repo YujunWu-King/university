@@ -257,6 +257,9 @@ public class TzClueExpImpServiceImpl extends FrameworkImpl {
 			}
 			
 			Map<String, Object> mapParams = new HashMap<String,Object>();
+			if("MYXS".equals(exportType)){
+				searchSql = searchSql + " AND TZ_ZR_OPRID2 ='" + oprid +"'";
+			}
 			mapParams.put("searchSql", searchSql);
 			strParams = jacksonUtil.Map2json(mapParams);
 			
