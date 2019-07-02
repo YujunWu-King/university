@@ -68,7 +68,7 @@
 			format:'H:i',
 			name: 'startTime',
 			minValue: '7:00 AM',
-	        maxValue: '23:30'
+	        maxValue: '19:00'
         },{
             xtype: 'timefield',
             fieldLabel: '结束时间',
@@ -78,7 +78,7 @@
 			format:'H:i',	
 			name: 'endTime',
 			minValue: '7:00 AM',
-	        maxValue: '23:30',
+	        maxValue: '24:00',
 	        validator: function(val){
 				var form = this.findParentByType('form').getForm();
 				if(val != ""){
