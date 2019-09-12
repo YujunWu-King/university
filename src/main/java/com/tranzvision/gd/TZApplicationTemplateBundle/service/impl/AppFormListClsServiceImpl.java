@@ -435,6 +435,10 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 		if (StringUtils.equals(oType, "KSPHOTO")) {
 			// 判断当前登录人是否有个人照片信息
 			String ishasSql = "SELECT 'Y' FROM PS_TZ_OPR_PHT_GL_T WHERE OPRID = ?";
+			if(jacksonUtil.containsKey("appInsId")){
+				String appInsId = jacksonUtil.getString("appInsId");
+				oprId=sqlQuery.queryForObject("select top 1 OPRID from ps_tz_form_wrk_t where TZ_APP_INS_ID=?", new Object[]{appInsId}, "String");
+			}
 			String isHas = sqlQuery.queryForObject(ishasSql, new Object[] { oprId }, "String");
 			if (StringUtils.equals("Y", isHas)) {
 				String sql = "SELECT PH.TZ_ATTACHSYSFILENA,PH.TZ_ATTACHFILE_NAME,PH.TZ_ATT_P_URL,PH.TZ_ATT_A_URL FROM PS_TZ_OPR_PHT_GL_T GL, PS_TZ_OPR_PHOTO_T PH WHERE GL.TZ_ATTACHSYSFILENA = PH.TZ_ATTACHSYSFILENA AND GL.OPRID = ?";

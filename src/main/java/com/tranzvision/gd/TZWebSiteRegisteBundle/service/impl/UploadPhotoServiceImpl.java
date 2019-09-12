@@ -88,6 +88,10 @@ public class UploadPhotoServiceImpl extends FrameworkImpl {
 
 			// 查询当前文件
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+			if(jacksonUtil.containsKey("appInsId")){
+				String appInsId =  jacksonUtil.getString("appInsId");
+				oprid=jdbcTemplate.queryForObject("select top 1 OPRID from ps_tz_form_wrk_t where TZ_APP_INS_ID=?", new Object[]{appInsId}, "String");
+			}
 			String tzAttaUrl, tzAttashSysFile;
 			String sql = "SELECT TZ_ATT_A_URL,A.TZ_ATTACHSYSFILENA FROM PS_TZ_OPR_PHT_GL_T A,PS_TZ_OPR_PHOTO_T B WHERE A.TZ_ATTACHSYSFILENA=B.TZ_ATTACHSYSFILENA AND A.OPRID=?";
 			Map<String, Object> mapHeadImgNow = jdbcTemplate.queryForMap(sql, new Object[] { oprid });
@@ -170,7 +174,7 @@ public class UploadPhotoServiceImpl extends FrameworkImpl {
 			String TZ_ENROLL_UPLOADPHO = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_PHO_HTML", phoToData,
 					LOAD, xuanzhuang, pleaseupload, fileSize, in_M, TZ_FILE_PROCESSING, TZ_TAILORING, TZ_P_UPLOAD,
 					TZ_INSIZE_FILE, TZ_FORMAT_ERROR, TZ_SAVE_ERROR, TZ_UPLOAD_PHOTO, TZ_PHOTO_PROCESSING, TZ_LOAD_PHOTO,
-					TZ_FILE_FORMAT, TZ_SIZE_TITLE, UpPhoto, SavePhoto, contextPath, imgPath, tzAttaUrl,savePhoto);
+					TZ_FILE_FORMAT, TZ_SIZE_TITLE, UpPhoto, SavePhoto, contextPath, imgPath, tzAttaUrl,savePhoto,oprid);
 			TZ_ENROLL_UPLOADPHO = objRep.repTitle(TZ_ENROLL_UPLOADPHO, siteId);
 			TZ_ENROLL_UPLOADPHO = objRep.repCss(TZ_ENROLL_UPLOADPHO, siteId);
 			return TZ_ENROLL_UPLOADPHO;
@@ -179,7 +183,10 @@ public class UploadPhotoServiceImpl extends FrameworkImpl {
 		}
 		return "";
 	}
-
+	/*
+	 * 上传图片后保存方法
+	 * 
+	 */
 	@Override
 	public String tzOther(String oprType, String strParams, String[] errorMsg) {
 		JacksonUtil jacksonUtil = new JacksonUtil();
@@ -188,18 +195,25 @@ public class UploadPhotoServiceImpl extends FrameworkImpl {
 			String sysFileName = jacksonUtil.getString("sysFileName");
 			String filename = jacksonUtil.getString("filename");
 			String imaPath = jacksonUtil.getString("imaPath");
+			String oprid=tzLoginServiceImpl.getLoginedManagerOprid(request);;
+			if(jacksonUtil.containsKey("oprid")){
+				oprid = jacksonUtil.getString("oprid");
+				if("".equals(oprid)||oprid==null){
+					oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+				}
+			}
+			
 			if (sysFileName != null && !"".equals(sysFileName) && filename != null && !"".equals(filename)
 					&& imaPath != null && !"".equals(imaPath)) {
-
 				String path = request.getServletContext().getRealPath(imaPath);
-
 				if ((path.lastIndexOf(File.separator) + 1) != path.length()) {
 					path = path + File.separator;
 				}
 
 				File file = new File(path + sysFileName);
 				if (file.exists() && file.isFile()) {
-					String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+					
+					//String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 					// 查询原来文件;
 					String tzAttpUrl, tzAttashSysFile;
 					String sql = "SELECT TZ_ATT_P_URL,A.TZ_ATTACHSYSFILENA FROM PS_TZ_OPR_PHT_GL_T A,PS_TZ_OPR_PHOTO_T B WHERE A.TZ_ATTACHSYSFILENA=B.TZ_ATTACHSYSFILENA AND A.OPRID=?";

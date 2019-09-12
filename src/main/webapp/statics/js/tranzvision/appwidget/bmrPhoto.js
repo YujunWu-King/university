@@ -15,7 +15,7 @@ SurveyBuild.extend("bmrPhoto", "baseComponent", {
 
         if (previewmode) {
             if(SurveyBuild.appInsId == "0"){
-                var params = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_OTHER_STD","OperateType":"EJSON","comParams":{"OType":"KSPHOTO"}}';
+                var params = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_OTHER_STD","OperateType":"EJSON","comParams":{"OType":"KSPHOTO","appInsId":"'+SurveyBuild.appInsId+'"}}';
                 $.ajax({
                     type: "get",
                     dataType: "JSON",
@@ -197,7 +197,7 @@ SurveyBuild.extend("bmrPhoto", "baseComponent", {
     		var up;
         $photoBox.click(function(e) {
             var photoUrl = SurveyBuild.tzGeneralURL + '?tzParams=';
-            var params = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_UP_PHOTO_STD","OperateType":"HTML","comParams":{"TPLID":"' + templId + '","siteId":"' + $("#siteId").val() + '"}}';
+            var params = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_UP_PHOTO_STD","OperateType":"HTML","comParams":{"TPLID":"' + templId + '","siteId":"' + $("#siteId").val() + '","appInsId":"'+SurveyBuild.appInsId+'"}}';
             photoUrl = photoUrl + window.escape(params);
             up = $.layer({
                 type: 2,

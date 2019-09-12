@@ -214,7 +214,7 @@
 							},
 				            success: function(msg) {
 				              	//var data="sysFileName=" + msg.name + "&filename=" + filename + "&imaPath=" + imaPath + "&path=" + path;
-			          			var fileStrJson = {"sysFileName": msg.name , "filename": filename, "imaPath": imaPath, "path": path};
+			          			var fileStrJson = {"sysFileName": msg.name , "filename": filename, "imaPath": imaPath, "path": path,"oprid":"%bind(:23)"};
 					  			var tzParams = '{"ComID":"TZ_GD_ZS_USERMNG","PageID":"TZ_UP_PHOTO_STD","OperateType":"PHOTO","comParams":' + JSON.stringify( fileStrJson ) + '}';
 			
 				                $.ajax({
