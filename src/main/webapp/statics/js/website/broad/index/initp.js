@@ -438,7 +438,7 @@ $(document).ready(function(){
 			    }); 
 			
 			var jgid = $("#jgid").val();
-			if(jgid != "mpacc" && jgid != "mf" && jgid && "MPACC" && jgid != "MF"){
+			if(jgid != "mpacc" && jgid != "mf" && jgid != "MPACC" && jgid != "MF"){
 				$("#projectAdjust").hide();
 			}
 			$("#projectAdjust").click(function(){
