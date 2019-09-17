@@ -116,7 +116,15 @@
                width:60,
 			   align: 'center',
 			   xtype: 'actioncolumn',
-			   items:[{iconCls: 'edit',tooltip:"审核",handler:'audit'}
+			   menuDisabled:true,
+			   items:[{iconCls: 'edit',tooltip:"审核",handler:'audit',
+				   isDisabled: function (view, rowIndex, colIndex, item, record) {
+                   	var state = record.data.state;
+                   	if(state=="1"||state=="2"){
+                   		return true;
+                   	}
+                   	return false;
+                   }}
 			   ]
             }],
 			store: store,
