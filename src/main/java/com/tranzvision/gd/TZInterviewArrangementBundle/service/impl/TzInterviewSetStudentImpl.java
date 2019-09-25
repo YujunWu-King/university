@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
+import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.CreateTaskServiceImpl;
 import com.tranzvision.gd.TZInterviewArrangementBundle.dao.PsTzMsapAudTblMapper;
@@ -33,6 +34,9 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl {
 
 	@Autowired
 	private SqlQuery sqlQuery;
+	
+	@Autowired
+	private FliterForm fliterForm;
 
 	@Autowired
 	private CreateTaskServiceImpl createTaskServiceImpl;
@@ -52,7 +56,7 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl {
 	@Autowired
 	private PsTzMsapAudTblMapper psTzMsapAudTblMapper;
 
-	@Override
+	/*@Override
 	public String tzQueryList(String strParams, int numLimit, int numStart, String[] errorMsg) {
 		// 返回值;
 		String strRet = "";
@@ -185,6 +189,117 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl {
 							mapRet.replace("total", total);
 							mapRet.replace("root", listJson);
 						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			errorMsg[0] = "1";
+			errorMsg[1] = "参数不正确！";
+		}
+
+		strRet = jacksonUtil.Map2json(mapRet);
+		return strRet;
+	}*/
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public String tzQueryList(String strParams, int numLimit, int numStart, String[] errorMsg) {
+		// 返回值;
+		String strRet = "";
+		Map<String, Object> mapRet = new HashMap<String, Object>();
+		mapRet.put("total", 0);
+		mapRet.put("root", new ArrayList<Map<String, Object>>());
+
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		try {
+			jacksonUtil.json2Map(strParams);
+
+			String type = jacksonUtil.getString("TYPE");
+			String classID = jacksonUtil.getString("classID");
+			String batchID = jacksonUtil.getString("batchID");
+
+			// 查询面试安排总数
+
+			ArrayList<Map<String, Object>> listJson = new ArrayList<Map<String, Object>>();
+			// 排序字段如果没有不要赋值
+			String[][] orderByArr = new String[][] { new String[] { "TZ_MSH_ID", "DESC" } };
+
+			// json数据要的结果字段;
+			String[] resultFldArray = { "TZ_BATCH_ID", "TZ_BATCH_NAME", "TZ_CLASS_ID", "TZ_APP_INS_ID", "OPRID",
+					"TZ_REALNAME", "TZ_MSH_ID", "TZ_MOBILE", "TZ_EMAIL", "TZ_CLASS_NAME"};
+
+			// 可配置搜索通用函数;
+			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, strParams, numLimit, numStart, errorMsg);
+			if (obj != null && obj.length > 0) {
+				ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
+				for (int i = 0; i < list.size(); i++) {
+					String[] rowList = list.get(i);
+					Map<String, Object> mapList = new HashMap<String, Object>();
+					mapList.put("batchID", rowList[0]);
+					mapList.put("batchName", rowList[1]);
+					mapList.put("classID", rowList[2]);
+					mapList.put("appId", rowList[3]);
+					mapList.put("oprid", rowList[4]);
+					mapList.put("stuName", rowList[5]);
+					mapList.put("interviewAppId", rowList[6]);
+					mapList.put("mobile", rowList[7]);
+					mapList.put("email", rowList[8]);
+					mapList.put("className", rowList[9]);
+
+					//预约状态
+					String sql = "select 'Y' from PS_TZ_MSYY_KS_TBL where TZ_CLASS_ID=? and TZ_BATCH_ID=? and OPRID=? limit 1";
+					String yySta = sqlQuery.queryForObject(sql, new Object[]{ rowList[2], rowList[0], rowList[4] }, "String");
+					String yyStatus = "未预约";
+					if("Y".equals(yySta)){
+						yyStatus = "已预约";
+					}
+					mapList.put("yyStatus", yyStatus);
+					
+					// 标签
+					String strLabel = "";
+					sql = "SELECT TZ_LABEL_NAME FROM PS_TZ_FORM_LABEL_T A,PS_TZ_LABEL_DFN_T B WHERE A.TZ_LABEL_ID=B.TZ_LABEL_ID AND TZ_APP_INS_ID=?";
+					List<Map<String, Object>> labelList = sqlQuery.queryForList(sql,
+							new Object[] { Long.parseLong(rowList[3]) });
+					for (Map<String, Object> mapLabel : labelList) {
+						String label = String.valueOf(mapLabel.get("TZ_LABEL_NAME"));
+						if (!"".equals(label) && label != null) {
+							strLabel = strLabel == "" ? label : strLabel + "； " + label;
+						}
+					}
+					mapList.put("label", strLabel);
+
+					listJson.add(mapList);
+				}
+				mapRet.replace("total", obj[0]);
+				mapRet.replace("root", listJson);
+				// 面试听众store
+				if ("AUD".equals(type)) {
+					String sql = "SELECT COUNT(*) FROM PS_TZ_MSAP_AUD_TBL WHERE TZ_CLASS_ID=? AND TZ_BATCH_ID=?";
+					int total = sqlQuery.queryForObject(sql, new Object[] { classID, batchID }, "int");
+
+					listJson = new ArrayList<Map<String, Object>>();
+					if (total > 0) {
+						sql = "SELECT TZ_AUD_ID FROM PS_TZ_MSAP_AUD_TBL WHERE TZ_CLASS_ID=? AND TZ_BATCH_ID=?";
+						List<Map<String, Object>> listData = sqlQuery.queryForList(sql,
+								new Object[] { classID, batchID });
+
+						for (Map<String, Object> mapData : listData) {
+							Map<String, Object> mapJson = new HashMap<String, Object>();
+							// 听众ID
+							String audID = String.valueOf(mapData.get("TZ_AUD_ID"));
+
+							// 查询姓名
+							sql = "SELECT TZ_AUD_NAM FROM PS_TZ_AUD_DEFN_T WHERE TZ_AUD_ID=?";
+							String audName = sqlQuery.queryForObject(sql, new Object[] { audID }, "String");
+
+							mapJson.put("id", audID);
+							mapJson.put("desc", audName);
+
+							listJson.add(mapJson);
+						}
+						mapRet.replace("total", total);
+						mapRet.replace("root", listJson);
 					}
 				}
 			}

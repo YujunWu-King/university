@@ -57,7 +57,7 @@
                 fieldLabel: '面试秘书',
     			name: 'roleName',
     			editable: false,
-    			value:'msmsE',
+    			value:'',
                 triggers: {
                     search: {
                         cls: 'x-form-search-trigger',
@@ -69,7 +69,7 @@
             	xtype: 'displayfield',
                 hideLabel: true,
                 name: 'roleNameDesc',
-                value:'面试秘书E'
+                value:''
             }]
             
         }]

@@ -45,6 +45,8 @@ public class TzClueCommonServiceImpl extends FrameworkImpl {
 	public String tzGetHtmlContent(String comParams) {
 		String contextUrl = request.getContextPath();
 		String jgId = request.getParameter("jgId");
+		String color = "#078445";
+		String text = "咨询报名华理MBA课程";
 		String str_appform_main_html = "";
 		boolean isMobile = CommonUtils.isMobile(request);
 		String sql = "SELECT COUNT(*) FROM PS_TZ_JG_BASE_T WHERE TZ_JG_ID=?";
@@ -52,14 +54,36 @@ public class TzClueCommonServiceImpl extends FrameworkImpl {
 			if(!"".equals(jgId)&&jgId!=null){
 				int res = sqlQuery.queryForObject(sql, new Object[]{ jgId }, "Integer");
 				if(res>0){
+					//根据机构id判断主题颜色和标题下内容
+					if("SEM".equals(jgId)){
+						color = "#078445";
+						text = "咨询报名华理MBA课程";
+					}
+					if("MEM".equals(jgId)){
+						color = "#1e7fb8";
+						text = "咨询报名华理MEM课程";
+					}
+					if("MPACC".equals(jgId)){
+						color = "#e3001e";
+						text = "咨询报名华理MPACC课程";
+					}
+					if("MF".equals(jgId)){
+						color = "#be9c5a";
+						text = "咨询报名华理MF课程";
+					}
+					if("IMBA".equals(jgId)){
+						color = "#40a4dc";
+						text = "咨询报名华理中澳合作MBA课程";
+					}
+					
 					if(isMobile){
 						System.out.println("手机端");
 						str_appform_main_html = tzGdObject.getHTMLTextForDollar(
-								"HTML.TZClueCommonBundle.TZ_CLUEM_COMMON_HTML", true,contextUrl,jgId);
+								"HTML.TZClueCommonBundle.TZ_CLUEM_COMMON_HTML", true,contextUrl,jgId,color,text);
 					}else{
 						System.out.println("PC端");
 						str_appform_main_html = tzGdObject.getHTMLTextForDollar(
-								"HTML.TZClueCommonBundle.TZ_CLUE_COMMON_HTML", true,contextUrl,jgId);
+								"HTML.TZClueCommonBundle.TZ_CLUE_COMMON_HTML", true,contextUrl,jgId,color,text);
 					}
 				}else{
 					System.out.println("错误");

@@ -22,6 +22,7 @@ import com.tranzvision.gd.TZClassSetBundle.dao.PsTzClsBatchTMapper;
 import com.tranzvision.gd.TZClassSetBundle.model.PsTzClassInfT;
 import com.tranzvision.gd.TZClassSetBundle.model.PsTzClsBatchT;
 import com.tranzvision.gd.TZClassSetBundle.model.PsTzClsBatchTKey;
+import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.CreateTaskServiceImpl;
 import com.tranzvision.gd.TZInterviewArrangementBundle.dao.PsTzMssjArrTblMapper;
 import com.tranzvision.gd.TZInterviewArrangementBundle.dao.PsTzMsyySetTblMapper;
 import com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMssjArrTbl;
@@ -79,7 +80,90 @@ public class TzInterviewArrangementImpl extends FrameworkImpl{
 	@Autowired
 	private PsTzMszgTMapper psTzMszgTMapper;
 	
+	@Autowired
+	private CreateTaskServiceImpl createTaskServiceImpl;
+	
+	//发送短信添加听众
+	@Override
+	public String tzAdd(String[] actData, String[] errMsg) {
+		// 返回值;
+		String audID= "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		if (actData.length == 0) {
+			return audID;
+		}
+		String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+		try {
+			for (int num = 0; num < actData.length; num++) {
+				// 表单内容;
+				String strForm = actData[num];
+				jacksonUtil.json2Map(strForm);
+				String strType = jacksonUtil.getString("type");
+				boolean SMS = false;
+				
+				if("SMS".equals(strType)){
+					audID = createTaskServiceImpl.createAudience("",orgId,"批量发送短信", "MS");
+					SMS = true;
+				}
+				
+				if(SMS){
+					@SuppressWarnings("unchecked")
+					List<Map<String, Object>> list = (List<Map<String, Object>>) jacksonUtil.getList("personList");
+					if(list != null && list.size() > 0){
+						for(int num_1 = 0; num_1 < list.size(); num_1 ++){
+							Map<String, Object> map = list.get(num_1);
+							String classID = (String)map.get("classID");
+				            String batchID = (String)map.get("batchID");
+				            String msJxNo=(String)map.get("msJxNo");
+							if(null != classID && !"".equals(classID) && null != batchID && !"".equals(batchID)){
+								//查询面试安排总数
+								String sql = "SELECT COUNT(*) FROM PS_TZ_MSYY_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_BATCH_ID=?";
+								int total = jdbcTemplate.queryForObject(sql, new Object[]{classID, batchID}, "int");
 
+								if (total > 0) {
+									sql = "SELECT TZ_MS_PLAN_SEQ,OPRID FROM PS_TZ_MSYY_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_BATCH_ID=? AND TZ_MS_PLAN_SEQ = ?";
+									List<Map<String, Object>> listData = jdbcTemplate.queryForList(sql, new Object[]{classID, batchID, msJxNo});
+
+									for(Map<String,Object> mapData : listData){
+										//报名表实例ID
+										String oprid1 = String.valueOf(mapData.get("OPRID"));
+										
+										String name = "";
+										String email = "";
+										String mobile = "";
+										sql = "SELECT TZ_REALNAME,TZ_EMAIL,TZ_MOBILE,TZ_MSH_ID FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
+										Map<String,Object> infoMap = jdbcTemplate.queryForMap(sql, new Object[]{ oprid1 });
+										if(infoMap != null){
+											name = infoMap.get("TZ_REALNAME").toString();
+											email = infoMap.get("TZ_EMAIL").toString();
+											mobile = infoMap.get("TZ_MOBILE").toString();
+										}
+										
+										String appInsID = "";
+										sql = "SELECT TZ_COLOR_SORT_ID,TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID=? AND OPRID=?";
+										Map<String,Object> wrkMap = jdbcTemplate.queryForMap(sql, new Object[]{ classID, oprid1 });
+										if(wrkMap != null){
+											appInsID = wrkMap.get("TZ_APP_INS_ID").toString(); 
+										}
+										if(oprid != null && !"".equals(oprid)){
+							                createTaskServiceImpl.addAudCy(audID,name, "", mobile, mobile, email, email, "", oprid, "", "", appInsID);
+							            }
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			errMsg[0] = "1";
+			errMsg[1] = e.toString();
+		}
+		return audID;
+	}
+	
 	/*
 	 * 获取指定班级批次信息
 	 * @see com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl#tzQuery(java.lang.String, java.lang.String[])

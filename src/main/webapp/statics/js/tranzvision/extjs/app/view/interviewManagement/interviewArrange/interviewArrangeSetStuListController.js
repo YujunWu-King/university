@@ -7,6 +7,26 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
 
     },
     
+    //查询学生
+    queryStudents:function(btn){
+    	var panel=btn.findParentByType("panel").config;
+    	var form = this.getView().child("form").getForm();
+    	var classID = form.findField("classID").getValue();
+    	var batchID = form.findField("batchID").getValue();
+        Ext.tzShowCFGSearch({	
+        	cfgSrhId: 'TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.TZ_MS_ARR_VW',
+        	condition:{
+        		TZ_CLASS_ID: classID,
+        		TZ_BATCH_ID: batchID
+            },
+            callback: function(seachCfg){
+                var store = btn.findParentByType("grid").store;
+                store.tzStoreParams = seachCfg;
+                store.load();
+            }
+        });
+    },
+    
     //添加听众
     addAudience:function(btn){
     	Ext.tzShowPromptSearch({

@@ -259,7 +259,10 @@
 			maxRow:50,
 			condition:{
 				presetFields:{
-					
+					TZ_JG_ID:{
+                        value: Ext.tzOrgID,
+                        type: '01'
+                    }
 				},
 				srhConFields:{
 					TZ_DLZH_ID:{
