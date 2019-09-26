@@ -189,6 +189,11 @@
 								iconCls:  'list',
 								glyph: 61,
 								menu:[{
+			        					text:'批量发送短信',
+			        					iconCls:'publish',
+			                            name:'sendEmlSelPers',
+			        					handler:'sendSmsSelPers'
+		                        	},{
 										text:'清除选中时间安排',
 										iconCls:"remove",
 										handler:'ms_cleanTimeArr'

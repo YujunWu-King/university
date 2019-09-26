@@ -176,7 +176,7 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 				String tzSiteLang = sqlQuery.queryForObject(sql, new Object[] { strApplyId }, "String");
 
 				String onlineApplyText = gdObjectServiceImpl.getMessageTextWithLanguageCd(request,
-						"TZGD_APPLICATION_MSG", "MSG01", tzSiteLang, "在线报名", "Online Application");
+						"TZGD_APPLICATION_MSG", "MSG01", tzSiteLang, "立即报名", "Online Application");
 				String allSeatText = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPLICATION_MSG",
 						"MSG02", tzSiteLang, "总席位数", "Seats number");
 				String appliedNumText = gdObjectServiceImpl.getMessageTextWithLanguageCd(request,

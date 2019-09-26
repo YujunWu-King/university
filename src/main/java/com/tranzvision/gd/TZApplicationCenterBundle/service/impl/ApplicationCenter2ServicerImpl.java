@@ -150,7 +150,14 @@ public class ApplicationCenter2ServicerImpl extends FrameworkImpl {
 					String classDiv = "";
 					String classselect = "";
 					// 循坏允许报名的班级;
-					String classSQL = "SELECT TZ_CLASS_ID, TZ_CLASS_NAME FROM  PS_TZ_CLASS_INF_T where TZ_PRJ_ID IN (SELECT TZ_PRJ_ID FROM PS_TZ_PROJECT_SITE_T WHERE TZ_SITEI_ID=?) AND TZ_JG_ID=? and TZ_IS_APP_OPEN='Y' and TZ_APP_START_DT IS NOT NULL AND TZ_APP_START_TM IS NOT NULL AND TZ_APP_END_DT IS NOT NULL AND TZ_APP_END_TM IS NOT NULL AND str_to_date(concat(DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now() AND str_to_date(concat(DATE_FORMAT(TZ_APP_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now() AND TZ_CLASS_ID NOT IN (select TZ_CLASS_ID from PS_TZ_FORM_WRK_T where OPRID=?)";
+					String classSQL = "SELECT TZ_CLASS_ID, TZ_CLASS_NAME FROM  PS_TZ_CLASS_INF_T where TZ_PRJ_ID IN "
+							+ "(SELECT TZ_PRJ_ID FROM PS_TZ_PROJECT_SITE_T WHERE TZ_SITEI_ID=?) AND TZ_JG_ID=? and TZ_IS_APP_OPEN='Y'"
+							+ " and TZ_APP_START_DT IS NOT NULL AND TZ_APP_START_TM IS NOT NULL "
+							+ "AND TZ_APP_END_DT IS NOT NULL AND TZ_APP_END_TM IS NOT NULL "
+							+ "AND str_to_date(concat(DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now() "
+							+ "AND str_to_date(concat(DATE_FORMAT(TZ_APP_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now() "
+							+ "AND TZ_CLASS_ID NOT IN "
+							+ "(select A.TZ_CLASS_ID from PS_TZ_FORM_WRK_T A,PS_TZ_APP_INS_T B  where A.TZ_APP_INS_ID=B.TZ_APP_INS_ID AND A.OPRID=? AND B.TZ_APP_FORM_STA <>'OUT')";
 					List<Map<String, Object>> classList = jdbcTemplate.queryForList(classSQL,
 							new Object[] { strSiteId, str_jg_id, oprid });
 					if (classList != null && classList.size() > 0) {
@@ -271,7 +278,13 @@ public class ApplicationCenter2ServicerImpl extends FrameworkImpl {
 						String classDiv = "";
 						String classselect = "";
 						// 循坏允许报名的班级;
-						String classSQL = "SELECT TZ_CLASS_ID, TZ_CLASS_NAME FROM  PS_TZ_CLASS_INF_T where TZ_PRJ_ID IN (SELECT TZ_PRJ_ID FROM PS_TZ_PROJECT_SITE_T WHERE TZ_SITEI_ID=?) AND TZ_JG_ID=? and TZ_IS_APP_OPEN='Y' and TZ_APP_START_DT IS NOT NULL AND TZ_APP_START_TM IS NOT NULL AND TZ_APP_END_DT IS NOT NULL AND TZ_APP_END_TM IS NOT NULL AND str_to_date(concat(DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now() AND str_to_date(concat(DATE_FORMAT(TZ_APP_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now()";
+						String classSQL = "SELECT TZ_CLASS_ID, TZ_CLASS_NAME FROM  PS_TZ_CLASS_INF_T where TZ_PRJ_ID IN "
+								+ "(SELECT TZ_PRJ_ID FROM PS_TZ_PROJECT_SITE_T WHERE TZ_SITEI_ID=?)"
+								+ " AND TZ_JG_ID=? and TZ_IS_APP_OPEN='Y' "
+								+ "and TZ_APP_START_DT IS NOT NULL AND TZ_APP_START_TM IS NOT NULL"
+								+ " AND TZ_APP_END_DT IS NOT NULL AND TZ_APP_END_TM IS NOT NULL "
+								+ "AND str_to_date(concat(DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now() "
+								+ "AND str_to_date(concat(DATE_FORMAT(TZ_APP_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now()";
 						List<Map<String, Object>> classList = jdbcTemplate.queryForList(classSQL,
 								new Object[] { strSiteId, str_jg_id });
 						if (classList != null && classList.size() > 0) {

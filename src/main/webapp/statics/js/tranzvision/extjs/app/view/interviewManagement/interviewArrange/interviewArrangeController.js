@@ -40,6 +40,52 @@
         win.show();
     },
     
+    /*批量发送短信*/
+    sendSmsSelPers:function(btn) {
+    	var grid = btn.findParentByType("grid");
+        var store = grid.getStore();
+        var selList = grid.getSelectionModel().getSelection();
+        //选中行长度
+        var checkLen = selList.length;
+        if(checkLen==0){
+            Ext.MessageBox.alert('提示','您没有选中任何记录');
+            return;
+        } else {
+            var noMobileName = "";
+            var noMobileCount = 0;
+            var personList = [];
+            for (var i = 0; i < checkLen; i++) {
+                var classID = selList[i].get('classID');
+                var batchID = selList[i].get('batchID');
+                var msJxNo=selList[i].get("msJxNo");
+
+                personList.push({"classID": classID, "batchID": batchID,"msJxNo":msJxNo});
+
+            }
+
+            var params = {
+                "ComID": "TZ_MS_ARR_MG_COM",
+                "PageID": "TZ_MS_CAL_ARR_STD",
+                "OperateType": "U",
+                "comParams": {
+                    "add": [
+                        {"type": 'SMS', "personList": personList}
+                    ]
+                }
+            };
+            Ext.tzLoad(Ext.JSON.encode(params), function (responseData) {
+            	Ext.tzSendSms({
+                    //发送的短信模板;
+                    "SmsTmpName": ["TZ_SMS_N_002"],
+                    //创建的需要发送的听众ID;
+                    "audienceId": responseData,
+                    //是否有附件: Y 表示可以发送附件,"N"表示无附件;
+                    "file": "N"
+                });
+            });
+        }
+    },
+    
     //新增面试安排
     addInterviewTime: function(btn){
     	var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_MS_ARR_MG_COM"]["TZ_MSJH_SET_STD"];
@@ -292,7 +338,7 @@
 			});
 			*/
 
-			Params= '{"TYPE":"STULIST","classID":"'+classID+'","batchID":"'+batchID+'"}';
+			Params= '{"TYPE":"STULIST","classID":"'+classID+'","batchID":"'+batchID+'","cfgSrhId": "TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.TZ_MS_ARR_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "'+classID+'","TZ_BATCH_ID-operator": "01","TZ_BATCH_ID-value": "'+batchID+'"}}';
 			setStuListGrid.store.tzStoreParams = Params;
 			setStuListGrid.store.load({
 				callback : function(records, operation, success) {

@@ -140,6 +140,11 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                         iconCls:"add",
                         handler:'addAudience'
                     },*/{
+                        text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.query","查询"),
+                        tooltip: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.query","查询"),
+                        iconCls:"query",
+                        handler:"queryStudents"
+                    },{
                     	text: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.addStudent","添加考生"),
                     	tooltip: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.addStudent","添加考生"),
                         iconCls:"add",

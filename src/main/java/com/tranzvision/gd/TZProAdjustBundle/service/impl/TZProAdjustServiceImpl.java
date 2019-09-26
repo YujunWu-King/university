@@ -192,16 +192,33 @@ public class TZProAdjustServiceImpl extends FrameworkImpl {
 			
 			String sql = "select TZ_APP_FORM_STA  from PS_TZ_APP_INS_T where TZ_APP_INS_ID=?";
 			String submitState = sqlQuery.queryForObject(sql, new Object[] {appinsId}, "String");
+			int count = sqlQuery.queryForObject("select count(1) from ps_tz_proadjust_t where appinsId=? and state=0",
+					new Object[] { appinsId }, "int");
+			if(count>0){
+				int adjustId = sqlQuery.queryForObject(
+						"select tz_proadjust_id from ps_tz_proadjust_t where appinsId=? and state=0 limit 0,1",
+						new Object[] {appinsId}, "int");
+				PsTzProAdjustT proAdjustT = psTzProAdjustTMapper.selectByPrimaryKey(adjustId);
+				proAdjustT.setAppinsid(appinsId);
+				proAdjustT.setApplicationid(applyId);
+				proAdjustT.setClassid(classId);
+				proAdjustT.setTzOprid(oprid);
+				proAdjustT.setState(0);
+				proAdjustT.setApplyDate(new Date());
+				proAdjustT.setSubmitstate(submitState);
+				psTzProAdjustTMapper.updateByPrimaryKey(proAdjustT);
+			}else{
+				PsTzProAdjustT proAdjustT = new PsTzProAdjustT();
+				proAdjustT.setAppinsid(appinsId);
+				proAdjustT.setApplicationid(applyId);
+				proAdjustT.setClassid(classId);
+				proAdjustT.setTzOprid(oprid);
+				proAdjustT.setState(0);
+				proAdjustT.setApplyDate(new Date());
+				proAdjustT.setSubmitstate(submitState);
+				psTzProAdjustTMapper.insertSelective(proAdjustT);
+			}
 			
-			PsTzProAdjustT proAdjustT = new PsTzProAdjustT();
-			proAdjustT.setAppinsid(appinsId);
-			proAdjustT.setApplicationid(applyId);
-			proAdjustT.setClassid(classId);
-			proAdjustT.setTzOprid(oprid);
-			proAdjustT.setState(0);
-			proAdjustT.setApplyDate(new Date());
-			proAdjustT.setSubmitstate(submitState);
-			psTzProAdjustTMapper.insertSelective(proAdjustT);
 		} catch (Exception e) {
 			errorMsg[0] = "1";
 			errorMsg[1] = e.getMessage();
