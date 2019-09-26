@@ -742,7 +742,7 @@ public class TzEventApplyFormServiceImpl extends FrameworkImpl {
 							//非考生栏目
 							String fksColu = sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?", new Object[] {"TZ_FKS_COLU"}, "String");
 							//非考生栏目活动报名不创建线索
-							if(!TZ_COLU_ID.equals(fksColu)) {
+							if(fksColu.indexOf(TZ_COLU_ID) == -1) {
 								//报名成功创建线索
 								tzCreateClue(strApplyId, strBmrId, str_bmr_phone);
 							}

@@ -112,18 +112,17 @@ function useJson(varjsonData){
 	*/
 	//$("#msGroup option[value='"+ firstValue+"'] ").attr("selected",true);
 
-	
 	//考生列表
 	var collist="";
 	var ksheadObject=jsonObject['ps_data_kslb']['ps_ksh_list_headers'];
 	
 	var m = 0;
-	for(var i in ksheadObject) {
+	/*for(var i in ksheadObject) {
 		m++;
 		var colName = '00' + m;
 		colName = 'col' + colName.substr(colName.length - 2);
 		collist+='<th>'+ksheadObject[colName]+'</th>';
-    }
+    }*/
 	
 	var ksbodyArray=jsonObject['ps_data_kslb']['ps_ksh_list_contents'];
 
@@ -139,13 +138,17 @@ function useJson(varjsonData){
 			concollist+="<td class='alt' >"+(ksbodyArray[i][colName]||"")+'</td>';
 	    }
 		var ps_ksh_bmbid = ksbodyArray[i]['ps_ksh_bmbid'];
+		//面试申请号
+		var ps_msh_id = ksbodyArray[i]['ps_msh_id'];
 		var name = ksbodyArray[i]['ps_ksh_xm'];
 		detallist+="<tr id='"+ksbodyArray[i]['ps_ksh_bmbid']+"' style='text-align: center;'>";
 		detallist+="<td  class='alt' style='border-left: 1px solid #c1dad7;'>"+ksbodyArray[i]['ps_ksh_xh']+"</td>";
 		//detallist+="<td  class='alt' style='border-left: 1px solid #c1dad7;'>"+ksbodyArray[i]['ps_ksh_bmbid']+"</td>";
 		detallist+="<td  class='alt' style='border-left: 1px solid #c1dad7;'>"+ksbodyArray[i]['ps_ksh_xm']+"</td>";
+		detallist+="<td  class='alt' style='border-left: 1px solid #c1dad7;'>"+ps_msh_id+"</td>";
 		//detallist+="<td  class='alt' style='border-left: 1px solid #c1dad7;'>"+ksbodyArray[i]['ps_ksh_sex']+"</td>";
-		detallist+=concollist + "</td>";
+		//detallist+=concollist + "</td>";
+		detallist+="</td>";
 		//detallist+="</td>"+"<td  class='alt'>"+(ksbodyArray[i]['ps_ksh_zt']||"")+"</td>";
 		//detallist+="<td  class='alt'>"+ksbodyArray[i]['ps_ksh_dt']+"</td>";
 		var ps_mszt = ksbodyArray[i]['ps_mszt'];
@@ -178,6 +181,7 @@ function useJson(varjsonData){
 	 //列名
 	 var examerHeaderlist="<th scope='col'  style='text-align:center;'>序号</th>";
 	 	examerHeaderlist += "<th scope='col'  style='text-align:center;'>姓名</th>";
+	 	examerHeaderlist += "<th scope='col'  style='text-align:center;'>面试申请号</th>";
 
 	 var headbutton = "<th scope='col'  style='text-align:center;'>面试状态</th>";
 	 headbutton +="<th scope='col'  style='text-align:center;'>开始面试</th>";
@@ -219,7 +223,8 @@ function startMs(appinsId,name,ps_mszt){
   		url: baseUrl+"&type=startMs",
   		data: {"BaokaoClassID":ClassId,"BaokaoPCID":BatchId,"KSH_BMBID":appinsId},
   		success: function(response) {
-  			loadData()
+  			loadData();
+  			refreshTimer();
 	    },
 	  		dataType: "json"
 		});
@@ -227,7 +232,7 @@ function startMs(appinsId,name,ps_mszt){
 	str = name + " 面试时间："
 	var t1;
 	var html = "<div id='timer' style='background-color: orange;font-size: 24px;height: 50px;line-height:48px'></div>";
-	index = layer.open({
+	/*index = layer.open({
 		  title: '',
 		  content: html,
 		  shade: 0,
@@ -251,7 +256,7 @@ function startMs(appinsId,name,ps_mszt){
 			  clearInterval(t1);
 			  index = undefined;
 		  }
-		});
+		});*/
 }
 
 function beginS() { // 计算秒
@@ -294,7 +299,9 @@ function endMs(appinsId,ps_mszt){
   		url: baseUrl+"&type=endMs",
   		data: {"BaokaoClassID":ClassId,"BaokaoPCID":BatchId,"KSH_BMBID":appinsId},
   		success: function(response) {
-  			loadData()
+  			loadData();
+  			msStart = ""
+  			$("#timer").hide();
 	    },
 	  		dataType: "json"
 		});

@@ -54,7 +54,6 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 		String strReturn = "";
 		try {
 			String type = request.getParameter("type");
-
 			// 获取批次列表
 			if ("list".equals(type)) {
 				strReturn = getBatchList(strParams);
@@ -95,11 +94,47 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 			if ("other".equals(type)) {
 				strReturn = otherJudgeScore(strParams);
 			}
+			//查看面试秘书是否开始
+			if ("timer".equals(type)) {
+				strReturn = queryTimer(strParams);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		return strReturn;
+	}
+
+	/**
+	 * 查询当前登录评委是否正在进行面试的考生
+	 * @param strParams
+	 * @return
+	 */
+	private String queryTimer(String strParams) {
+		String classId = request.getParameter("classId"); /*字符串，请求班级编号*/
+		String batchId = request.getParameter("batchId"); /*字符串，请求报考批次编号*/
+		String oprId = tzLoginServiceImpl.getLoginedManagerOprid(request);
+		
+		Map<String,Object> rtnMap = new HashMap<String,Object>();
+
+		String TZ_APP_INS_ID = "";
+		String TZ_MSSJ = "";
+		int seconds = 0;
+		String sql = "SELECT B.TZ_APP_INS_ID, A.TZ_MSSJ,TIMESTAMPDIFF(SECOND, A.TZ_MSSJ, NOW()) SECONDS FROM PS_TZ_MP_PW_KS_TBL B, PS_TZ_MSPS_KSH_TBL A, PS_TZ_INTEGROUP_T C WHERE A.TZ_CLASS_ID = B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID = B.TZ_APPLY_PC_ID AND A.TZ_APP_INS_ID = B.TZ_APP_INS_ID AND A.TZ_GROUP_ID = C.TZ_GROUP_ID AND B.TZ_CLASS_ID = ? AND B.TZ_APPLY_PC_ID = ? AND B.TZ_PWEI_OPRID = ? AND B.TZ_DELETE_ZT <> 'Y' AND A.TZ_MSZT = 1 ORDER BY A.TZ_MSSJ DESC LIMIT 1";
+		Map<String, Object> map = sqlQuery.queryForMap(sql, new Object[] {classId, batchId, oprId});
+		if(map != null) {
+			TZ_APP_INS_ID  = map.get("TZ_APP_INS_ID") == null ? "" : map.get("TZ_APP_INS_ID").toString();
+			TZ_MSSJ  = map.get("TZ_MSSJ") == null ? "" : map.get("TZ_MSSJ").toString();
+			seconds  = map.get("SECONDS") == null ? 0 : Integer.parseInt(map.get("SECONDS").toString());
+		}
+		sql = "select A.TZ_REALNAME from PS_TZ_AQ_YHXX_TBL A,PS_TZ_FORM_WRK_T B WHERE A.OPRID=B.OPRID AND B.TZ_APP_INS_ID=?";
+		String name = sqlQuery.queryForObject(sql, new Object[] {TZ_APP_INS_ID}, "String");
+		
+		rtnMap.put("name", name);
+		rtnMap.put("seconds", seconds);
+		rtnMap.put("startDt", TZ_MSSJ);
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		return jacksonUtil.Map2json(rtnMap);
 	}
 
 	private String searchApplicant(String strParams){

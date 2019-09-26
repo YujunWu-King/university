@@ -32,6 +32,30 @@ function showLoader() {
 function hideLoader() {  
     $.mobile.loading('hide');  
 }  
+/*刷新考生列表*/
+function refreshKslist2(){
+	$.ajax({
+		url:baseUrl+'?type=data&batchId='+BatchId+'&RequestDataType=S&MaxRowCount=500',
+		type: "GET",
+		dataType:"JSON",
+		timeout: 60000,
+		success: function(data){
+			var jsonObject = data; 
+			useJson(jsonObject);
+		},
+		error: function(XMLHttpRequest, textStatus, errorThrown){
+			if(textStatus == "timeout"){
+				hideLoader();
+				alert("数据请求超时，请稍后再试");
+			}else{
+				hideLoader();
+				alert("数据请求失败");
+			}
+		}
+	});
+
+}
+
 function refreshKslist(){
 
 		$.getJSON(

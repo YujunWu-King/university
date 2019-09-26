@@ -20,9 +20,13 @@
 	var ClassId = "%bind(:4)";
 	var BatchId = "%bind(:5)";
 	var GroupLeader = "%bind(:9)";
+	var pweiType = "A";
+	var msStart = "";
+	var msSeconds = 0;
 </script>
 
 <script type="text/javascript" src="%bind(:1)/statics/js/evaluation/interview/touch/main-evaluation-touch.js"></script>
+<script type="text/javascript" src="%bind(:1)/statics/js/evaluation/interview/touch/timer.js"></script>
 
 <style type="text/css" >
 caption {
@@ -53,13 +57,17 @@ th {
 	padding: 6px 6px 6px 12px;
 	color: #333;
 }
-
+.timer{height: 60px;width: 40%;z-index: 999;margin-left: 30%;margin-right: 30%;position: fixed;text-align: center;line-height: 60px;display:none;}
+.timer .time-box{width: 355px;height: 100%;background: #fa7e00;display: inline-block;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;color: #000;font-size: 25px;}
 </style>
 
 </head> 
 
 <body> 
-
+<!--计时器-->
+<div class="timer" id="timer">
+	<div class="time-box"><span id="name"></span> 面试时间 <span id="time"></span></div>
+</div>
 <div data-role="page" data-theme="a">
 
 	<div data-role="header" data-theme="b">
@@ -288,6 +296,9 @@ th {
 				});
 			}
 		});
+		//5s刷新一次计时器
+		refreshTimer();
+		setInterval(refreshTimer,5000);
 </script>
 </body>
 </html>
