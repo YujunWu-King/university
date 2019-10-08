@@ -165,7 +165,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                     		Ext.Msg.alert("提示",respData.message);
                     	}
                     	
-                    	setStuListGridStore.tzStoreParams = '{"TYPE":"STULIST","classID":"'+classID+'","batchID":"'+batchID+'"}';
+                    	setStuListGridStore.tzStoreParams = '{"cfgSrhId":"TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.TZ_MS_ARR_VW","condition":{"TZ_REALNAME-operator":"07","TZ_REALNAME-value":"","TZ_BATCH_ID-operator":"01","TZ_BATCH_ID-value":"'+batchID+'","TZ_CLASS_ID-operator":"01","TZ_CLASS_ID-value":"'+classID+'"}}';
                 		setStuListGridStore.reload();
                     },"保存成功",true,this);
             	}
@@ -312,7 +312,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
 	        		Ext.Msg.alert("提示","删除考生"+ notAllow +"失败，已被面试评委抽取，无法删除");
 	        	}
 	        	
-	            Params= '{"TYPE":"STULIST","classID":"'+classID+'","batchID":"'+batchID+'"}';
+	            Params= '{"cfgSrhId":"TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.TZ_MS_ARR_VW","condition":{"TZ_REALNAME-operator":"07","TZ_REALNAME-value":"","TZ_BATCH_ID-operator":"01","TZ_BATCH_ID-value":"'+batchID+'","TZ_CLASS_ID-operator":"01","TZ_CLASS_ID-value":"'+classID+'"}}';
 	            setStuListGridStore.tzStoreParams = Params;
 	            setStuListGridStore.load({
 	                callback : function(records, operation, success) {
