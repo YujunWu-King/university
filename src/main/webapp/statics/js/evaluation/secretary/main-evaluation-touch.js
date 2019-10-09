@@ -48,9 +48,9 @@ function hideLoader() {
     $.mobile.loading('hide');  
 }  
 function refreshKslist(){
-
+	var groupId = $("#msGroup option:selected").text();
 		$.getJSON(
-				baseUrl+'&type=data&BaokaoClassID='+ClassId+'&BaokaoPCID='+BatchId+'&RequestDataType=S&MaxRowCount=200',
+				baseUrl+'&type=data&BaokaoClassID='+ClassId+'&BaokaoPCID='+BatchId+'&groupId='+groupId+'&RequestDataType=S&MaxRowCount=200',
 				function(data){
 					var jsonObject = data.comContent; 
 					useJson(jsonObject);
@@ -213,8 +213,11 @@ function startMs(appinsId,name,ps_mszt){
 	if(ps_mszt == 1 || ps_mszt == 2){
 		return;
 	}
-	console.log(index)
-	if(index != undefined){
+	/*if(index != undefined){
+		alert("请先结束当前面试，再开启下一个面试")
+		return;
+	}*/
+	if($("#timer").attr("style") == 'display: block;'){
 		alert("请先结束当前面试，再开启下一个面试")
 		return;
 	}
