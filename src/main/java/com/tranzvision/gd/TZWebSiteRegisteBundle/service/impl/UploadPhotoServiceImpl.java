@@ -90,7 +90,7 @@ public class UploadPhotoServiceImpl extends FrameworkImpl {
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 			if(jacksonUtil.containsKey("appInsId")){
 				String appInsId =  jacksonUtil.getString("appInsId");
-				oprid=jdbcTemplate.queryForObject("select top 1 OPRID from ps_tz_form_wrk_t where TZ_APP_INS_ID=?", new Object[]{appInsId}, "String");
+				oprid=jdbcTemplate.queryForObject("select OPRID from ps_tz_form_wrk_t where TZ_APP_INS_ID=?", new Object[]{appInsId}, "String");
 			}
 			String tzAttaUrl, tzAttashSysFile;
 			String sql = "SELECT TZ_ATT_A_URL,A.TZ_ATTACHSYSFILENA FROM PS_TZ_OPR_PHT_GL_T A,PS_TZ_OPR_PHOTO_T B WHERE A.TZ_ATTACHSYSFILENA=B.TZ_ATTACHSYSFILENA AND A.OPRID=?";
