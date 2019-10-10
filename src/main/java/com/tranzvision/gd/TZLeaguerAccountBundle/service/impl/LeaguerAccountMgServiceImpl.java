@@ -23,6 +23,7 @@ import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.encrypt.DESUtil;
 import com.tranzvision.gd.util.poi.excel.ExcelHandle2;
+import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -61,6 +62,8 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 	private GetSysHardCodeVal getSysHardCodeVal;
 	@Autowired
 	private CreateTaskServiceImpl createTaskServiceImpl;
+	@Autowired
+	private GetSeqNum getSeqNum;
 	// @Override
 	public String tzQueryList11(String strParams, int numLimit, int numStart, String[] errorMsg) {
 
@@ -1158,7 +1161,7 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 						sql = sql.replace("SELECT ",sqlStr );
 						list = jdbcTemplate.queryForList(sql);
 					}
-					
+					int audCyId = getSeqNum.getSeqNum("TZ_AUDCYUAN_T", "TZ_AUDCY_ID",list.size(),0)-list.size();
 					for(int num_1=0;num_1<list.size();num_1++){
 						Map<String, Object> map = list.get(num_1);
 						String appInsId=String.valueOf(map.get("TZ_APP_INS_ID"));
@@ -1166,7 +1169,8 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 			            String email = (String)map.get("TZ_EMAIL");
 			            String mobile=(String)map.get("TZ_MOBILE");
 			            if(oprid != null && !"".equals(oprid)){
-			                createTaskServiceImpl.addAudCy(audID,name, "", mobile, mobile, email, email, "", oprid, "", "", appInsId);
+			                createTaskServiceImpl.addAudCy2(audID,name, "", mobile, mobile, email, email, "", oprid, "", "", appInsId,audCyId);
+			                audCyId++;
 			            }
 					}
 				}

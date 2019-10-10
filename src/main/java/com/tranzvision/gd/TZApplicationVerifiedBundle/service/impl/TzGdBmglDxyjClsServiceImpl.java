@@ -13,6 +13,7 @@ import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.CreateTaskServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -29,7 +30,8 @@ public class TzGdBmglDxyjClsServiceImpl extends FrameworkImpl{
 	private TzLoginServiceImpl tzLoginServiceImpl;
 	@Autowired
 	private TZGDObject tzGdObject;
-	
+	@Autowired
+	private GetSeqNum getSeqNum;
 	/* 添加听众 */
 	@Override
 	public String tzAdd(String[] actData, String[] errMsg) {
@@ -88,6 +90,7 @@ public class TzGdBmglDxyjClsServiceImpl extends FrameworkImpl{
 					String sql="select OPRID,TZ_APP_INS_ID from PS_TZ_APP_LIST_VW where TZ_CLASS_ID=? and TZ_BATCH_ID=?";
 					List<Map<String, Object>> list1=jdbcTemplate.queryForList(sql, new Object[]{classID,batchID});
 					if(list1!=null && list1.size()>0){
+						int audCyId = getSeqNum.getSeqNum("TZ_AUDCYUAN_T", "TZ_AUDCY_ID",list1.size(),0)-list1.size();
 						for(int num_2=0;num_2<list1.size();num_2++){
 							Map<String, Object> map = list1.get(num_2);
 							sOprID=(String)map.get("OPRID");
@@ -112,8 +115,8 @@ public class TzGdBmglDxyjClsServiceImpl extends FrameworkImpl{
 				                	wechat = (String)lxfsMap.get("TZ_WEIXIN");
 				                	//skype = (String)lxfsMap.get("TZ_SKYPE");
 				                }
-				                createTaskServiceImpl.addAudCy(audID,strName, "", mainMobilePhone, backupMobilePhone, mainEmail, backupEmail, wechat, sOprID, "", "", String.valueOf(sAppInsID));
-
+				                createTaskServiceImpl.addAudCy2(audID,strName, "", mainMobilePhone, backupMobilePhone, mainEmail, backupEmail, wechat, sOprID, "", "", String.valueOf(sAppInsID),audCyId);
+				                audCyId++;
 				            }
 						}
 					}

@@ -13,6 +13,7 @@ import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.CreateTaskServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -33,6 +34,8 @@ public class TzGdBmglYjdxClsServiceImpl extends FrameworkImpl {
 	private TzLoginServiceImpl tzLoginServiceImpl;
 	@Autowired
 	private TZGDObject tzGdObject;
+	@Autowired
+	private GetSeqNum getSeqNum;
 	
 	/* 添加听众 */
 	@Override
@@ -75,6 +78,7 @@ public class TzGdBmglYjdxClsServiceImpl extends FrameworkImpl {
 					@SuppressWarnings("unchecked")
 					List<Map<String, Object>> list = (List<Map<String, Object>>) jacksonUtil.getList("personList");
 					if(list != null && list.size() > 0){
+						int audCyId = getSeqNum.getSeqNum("TZ_AUDCYUAN_T", "TZ_AUDCY_ID",list.size(),0)-list.size();
 						for(int num_1 = 0; num_1 < list.size(); num_1 ++){
 							Map<String, Object> map = list.get(num_1);
 				            sOprID = (String)map.get("oprID");
@@ -100,8 +104,8 @@ public class TzGdBmglYjdxClsServiceImpl extends FrameworkImpl {
 				                	//skype = (String)lxfsMap.get("TZ_SKYPE");
 				                }
 				               
-				                createTaskServiceImpl.addAudCy(audID,strName, "", mainMobilePhone, backupMobilePhone, mainEmail, backupEmail, wechat, sOprID, "", "", String.valueOf(sAppInsID));
-
+				                createTaskServiceImpl.addAudCy2(audID,strName, "", mainMobilePhone, backupMobilePhone, mainEmail, backupEmail, wechat, sOprID, "", "", String.valueOf(sAppInsID),audCyId);
+				                audCyId++;
 				            }
 				            
 						}

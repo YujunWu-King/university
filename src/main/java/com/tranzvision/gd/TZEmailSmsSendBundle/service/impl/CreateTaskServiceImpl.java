@@ -409,4 +409,36 @@ public class CreateTaskServiceImpl {
 		}
 		return false;
 	}
+	
+	// 添加听众成员优化;
+		public boolean addAudCy2(String audId, String name, String ch, String mainPhone, String cyPhone, String mainEmail,
+				String cyEmail, String wxh, String oprId, String xsxxId, String hdId, String bmbId,int aud) {
+			boolean bl = false;
+			try {
+				String audCyId = String.valueOf(aud);
+				PsTzAudcyuanT psTzAudcyuanT = new PsTzAudcyuanT();
+				psTzAudcyuanT.setTzAudienceId(audId);
+				psTzAudcyuanT.setTzAudcyId(audCyId);
+				psTzAudcyuanT.setTzAudXm(name);
+				psTzAudcyuanT.setTzAudCh(ch);
+				psTzAudcyuanT.setTzZySj(mainPhone);
+				psTzAudcyuanT.setTzCySj(cyPhone);
+				psTzAudcyuanT.setTzZyEmail(mainEmail);
+				psTzAudcyuanT.setTzCyEmail(cyEmail);
+				psTzAudcyuanT.setTzWeixin(wxh);
+				psTzAudcyuanT.setOprid(oprId);
+				psTzAudcyuanT.setTzXsxsId(xsxxId);
+				psTzAudcyuanT.setTzHuodId(hdId);
+				psTzAudcyuanT.setTzBmbId(bmbId);
+				int i = psTzAudcyuanTMapper.insert(psTzAudcyuanT);
+				if (i > 0) {
+					bl = true;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				bl = false;
+			}
+
+			return bl;
+		}
 }
