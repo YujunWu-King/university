@@ -36,6 +36,7 @@ public class JudgesGroupMsInfoServiceImpl extends FrameworkImpl {
 	@Autowired
 	private HttpServletRequest request;
 	
+	
 	/* 获取面试评委组信息 */
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {
@@ -101,41 +102,48 @@ public class JudgesGroupMsInfoServiceImpl extends FrameworkImpl {
 				// 角色描述
 				String roleNameDesc = infoData.get("roleNameDesc")==null?"":(String) infoData.get("roleNameDesc");
 				PsTzMspsGrTbl psTzMspsGrTbl;
-				
-				if ("NEXT".equals(jugGroupId)) {
-//					strJugTypeId = "PRJ_TYPE_" + String.valueOf(getSeqNum.getSeqNum("TZ_PRJ_TYPE_T", "TZ_PRJ_TYPE_ID"));
-					jugGroupId = String.valueOf(getSeqNum.getSeqNum("TZ_MSPS_GR_TBL", "TZ_CLPS_GR_ID"));
-					psTzMspsGrTbl = new PsTzMspsGrTbl();
-					psTzMspsGrTbl.setTzJgId(orgid);
-					psTzMspsGrTbl.setTzClpsGrId(jugGroupId);
-					psTzMspsGrTbl.setTzClpsGrName(jugGroupName);
-					psTzMspsGrTbl.setTzRolename(roleName);
-					psTzMspsGrTbl.setTzDescr(roleNameDesc);
-					int i = PsTzMspsGrTblMapper.insert(psTzMspsGrTbl);
-					if (i > 0) {
-						returnJsonMap.replace("jugGroupId", jugGroupId);
-					} else {
-						errMsg[0] = "1";
-						errMsg[1] = "面试评委组信息保存失败";
-					}
-				} else{
-					String sql = "select COUNT(1) from PS_TZ_MSPS_GR_TBL WHERE TZ_CLPS_GR_ID=?";
-					int count = jdbcTemplate.queryForObject(sql, new Object[] { jugGroupId }, "Integer");
-					if (count > 0) {
+				// 查询是否在其他面试评审评委组有该面试秘书
+				String sqlMs = "select count(1) from PS_TZ_MSPS_GR_TBL where TZ_JG_ID=? and TZ_ROLENAME = ? and TZ_CLPS_GR_NAME <>?";
+				int countMs = jdbcTemplate.queryForObject(sqlMs, new Object[] { orgid,roleName,jugGroupName }, "Integer");
+				if(countMs>0){
+					errMsg[0] = "1";
+					errMsg[1] = "无法保存：其他面试评审评委组已有该面试秘书";
+				}else{
+					if ("NEXT".equals(jugGroupId)) {
+//						strJugTypeId = "PRJ_TYPE_" + String.valueOf(getSeqNum.getSeqNum("TZ_PRJ_TYPE_T", "TZ_PRJ_TYPE_ID"));
+						jugGroupId = String.valueOf(getSeqNum.getSeqNum("TZ_MSPS_GR_TBL", "TZ_CLPS_GR_ID"));
 						psTzMspsGrTbl = new PsTzMspsGrTbl();
 						psTzMspsGrTbl.setTzJgId(orgid);
 						psTzMspsGrTbl.setTzClpsGrId(jugGroupId);
 						psTzMspsGrTbl.setTzClpsGrName(jugGroupName);
 						psTzMspsGrTbl.setTzRolename(roleName);
 						psTzMspsGrTbl.setTzDescr(roleNameDesc);
-						int i = PsTzMspsGrTblMapper.updateByPrimaryKey(psTzMspsGrTbl);
+						int i = PsTzMspsGrTblMapper.insert(psTzMspsGrTbl);
 						if (i > 0) {
 							returnJsonMap.replace("jugGroupId", jugGroupId);
 						} else {
 							errMsg[0] = "1";
 							errMsg[1] = "面试评委组信息保存失败";
 						}
-					} 
+					} else{
+						String sql = "select COUNT(1) from PS_TZ_MSPS_GR_TBL WHERE TZ_CLPS_GR_ID=?";
+						int count = jdbcTemplate.queryForObject(sql, new Object[] { jugGroupId }, "Integer");
+						if (count > 0) {
+							psTzMspsGrTbl = new PsTzMspsGrTbl();
+							psTzMspsGrTbl.setTzJgId(orgid);
+							psTzMspsGrTbl.setTzClpsGrId(jugGroupId);
+							psTzMspsGrTbl.setTzClpsGrName(jugGroupName);
+							psTzMspsGrTbl.setTzRolename(roleName);
+							psTzMspsGrTbl.setTzDescr(roleNameDesc);
+							int i = PsTzMspsGrTblMapper.updateByPrimaryKey(psTzMspsGrTbl);
+							if (i > 0) {
+								returnJsonMap.replace("jugGroupId", jugGroupId);
+							} else {
+								errMsg[0] = "1";
+								errMsg[1] = "面试评委组信息保存失败";
+							}
+						} 
+					}
 				}
 			}
 		} catch (Exception e) {

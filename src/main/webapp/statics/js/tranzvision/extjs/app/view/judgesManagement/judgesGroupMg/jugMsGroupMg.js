@@ -49,6 +49,12 @@
                 width: 305,
                 flex: 1
             },{
+                text: '面试秘书',
+                sortable: true,
+                dataIndex: 'roleName',
+                width: 305,
+                flex: 1
+            },{
                menuDisabled: true,
                sortable: false,
 			   			 width:50,

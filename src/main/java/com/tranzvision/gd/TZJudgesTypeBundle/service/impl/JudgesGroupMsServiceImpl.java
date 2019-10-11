@@ -40,7 +40,7 @@ public class JudgesGroupMsServiceImpl extends FrameworkImpl {
 		String[][] orderByArr = new String[][] { { "TZ_CLPS_GR_ID", "ASC" } };
 
 		// json数据要的结果字段;
-		String[] resultFldArray = { "TZ_JG_ID", "TZ_CLPS_GR_ID", "TZ_CLPS_GR_NAME" };
+		String[] resultFldArray = { "TZ_JG_ID", "TZ_CLPS_GR_ID", "TZ_CLPS_GR_NAME" , "TZ_ROLENAME" };
 
 		// 可配置搜索通用函数;
 		Object[] obj = fliterForm.searchFilter(resultFldArray,orderByArr,comParams, numLimit, numStart, errorMsg);
@@ -53,6 +53,7 @@ public class JudgesGroupMsServiceImpl extends FrameworkImpl {
 				mapList.put("jgID", rowList[0]);
 				mapList.put("jugGroupId", rowList[1]);
 				mapList.put("jugGroupName", rowList[2]);
+				mapList.put("roleName", rowList[3]);
 				listData.add(mapList);
 			}
 			mapRet.replace("total", obj[0]);
