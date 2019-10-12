@@ -169,6 +169,28 @@ public class Index {
 		}
 
 	}
+	
+	private boolean checkOrgid(String orgid) {
+		// 查询机构是不是存在;
+		String sql = "SELECT count(1) FROM PS_TZ_JG_BASE_T WHERE TZ_JG_EFF_STA='Y' AND LOWER(TZ_JG_ID)=LOWER(?)";
+		int count = jdbcTemplate.queryForObject(sql, new Object[] { orgid.toLowerCase() }, "Integer");
+		if (count > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private boolean checkSite(String siteid) {
+		// 查询机构是不是存在;
+		String sql = "select count(1) from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=? AND TZ_SITEI_ENABLE='Y'";
+		int count = jdbcTemplate.queryForObject(sql, new Object[] { siteid }, "Integer");
+		if (count > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	@RequestMapping(value = "dispatcher", produces = "text/html;charset=UTF-8")
 	@ResponseBody
@@ -204,6 +226,53 @@ public class Index {
 		if (tmpClassId == null || "".equals(tmpClassId)) {
 			strParams = request.getParameter("tzParams");
 		} else {
+			// 组件配置的类引用ID的情况下 需要对orgid和siteid 进行校验
+			Map<String, String[]> parameterMap = request.getParameterMap();
+			String[] keyValue = null;
+			for (String key : parameterMap.keySet()) {
+				if (key.toLowerCase().equals("orgid") || key.toLowerCase().equals("jgid")) {
+					keyValue = parameterMap.get(key);
+					for (String str : keyValue) {
+						System.out.println("str:" + str);
+						if (!checkOrgid(str)) {
+
+							// strRetContent = "{\"comContent\":
+							// \"\",\"state\":{\"errcode\":1,\"errdesc\":
+							// \"非法链接\",\"timeout\": "
+							// + false + ",\"authorizedInfo\": {}}}";
+							response.setStatus(404);
+							return null;
+						}
+					}
+				}
+				if (key.toLowerCase().equals("siteid")) {
+					keyValue = parameterMap.get(key);
+					for (String str : keyValue) {
+						System.out.println("str:" + str);
+						try {
+							Integer.parseInt(str);
+							if (!checkSite(str)) {
+								// strRetContent = "{\"comContent\":
+								// \"\",\"state\":{\"errcode\":1,\"errdesc\":
+								// \"非法链接\",\"timeout\": "
+								// + false + ",\"authorizedInfo\": {}}}";
+								// return strRetContent;
+								response.setStatus(404);
+								return null;
+							}
+						} catch (Exception e) {
+							// strRetContent = "{\"comContent\":
+							// \"\",\"state\":{\"errcode\":1,\"errdesc\":
+							// \"非法链接\",\"timeout\": "
+							// + false + ",\"authorizedInfo\": {}}}";
+							// return strRetContent;
+
+							response.setStatus(404);
+							return null;
+						}
+					}
+				}
+			}
 			String tmpComId = "";
 			String tmpPageId = "";
 			String tmpComParams = "{}";
@@ -248,6 +317,35 @@ public class Index {
 		
 		// 操作类型;
 		String strOprType = "";
+		
+		/* 防止参数携带js攻击 */
+		if (strParams.toLowerCase().contains("<script")) {
+			 strRetContent = "{\"comContent\":"+
+			 "\"\",\"state\":{\"errcode\":1,\"errdesc\": \"非法输入参数\",\"timeout\":"+
+			 "false"+
+			 ",\"authorizedInfo\": {}}}";
+			 return strRetContent;
+			//response.setStatus(404);
+			//return null;
+		}
+		// 检查所有的传入参数，是否有<script modity by caoy
+		Map<String, String[]> parameterMap = request.getParameterMap();
+		// 遍历map中的值
+		for (String[] value : parameterMap.values()) {
+			for (String str : value) {
+				//System.out.println("str:" + str);
+				if (str.toLowerCase().contains("<script")) {
+					strRetContent = "{\"comContent\":"+
+					 "\"\",\"state\":{\"errcode\":1,\"errdesc\": \"非法输入参数\",\"timeout\":"+
+					 "false"+
+					 ",\"authorizedInfo\": {}}}";
+					return strRetContent;
+					/*response.setStatus(404);
+					return null;*/
+				}
+			}
+		}
+		/* 防止参数携带js攻击 */
 
 		try {
 			jacksonUtil.json2Map(strParams);

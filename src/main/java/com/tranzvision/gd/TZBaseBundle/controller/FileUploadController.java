@@ -496,8 +496,17 @@ public class FileUploadController {
 		if (getSysHardCodeVal.getFileUploadDeniedExtensions().contains(fileSuffix.toLowerCase())) {
 			return false;
 		}
+		if (getSysHardCodeVal.getFileUploadAllowedExtensions() != null
+				|| !"".equals(getSysHardCodeVal.getFileUploadAllowedExtensions())) {
+			if (getSysHardCodeVal.getFileUploadAllowedExtensions().contains(fileSuffix.toLowerCase())) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return true;
+		}
 
-		return true;
 	}
 
 	private boolean checkSize(long filesize) {
