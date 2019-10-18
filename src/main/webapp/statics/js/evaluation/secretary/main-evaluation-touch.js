@@ -210,6 +210,14 @@ var x = 0,
 var index;
 //开始面试
 function startMs(appinsId,name,ps_mszt){
+	/*console.log(endSeconds)
+	console.log(new Date().getTime())
+	if((new Date().getTime()-endSeconds) <= 5){
+		alert("刚结束面试，请等待五秒再开启下一个面试");
+		return;
+	}
+	endSeconds = 0;*/
+
 	if(ps_mszt == 1 || ps_mszt == 2){
 		return;
 	}
@@ -308,7 +316,11 @@ function endMs(appinsId,ps_mszt){
 	    },
 	  		dataType: "json"
 		});
+	
+	msStart = "";
+	endSeconds = new Date().getTime();
 }
+
 
 //查看考生报名表
 function viewBmb(appinsId){

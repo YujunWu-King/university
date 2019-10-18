@@ -18,17 +18,19 @@ function refreshTimer(){
 			batchId: BatchId
 		},
 		success:function(resp){		
-			console.log(resp.comContent)
 			if(resp.comContent.startDt == undefined)return;
 			var startDt = resp.comContent.startDt;
 			var seconds = resp.comContent.seconds;
 			var name = resp.comContent.name;
+			var tempmsStart=msStart;
 
 			if(startDt != msStart){
 				msStart = startDt;
 				msSeconds = seconds;
 				$("#name").text(name);
-				atime();
+				if(tempmsStart == ""){ 
+					atime();
+				}
 				
 				if(pweiType != "C" && getURLParamVal("page") == "batch"){
 					refreshKslist();
@@ -42,11 +44,11 @@ function refreshTimer(){
 
 
 function atime() {
+	
 	if(msStart == ""){
 		$("#timer").hide();
 		return;
 	}
-	
 	var sen = msSeconds;
 	var hour = 0;
 	var min = parseInt(sen / 60);
