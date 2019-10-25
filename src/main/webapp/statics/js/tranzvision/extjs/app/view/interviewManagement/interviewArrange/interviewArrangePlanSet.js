@@ -68,7 +68,7 @@
 			format:'H:i',
 			name: 'startTime',
 			minValue: '7:00 AM',
-	        maxValue: '19:00'
+	        maxValue: '24:00'
         },{
             xtype: 'timefield',
             fieldLabel: '结束时间',
