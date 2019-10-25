@@ -67,7 +67,7 @@
 			allowBlank: false,
 			format:'H:i',
 			name: 'startTime',
-			minValue: '7:00 AM',
+			minValue: '00:00 AM',
 	        maxValue: '24:00'
         },{
             xtype: 'timefield',
@@ -77,7 +77,7 @@
 			allowBlank: false,
 			format:'H:i',	
 			name: 'endTime',
-			minValue: '7:00 AM',
+			minValue: '00:00 AM',
 	        maxValue: '24:00',
 	        validator: function(val){
 				var form = this.findParentByType('form').getForm();
