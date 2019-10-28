@@ -165,7 +165,7 @@ $(document).ready(function(){
 		if(check_yzm($("#picyzm").val())){
 			if(yzm==""){$("#yzm_status").html("<span>请输入手机验证码</span>");$("#yzmStyle").removeClass("alert_display_none");create_yzm();}
 			else{
-				var tzParams = 	'{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_SMS_STD","OperateType":"QF","comParams":{"phone":"'+tel+'","yzm":"'+yzm+'","siteid":"%bind(:7)","orgid":"'+$("#orgid").val()+'","lang":"%bind(:3)","sen":"3"}}';
+				var tzParams = 	'{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_SMS_STD","OperateType":"QF","comParams":{"phone":"'+tel+'","yzm":"'+yzm+'","picyzm":"'+$("#picyzm").val()+'","siteid":"%bind(:7)","orgid":"'+$("#orgid").val()+'","lang":"%bind(:3)","sen":"3"}}';
 				$.ajax({
 					type:"post",
 					dataType:"json",

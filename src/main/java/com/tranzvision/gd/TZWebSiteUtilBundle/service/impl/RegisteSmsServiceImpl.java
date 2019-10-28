@@ -20,6 +20,7 @@ import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.SendSmsOrMalServiceI
 import com.tranzvision.gd.TZSelfInfoBundle.model.PsTzShjiYzmTbl;
 import com.tranzvision.gd.TZSelfInfoBundle.dao.PsTzShjiYzmTblMapper;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.captcha.Patchca;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.encrypt.DESUtil;
 import com.tranzvision.gd.util.security.RegExpValidatorUtils;
@@ -614,6 +615,7 @@ public class RegisteSmsServiceImpl extends FrameworkImpl {
 		String strOrgid = "";
 		String strLang = "";
 		String strYzm = "";
+		String picyzm="";
 		//String strResult = "\"failure\"";
 		Map<String,Object> resMap = new HashMap<String,Object>();
 		resMap.put("result", "failure");
@@ -626,9 +628,21 @@ public class RegisteSmsServiceImpl extends FrameworkImpl {
 			strOrgid = jacksonUtil.getString("orgid").trim();
 			strLang = jacksonUtil.getString("lang").trim();
 			strYzm = jacksonUtil.getString("yzm").trim();
-
+			picyzm = jacksonUtil.getString("picyzm").trim();
+			Patchca patcha = new Patchca();
 			if (strPhone != null && !"".equals(strPhone) && strOrgid != null && !"".equals(strOrgid) && strYzm != null
-					&& !"".equals(strYzm)) {
+					&& !"".equals(strYzm)&&picyzm != null&& !"".equals(picyzm)) {
+				System.out.println("patchca"+picyzm);
+				// 校验验证码
+				//Patchca patchca = new Patchca();
+				if (!patcha.verifyToken(request, picyzm)) {
+					errorMsg[0] = "2";
+					errorMsg[1] ="图片验证码不正确";
+					
+					patcha.removeToken(request);
+					return jacksonUtil.Map2json(resMap);
+				}
+				System.out.println("sjyzm===");
 				// 是否存在有效验证码
 				String sql = "SELECT TZ_YZM_YXQ FROM PS_TZ_SHJI_YZM_TBL  WHERE TZ_EFF_FLAG = 'Y' AND TZ_JG_ID = ? AND TZ_MOBILE_PHONE = ? and TZ_SJYZM= ? LIMIT 0,1";
 				Map<String, Object> yzmMap = jdbcTemplate.queryForMap(sql, new Object[] { strOrgid, strPhone, strYzm });
@@ -639,23 +653,27 @@ public class RegisteSmsServiceImpl extends FrameworkImpl {
 					if (curDate.before(dtYxq)) {
 						String uuid = UUID.randomUUID().toString().replaceAll("-","");
 						jdbcTemplate.update("INSERT INTO TZ_RESET_UUID_T(TZ_UUID,TZ_PHONE,TZ_YZM) VALUES(?,?,?)",new Object[]{uuid,strPhone,strYzm});
+						
 						resMap.replace("result", "success");
 						resMap.put("uuid",uuid);
 //						strResult = "\"success\"";
 						errorMsg[0] = "0";
-//						errorMsg[1] = strTzGeneralURL + "?classid=smsCls&phone=" + strPhone + "&orgid=" + strOrgid
-////								+ "&lang=" + strLang + "&sen=3&yzm=" + strYzm;
+
 					} else {
+						patcha.removeToken(request);
+					
 						errorMsg[0] = "10";
 						errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE",
 								"130", "验证码已失效,请重新发送验证码到手机。", "Verification Code has timed out!");
 					}
 				} else {
+					patcha.removeToken(request);
 					errorMsg[0] = "20";
 					errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE", "50",
 							"验证码不正确", "Wrong Verification Code!");
 				}
 			} else {
+				patcha.removeToken(request);
 				errorMsg[0] = "30";
 				errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE", "56",
 						"参数错误", "Parameters Error !");
@@ -666,6 +684,7 @@ public class RegisteSmsServiceImpl extends FrameworkImpl {
 			errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE", "55",
 					"获取数据失败，请联系管理员", "Get the data failed, please contact the administrator");
 		}
+		System.out.println(jacksonUtil.Map2json(resMap));
 		return jacksonUtil.Map2json(resMap);
 	}
 
