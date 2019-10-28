@@ -171,15 +171,15 @@ function send_yzm(_this){
 				async:false,
 				data:{tzParams:tzParams},
 				url:"%bind(:4)",
-				success:function(result){	
-					if(result.comContent=="success"){
+				success:function(response){	
+					if(response.comContent.result=="success"){
 						clearTimeout(stop);
 						$("#errormsg2").html("");
 						$("#errormsg2").hide();
 						//btime();
-						window.location.href="%bind(:4)"+"?classid=smsCls&orgid="+$("#orgid").val()+"&siteid=%bind(:5)&phone="+tel+"&lang=%bind(:3)&sen=4&yzm="+yzm+"&isMobile=Y";
+						window.location.href="%bind(:4)"+"?classid=smsCls&orgid="+$("#orgid").val()+"&siteid=%bind(:5)&lang=%bind(:3)&sen=4&isMobile=Y&id="+response.comContent.uuid;
 					}else{
-						$("#errormsg2").html(result.state.errdesc);
+						$("#errormsg2").html(response.state.errdesc);
 						$("#errormsg2").show();
 					}
 				}

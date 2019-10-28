@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ import com.tranzvision.gd.util.encrypt.DESUtil;
 import com.tranzvision.gd.util.security.RegExpValidatorUtils;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
-
+import java.util.UUID;
 /**
  * 
  * @author tang 招生网站考生申请人短信处理包 原： TZ_SITE_UTIL_APP:TZ_SITE_SMS_CLS
@@ -55,7 +56,8 @@ public class RegisteSmsServiceImpl extends FrameworkImpl {
 	private SiteRepCssServiceImpl objRep;
 	@Autowired
 	private GetSysHardCodeVal getSysHardCodeVal;
-
+	@Autowired
+	private HttpServletResponse response;
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {
 		String strSen = "";
@@ -104,6 +106,8 @@ public class RegisteSmsServiceImpl extends FrameworkImpl {
 		String strSen = request.getParameter("sen");
 		String classid = request.getParameter("classid");
 		String isMobile = request.getParameter("isMobile");
+		String id =request.getParameter("id");
+		System.out.print("id"+id);
 		String strResponse = "获取数据失败，请联系管理员";
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
@@ -120,7 +124,7 @@ public class RegisteSmsServiceImpl extends FrameworkImpl {
 			if (classid != null && !"".equals(classid)) {
 				strParams = "{\"siteid\":\"" + strSiteid + "\",\"orgid\":\"" + strOrgid + "\",\"lang\":\"" + strLang
 						+ "\",\"yzm\":\"" + strYzm + "\",\"phone\":\"" + strPhone + "\",\"sen\":\"" + strSen
-						+ "\",\"isMobile\":\"" + isMobile + "\"}";
+						+ "\",\"isMobile\":\"" + isMobile + "\",\"id\":\"" + id + "\"}";
 			} else {
 				jacksonUtil.json2Map(strParams);
 				strOrgid = jacksonUtil.getString("orgid");
@@ -583,6 +587,8 @@ public class RegisteSmsServiceImpl extends FrameworkImpl {
 							"短信发送失败", "Failed to send SMS。");
 					return strResult;
 				}
+				
+				
 				sendSmsOrMalServiceImpl.send(taskId, "");
 				strResult = "\"success\"";
 				return strResult;
@@ -608,7 +614,9 @@ public class RegisteSmsServiceImpl extends FrameworkImpl {
 		String strOrgid = "";
 		String strLang = "";
 		String strYzm = "";
-		String strResult = "\"failure\"";
+		//String strResult = "\"failure\"";
+		Map<String,Object> resMap = new HashMap<String,Object>();
+		resMap.put("result", "failure");
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
@@ -629,10 +637,14 @@ public class RegisteSmsServiceImpl extends FrameworkImpl {
 					Date dtYxq = (Date) yzmMap.get("TZ_YZM_YXQ");
 					Date curDate = new Date();
 					if (curDate.before(dtYxq)) {
-						strResult = "\"success\"";
+						String uuid = UUID.randomUUID().toString().replaceAll("-","");
+						jdbcTemplate.update("INSERT INTO TZ_RESET_UUID_T(TZ_UUID,TZ_PHONE,TZ_YZM) VALUES(?,?,?)",new Object[]{uuid,strPhone,strYzm});
+						resMap.replace("result", "success");
+						resMap.put("uuid",uuid);
+//						strResult = "\"success\"";
 						errorMsg[0] = "0";
-						errorMsg[1] = strTzGeneralURL + "?classid=smsCls&phone=" + strPhone + "&orgid=" + strOrgid
-								+ "&lang=" + strLang + "&sen=3&yzm=" + strYzm;
+//						errorMsg[1] = strTzGeneralURL + "?classid=smsCls&phone=" + strPhone + "&orgid=" + strOrgid
+////								+ "&lang=" + strLang + "&sen=3&yzm=" + strYzm;
 					} else {
 						errorMsg[0] = "10";
 						errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE",
@@ -654,7 +666,7 @@ public class RegisteSmsServiceImpl extends FrameworkImpl {
 			errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE", "55",
 					"获取数据失败，请联系管理员", "Get the data failed, please contact the administrator");
 		}
-		return strResult;
+		return jacksonUtil.Map2json(resMap);
 	}
 
 	// 忘记密码-手机找回-修改密码
@@ -773,15 +785,18 @@ public class RegisteSmsServiceImpl extends FrameworkImpl {
 		String strResult = "";
 		String siteid = "";
 		String isMobile = "";
+		String uuid="";
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
 			strOrgid = jacksonUtil.getString("orgid");
 			strLang = jacksonUtil.getString("lang");
-			strPhone = jacksonUtil.getString("phone").trim();
-			strYzm = jacksonUtil.getString("yzm").trim();
+//			strPhone = jacksonUtil.getString("phone").trim();
+//			strYzm = jacksonUtil.getString("yzm").trim();
 			siteid = jacksonUtil.getString("siteid").trim();
+			uuid = jacksonUtil.getString("id").trim();
 			isMobile = jacksonUtil.getString("isMobile").trim();
+			
 			strResult = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE", "55",
 					"获取数据失败，请联系管理员", "Get the data failed, please contact the administrator");
 			/*
@@ -808,10 +823,20 @@ public class RegisteSmsServiceImpl extends FrameworkImpl {
 			/**/
 			String imgPath = getSysHardCodeVal.getWebsiteSkinsImgPath();
 			imgPath = request.getContextPath() + imgPath + "/" + skinId;
-
-			String loginUrl = contextPath + "/user/login/" + strOrgid.toLowerCase() + "/" + strSiteId;
-
 			String str_content = "";
+			String loginUrl = contextPath + "/user/login/" + strOrgid.toLowerCase() + "/" + strSiteId;
+			Map<String , Object> resMap = jdbcTemplate.queryForMap("select TZ_PHONE,TZ_YZM FROM TZ_RESET_UUID_T WHERE TZ_UUID=?", new Object[]{uuid});
+			if(resMap!=null){
+				strPhone = resMap.get("TZ_PHONE").toString();
+				strYzm = resMap.get("TZ_YZM").toString();
+			}else{
+				String message =  validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE", "55",
+						"获取数据失败，请联系管理员", "Get the data failed, please contact the administrator");
+				str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_TIMEOUT_TIP_HMTL", message,
+						strBeginUrl);
+				return str_content;
+			}
+			
 			String yzmSQL = "SELECT COUNT(1) FROM PS_TZ_SHJI_YZM_TBL WHERE TZ_EFF_FLAG = 'Y' AND TZ_JG_ID = ? AND TZ_MOBILE_PHONE = ? and TZ_SJYZM= ? LIMIT 0,1";
 
 			int count = jdbcTemplate.queryForObject(yzmSQL, new Object[] { strOrgid, strPhone, strYzm }, "Integer");

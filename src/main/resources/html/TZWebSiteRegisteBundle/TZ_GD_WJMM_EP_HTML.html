@@ -7,6 +7,11 @@
 <link href="page_stylecss" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="%bind(:4)/statics/js/lib/jquery/jquery.min.js"></script>
 <script type="text/javascript">
+$(document).ready(function(){ 
+	create_yzm();//获取验证码
+	$("#picyzm").val("");	
+	$("#status_picyzm").val("");	
+})
 	function setTab(m,n){
 		var menu=document.getElementById("tab" + m).getElementsByTagName("li");  
 		var showdiv=$("#content" + m + " .tab1"); 
@@ -143,34 +148,120 @@
 			}
 		}
   	};
+  	function getCookie(name) 
+  	{ 
+  	    var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+  	 
+  	    if(arr=document.cookie.match(reg))
+  	 
+  	        return unescape(arr[2]); 
+  	    else 
+  	        return null; 
+  	} 
 
 	function ymobile(){ 
 		var yzm=$("#yzm").val();
 		var tel=$("#Mobile_User").val();
-		if(yzm==""){$("#yzm_status").html("<span>请输入验证码</span>");$("#yzmStyle").removeClass("alert_display_none");}
-		else{
-			var tzParams = 	'{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_SMS_STD","OperateType":"QF","comParams":{"phone":"'+tel+'","yzm":"'+yzm+'","siteid":"%bind(:7)","orgid":"'+$("#orgid").val()+'","lang":"%bind(:3)","sen":"3"}}';
+		if(check_yzm($("#picyzm").val())){
+			if(yzm==""){$("#yzm_status").html("<span>请输入手机验证码</span>");$("#yzmStyle").removeClass("alert_display_none");create_yzm();}
+			else{
+				var tzParams = 	'{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_SMS_STD","OperateType":"QF","comParams":{"phone":"'+tel+'","yzm":"'+yzm+'","siteid":"%bind(:7)","orgid":"'+$("#orgid").val()+'","lang":"%bind(:3)","sen":"3"}}';
+				$.ajax({
+					type:"post",
+					dataType:"json",
+					async:false,
+					data:{tzParams:tzParams},
+					url:"%bind(:1)",
+					success:function(response){	
+						if(response.comContent.result=="success"){
+							clearTimeout(stop);
+							$("#yzm_status").html("");
+							$("#yzmStyle").addClass("alert_display_none");
+							btime();
+							window.location.href="%bind(:1)"+"?classid=smsCls&orgid="+$("#orgid").val()+"&siteid=%bind(:7)&lang=%bind(:3)&sen=4&id="+response.comContent.uuid;
+							//window.location.href="%bind(:1)"+"?classid=smsCls&orgid="+$("#orgid").val()+"&siteid=%bind(:7)&phone="+tel+"&lang=%bind(:3)&sen=4&yzm="+yzm;
+						}else{
+							create_yzm();
+							$("#yzm_status").html(response.state.errdesc);
+							$("#yzmStyle").removeClass("alert_display_none");
+						}
+					}
+				});
+			}
+			
+		}else{
+			create_yzm();
+			
+		}
+		
+	};
+	//重新加载图片验证码
+	function create_yzm(){
+		var _captchaURL =  "/captcha";
+		$('#yzmImg').attr('src',_captchaURL + "?" + Math.random());
+	}
+	//判断输入的图片验证码是否一致
+	function check_yzm(val){
+		var flag = true;
+		if(val !=''){
+			
+	        var tzParams1 = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"QF","comParams":{"checkCode":"'+val+'","sen":"3"}}';
+	        var tzParams2 = {};
+	        tzParams2.ComID = "TZ_SITE_UTIL_COM";
+	        tzParams2.PageID = "TZ_SITE_ENROLL_STD";
+	        tzParams2.OperateType = "QF";
+	        tzParams2.comParams = {};
+	        tzParams2.comParams.checkCode = val;
+	        tzParams2.comParams.lang = "ZHS";
+	        tzParams2.comParams.sen = "3";
+
+	        var tzParams = "";
+	        if(JSON && JSON.stringify)
+	        {
+	          tzParams = JSON.stringify(tzParams2);
+	        }
+	        else
+	        {
+	          tzParams = tzParams1;
+	        }
+
+
 			$.ajax({
-				type:"post",
-				dataType:"json",
-				async:false,
-				data:{tzParams:tzParams},
-				url:"%bind(:1)",
-				success:function(result){	
-					if(result.comContent=="success"){
-						clearTimeout(stop);
-						$("#yzm_status").html("");
-						$("#yzmStyle").addClass("alert_display_none");
-						btime();
-						window.location.href="%bind(:1)"+"?classid=smsCls&orgid="+$("#orgid").val()+"&siteid=%bind(:7)&phone="+tel+"&lang=%bind(:3)&sen=4&yzm="+yzm;
-					}else{
-						$("#yzm_status").html(result.state.errdesc);
-						$("#yzmStyle").removeClass("alert_display_none");
+				type: "get",
+				async :false,
+				data:{
+					tzParams:tzParams
+				},
+				url:"/dispatcher",
+				dataType: "json",
+				success: function(result){
+				   	if(result.comContent =="success"){
+				   		$('#picyzm_status').html("");
+						$('#status_picyzm').attr("value", 0); 
+						$("#picyzm_style").addClass("alert_display_none");
+						flag = true;
+					}else{					
+						$('#picyzm_status').html("<span>"+result.state.errdesc+"</span>");
+						$('#status_picyzm').attr("value", 1);
+						$("#picyzm_style").removeClass("alert_display_none");
+						create_yzm();
+						flag = false;
 					}
 				}
-			});
+			});			
+			
+		}else{
+			$('#picyzm_status').html("<span>图片验证码不能为空</span>");
+	   		$('#status_picyzm').attr("value", 1);
+			$("#picyzm_style").removeClass("alert_display_none");
+			create_yzm();
+			flag = false;
 		}
-	};
+		return flag;
+	}
+
+
+
 </script>
 <script type="text/javascript">
 	var emailstop;
@@ -295,8 +386,17 @@
 			    			<input id="sendyzm" type="button" value="发送验证码" class="button_251px" onclick="send_yzm()"/>
 						</div>
 			  		</div>
+			  		<div class="main_full_line">
+						    <div class="main_full_line_left"><span class="reg_title_star"></span>图片验证码：</div>
+						    <div class="main_full_line_right">
+						      <input name="picyzm" type="text" class="input_text input_120px" id="picyzm" onblur="check_yzm(this.value)">
+						      <a id="changeImg" href="javascript:void(0)" onclick="create_yzm();"><img id="yzmImg" src="" width="113" height="37" class="img_num"></a>
+						<span id="picyzm_style" class="alert_display_none"><img src="%bind(:5)/alert.png" width="16" height="16" class="alert_img"><label id="picyzm_status"></label>
+						</span>
+						 </div>
+					</div>
 					<div class="main_full_line">
-					    <div class="main_full_line_left"><span class="reg_title_star"></span>验证码：</div>
+					    <div class="main_full_line_left"><span class="reg_title_star"></span>手机验证码：</div>
 					    <div class="main_full_line_right">
 					      <input name="yzm" type="text" class="input_105px" id="yzm"  tabindex='6'/>
 					      <span id="yzmStyle" class="alert_display_none"><img src="%bind(:5)/alert.png" width="16" height="16" class="alert_img"  />
