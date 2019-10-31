@@ -6,7 +6,7 @@
 <meta name="format-detection" content="telephone=no">
 <meta name="viewport"
 	content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=0;" />
-<title>在线咨询</title>
+<title>咨询报名</title>
 <script type="text/javascript">
 	var TzUniversityContextPath = "";
  
@@ -180,17 +180,17 @@
 		<div class="viewport-adaptive" id="before">
 			<div class="bg1">
 				<!-- 头部 -->
-				<div class="headzdy" >
+				<!-- <div class="headzdy" >
 					<p>在线咨询</p>
-					<p>%bind(:4)</p>
-				</div>
+					<p>%bind(:4)</p> 
+				</div> -->
 				<div class="register">
 					<form id="signupForm" name="signupForm" method="post"
 						enctype="multipart/form-data">
 						<div class="register_body">
 							<p id="xmT">
-								姓名*<img class='reg_right'
-									src='%bind(:1)/statics/css/website/m/images/reg_warm.png'>
+								姓名*<!-- <img class='reg_right'
+									src='%bind(:1)/statics/css/website/m/images/reg_warm.png'> -->
 							</p>
 							<div class="overhidden">
 								<input type="text" name="xm" id="xm"
@@ -218,8 +218,8 @@
 						<p id="nlSpan" class="reg_tips"></p> -->
 						<div class="register_body">
 							<p id="sjT">
-								手机*<img class='reg_right'
-									src='%bind(:1)/statics/css/website/m/images/reg_warm.png'>
+								手机*<!-- <img class='reg_right'
+									src='%bind(:1)/statics/css/website/m/images/reg_warm.png'> -->
 							</p>
 							<div class="overhidden">
 								<input type="text" name="sj" id="sj"
@@ -229,8 +229,8 @@
 						<p id="sjSpan" class="reg_tips"></p>
 						<div class="register_body">
 							<p id="yxT">
-								电子邮箱*<img class='reg_right'
-									src='%bind(:1)/statics/css/website/m/images/reg_warm.png'>
+								电子邮箱*<!-- <img class='reg_right'
+									src='%bind(:1)/statics/css/website/m/images/reg_warm.png'> -->
 							</p>
 							<div class="overhidden">
 								<input type="text" name="yx" id="yx"
@@ -303,7 +303,7 @@
 						<p id="zxnrSpan" class="reg_tips"></p>
 					</form>
 				</div>
-				<a href="javascript:void(0)" class="register_btn" id="sub" style="background: %bind(:3);">提交申请</a>
+				<a href="javascript:void(0)" class="register_btn" id="sub" style="background: %bind(:3);">提交</a>
 			</div>
 		</div>
 
@@ -408,7 +408,7 @@
 				ts = '姓名*<img class="reg_right" src="%bind(:1)/statics/css/website/m/images/reg_right.png">';
 				xmCheckB = true;
 			}
-			$("#xmT").html(ts);
+			//$("#xmT").html(ts);
 			$("#xmSpan").html(tsyj);
 			
 		}
@@ -453,7 +453,7 @@
 				}
 				
 			}
-			$("#sjT").html(ts);
+			//$("#sjT").html(ts);
 			$("#sjSpan").html(tsyj);
 		}
 		
@@ -477,7 +477,7 @@
 				}
 				
 			}
-			$("#yxT").html(ts);
+			//$("#yxT").html(ts);
 			$("#yxSpan").html(tsyj);
 		}
 		

@@ -173,62 +173,53 @@ public class TzClueCommonServiceImpl extends FrameworkImpl {
 				} else {
 					createWay = "G";
 				}
+				clueId=String.valueOf(getSeqNum.getSeqNum("TZ_XSXS_INFO_T", "TZ_LEAD_ID"));
+				PsTzXsxsInfoTWithBLOBs PsTzXsxsInfoT=new PsTzXsxsInfoTWithBLOBs();
+				PsTzXsxsInfoT.setTzLeadId(clueId);
+				PsTzXsxsInfoT.setTzJgId(jgId);
+				PsTzXsxsInfoT.setTzLeadStatus(clueState);
+				//线索创建方式
+				PsTzXsxsInfoT.setTzRsfcreateWay(createWay);	
+				PsTzXsxsInfoT.setTzZrOprid(chargeOprid);
+				PsTzXsxsInfoT.setTzRealname(xm);
+				PsTzXsxsInfoT.setTzCompCname(gzdw);
+				PsTzXsxsInfoT.setTzMobile(sj);
+				PsTzXsxsInfoT.setTzPhone(sj);
+				PsTzXsxsInfoT.setTzEmail(yx);
+				PsTzXsxsInfoT.setTzPosition(xrzw);
+				PsTzXsxsInfoT.setTzRefereeName(refereeName);
+				PsTzXsxsInfoT.setTzBz(zxnr);
+				PsTzXsxsInfoT.setTzColourSortId(colorType);
+				PsTzXsxsInfoT.setRowAddedOprid(oprid);
+				PsTzXsxsInfoT.setRowLastmantOprid(oprid);
+				PsTzXsxsInfoT.setRowAddedDttm(new java.util.Date());
+				PsTzXsxsInfoT.setRowLastmantDttm(new java.util.Date());
 				
-				String sql = "select count(*) from PS_TZ_XSXS_INFO_T where TZ_JG_ID=? and TZ_LEAD_STATUS<>'G' and ((TZ_MOBILE<>' ' and TZ_MOBILE=?) or (TZ_EMAIL<>' '  and TZ_EMAIL=?))";
-				int existsCount = sqlQuery.queryForObject(sql, new Object[]{ jgId,sj,yx }, "int");
-				if(existsCount > 0){
-					errMsg[0] = "1";
-					errMsg[1] = "申请失败，手机或邮箱已存在对应线索！";
-					map.put("msg", errMsg[1]);
+				PsTzXsxsInfoT.setTzAge(nl);
+				PsTzXsxsInfoT.setTzSex(xb);
+				PsTzXsxsInfoT.setTzTjr(tjr);
+				PsTzXsxsInfoT.setTzFdb(fdb);
+				PsTzXsxsInfoT.setTzZgxl(zgxl);
+				PsTzXsxsInfoT.setTzGznx(gznx);
+				PsTzXsxsInfoT.setTzGlnx(glnx);
+				int res = psTzXsxsInfoTMapper.insert(PsTzXsxsInfoT);
+				if(res > 0){
+					map.put("msg", "提交成功！");
+					map.put("clueId", clueId);
+					map.put("bkStatus", "A");
 				}else{
-					clueId=String.valueOf(getSeqNum.getSeqNum("TZ_XSXS_INFO_T", "TZ_LEAD_ID"));
-					PsTzXsxsInfoTWithBLOBs PsTzXsxsInfoT=new PsTzXsxsInfoTWithBLOBs();
-					PsTzXsxsInfoT.setTzLeadId(clueId);
-					PsTzXsxsInfoT.setTzJgId(jgId);
-					PsTzXsxsInfoT.setTzLeadStatus(clueState);
-					//线索创建方式
-					PsTzXsxsInfoT.setTzRsfcreateWay(createWay);	
-					PsTzXsxsInfoT.setTzZrOprid(chargeOprid);
-					PsTzXsxsInfoT.setTzRealname(xm);
-					PsTzXsxsInfoT.setTzCompCname(gzdw);
-					PsTzXsxsInfoT.setTzMobile(sj);
-					PsTzXsxsInfoT.setTzPhone(sj);
-					PsTzXsxsInfoT.setTzEmail(yx);
-					PsTzXsxsInfoT.setTzPosition(xrzw);
-					PsTzXsxsInfoT.setTzRefereeName(refereeName);
-					PsTzXsxsInfoT.setTzBz(zxnr);
-					PsTzXsxsInfoT.setTzColourSortId(colorType);
-					PsTzXsxsInfoT.setRowAddedOprid(oprid);
-					PsTzXsxsInfoT.setRowLastmantOprid(oprid);
-					PsTzXsxsInfoT.setRowAddedDttm(new java.util.Date());
-					PsTzXsxsInfoT.setRowLastmantDttm(new java.util.Date());
-					
-					PsTzXsxsInfoT.setTzAge(nl);
-					PsTzXsxsInfoT.setTzSex(xb);
-					PsTzXsxsInfoT.setTzTjr(tjr);
-					PsTzXsxsInfoT.setTzFdb(fdb);
-					PsTzXsxsInfoT.setTzZgxl(zgxl);
-					PsTzXsxsInfoT.setTzGznx(gznx);
-					PsTzXsxsInfoT.setTzGlnx(glnx);
-					int res = psTzXsxsInfoTMapper.insert(PsTzXsxsInfoT);
-					if(res > 0){
-						map.put("msg", "申请成功！");
-						map.put("clueId", clueId);
-						map.put("bkStatus", "A");
-					}else{
-						errMsg[0] = "1";
-						errMsg[1] = "申请失败！";
-						map.put("statu", "insert");
-						map.put("msg", errMsg[1]);
-					}
-					
-					/*查询是否存在姓名相同未关闭的线索*/
-					Integer existName = sqlQuery.queryForObject("SELECT COUNT(1) FROM PS_TZ_XSXS_INFO_T WHERE TZ_LEAD_ID<>? AND TZ_LEAD_STATUS<>'G' AND TZ_REALNAME=?", new Object[]{clueId,xm},"Integer");
-					if(existName>0) {
-						map.put("existName", "Y");
-					} else {
-						map.put("existName", "");
-					}
+					errMsg[0] = "1";
+					errMsg[1] = "提交失败！";
+					map.put("statu", "insert");
+					map.put("msg", errMsg[1]);
+				}
+				
+				/*查询是否存在姓名相同未关闭的线索*/
+				Integer existName = sqlQuery.queryForObject("SELECT COUNT(1) FROM PS_TZ_XSXS_INFO_T WHERE TZ_LEAD_ID<>? AND TZ_LEAD_STATUS<>'G' AND TZ_REALNAME=?", new Object[]{clueId,xm},"Integer");
+				if(existName>0) {
+					map.put("existName", "Y");
+				} else {
+					map.put("existName", "");
 				}
 			}else{
 				PsTzXsxsInfoTWithBLOBs PsTzXsxsInfoT=new PsTzXsxsInfoTWithBLOBs();
@@ -249,6 +240,11 @@ public class TzClueCommonServiceImpl extends FrameworkImpl {
 				PsTzXsxsInfoT.setTzEmail(yx);
 				PsTzXsxsInfoT.setTzPosition(xrzw);
 				PsTzXsxsInfoT.setTzRefereeName(refereeName);
+				String sql = "select TZ_BZ from PS_TZ_XSXS_INFO_T where TZ_LEAD_ID = ?";
+				String queryBz = sqlQuery.queryForObject(sql, new Object[]{ clueId },"String");
+				if(queryBz!=null&&!"".equals(queryBz)){
+					zxnr = queryBz +"；"+zxnr;
+				}
 				PsTzXsxsInfoT.setTzBz(zxnr);
 				PsTzXsxsInfoT.setTzColourSortId(colorType);
 				PsTzXsxsInfoT.setRowLastmantOprid(oprid);
@@ -263,13 +259,13 @@ public class TzClueCommonServiceImpl extends FrameworkImpl {
 				PsTzXsxsInfoT.setTzGlnx(glnx);
 				int res = psTzXsxsInfoTMapper.updateByPrimaryKeySelective(PsTzXsxsInfoT);
 				if(res > 0){
-					map.put("msg", "申请成功！");
+					map.put("msg", "提交成功！");
 					map.put("clueId", clueId);
 					map.put("bkStatus", "A");
 					map.put("statu", "update");
 				}else{
 					errMsg[0] = "1";
-					errMsg[1] = "申请失败！";
+					errMsg[1] = "提交失败！";
 					map.put("msg", errMsg[1]);
 				}
 			}
