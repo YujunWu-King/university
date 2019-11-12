@@ -11,6 +11,8 @@ public interface PsTzFilterFldTMapper {
     int insertSelective(PsTzFilterFldT record);
 
     PsTzFilterFldT selectByPrimaryKey(PsTzFilterFldTKey key);
+    
+    PsTzFilterFldT selectByPrimaryKey2(PsTzFilterFldTKey key);
 
     int updateByPrimaryKeySelective(PsTzFilterFldT record);
 

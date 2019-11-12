@@ -61,6 +61,42 @@
 			name: 'ViewMc',
 			maxLength: 18,
 			allowBlank: false
+		},{
+			xtype: 'textfield',
+			fieldLabel: '程序类名称',
+			name: 'appClassMc',
+			maxLength: 18,
+			allowBlank: true,
+			hidden:true
+		},{
+			xtype: 'combobox',
+			fieldLabel: '类型名称',
+			name: 'typeName',
+			maxLength: 18,
+			allowBlank: false,
+			editable:false,
+			value: '0',
+	        queryMode: 'remote',
+	    	valueField: 'TValue',
+    		displayField: 'TSDesc',
+    		store: new KitchenSink.view.common.store.appTransStore("TZ_SEARCH_TYPE"),
+    		listeners:{
+				change:function(ts, newvalue, oldvalue){
+					var typeName = ts.findParentByType("form").down('textfield[name=typeName]').getValue();
+					if(typeName == 0){
+						ts.findParentByType("form").down('textfield[name=ViewMc]').allowBlank = false;
+						ts.findParentByType("form").down('textfield[name=appClassMc]').allowBlank = true;
+						ts.findParentByType("form").down('textfield[name=ViewMc]').setHidden(false);
+						ts.findParentByType("form").down('textfield[name=appClassMc]').setHidden(true);
+					}
+					if(typeName == 1){
+						ts.findParentByType("form").down('textfield[name=appClassMc]').allowBlank = false;
+						ts.findParentByType("form").down('textfield[name=ViewMc]').allowBlank = true;
+						ts.findParentByType("form").down('textfield[name=appClassMc]').setHidden(false);
+						ts.findParentByType("form").down('textfield[name=ViewMc]').setHidden(true);
+					}
+				}
+			}
 		}]
 	}],
     buttons: [{

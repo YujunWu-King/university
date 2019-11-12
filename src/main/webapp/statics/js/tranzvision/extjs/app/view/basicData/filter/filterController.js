@@ -251,7 +251,7 @@
 			//页面注册信息列表
 			var grid = panel.child('grid');
 			//参数
-			var tzParams = '{"ComID":"TZ_GD_FILTER_COM","PageID":"TZ_FILTER_DEFN_STD","OperateType":"QF","comParams":{"ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'"}}';
+			var tzParams = '{"ComID":"TZ_GD_FILTER_COM","PageID":"TZ_FILTER_DEFN_STD","OperateType":"QF","comParams":{"ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'","type":"0"}}';
 			//加载数据
 			Ext.tzLoad(tzParams,function(responseData){
 				//组件注册信息数据
@@ -267,7 +267,7 @@
 			var queryID;
 			queryID = "1";
 			var grid1 = panel.down('grid[name=filterGrid]');
-			var tzStoreParams1 = '{"queryID":"' + queryID + '","ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'"}';
+			var tzStoreParams1 = '{"queryID":"' + queryID + '","ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'","type":"0"}';
 			grid1.store.tzStoreParams = tzStoreParams1;
 			//grid1.store.load();
 			
@@ -275,6 +275,106 @@
 			var grid2 = panel.down('grid[name=dataSetGrid]');
 			var tzStoreParams2 = '{"queryID":"' + queryID + '","ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'"}';
 			grid2.store.tzStoreParams = tzStoreParams2;
+			
+			//var tzStoreParams = '{"ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'"}';
+			//grid.store.tzStoreParams = tzStoreParams;
+		});
+		tab = contentPanel.add(cmp);     
+		
+		contentPanel.setActiveTab(tab);
+
+		Ext.resumeLayouts(true);
+
+		if (cmp.floating) {
+			cmp.show();
+		}
+    },
+    
+    addFilterInfoClass: function(ComID,PageID,appClassMc) {
+		//是否有访问权限
+		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_GD_FILTER_COM"]["TZ_FILTER_DEF_STD"];
+		if( pageResSet == "" || pageResSet == undefined){
+			Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+			return;
+		}
+		//该功能对应的JS类
+		var className = pageResSet["jsClassName"];
+		if(className == "" || className == undefined){
+			Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_FILTER_DEFN_STD，请检查配置。');
+			return;
+		}
+		
+		var contentPanel,cmp, className, ViewClass, clsProto;
+		var themeName = Ext.themeName;
+		
+		contentPanel = Ext.getCmp('tranzvision-framework-content-panel');			
+		contentPanel.body.addCls('kitchensink-example');
+
+		//className = 'KitchenSink.view.security.com.comInfoPanel';
+		if(!Ext.ClassManager.isCreated(className)){
+			Ext.syncRequire(className);
+		}	
+		ViewClass = Ext.ClassManager.get(className);
+		clsProto = ViewClass.prototype;
+
+		if (clsProto.themes) {
+			clsProto.themeInfo = clsProto.themes[themeName];
+
+			if (themeName === 'gray') {
+				clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
+			} else if (themeName !== 'neptune' && themeName !== 'classic') {
+				if (themeName === 'crisp-touch') {
+					clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
+				}
+				clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
+			}
+			// <debug warn>
+			// Sometimes we forget to include allowances for other themes, so issue a warning as a reminder.
+			if (!clsProto.themeInfo) {
+				Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
+					themeName + '\'. Is this intentional?');
+			}
+			// </debug>
+		}
+		cmp = new ViewClass();
+		//操作类型设置为更新
+		cmp.actType = "add";
+		cmp.on('afterrender',function(panel){
+			//组件注册表单信息;
+			var form = panel.child('form').getForm();
+			form.findField("ComID").setReadOnly(true);
+			form.findField("ComID").addCls("lanage_1");
+			form.findField("PageID").setReadOnly(true);
+			form.findField("PageID").addCls("lanage_1");
+			form.findField("appClassMc").setReadOnly(true);
+			form.findField("appClassMc").addCls("lanage_1");
+			//页面注册信息列表
+			var grid = panel.child('grid');
+			//参数
+			var tzParams = '{"ComID":"TZ_GD_FILTER_COM","PageID":"TZ_FILTER_DEFN_STD","OperateType":"QF","comParams":{"ComID":"'+ComID+'","PageID":"'+PageID+'","appClassMc":"'+appClassMc+'","type":"1"}}';
+			//加载数据
+			Ext.tzLoad(tzParams,function(responseData){
+				//组件注册信息数据
+				var formData = responseData.formData;
+				form.setValues(formData);
+				//页面注册信息列表数据
+				var roleList = responseData.listData;	
+
+				
+				//grid.store.load();						
+			});
+			
+			var queryID;
+			queryID = "1";
+			var grid1 = panel.down('grid[name=filterGrid]');
+			var tzStoreParams1 = '{"queryID":"' + queryID + '","ComID":"'+ComID+'","PageID":"'+PageID+'","appClassMc":"'+appClassMc+'","type":"1"}';
+			grid1.store.tzStoreParams = tzStoreParams1;
+			//grid1.store.load();
+			
+			/*queryID = "2";
+			var grid2 = panel.down('grid[name=dataSetGrid]');
+			var tzStoreParams2 = '{"queryID":"' + queryID + '","ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'"}';
+			grid2.store.tzStoreParams = tzStoreParams2;*/
 			
 			//var tzStoreParams = '{"ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'"}';
 			//grid.store.tzStoreParams = tzStoreParams;
@@ -315,7 +415,14 @@
 	 	var ComID = selRec.get("ComID");
 	    var PageID = selRec.get("PageID");
 	    var ViewMc = selRec.get("ViewMc");
-     	this.editFilterByID(ComID,PageID,ViewMc);
+	    var appClassMc = selRec.get("appClassMc");
+	    var typeName = selRec.get("typeName");
+	    if(typeName == '0'){
+	    	this.editFilterByID(ComID,PageID,ViewMc);
+	    }
+	    if(typeName == '1'){
+	    	this.editFilterByID2(ComID,PageID,appClassMc);
+	    }
   },
  editFilterByID: function(ComID,PageID,ViewMc){
 		//是否有访问权限
@@ -380,7 +487,7 @@
 			//页面注册信息列表
 			var grid = panel.child('grid');
 			//参数
-			var tzParams = '{"ComID":"TZ_GD_FILTER_COM","PageID":"TZ_FILTER_DEFN_STD","OperateType":"QF","comParams":{"ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'"}}';
+			var tzParams = '{"ComID":"TZ_GD_FILTER_COM","PageID":"TZ_FILTER_DEFN_STD","OperateType":"QF","comParams":{"ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'","type":"0"}}';
 			//加载数据
 			Ext.tzLoad(tzParams,function(responseData){
 				//组件注册信息数据
@@ -393,7 +500,7 @@
 
 			queryID = "1";
 			var grid1 = panel.down('grid[name=filterGrid]');
-			var tzStoreParams1 = '{"queryID":"' + queryID + '","ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'"}';
+			var tzStoreParams1 = '{"queryID":"' + queryID + '","ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'","type":"0"}';
 			grid1.store.tzStoreParams = tzStoreParams1;
 			//grid1.store.load();
 			
@@ -401,6 +508,108 @@
 			var grid2 = panel.down('grid[name=dataSetGrid]');
 			var tzStoreParams2 = '{"queryID":"' + queryID + '","ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'"}';
 			grid2.store.tzStoreParams = tzStoreParams2;
+			//grid2.store.load();	
+			/*
+			var tzStoreParams = '{"ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'"}';
+			grid.store.tzStoreParams = tzStoreParams;
+			*/
+		});
+		
+		tab = contentPanel.add(cmp);     
+		
+		contentPanel.setActiveTab(tab);
+
+		Ext.resumeLayouts(true);
+
+		if (cmp.floating) {
+			cmp.show();
+		}
+		
+	},
+	editFilterByID2: function(ComID,PageID,appClassMc){
+		//是否有访问权限
+		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_GD_FILTER_COM"]["TZ_FILTER_DEF_STD"];
+		if( pageResSet == "" || pageResSet == undefined){
+			Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+			return;
+		}
+		//该功能对应的JS类
+		var className = pageResSet["jsClassName"];
+		if(className == "" || className == undefined){
+			Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_FILTER_DEF_STD，请检查配置。');
+			return;
+		}
+		
+		var contentPanel,cmp, className, ViewClass, clsProto;
+		var themeName = Ext.themeName;
+		
+		contentPanel = Ext.getCmp('tranzvision-framework-content-panel');			
+		contentPanel.body.addCls('kitchensink-example');
+
+		//className = 'KitchenSink.view.security.com.comInfoPanel';
+		if(!Ext.ClassManager.isCreated(className)){
+			Ext.syncRequire(className);
+		}	
+		ViewClass = Ext.ClassManager.get(className);
+
+		clsProto = ViewClass.prototype;
+
+		if (clsProto.themes) {
+			clsProto.themeInfo = clsProto.themes[themeName];
+
+			if (themeName === 'gray') {
+				clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
+			} else if (themeName !== 'neptune' && themeName !== 'classic') {
+				if (themeName === 'crisp-touch') {
+					clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
+				}
+				clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
+			}
+			// <debug warn>
+			// Sometimes we forget to include allowances for other themes, so issue a warning as a reminder.
+			if (!clsProto.themeInfo) {
+				Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
+					themeName + '\'. Is this intentional?');
+			}
+			// </debug>
+		}
+
+		cmp = new ViewClass();
+		//操作类型设置为更新
+		cmp.actType = "update";
+		cmp.on('afterrender',function(panel){
+			//组件注册表单信息;
+			var form = panel.child('form').getForm();
+			form.findField("ComID").setReadOnly(true);
+			form.findField("ComID").addCls("lanage_1");
+			form.findField("PageID").setReadOnly(true);
+			form.findField("PageID").addCls("lanage_1");
+			form.findField("appClassMc").setReadOnly(true);
+			form.findField("appClassMc").addCls("lanage_1");
+			//页面注册信息列表
+			var grid = panel.child('grid');
+			//参数
+			var tzParams = '{"ComID":"TZ_GD_FILTER_COM","PageID":"TZ_FILTER_DEFN_STD","OperateType":"QF","comParams":{"ComID":"'+ComID+'","PageID":"'+PageID+'","appClassMc":"'+appClassMc+'","type":"1"}}';
+			//加载数据
+			Ext.tzLoad(tzParams,function(responseData){
+				//组件注册信息数据
+				var formData = responseData.formData;
+				form.setValues(formData);
+				//页面注册信息列表数据
+				var roleList = responseData.listData;		
+			});
+			var queryID;
+
+			queryID = "1";
+			var grid1 = panel.down('grid[name=filterGrid]');
+			var tzStoreParams1 = '{"queryID":"' + queryID + '","ComID":"'+ComID+'","PageID":"'+PageID+'","appClassMc":"'+appClassMc+'","type":"1"}';
+			grid1.store.tzStoreParams = tzStoreParams1;
+			//grid1.store.load();
+			
+			/*queryID = "2";
+			var grid2 = panel.down('grid[name=dataSetGrid]');
+			var tzStoreParams2 = '{"queryID":"' + queryID + '","ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'"}';
+			grid2.store.tzStoreParams = tzStoreParams2;*/
 			//grid2.store.load();	
 			/*
 			var tzStoreParams = '{"ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'"}';
@@ -440,7 +649,15 @@
 	 	var ComID = selRec.get("ComID");
 	    var PageID = selRec.get("PageID");
 	    var ViewMc = selRec.get("ViewMc");
-     	this.editFilterByID(ComID,PageID,ViewMc);
+	    var appClassMc = selRec.get("appClassMc");
+	    var typeName = selRec.get("typeName");
+	    alert(typeName)
+	    if(typeName == '0'){
+	    	this.editFilterByID(ComID,PageID,ViewMc);
+	    }
+	    if(typeName == '1'){
+	    	this.editFilterByID2(ComID,PageID,appClassMc);
+	    }
     },
 	deleteFilterBL: function(view, rowIndex){
 		Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?', function(btnId){
@@ -456,9 +673,10 @@
 		//页面注册信息表单
 		var form = win.child("form").getForm();
 		var formParams = form.getValues();
+		var typeName = form.findField("typeName").getValue();
 		if (form.isValid()) {
 			var tu = this;
-			var tzChParams = '{"ComID":"' + formParams["ComID"] + '","PageID":"' + formParams["PageID"] + '","ViewMc":"' + formParams["ViewMc"] + '"}';
+			var tzChParams = '{"ComID":"' + formParams["ComID"] + '","PageID":"' + formParams["PageID"] + '","ViewMc":"' + formParams["ViewMc"] + '","appClassMc":"' + formParams["appClassMc"] + '","typeName":"' + formParams["typeName"] + '"}';
 			var tzParams = '{"ComID":"TZ_GD_FILTER_COM","PageID":"TZ_GD_FILTERTZ_STD","OperateType":"EJSON","comParams":'+tzChParams+'}';
 			Ext.Ajax.request({
 			    //url: '/psc/TZDEV/EMPLOYEE/CRM/s/WEBLIB_GD_FILTE.TZ_GD_FILTER_D.FieldFormula.Iscript_ensureFilter',
@@ -474,7 +692,13 @@
 						form.reset();
 						//关闭窗口
 						win.close();
-						tu.addFilterInfo(formParams["ComID"],formParams["PageID"],formParams["ViewMc"]);
+						if(typeName=='0'){
+							tu.addFilterInfo(formParams["ComID"],formParams["PageID"],formParams["ViewMc"]);
+						}
+						if(typeName=='1'){
+							tu.addFilterInfoClass(formParams["ComID"],formParams["PageID"],formParams["appClassMc"]);
+						}
+						
 						
 			        }else{
 			        	Ext.MessageBox.alert("错误", responseText.message);        

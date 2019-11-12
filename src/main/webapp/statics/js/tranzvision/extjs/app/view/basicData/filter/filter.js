@@ -77,6 +77,27 @@
                 minWidth: 100,
 								flex:1
             },{
+                text: '程序类名称',
+                sortable: true,
+				dataIndex: 'appClassMc',
+                minWidth: 100,
+				flex:1
+            },{
+                text: '类型名称',
+                sortable: true,
+				dataIndex: 'typeName',
+                minWidth: 100,
+				flex:1,
+				renderer:function(value){
+                    if(value=='0'){
+                        return '视图';
+                    }else if(value=='1'){
+                    	return '程序类';
+                    }else{
+                    	return '';
+                    }                    
+                }
+            },{
                menuDisabled: true,
                sortable: false,
 			   			 width:50,

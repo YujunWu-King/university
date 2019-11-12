@@ -52,14 +52,27 @@ public class FilterClsServiceImpl extends FrameworkImpl {
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
+			PsTzFilterDfnTKey psTzFilterDfnTKey = new PsTzFilterDfnTKey();
+			String type = jacksonUtil.getString("type");
 			String str_com_id = jacksonUtil.getString("ComID");
 			String str_page_id = jacksonUtil.getString("PageID");
-			String str_view_name = jacksonUtil.getString("ViewMc");
-			PsTzFilterDfnTKey psTzFilterDfnTKey = new PsTzFilterDfnTKey();
+			String str_view_name = "";
+			String app_class_name = "";
 			psTzFilterDfnTKey.setTzComId(str_com_id);
 			psTzFilterDfnTKey.setTzPageId(str_page_id);
-			psTzFilterDfnTKey.setTzViewName(str_view_name);
-			PsTzFilterDfnT psTzFilterDfnT = psTzFilterDfnTMapper.selectByPrimaryKey(psTzFilterDfnTKey);
+			PsTzFilterDfnT psTzFilterDfnT = new PsTzFilterDfnT();
+			if("0".equals(type)){
+				str_view_name = jacksonUtil.getString("ViewMc");
+				psTzFilterDfnTKey.setTzViewName(str_view_name);
+				psTzFilterDfnT = psTzFilterDfnTMapper.selectByPrimaryKey(psTzFilterDfnTKey);
+			}
+			if("1".equals(type)){
+				app_class_name = jacksonUtil.getString("appClassMc");
+				psTzFilterDfnTKey.setTzAppClassName(app_class_name);
+				psTzFilterDfnT = psTzFilterDfnTMapper.selectByPrimaryKey2(psTzFilterDfnTKey);
+			}
+			
+			
 			// 组件名称;
 			String comMcSQL = "select TZ_COM_MC from PS_TZ_AQ_COMZC_TBL where TZ_COM_ID=?";
 			String str_com_mc = jdbcTemplate.queryForObject(comMcSQL, new Object[] { str_com_id }, "String");
@@ -80,6 +93,8 @@ public class FilterClsServiceImpl extends FrameworkImpl {
 			map.put("PageID", str_page_id);
 			map.put("pageMc", str_page_mc);
 			map.put("ViewMc", str_view_name);
+			map.put("appClassMc", app_class_name);
+			map.put("type", type);
 			if(psTzFilterDfnT != null){
 				map.put("maxNum", psTzFilterDfnT.getTzResultMaxNum());
 				map.put("advModel", psTzFilterDfnT.getTzAdvanceModel());
@@ -111,7 +126,9 @@ public class FilterClsServiceImpl extends FrameworkImpl {
 			String str_com_id = jacksonUtil.getString("ComID");
 			String str_page_id = jacksonUtil.getString("PageID");
 			String str_view_name = jacksonUtil.getString("ViewMc");
+			String str_class_name = jacksonUtil.getString("appClassMc");
 			String queryID = jacksonUtil.getString("queryID");
+			String type = jacksonUtil.getString("type");
 			int total = 0;
 			
 			if ("1".equals(queryID)) {
@@ -119,15 +136,32 @@ public class FilterClsServiceImpl extends FrameworkImpl {
 				String strDqFlg="";
 				String strDqView="";
 				String strDqFld="";
+				String totalSQL ="";
+				String sql = "";
+				List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 				
-				// 查询总数;
-				String totalSQL = "SELECT COUNT('Y') FROM PS_TZ_FILTER_FLD_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=?";
-				total = jdbcTemplate.queryForObject(totalSQL, new Object[] { str_com_id, str_page_id, str_view_name },
-						"Integer");
-	
-				String sql = "SELECT TZ_FILTER_FLD,TZ_FILTER_FLD_DESC,TZ_SORT_NUM,TZ_FLD_READONLY,TZ_FLD_HIDE,TZ_PROMPT_TBL_NAME,TZ_PROMPT_FLD,ifnull(TZ_DEEPQUERY_FLG,'N')TZ_DEEPQUERY_FLG,TZ_DEEPQUERY_VIEW,TZ_DEEPQUERY_FLD FROM PS_TZ_FILTER_FLD_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? order by TZ_SORT_NUM asc limit ?,?";
-				List<Map<String, Object>> list = jdbcTemplate.queryForList(sql,
-						new Object[] { str_com_id, str_page_id, str_view_name, numStart, numLimit });
+				if("0".equals(type)){
+					// 查询总数;
+					totalSQL = "SELECT COUNT('Y') FROM PS_TZ_FILTER_FLD_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=?";
+					sql = "SELECT TZ_FILTER_FLD,TZ_FILTER_FLD_DESC,TZ_SORT_NUM,TZ_FLD_READONLY,TZ_FLD_HIDE,TZ_PROMPT_TBL_NAME,TZ_PROMPT_FLD,ifnull(TZ_DEEPQUERY_FLG,'N')TZ_DEEPQUERY_FLG,TZ_DEEPQUERY_VIEW,TZ_DEEPQUERY_FLD FROM PS_TZ_FILTER_FLD_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? order by TZ_SORT_NUM asc limit ?,?";
+					total = jdbcTemplate.queryForObject(totalSQL, new Object[] { str_com_id, str_page_id, str_view_name },
+							"Integer");
+		
+					
+					list = jdbcTemplate.queryForList(sql,
+							new Object[] { str_com_id, str_page_id, str_view_name, numStart, numLimit });
+				}
+				if("1".equals(type)){
+					totalSQL = "SELECT COUNT('Y') FROM PS_TZ_FILTER_FLD_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_APP_CLASS_NAME=?";
+					sql = "SELECT TZ_FILTER_FLD,TZ_FILTER_FLD_DESC,TZ_SORT_NUM,TZ_FLD_READONLY,TZ_FLD_HIDE,TZ_PROMPT_TBL_NAME,TZ_PROMPT_FLD,ifnull(TZ_DEEPQUERY_FLG,'N')TZ_DEEPQUERY_FLG,TZ_DEEPQUERY_VIEW,TZ_DEEPQUERY_FLD FROM PS_TZ_FILTER_FLD_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_APP_CLASS_NAME=? order by TZ_SORT_NUM asc limit ?,?";
+					total = jdbcTemplate.queryForObject(totalSQL, new Object[] { str_com_id, str_page_id, str_class_name },
+							"Integer");
+		
+					
+					list = jdbcTemplate.queryForList(sql,
+							new Object[] { str_com_id, str_page_id, str_class_name, numStart, numLimit });
+				}
+				
 				if (list != null && list.size()>0) {
 					for (int i = 0; i < list.size(); i++) {
 						String FieldMc = (String) list.get(i).get("TZ_FILTER_FLD");
@@ -158,6 +192,7 @@ public class FilterClsServiceImpl extends FrameworkImpl {
 						map.put("ComID", str_com_id);
 						map.put("PageID", str_page_id);
 						map.put("ViewMc", str_view_name);
+						map.put("appClassMc", str_class_name);
 						map.put("FieldMc", FieldMc);
 						map.put("fieldDesc", fieldDesc);
 						map.put("fldReadonly", str_fld_readonly);
@@ -246,6 +281,7 @@ public class FilterClsServiceImpl extends FrameworkImpl {
 				jacksonUtil.json2Map(strForm);
 				// 类型标志;
 				String strFlag = jacksonUtil.getString("typeFlag");
+				String type = jacksonUtil.getString("type");
 				
 				if ("FILTER".equals(strFlag)) {
 					// 将字符串转换成json;
@@ -254,11 +290,26 @@ public class FilterClsServiceImpl extends FrameworkImpl {
 					String str_com_id = (String) Json.get("ComID");
 					String str_page_id = (String) Json.get("PageID");
 					String str_view_name = (String) Json.get("ViewMc");
-
+					String str_class_name = (String) Json.get("appClassMc");
+					String sql="";
 					String isExist = "";
-					String sql = "select 'Y' from PS_TZ_FILTER_DFN_T WHERE TZ_COM_ID=? AND TZ_PAGE_ID=? AND TZ_VIEW_NAME=?";
-					isExist = jdbcTemplate.queryForObject(sql, new Object[] { str_com_id, str_page_id, str_view_name },
-							"String");
+					if("0".equals(type)){
+						sql = "select 'Y' from PS_TZ_FILTER_DFN_T WHERE TZ_COM_ID=? AND TZ_PAGE_ID=? AND TZ_VIEW_NAME=?";
+						isExist = jdbcTemplate.queryForObject(sql, new Object[] { str_com_id, str_page_id, str_view_name },
+								"String");
+					}
+					int total = 0;
+					if("1".equals(type)){
+						sql = "select 'Y' from PS_TZ_FILTER_DFN_T WHERE TZ_COM_ID=? AND TZ_PAGE_ID=? AND TZ_APP_CLASS_NAME=?";
+						isExist = jdbcTemplate.queryForObject(sql, new Object[] { str_com_id, str_page_id, str_class_name },
+								"String");
+						sql = "select count(1) from PS_TZ_FILTER_DFN_T WHERE TZ_COM_ID=? AND TZ_PAGE_ID=? AND TZ_APP_CLASS_NAME=?";
+						total = jdbcTemplate.queryForObject(sql, new Object[] { str_com_id, str_page_id, str_class_name },
+								"Integer");
+					}
+					
+					
+					
 					if ("Y".equals(isExist)) {
 						errMsg[0] = "1";
 						errMsg[1] = "试图添加的值已存在，请指定新值。";
@@ -275,7 +326,15 @@ public class FilterClsServiceImpl extends FrameworkImpl {
 						PsTzFilterDfnT psTzFilterDfnT = new PsTzFilterDfnT();
 						psTzFilterDfnT.setTzComId(str_com_id);
 						psTzFilterDfnT.setTzPageId(str_page_id);
-						psTzFilterDfnT.setTzViewName(str_view_name);
+						if("0".equals(type)){
+							psTzFilterDfnT.setTzViewName(str_view_name);
+							psTzFilterDfnT.setTzAppClassName("");
+						}
+						if("1".equals(type)){
+							psTzFilterDfnT.setTzViewName("");
+							psTzFilterDfnT.setTzAppClassName(str_class_name);
+						}
+						psTzFilterDfnT.setTzType(type);
 						psTzFilterDfnT.setTzResultMaxNum(num_max_num);
 						psTzFilterDfnT.setTzAdvanceModel(str_adv_model);
 						psTzFilterDfnT.setTzBaseSchEdit(str_base_sch_edit);
@@ -305,13 +364,14 @@ public class FilterClsServiceImpl extends FrameworkImpl {
 				jacksonUtil.json2Map(strForm);
 				// 类型标志;
 				String strFlag = jacksonUtil.getString("typeFlag");
-				
+				String type = jacksonUtil.getString("type");
 				if ("FILTER".equals(strFlag)) {
 					// 将字符串转换成json;
 					Map<String, Object> Json = jacksonUtil.getMap("data");
 					String str_com_id = (String) Json.get("ComID");
 					String str_page_id = (String) Json.get("PageID");
 					String str_view_name = (String) Json.get("ViewMc");
+					String str_class_name = (String) Json.get("appClassMc");
 					String num_max = (String) Json.get("maxNum");
 					int num_max_num = 0;
 					if (!"".equals(num_max) && StringUtils.isNumeric(num_max)) {
@@ -323,7 +383,14 @@ public class FilterClsServiceImpl extends FrameworkImpl {
 					PsTzFilterDfnT psTzFilterDfnT = new PsTzFilterDfnT();
 					psTzFilterDfnT.setTzComId(str_com_id);
 					psTzFilterDfnT.setTzPageId(str_page_id);
-					psTzFilterDfnT.setTzViewName(str_view_name);
+					if("0".equals(type)){
+						psTzFilterDfnT.setTzViewName(str_view_name);
+						psTzFilterDfnT.setTzAppClassName("");
+					}
+					if("1".equals(type)){
+						psTzFilterDfnT.setTzViewName("");
+						psTzFilterDfnT.setTzAppClassName(str_class_name);
+					}
 					psTzFilterDfnT.setTzResultMaxNum(num_max_num);
 					psTzFilterDfnT.setTzAdvanceModel(str_adv_model);
 					psTzFilterDfnT.setTzBaseSchEdit(str_base_sch_edit);
@@ -376,6 +443,7 @@ public class FilterClsServiceImpl extends FrameworkImpl {
 				jacksonUtil.json2Map(strForm);
 				// 类型标志;
 				String strFlag = jacksonUtil.getString("typeFlag");
+				String type = jacksonUtil.getString("type");
 				// 信息内容;
 				if ("FILTER".equals(strFlag)) {
 					
@@ -390,20 +458,24 @@ public class FilterClsServiceImpl extends FrameworkImpl {
 								String str_com_id = (String) Json2.get("ComID");
 								String str_page_id = (String) Json2.get("PageID");
 								String str_view_name = (String) Json2.get("ViewMc");
+								String str_class_name = (String) Json2.get("appClassMc");
 								String str_field_name = (String) Json2.get("FieldMc");
 								PsTzFilterFldTKey psTzFilterFldTKey = new PsTzFilterFldTKey();
 								psTzFilterFldTKey.setTzComId(str_com_id);
 								psTzFilterFldTKey.setTzPageId(str_page_id);
-								psTzFilterFldTKey.setTzViewName(str_view_name);
+								psTzFilterFldTKey.setTzViewName(str_view_name==null?"":str_view_name);
+								psTzFilterFldTKey.setTzAppClassName(str_class_name==null?"":str_class_name);
 								psTzFilterFldTKey.setTzFilterFld(str_field_name);
 								psTzFilterFldTMapper.deleteByPrimaryKey(psTzFilterFldTKey);
 								//Mabc，20170412，add-删除字段同时删除TZ_FILTER_YSF_T表
-								String strDelYsfSql = "delete from PS_TZ_FILTER_YSF_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? and TZ_FILTER_FLD=?";
-								jdbcTemplate.update(strDelYsfSql,new Object[] { str_com_id, str_page_id, str_view_name ,str_field_name});
+								String strDelYsfSql = "delete from PS_TZ_FILTER_YSF_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? and TZ_FILTER_FLD=? and TZ_APP_CLASS_NAME=?";
+								jdbcTemplate.update(strDelYsfSql,new Object[] { str_com_id, str_page_id, str_view_name ,str_field_name,str_class_name});
 								
-								//Mabc，20170412，add-删除字段同时删除TZ_FLTPRM_FLD_T表
-								String strDelPrmTblSql = "delete from PS_TZ_FLTPRM_FLD_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? and TZ_FILTER_FLD=?";
-								jdbcTemplate.update(strDelPrmTblSql,new Object[] { str_com_id, str_page_id, str_view_name ,str_field_name});
+								if("0".equals(type)){
+									//Mabc，20170412，add-删除字段同时删除TZ_FLTPRM_FLD_T表
+									String strDelPrmTblSql = "delete from PS_TZ_FLTPRM_FLD_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? and TZ_FILTER_FLD=? and TZ_APP_CLASS_NAME=?";
+									jdbcTemplate.update(strDelPrmTblSql,new Object[] { str_com_id, str_page_id, str_view_name ,str_field_name});
+								}
 							}
 						}
 					}

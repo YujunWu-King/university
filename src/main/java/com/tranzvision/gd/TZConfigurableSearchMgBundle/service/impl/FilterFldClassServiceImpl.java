@@ -53,15 +53,25 @@ public class FilterFldClassServiceImpl extends FrameworkImpl {
 			String str_com_id = jacksonUtil.getString("ComID");
 			String str_page_id = jacksonUtil.getString("PageID");
 			String str_view_name = jacksonUtil.getString("ViewMc");
+			String str_class_name = jacksonUtil.getString("appClassMc");
 			String str_field_name = jacksonUtil.getString("FieldMc");
+			String type = jacksonUtil.getString("type");
 
 			PsTzFilterFldT psTzFilterFldT = new PsTzFilterFldT();
 			PsTzFilterFldTKey psTzFilterFldTKey = new PsTzFilterFldTKey();
 			psTzFilterFldTKey.setTzComId(str_com_id);
 			psTzFilterFldTKey.setTzPageId(str_page_id);
-			psTzFilterFldTKey.setTzViewName(str_view_name);
 			psTzFilterFldTKey.setTzFilterFld(str_field_name);
-			psTzFilterFldT = psTzFilterFldTMapper.selectByPrimaryKey(psTzFilterFldTKey);
+			if("0".equals(type)){
+				psTzFilterFldTKey.setTzViewName(str_view_name);
+				psTzFilterFldTKey.setTzAppClassName("");
+				psTzFilterFldT = psTzFilterFldTMapper.selectByPrimaryKey(psTzFilterFldTKey);
+			}
+			if("1".equals(type)){
+				psTzFilterFldTKey.setTzViewName("");
+				psTzFilterFldTKey.setTzAppClassName(str_class_name);
+				psTzFilterFldT = psTzFilterFldTMapper.selectByPrimaryKey2(psTzFilterFldTKey);
+			}
 
 			if (psTzFilterFldT != null) {
 				int maxNum = 0;
@@ -72,6 +82,7 @@ public class FilterFldClassServiceImpl extends FrameworkImpl {
 				map.put("ComID", psTzFilterFldT.getTzComId());
 				map.put("PageID", psTzFilterFldT.getTzPageId());
 				map.put("ViewMc", psTzFilterFldT.getTzViewName());
+				map.put("appClassMc", psTzFilterFldT.getTzAppClassName());
 				map.put("FieldMc", psTzFilterFldT.getTzFilterFld());
 				map.put("fieldDesc", psTzFilterFldT.getTzFilterFldDesc());
 				map.put("promptTab", psTzFilterFldT.getTzPromptTblName());
@@ -89,6 +100,15 @@ public class FilterFldClassServiceImpl extends FrameworkImpl {
 				map.put("deepQueryFlg", psTzFilterFldT.getTzDeepqueryFlg());
 				map.put("deepQueryView", psTzFilterFldT.getTzDeepqueryView());
 				map.put("deepQueryFld", psTzFilterFldT.getTzDeepqueryFld());
+				
+				returnJsonMap.replace("formData", map);
+			}else{
+				Map<String, Object> map = new HashMap<>();
+				map.put("ComID", str_com_id);
+				map.put("PageID", str_page_id);
+				map.put("ViewMc", str_view_name);
+				map.put("appClassMc", str_class_name);
+				map.put("FieldMc", str_field_name);
 				
 				returnJsonMap.replace("formData", map);
 			}
@@ -119,8 +139,10 @@ public class FilterFldClassServiceImpl extends FrameworkImpl {
 			String str_com_id = jacksonUtil.getString("ComID");
 			String str_page_id = jacksonUtil.getString("PageID");
 			String str_view_name = jacksonUtil.getString("ViewMc");
+			String str_class_name = jacksonUtil.getString("appClassMc");
 			String str_field_name = jacksonUtil.getString("FieldMc");
 			String queryID = jacksonUtil.getString("queryID");
+			String type = jacksonUtil.getString("type");
 			int total = 0;
 			String totalSQL = "";
 			String sql = "";
@@ -139,8 +161,17 @@ public class FilterFldClassServiceImpl extends FrameworkImpl {
 						psTzFilterYsfTKey.setTzViewName(str_view_name);
 						psTzFilterYsfTKey.setTzFilterFld(str_field_name);
 						psTzFilterYsfTKey.setTzFilterYsf(str_field_ysfid);
-						PsTzFilterYsfT psTzFilterYsfT = psTzFilterYsfTMapper.selectByPrimaryKey(psTzFilterYsfTKey);
-
+						PsTzFilterYsfT psTzFilterYsfT = new PsTzFilterYsfT();
+						if("0".equals(type)){
+							psTzFilterYsfTKey.setTzViewName(str_view_name);
+							psTzFilterYsfTKey.setTzAppClassName("");
+							psTzFilterYsfT = psTzFilterYsfTMapper.selectByPrimaryKey(psTzFilterYsfTKey);
+						}
+						if("1".equals(type)){
+							psTzFilterYsfTKey.setTzViewName("");
+							psTzFilterYsfTKey.setTzAppClassName(str_class_name);
+							psTzFilterYsfT = psTzFilterYsfTMapper.selectByPrimaryKey2(psTzFilterYsfTKey);
+						}
 						String str_is_qy = "", str_is_oprt = "";
 						if (psTzFilterYsfT != null) {
 							str_is_qy = psTzFilterYsfT.getTzFilterBdyQy();
@@ -150,6 +181,7 @@ public class FilterFldClassServiceImpl extends FrameworkImpl {
 						mapList.put("ComID", str_com_id);
 						mapList.put("PageID", str_page_id);
 						mapList.put("ViewMc", str_view_name);
+						mapList.put("appClassMc", str_class_name);
 						mapList.put("FieldMc", str_field_name);
 						mapList.put("orderNum", i + 1);
 						mapList.put("FieldYsfID", str_field_ysfid);
@@ -208,6 +240,128 @@ public class FilterFldClassServiceImpl extends FrameworkImpl {
 		}
 		return jacksonUtil.Map2json(mapRet);
 	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	/*添加 */
+	public String tzAdd(String[] actData, String[] errMsg) {
+		String strRet = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		try {
+			int num = 0;
+			for (num = 0; num < actData.length; num++) {
+				// 表单内容;
+				String strForm = actData[num];
+				// 将字符串转换成json;
+				
+				jacksonUtil.json2Map(strForm);
+				// 信息内容;
+
+				Map<String, Object> jsonObject = jacksonUtil.getMap("add");
+				String str_com_id = (String) jsonObject.get("ComID");
+				String str_page_id = (String) jsonObject.get("PageID");
+				String str_class_name = (String) jsonObject.get("appClassMc");
+				String str_field_name = (String) jsonObject.get("FieldMc");
+				String str_field_desc = (String) jsonObject.get("fieldDesc");
+				String num_max_String = (String) jsonObject.get("maxNum");
+				int num_max_num = 0;
+				String sql = "select count(1) from PS_TZ_FILTER_FLD_T WHERE TZ_COM_ID=? AND TZ_PAGE_ID=? AND TZ_APP_CLASS_NAME=?";
+				int total = jdbcTemplate.queryForObject(sql, new Object[] { str_com_id, str_page_id, str_class_name },
+						"Integer");
+				if (!"".equals(num_max_String) && StringUtils.isNumeric(num_max_String)) {
+					num_max_num = Integer.parseInt(num_max_String);
+				}
+				String str_readonly = (String) jsonObject.get("fldReadonly");
+				String str_hide = (String) jsonObject.get("fldHide");
+				String fldIsDown = (String) jsonObject.get("fldIsDown");
+
+				String fltFldQzLx = (String) jsonObject.get("fltFldQzLx");
+				String translateValueFld = (String) jsonObject.get("translateValueFld");
+				String fltFldNoUpperLower = (String) jsonObject.get("fltFldNoUpperLower");
+				
+				String deepQueryFlg=(String) jsonObject.get("deepQueryFlg");
+				String deepQueryView=(String) jsonObject.get("deepQueryView");
+				String deepQueryFld=(String) jsonObject.get("deepQueryFld");
+
+				PsTzFilterFldT psTzFilterFldT = new PsTzFilterFldT();
+				psTzFilterFldT.setTzComId(str_com_id);
+				psTzFilterFldT.setTzPageId(str_page_id);
+				psTzFilterFldT.setTzViewName("");
+				psTzFilterFldT.setTzAppClassName(str_class_name);
+				psTzFilterFldT.setTzFilterFld(str_field_name);
+				psTzFilterFldT.setTzFilterFldDesc(str_field_desc);
+				psTzFilterFldT.setTzPromptTblName("");
+				psTzFilterFldT.setTzPromptFld("");
+				psTzFilterFldT.setTzPromptDescFld("");
+				psTzFilterFldT.setTzResultMaxNum(num_max_num);
+				psTzFilterFldT.setTzSortNum(total+1);
+				psTzFilterFldT.setTzFldReadonly(str_readonly);
+				psTzFilterFldT.setTzFldHide(str_hide);
+				psTzFilterFldT.setTzIsdownFld(fldIsDown);
+				psTzFilterFldT.setTzFltFldQzType(fltFldQzLx);
+				psTzFilterFldT.setTzZhzjhId(translateValueFld);
+				psTzFilterFldT.setTzNoUporlow(fltFldNoUpperLower);
+				
+				psTzFilterFldT.setTzDeepqueryFlg(deepQueryFlg);
+				psTzFilterFldT.setTzDeepqueryView(deepQueryView);
+				psTzFilterFldT.setTzDeepqueryFld(deepQueryFld);
+				
+				
+				psTzFilterFldTMapper.insertSelective(psTzFilterFldT);
+				
+				Map<String, Object> jObj = null;
+				Map<String, Object> updateListJson = jacksonUtil.getMap("updateList");
+				try {
+					
+					List<Map<String, Object>> jsonArray2 = (List<Map<String, Object>>) updateListJson.get("data1");
+					
+					if (jsonArray2 != null && jsonArray2.size() > 0) {
+						for (int i = 0; i < jsonArray2.size(); i++) {
+							jObj = jsonArray2.get(i);
+							String str_fldysf_name = (String) jObj.get("FieldYsfID");
+							boolean is_qy = (boolean) jObj.get("isQy");
+							String str_is_qy = "";
+							String str_is_oprt = (String) jObj.get("isOprt");
+							if (is_qy == true) {
+								str_is_qy = "1";
+							} else {
+								str_is_qy = "0";
+							}
+
+							String isExist = "";
+							String isExistSQL = "select 'Y' from PS_TZ_FILTER_YSF_T WHERE TZ_COM_ID=? AND  TZ_PAGE_ID=? AND TZ_APP_CLASS_NAME=? AND TZ_FILTER_FLD=? AND TZ_FILTER_YSF=?";
+							isExist = jdbcTemplate.queryForObject(isExistSQL, new Object[] { str_com_id, str_page_id,
+									str_class_name, str_field_name, str_fldysf_name }, "String");
+
+							PsTzFilterYsfT psTzFilterYsfT = new PsTzFilterYsfT();
+							psTzFilterYsfT.setTzComId(str_com_id);
+							psTzFilterYsfT.setTzPageId(str_page_id);
+							psTzFilterYsfT.setTzViewName("");
+							psTzFilterYsfT.setTzAppClassName(str_class_name);
+							psTzFilterYsfT.setTzFilterFld(str_field_name);
+							psTzFilterYsfT.setTzFilterYsf(str_fldysf_name);
+							psTzFilterYsfT.setTzFilterBdyQy(str_is_qy);
+							psTzFilterYsfT.setTzIsDefOprt(str_is_oprt);
+
+							if ("Y".equals(isExist)) {
+								psTzFilterYsfTMapper.updateByPrimaryKeySelective(psTzFilterYsfT);
+							} else {
+								psTzFilterYsfTMapper.insert(psTzFilterYsfT);
+							}
+						}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			errMsg[0] = "1";
+			errMsg[1] = e.toString();
+		}
+		return strRet;
+	}
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -229,12 +383,20 @@ public class FilterFldClassServiceImpl extends FrameworkImpl {
 				String str_com_id = (String) jsonObject.get("ComID");
 				String str_page_id = (String) jsonObject.get("PageID");
 				String str_view_name = (String) jsonObject.get("ViewMc");
+				if(str_view_name==null){
+					str_view_name = "";
+				}
+				String str_class_name = (String) jsonObject.get("appClassMc");
+				if(str_class_name==null){
+					str_class_name = "";
+				}
 				String str_field_name = (String) jsonObject.get("FieldMc");
 				String str_field_desc = (String) jsonObject.get("fieldDesc");
 				String str_prompt_tbl = (String) jsonObject.get("promptTab");
 				String str_prompt_fld = (String) jsonObject.get("promptFld");
 				String str_prompt_desc = (String) jsonObject.get("promptDesc");
 				String num_max_String = (String) jsonObject.get("maxNum");
+				String type = (String) jsonObject.get("type");
 				int num_max_num = 0;
 				if (!"".equals(num_max_String) && StringUtils.isNumeric(num_max_String)) {
 					num_max_num = Integer.parseInt(num_max_String);
@@ -255,6 +417,7 @@ public class FilterFldClassServiceImpl extends FrameworkImpl {
 				psTzFilterFldT.setTzComId(str_com_id);
 				psTzFilterFldT.setTzPageId(str_page_id);
 				psTzFilterFldT.setTzViewName(str_view_name);
+				psTzFilterFldT.setTzAppClassName(str_class_name);
 				psTzFilterFldT.setTzFilterFld(str_field_name);
 				psTzFilterFldT.setTzFilterFldDesc(str_field_desc);
 				psTzFilterFldT.setTzPromptTblName(str_prompt_tbl);
@@ -295,14 +458,15 @@ public class FilterFldClassServiceImpl extends FrameworkImpl {
 							}
 
 							String isExist = "";
-							String isExistSQL = "select 'Y' from PS_TZ_FILTER_YSF_T WHERE TZ_COM_ID=? AND  TZ_PAGE_ID=? AND TZ_VIEW_NAME=? AND TZ_FILTER_FLD=? AND TZ_FILTER_YSF=?";
+							String isExistSQL = "select 'Y' from PS_TZ_FILTER_YSF_T WHERE TZ_COM_ID=? AND  TZ_PAGE_ID=? AND TZ_VIEW_NAME=? AND TZ_APP_CLASS_NAME=? AND TZ_FILTER_FLD=? AND TZ_FILTER_YSF=?";
 							isExist = jdbcTemplate.queryForObject(isExistSQL, new Object[] { str_com_id, str_page_id,
-									str_view_name, str_field_name, str_fldysf_name }, "String");
+									str_view_name,str_class_name, str_field_name, str_fldysf_name }, "String");
 
 							PsTzFilterYsfT psTzFilterYsfT = new PsTzFilterYsfT();
 							psTzFilterYsfT.setTzComId(str_com_id);
 							psTzFilterYsfT.setTzPageId(str_page_id);
 							psTzFilterYsfT.setTzViewName(str_view_name);
+							psTzFilterYsfT.setTzAppClassName(str_class_name);
 							psTzFilterYsfT.setTzFilterFld(str_field_name);
 							psTzFilterYsfT.setTzFilterYsf(str_fldysf_name);
 							psTzFilterYsfT.setTzFilterBdyQy(str_is_qy);
@@ -318,46 +482,47 @@ public class FilterFldClassServiceImpl extends FrameworkImpl {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-
-				try {
-					List<Map<String, Object>> jsonArray4 = (List<Map<String, Object>>) updateListJson.get("data2");
-					
-					if (jsonArray4 != null && jsonArray4.size() > 0) {
-						String deleteSQL = "delete from PS_TZ_FLTPRM_FLD_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? and TZ_FILTER_FLD=?";
-						jdbcTemplate.update(deleteSQL,new Object[]{str_com_id,str_page_id,str_view_name,str_field_name});
-						for (int i = 0; i < jsonArray4.size(); i++) {
-							jObj = jsonArray4.get(i);
-							String str_fldgl_name = (String) jObj.get("FieldGL");
-							
-							PsTzFltprmFldT psTzFltprmFld = new PsTzFltprmFldT();
-							psTzFltprmFld.setTzComId(str_com_id);
-							psTzFltprmFld.setTzPageId(str_page_id);
-							psTzFltprmFld.setTzViewName(str_view_name);
-							psTzFltprmFld.setTzFilterFld(str_field_name);
-							psTzFltprmFld.setTzFilterGlFld(str_fldgl_name);
-							psTzFltprmFld.setTzFilterOrder(i +1);
-							psTzFltprmFldTMapper.insert(psTzFltprmFld);
-						}
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				
-				try {
-					
-					List<Map<String, Object>> jsonArray3 = (List<Map<String, Object>>) updateListJson.get("data3");
-					if (jsonArray3 != null && jsonArray3.size() > 0) {
+				if("0".equals(type)){
+					try {
+						List<Map<String, Object>> jsonArray4 = (List<Map<String, Object>>) updateListJson.get("data2");
 						
-						for (int i = 0; i < jsonArray3.size(); i++) {
-							jObj = jsonArray3.get(i);
-							String str_field_gl = (String) jObj.get("FieldGL");
-							
-							String deleteSQL = "delete from PS_TZ_FLTPRM_FLD_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? and TZ_FILTER_FLD=? and TZ_FILTER_GL_FLD=?";
-							jdbcTemplate.update(deleteSQL,new Object[]{str_com_id,str_page_id,str_view_name,str_field_name,str_field_gl});
+						if (jsonArray4 != null && jsonArray4.size() > 0) {
+							String deleteSQL = "delete from PS_TZ_FLTPRM_FLD_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? and TZ_FILTER_FLD=?";
+							jdbcTemplate.update(deleteSQL,new Object[]{str_com_id,str_page_id,str_view_name,str_field_name});
+							for (int i = 0; i < jsonArray4.size(); i++) {
+								jObj = jsonArray4.get(i);
+								String str_fldgl_name = (String) jObj.get("FieldGL");
+								
+								PsTzFltprmFldT psTzFltprmFld = new PsTzFltprmFldT();
+								psTzFltprmFld.setTzComId(str_com_id);
+								psTzFltprmFld.setTzPageId(str_page_id);
+								psTzFltprmFld.setTzViewName(str_view_name);
+								psTzFltprmFld.setTzFilterFld(str_field_name);
+								psTzFltprmFld.setTzFilterGlFld(str_fldgl_name);
+								psTzFltprmFld.setTzFilterOrder(i +1);
+								psTzFltprmFldTMapper.insert(psTzFltprmFld);
+							}
 						}
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
-				} catch (Exception e) {
-					e.printStackTrace();
+					
+					try {
+						
+						List<Map<String, Object>> jsonArray3 = (List<Map<String, Object>>) updateListJson.get("data3");
+						if (jsonArray3 != null && jsonArray3.size() > 0) {
+							
+							for (int i = 0; i < jsonArray3.size(); i++) {
+								jObj = jsonArray3.get(i);
+								String str_field_gl = (String) jObj.get("FieldGL");
+								
+								String deleteSQL = "delete from PS_TZ_FLTPRM_FLD_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? and TZ_FILTER_FLD=? and TZ_FILTER_GL_FLD=?";
+								jdbcTemplate.update(deleteSQL,new Object[]{str_com_id,str_page_id,str_view_name,str_field_name,str_field_gl});
+							}
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
 				
 				

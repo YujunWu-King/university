@@ -6,6 +6,8 @@ public class PsTzFilterYsfTKey {
     private String tzPageId;
 
     private String tzViewName;
+    
+    private String tzAppClassName;
 
     private String tzFilterFld;
 
@@ -34,8 +36,16 @@ public class PsTzFilterYsfTKey {
     public void setTzViewName(String tzViewName) {
         this.tzViewName = tzViewName == null ? null : tzViewName.trim();
     }
+    
+    public String getTzAppClassName() {
+		return tzAppClassName;
+	}
 
-    public String getTzFilterFld() {
+	public void setTzAppClassName(String tzAppClassName) {
+		this.tzAppClassName = tzAppClassName;
+	}
+
+	public String getTzFilterFld() {
         return tzFilterFld;
     }
 
@@ -50,4 +60,5 @@ public class PsTzFilterYsfTKey {
     public void setTzFilterYsf(String tzFilterYsf) {
         this.tzFilterYsf = tzFilterYsf == null ? null : tzFilterYsf.trim();
     }
+    
 }

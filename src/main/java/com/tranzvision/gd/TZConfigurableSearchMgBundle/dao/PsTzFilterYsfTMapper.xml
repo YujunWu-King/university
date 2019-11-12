@@ -5,13 +5,14 @@
     <id column="TZ_COM_ID" property="tzComId" jdbcType="VARCHAR" />
     <id column="TZ_PAGE_ID" property="tzPageId" jdbcType="VARCHAR" />
     <id column="TZ_VIEW_NAME" property="tzViewName" jdbcType="VARCHAR" />
+    <id column="TZ_APP_CLASS_NAME" property="tzAppClassName" jdbcType="VARCHAR" />
     <id column="TZ_FILTER_FLD" property="tzFilterFld" jdbcType="VARCHAR" />
     <id column="TZ_FILTER_YSF" property="tzFilterYsf" jdbcType="VARCHAR" />
     <result column="TZ_FILTER_BDY_QY" property="tzFilterBdyQy" jdbcType="VARCHAR" />
     <result column="TZ_IS_DEF_OPRT" property="tzIsDefOprt" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    TZ_COM_ID, TZ_PAGE_ID, TZ_VIEW_NAME, TZ_FILTER_FLD, TZ_FILTER_YSF, TZ_FILTER_BDY_QY, 
+    TZ_COM_ID, TZ_PAGE_ID, TZ_VIEW_NAME, TZ_APP_CLASS_NAME, TZ_FILTER_FLD, TZ_FILTER_YSF, TZ_FILTER_BDY_QY, 
     TZ_IS_DEF_OPRT
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFilterYsfTKey" >
@@ -24,6 +25,16 @@
       and TZ_FILTER_FLD = #{tzFilterFld,jdbcType=VARCHAR}
       and TZ_FILTER_YSF = #{tzFilterYsf,jdbcType=VARCHAR}
   </select>
+  <select id="selectByPrimaryKey2" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFilterYsfTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_FILTER_YSF_T
+    where TZ_COM_ID = #{tzComId,jdbcType=VARCHAR}
+      and TZ_PAGE_ID = #{tzPageId,jdbcType=VARCHAR}
+      and TZ_APP_CLASS_NAME = #{tzAppClassName,jdbcType=VARCHAR}
+      and TZ_FILTER_FLD = #{tzFilterFld,jdbcType=VARCHAR}
+      and TZ_FILTER_YSF = #{tzFilterYsf,jdbcType=VARCHAR}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFilterYsfTKey" >
     delete from PS_TZ_FILTER_YSF_T
     where TZ_COM_ID = #{tzComId,jdbcType=VARCHAR}
@@ -33,10 +44,10 @@
       and TZ_FILTER_YSF = #{tzFilterYsf,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFilterYsfT" >
-    insert into PS_TZ_FILTER_YSF_T (TZ_COM_ID, TZ_PAGE_ID, TZ_VIEW_NAME, 
+    insert into PS_TZ_FILTER_YSF_T (TZ_COM_ID, TZ_PAGE_ID, TZ_VIEW_NAME, TZ_APP_CLASS_NAME,
       TZ_FILTER_FLD, TZ_FILTER_YSF, TZ_FILTER_BDY_QY, 
       TZ_IS_DEF_OPRT)
-    values (#{tzComId,jdbcType=VARCHAR}, #{tzPageId,jdbcType=VARCHAR}, #{tzViewName,jdbcType=VARCHAR}, 
+    values (#{tzComId,jdbcType=VARCHAR}, #{tzPageId,jdbcType=VARCHAR}, #{tzViewName,jdbcType=VARCHAR}, #{tzAppClassName,jdbcType=VARCHAR},
       #{tzFilterFld,jdbcType=VARCHAR}, #{tzFilterYsf,jdbcType=VARCHAR}, #{tzFilterBdyQy,jdbcType=VARCHAR}, 
       #{tzIsDefOprt,jdbcType=VARCHAR})
   </insert>
@@ -102,6 +113,7 @@
     where TZ_COM_ID = #{tzComId,jdbcType=VARCHAR}
       and TZ_PAGE_ID = #{tzPageId,jdbcType=VARCHAR}
       and TZ_VIEW_NAME = #{tzViewName,jdbcType=VARCHAR}
+      and TZ_APP_CLASS_NAME = #{tzAppClassName,jdbcType=VARCHAR}
       and TZ_FILTER_FLD = #{tzFilterFld,jdbcType=VARCHAR}
       and TZ_FILTER_YSF = #{tzFilterYsf,jdbcType=VARCHAR}
   </update>

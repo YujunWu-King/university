@@ -11,6 +11,8 @@ public interface PsTzFilterDfnTMapper {
     int insertSelective(PsTzFilterDfnT record);
 
     PsTzFilterDfnT selectByPrimaryKey(PsTzFilterDfnTKey key);
+    
+    PsTzFilterDfnT selectByPrimaryKey2(PsTzFilterDfnTKey key);
 
     int updateByPrimaryKeySelective(PsTzFilterDfnT record);
 

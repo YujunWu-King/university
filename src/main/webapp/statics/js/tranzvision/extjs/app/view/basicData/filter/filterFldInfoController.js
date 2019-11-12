@@ -109,7 +109,6 @@
     },
     onFilterInfoSave: function(btn){
 			var from = this.getView().child("form").getForm();
-			
 			if (from.isValid()) {
 				var actType = this.getView().actType;
 				var comSiteParams = from.getValues();
@@ -218,7 +217,7 @@
 			
 				//修改json字符串
 				//comParams = '"update":[{"update":' + Ext.JSON.encode(comSiteParams) + ',"queryID":"1","updateList":[' + editJson1 + '],"deleteList":[' + removeJson1 + ']}]';
-				comParams = '"update":[{"update":' + Ext.JSON.encode(comSiteParams) + ',"updateList":{"data1":[' + editJson1 + '],"data2":['+ editJson2 + '],"data3":['+ removeJson2 + ']}}]';
+				comParams = '"update":[{"type":"0","update":' + Ext.JSON.encode(comSiteParams) + ',"updateList":{"data1":[' + editJson1 + '],"data2":['+ editJson2 + '],"data3":['+ removeJson2 + ']}}]';
 				
 				//提交参数
 				var tzParams = '{"ComID":"TZ_GD_FILTER_COM","PageID":"TZ_FILTER_FLD_STD","OperateType":"U","comParams":{'+comParams+'}}';
@@ -234,6 +233,87 @@
 					this.getView().close();
 				}
 			}
+    },
+    onFilterInfoSave2: function(btn){
+		var from = this.getView().child("form").getForm();
+		var actType = this.getView().actType;
+		if (from.isValid()) {
+			var actType = this.getView().actType;
+			var comSiteParams = from.getValues();
+			var ComID = comSiteParams['ComID'];
+			var PageID = comSiteParams['PageID'];
+			var appClassMc = comSiteParams['appClassMc'];
+			var FieldMc = comSiteParams['FieldMc'];
+			var comParams = "";
+			
+			if(comSiteParams["fldIsDown"]){
+				comSiteParams["fldIsDown"] = "1";
+			}else{
+				comSiteParams["fldIsDown"] = "0";
+			}
+			if(comSiteParams["fldReadonly"]){
+				comSiteParams["fldReadonly"] = "1";
+			}else{
+				comSiteParams["fldReadonly"] = "0";
+			}
+			if(comSiteParams["fldHide"]){
+				comSiteParams["fldHide"] = "1";
+			}else{
+				comSiteParams["fldHide"] = "0";
+			}		
+			//列表信息
+			var tabpanel = this.getView().child("form").child("tabpanel");
+			var grid = tabpanel.getActiveTab();
+			var grid1 = tabpanel.down('grid[name=searchFld]');
+			
+			var queryID;
+			
+			var store1 = grid1.getStore();
+			
+			var editJson1="";
+			var removeJson1="";
+			for(var i =0;i<store1.getCount();i++){
+				var rec1 = store1.getAt(i);
+				var isOprt1 = rec1.get('isOprt');
+				if(isOprt1 == "1"){
+					var isQy = rec1.get('isQy');
+					if(isQy != 1){
+						Ext.Msg.alert("提示","未启用的字段不能设置为默认字段。");
+						return;
+					}
+				}
+			}
+			//列表中修改的记录
+			var mfRecs1 = store1.getModifiedRecords(); 
+			for(var i=0;i<mfRecs1.length;i++){
+				if(editJson1 == ""){
+					editJson1 = Ext.JSON.encode(mfRecs1[i].data);
+				}else{
+					editJson1 = editJson1 + ','+Ext.JSON.encode(mfRecs1[i].data);
+				}
+			}
+		
+			//修改json字符串
+			
+			if(actType == "add"){
+	            comParams = '"add":[{"add":' + Ext.JSON.encode(comSiteParams) + ',"updateList":{"data1":[' + editJson1 + ']}}]';
+	        }
+			if(actType == "update"){
+				comParams = '"update":[{"type":"1","update":' + Ext.JSON.encode(comSiteParams) + ',"updateList":{"data1":[' + editJson1 + '],"data2":[],"data3":[]}}]';
+	        }
+			//提交参数
+			var tzParams = '{"ComID":"TZ_GD_FILTER_COM","PageID":"TZ_FILTER_FLD_STD","OperateType":"U","comParams":{'+comParams+'}}';
+			
+			Ext.tzSubmit(tzParams,function(){
+				store1.reload();
+			},"",true,this);
+			if(btn == "btn_Ensure"){
+				this.getView().close();
+			}
+		}
+    },
+    onFilterInfoEnsure2: function(){
+		this.onFilterInfoSave2("btn_Ensure");
     },
     onFilterInfoEnsure: function(){
 		this.onFilterInfoSave("btn_Ensure");

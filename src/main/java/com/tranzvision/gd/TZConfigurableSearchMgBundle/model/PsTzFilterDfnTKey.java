@@ -6,6 +6,10 @@ public class PsTzFilterDfnTKey {
     private String tzPageId;
 
     private String tzViewName;
+    
+    private String tzAppClassName;
+    
+    private String tzType;
 
     public String getTzComId() {
         return tzComId;
@@ -30,4 +34,21 @@ public class PsTzFilterDfnTKey {
     public void setTzViewName(String tzViewName) {
         this.tzViewName = tzViewName == null ? null : tzViewName.trim();
     }
+
+	public String getTzAppClassName() {
+		return tzAppClassName;
+	}
+
+	public void setTzAppClassName(String tzAppClassName) {
+		this.tzAppClassName = tzAppClassName;
+	}
+
+	public String getTzType() {
+		return tzType;
+	}
+
+	public void setTzType(String tzType) {
+		this.tzType = tzType;
+	}
+
 }

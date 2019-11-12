@@ -46,6 +46,113 @@
 
         win.show();
     },
+    addFld2: function() {
+    	if(this.getView().actType == "add"){
+			Ext.MessageBox.alert("提示","请先保存组信息后，再新增字段信息。");
+			return;
+		}
+    	//是否有访问权限
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_GD_FILTER_COM"]["TZ_FILTER_FLDC_STD"];
+        if( pageResSet == "" || pageResSet == undefined){
+            Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+            return;
+        }
+        //该功能对应的JS类
+        var className = pageResSet["jsClassName"];
+        if(className == "" || className == undefined){
+            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_FILTER_FLDC_STD，请检查配置。');
+            return;
+        }
+        
+        var contentPanel,cmp, className, ViewClass, clsProto;
+        var themeName = Ext.themeName;
+
+        contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+        contentPanel.body.addCls('kitchensink-example');
+		//className = 'KitchenSink.view.basicData.filter.filterFldInfoPanel';
+        if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+        ViewClass = Ext.ClassManager.get(className);
+
+        clsProto = ViewClass.prototype;
+
+        if (clsProto.themes) {
+            clsProto.themeInfo = clsProto.themes[themeName];
+
+            if (themeName === 'gray') {
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
+            } else if (themeName !== 'neptune' && themeName !== 'classic') {
+                if (themeName === 'crisp-touch') {
+                    clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
+                }
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
+            }
+            // <debug warn>
+            // Sometimes we forget to include allowances for other themes, so issue a warning as a reminder.
+            if (!clsProto.themeInfo) {
+                Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
+                    themeName + '\'. Is this intentional?');
+            }
+            // </debug>
+        }
+
+        var form = this.getView().child("form").getForm();
+		var formParams = form.getValues();
+		var ComID = formParams['ComID'];
+   	 	var PageID = formParams['PageID'];
+   	 	var appClassMc = formParams['appClassMc'];
+   	 	
+        cmp = new ViewClass();
+        //操作类型设置为更新
+        cmp.actType = "add";
+        cmp.on('afterrender',function(panel){
+        	var form2 = panel.child('form').getForm();
+        	//参数
+            var tzParams = '{"ComID":"TZ_GD_FILTER_COM","PageID":"TZ_FILTER_FLDC_STD","OperateType":"QF","comParams":{"ComID":"'+ComID+'","PageID":"'+PageID+'","appClassMc":"'+appClassMc+'","FieldMc":"","type":"1"}}';
+            //加载数据
+            Ext.tzLoad(tzParams,function(responseData){
+                //资源集合信息数据
+                var formData = responseData.formData;
+                form2.setValues(formData);
+                
+                //资源集合信息列表数据
+                var roleList = responseData.listData;
+            });
+            var queryID;
+            /*
+			if(grid.name == "searchFld"){
+				queryID = "1";
+			}
+			if(grid.name == "promptFld"){
+				queryID = "2";
+			}
+			*/
+
+			queryID = "1";
+			var grid1 = panel.down('grid[name=searchFld]');
+			var tzStoreParams1 = '{"queryID":"' + queryID + '","ComID":"'+ComID+'","PageID":"'+PageID+'","appClassMc":"'+appClassMc+'","FieldMc":"","type":"1"}';
+            grid1.store.tzStoreParams = tzStoreParams1;
+            grid1.store.load();
+            
+           
+           /* queryID = "2";
+            var grid2 = panel.down('grid[name=promptFld]');
+						var tzStoreParams2 = '{"queryID":"' + queryID + '","ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'","FieldMc":"'+FieldMc+'"}';
+            grid2.store.tzStoreParams = tzStoreParams2;
+            grid2.store.load();*/
+        });
+
+        tab = contentPanel.add(cmp);
+
+        contentPanel.setActiveTab(tab);
+
+        Ext.resumeLayouts(true);
+
+        if (cmp.floating) {
+            cmp.show();
+        }
+    },
     //添加DeepQuery字段
     addDqFld: function() {
     	if(this.getView().actType == "add"){
@@ -200,7 +307,7 @@
             //资源信息列表
             var grid = panel.child('form').child('tabpanel').getActiveTab();	
             //参数
-            var tzParams = '{"ComID":"TZ_GD_FILTER_COM","PageID":"TZ_FILTER_FLD_STD","OperateType":"QF","comParams":{"ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'","FieldMc":"'+FieldMc+'"}}';
+            var tzParams = '{"ComID":"TZ_GD_FILTER_COM","PageID":"TZ_FILTER_FLD_STD","OperateType":"QF","comParams":{"ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'","FieldMc":"'+FieldMc+'","type":"0"}}';
             //加载数据
             Ext.tzLoad(tzParams,function(responseData){
                 //资源集合信息数据
@@ -233,7 +340,7 @@
 		
 						queryID = "1";
 						var grid1 = panel.down('grid[name=searchFld]');
-						var tzStoreParams1 = '{"queryID":"' + queryID + '","ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'","FieldMc":"'+FieldMc+'"}';
+						var tzStoreParams1 = '{"queryID":"' + queryID + '","ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'","FieldMc":"'+FieldMc+'","type":"0"}';
             grid1.store.tzStoreParams = tzStoreParams1;
             grid1.store.load();
             
@@ -243,6 +350,132 @@
 						var tzStoreParams2 = '{"queryID":"' + queryID + '","ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'","FieldMc":"'+FieldMc+'"}';
             grid2.store.tzStoreParams = tzStoreParams2;
             grid2.store.load();
+        });
+
+        tab = contentPanel.add(cmp);
+
+        contentPanel.setActiveTab(tab);
+
+        Ext.resumeLayouts(true);
+
+        if (cmp.floating) {
+            cmp.show();
+        }
+    },
+    editSelFld2: function(){
+    	//var store = view.findParentByType("grid").store;
+	 		//var selRec = store.getAt(rowIndex);
+		 	//选中行
+		   var tabpanel = this.getView().child("tabpanel");
+		   var grid = tabpanel.down('grid[name=filterGrid]');
+		   var selList = grid.getSelectionModel().getSelection();
+		   //选中行长度
+		   var checkLen = selList.length;
+		   if(checkLen == 0){
+				Ext.Msg.alert("提示","请选择一条要修改的记录");   
+				return;
+		   }else if(checkLen >1){
+			   Ext.Msg.alert("提示","只能选择一条要修改的记录");   
+			   return;
+		   }
+		   selRec = selList[0];
+	   
+   	 	var ComID = selRec.get("ComID");
+   	 	var PageID = selRec.get("PageID");
+   	 	var appClassMc = selRec.get("appClassMc");
+   	 	var FieldMc = selRec.get("FieldMc");
+   	 	
+     	//显示编辑页面
+     	this.editFilterFldByID2(ComID,PageID,appClassMc,FieldMc);
+    },
+    editFld2: function(view, rowIndex){
+    	var store = view.findParentByType("grid").store;
+	 	var selRec = store.getAt(rowIndex);
+	 	
+   	 	var ComID = selRec.get("ComID");
+   	 	var PageID = selRec.get("PageID");
+   	 	var appClassMc = selRec.get("appClassMc");
+   	 	var FieldMc = selRec.get("FieldMc");
+   	 	
+     	//显示编辑页面
+     	this.editFilterFldByID2(ComID,PageID,appClassMc,FieldMc);
+    },
+    editFilterFldByID2: function(ComID,PageID,appClassMc,FieldMc){
+        //是否有访问权限
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_GD_FILTER_COM"]["TZ_FILTER_FLDC_STD"];
+        if( pageResSet == "" || pageResSet == undefined){
+            Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+            return;
+        }
+        //该功能对应的JS类
+        var className = pageResSet["jsClassName"];
+        if(className == "" || className == undefined){
+            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_FILTER_FLDC_STD，请检查配置。');
+            return;
+        }
+        
+        var contentPanel,cmp, className, ViewClass, clsProto;
+        var themeName = Ext.themeName;
+
+        contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+        contentPanel.body.addCls('kitchensink-example');
+		//className = 'KitchenSink.view.basicData.filter.filterFldInfoPanel';
+        if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+        ViewClass = Ext.ClassManager.get(className);
+
+        clsProto = ViewClass.prototype;
+
+        if (clsProto.themes) {
+            clsProto.themeInfo = clsProto.themes[themeName];
+
+            if (themeName === 'gray') {
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
+            } else if (themeName !== 'neptune' && themeName !== 'classic') {
+                if (themeName === 'crisp-touch') {
+                    clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
+                }
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
+            }
+            // <debug warn>
+            // Sometimes we forget to include allowances for other themes, so issue a warning as a reminder.
+            if (!clsProto.themeInfo) {
+                Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
+                    themeName + '\'. Is this intentional?');
+            }
+            // </debug>
+        }
+
+        cmp = new ViewClass();
+        //操作类型设置为更新
+        cmp.actType = "update";
+        cmp.on('afterrender',function(panel){
+            //资源集合表单信息;
+            var form = panel.child('form').getForm();
+            form.findField("FieldMc").setReadOnly(true);
+            form.findField("FieldMc").addCls("lanage_1");
+            //资源信息列表
+            var grid = panel.child('form').child('tabpanel').getActiveTab();	
+            //参数
+            var tzParams = '{"ComID":"TZ_GD_FILTER_COM","PageID":"TZ_FILTER_FLDC_STD","OperateType":"QF","comParams":{"ComID":"'+ComID+'","PageID":"'+PageID+'","appClassMc":"'+appClassMc+'","FieldMc":"'+FieldMc+'","type":"1"}}';
+            //加载数据
+            Ext.tzLoad(tzParams,function(responseData){
+                //资源集合信息数据
+                var formData = responseData.formData;
+                form.setValues(formData);
+                
+                //资源集合信息列表数据
+                var roleList = responseData.listData;
+            });
+            var queryID;
+
+			queryID = "1";
+			var grid1 = panel.down('grid[name=searchFld]');
+			var tzStoreParams1 = '{"queryID":"' + queryID + '","ComID":"'+ComID+'","PageID":"'+PageID+'","appClassMc":"'+appClassMc+'","FieldMc":"'+FieldMc+'","type":"1"}';
+            grid1.store.tzStoreParams = tzStoreParams1;
+            grid1.store.load();
+            
         });
 
         tab = contentPanel.add(cmp);
@@ -279,7 +512,7 @@
 		var form = this.getView().child("form").getForm();
 		if (form.isValid()) {
 			//获取组件注册信息参数
-			var tzParams = this.getFilterInfoParams();
+			var tzParams = this.getFilterInfoParams('0');
 			var comView = this.getView();
 			Ext.tzSubmit(tzParams,function(responseData){
 				comView.actType = "update";	
@@ -289,11 +522,37 @@
 			},"",true,this);
 		}
     },
+    onFilterInfoSave2: function(){
+		var form = this.getView().child("form").getForm();
+		if (form.isValid()) {
+			//获取组件注册信息参数
+			var tzParams = this.getFilterInfoParams('1');
+			var comView = this.getView();
+			Ext.tzSubmit(tzParams,function(responseData){
+				comView.actType = "update";	
+				form.findField("ComID").setReadOnly(true);
+				form.findField("PageID").setReadOnly(true);
+				form.findField("appClassMc").setReadOnly(true);
+			},"",true,this);
+		}
+    },
     onFilterInfoEnsure: function(){
 		var form = this.getView().child("form").getForm();
 		if (form.isValid()) {
 			//获取组件注册信息参数
-			var tzParams = this.getFilterInfoParams();
+			var tzParams = this.getFilterInfoParams('0');
+			var comView = this.getView();
+			Ext.tzSubmit(tzParams,function(responseData){
+				//关闭窗口						   
+				comView.close();	
+			},"",true,this);
+		}
+    },
+    onFilterInfoEnsure2: function(){
+		var form = this.getView().child("form").getForm();
+		if (form.isValid()) {
+			//获取组件注册信息参数
+			var tzParams = this.getFilterInfoParams('1');
 			var comView = this.getView();
 			Ext.tzSubmit(tzParams,function(responseData){
 				//关闭窗口						   
@@ -304,7 +563,7 @@
     onFilterInfoClose: function(){
 		this.getView().close();
 	},
-	getFilterInfoParams: function(){
+	getFilterInfoParams: function(type){
         //资源集合表单
         var form = this.getView().child("form").getForm();
         //表单数据
@@ -328,7 +587,7 @@
         var comParams = "";
         //新增
         if(actType == "add"){
-            comParams = '"add":[{"typeFlag":"FILTER","data":'+Ext.JSON.encode(formParams)+'}]';
+            comParams = '"add":[{"typeFlag":"FILTER","type":"'+type+'","data":'+Ext.JSON.encode(formParams)+'}]';
         }
         //修改json字符串
         var editJson = "";
@@ -350,7 +609,7 @@
 		}
 		
         if(actType == "update"){
-            editJson = '{"typeFlag":"FILTER","data":'+Ext.JSON.encode(formParams)+',"updateList":[' + editfldJson + ']}';
+            editJson = '{"typeFlag":"FILTER","type":"'+type+'","data":'+Ext.JSON.encode(formParams)+',"updateList":[' + editfldJson + ']}';
         }
         if(editJson != ""){
             if(comParams == ""){
@@ -372,22 +631,26 @@
             }
     	}
 		
-		var gridDataSet = tabpanel.down('grid[name=dataSetGrid]');
         //DataSet信息数据
-        var storeDataSet = gridDataSet.getStore();
-		//删除json字符串
         var removeJsonDataSet = "";
-        //删除记录
-        var removeRecsDataSet = storeDataSet.getRemovedRecords();
-        for(var i=0;i<removeRecsDataSet.length;i++){
-            if(removeJsonDataSet == ""){
-                removeJsonDataSet = Ext.JSON.encode(removeRecsDataSet[i].data);
-            }else{
-                removeJsonDataSet = removeJsonDataSet + ','+Ext.JSON.encode(removeRecsDataSet[i].data);
-            }
-    	}
+		if(type=='0'){
+			var gridDataSet = tabpanel.down('grid[name=dataSetGrid]');
+			var storeDataSet = gridDataSet.getStore();
+			//删除json字符串
+	        //删除记录
+	        var removeRecsDataSet = storeDataSet.getRemovedRecords();
+	        for(var i=0;i<removeRecsDataSet.length;i++){
+	            if(removeJsonDataSet == ""){
+	                removeJsonDataSet = Ext.JSON.encode(removeRecsDataSet[i].data);
+	            }else{
+	                removeJsonDataSet = removeJsonDataSet + ','+Ext.JSON.encode(removeRecsDataSet[i].data);
+	            }
+	    	}
+		}
+        
 		
-		var removeJsonData = '{"typeFlag":"FILTER","removeList":[' + removeJson + ']}';
+		
+		var removeJsonData = '{"type":"'+type+'","typeFlag":"FILTER","removeList":[' + removeJson + ']}';
 		removeJsonData = removeJsonData + "," + '{"typeFlag":"DataSet","removeList":[' + removeJsonDataSet + ']}';
 		
         if(removeJsonData != ""){

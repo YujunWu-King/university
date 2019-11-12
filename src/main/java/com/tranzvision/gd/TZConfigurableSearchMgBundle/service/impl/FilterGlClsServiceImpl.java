@@ -41,7 +41,7 @@ public class FilterGlClsServiceImpl extends FrameworkImpl {
 			String[][] orderByArr = new String[][] { { "TZ_COM_ID", "ASC" },{ "TZ_PAGE_ID", "ASC" },{ "TZ_VIEW_NAME", "ASC" } };
 
 			// json数据要的结果字段;
-			String[] resultFldArray = { "TZ_COM_ID", "TZ_COM_MC", "TZ_PAGE_ID", "TZ_PAGE_MC", "TZ_VIEW_NAME" };
+			String[] resultFldArray = { "TZ_COM_ID", "TZ_COM_MC", "TZ_PAGE_ID", "TZ_PAGE_MC", "TZ_VIEW_NAME","TZ_APP_CLASS_NAME", "TZ_TYPE" };
 
 			// 可配置搜索通用函数;
 			Object[] obj = fliterForm.searchFilter(resultFldArray,orderByArr, comParams, numLimit, numStart, errorMsg);
@@ -57,6 +57,8 @@ public class FilterGlClsServiceImpl extends FrameworkImpl {
 					map.put("PageID", rowList[2]);
 					map.put("pageMc", rowList[3]);
 					map.put("ViewMc", rowList[4]);
+					map.put("appClassMc", rowList[5]);
+					map.put("typeName", rowList[6]);
 					listData.add(map);
 				}
 				mapRet.replace("total", obj[0]);
@@ -85,11 +87,13 @@ public class FilterGlClsServiceImpl extends FrameworkImpl {
 				String str_com_id = jacksonUtil.getString("ComID");
 				String str_page_id = jacksonUtil.getString("PageID");
 				String str_view_name = jacksonUtil.getString("ViewMc");
+				String str_class_name = jacksonUtil.getString("appClassMc");
 				
 				PsTzFilterDfnTKey psTzFilterDfnTKey = new PsTzFilterDfnTKey();
 				psTzFilterDfnTKey.setTzComId(str_com_id);
 				psTzFilterDfnTKey.setTzPageId(str_page_id);
 				psTzFilterDfnTKey.setTzViewName(str_view_name);
+				psTzFilterDfnTKey.setTzAppClassName(str_class_name);
 				psTzFilterDfnTMapper.deleteByPrimaryKey(psTzFilterDfnTKey);
 
 			}

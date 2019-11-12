@@ -178,6 +178,7 @@ public class SelectFilterFldServiceImpl extends FrameworkImpl {
 						psTzFilterFldT.setTzComId(str_com_id);
 						psTzFilterFldT.setTzPageId(str_page_id);
 						psTzFilterFldT.setTzViewName(str_view_name);
+						psTzFilterFldT.setTzAppClassName("");
 						psTzFilterFldT.setTzFilterFld(str_field_name);
 						psTzFilterFldT.setTzFilterFldDesc(str_fieldgl_desc);
 						psTzFilterFldT.setTzSortNum(numxh +1);
@@ -196,6 +197,7 @@ public class SelectFilterFldServiceImpl extends FrameworkImpl {
 						psTzFilterYsfT.setTzComId(str_com_id);
 						psTzFilterYsfT.setTzPageId(str_page_id);
 						psTzFilterYsfT.setTzViewName(str_view_name);
+						psTzFilterYsfT.setTzAppClassName("");
 						psTzFilterYsfT.setTzFilterFld(str_field_name);
 						if(intTypeString.contains(fieldType.toUpperCase())){
 							psTzFilterYsfT.setTzFilterYsf("07");

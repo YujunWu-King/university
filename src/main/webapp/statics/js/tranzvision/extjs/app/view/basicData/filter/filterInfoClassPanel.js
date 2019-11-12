@@ -1,6 +1,6 @@
-﻿    Ext.define('KitchenSink.view.basicData.filter.filterInfoPanel', {
+﻿    Ext.define('KitchenSink.view.basicData.filter.filterInfoClassPanel', {
     extend: 'Ext.panel.Panel',
-    xtype: 'filterInfoPanel',
+    xtype: 'filterInfoClassPanel',
 	controller: 'filterInfo',
 	requires: [
 	    'Ext.data.*',
@@ -8,7 +8,7 @@
         'Ext.util.*',
         'Ext.toolbar.Paging',
         'Ext.ux.ProgressBarPager',
-        'KitchenSink.view.basicData.filter.filterInfoStore',
+        'KitchenSink.view.basicData.filter.filterInfoStore2',
 		'KitchenSink.view.basicData.filter.FldDataSetStore',
         'KitchenSink.view.basicData.filter.filterInfoController',
         'tranzvision.extension.grid.column.Link'
@@ -60,10 +60,10 @@
             name: 'pageMc'
         }, {
             xtype: 'textfield',
-            fieldLabel: '视图名称',
+            fieldLabel: '程序类名称',
             readOnly:true,
 			cls:"lanage_1",
-            name: 'ViewMc'
+            name: 'appClassMc'
         },{
             xtype: 'textfield',
             fieldLabel: '类型',
@@ -114,9 +114,9 @@
 			dockedItems:{
 					xtype:"toolbar",
 					items:[
-						{text:"新增",tooltip:"新增",iconCls:"add",handler:'addFld'},"-",
-						{text:"新增DeepQuery字段",tooltip:"新增DeepQuery字段",iconCls:"add",handler:'addDqFld'},"-",
-						{text:"编辑",tooltip:"编辑",iconCls:"edit",handler:'editSelFld'},"-",
+						{text:"新增",tooltip:"新增",iconCls:"add",handler:'addFld2'},"-",
+						//{text:"新增DeepQuery字段",tooltip:"新增DeepQuery字段",iconCls:"add",handler:'addDqFld'},"-",
+						{text:"编辑",tooltip:"编辑",iconCls:"edit",handler:'editSelFld2'},"-",
 						{text:"删除",tooltip:"删除",iconCls:"remove",handler:'deleteFlds'}
 					]
 			},
@@ -127,7 +127,7 @@
 				multiSelect: true,
 				//style:"margin:10px",
 				store: {
-					type: 'filterInfoStore'
+					type: 'filterInfoStore2'
 				},
 				viewConfig: {
 					plugins: {
@@ -162,6 +162,10 @@
 					dataIndex: 'ViewMc',
 					hidden: true
 				},{
+					text: '程序类名称',
+					dataIndex: 'appClassMc',
+					hidden: true
+				},{
 					text: '序号',
 					dataIndex: 'orderNum',
 					width: 55
@@ -169,7 +173,7 @@
 					text:'字段名称',               
 					sortable: true,
 					dataIndex: 'FieldMc',
-								width: 160
+								width: 320
 								/*
 								renderer: function(val, mataData, record){
 									//return '<a href="#" onclick="editFilterFldInfo(\''+ record.data.projectId +'\')">'+ val +'</a>';
@@ -179,12 +183,12 @@
 				},{
 					text: '字段描述',
 					dataIndex: 'fieldDesc',
-					width: 130
+					width: 320
 				},{
 					xtype: 'checkcolumn',
 					text: '只读',
 					dataIndex: 'fldReadonly',
-					width: 80,
+					width: 120,
 					disabled:true
 					/*listeners: {
 						checkchange: function(item, rowIndex, checked, eOpts ){
@@ -210,7 +214,7 @@
 					xtype: 'checkcolumn',
 					text: '隐藏',
 					dataIndex: 'fldHide',
-					width: 80,
+					width: 120,
 					disabled:true
 					/*listeners: {
 						checkchange: function(item, rowIndex, checked, eOpts ){
@@ -232,7 +236,7 @@
 							}
 						}	
 					}*/
-				},{
+				},/*{
 					text: 'Prompt表名称',
 					dataIndex: 'promptTab',
 					width: 130
@@ -258,13 +262,13 @@
 					text: 'DeepQuery字段',
 					dataIndex: 'deepQueryFld',
 					hidden: true
-				},{
+				},*/{
 				   menuDisabled: true,
 				   sortable: false,
 				   width:60,
 				   xtype: 'actioncolumn',
 				   items:[
-					  {iconCls: 'edit',tooltip: '编辑',handler: 'editFld'},
+					  {iconCls: 'edit',tooltip: '编辑',handler: 'editFld2'},
 					  /** '-',  **/
 					  {iconCls: 'remove',tooltip: '删除',handler: 'deleteFLd'}
 				   ]
@@ -285,7 +289,7 @@
 					emptyMsg: '没有数据显示',
 					plugins: new Ext.ux.ProgressBarPager()
 				}
-			},{
+			}/*,{
 	        	xtype: 'grid',
 	        	name:"dataSetGrid",
 				minHeight: 360,
@@ -308,7 +312,7 @@
 				store: {
 					type: 'FldDataSetStore'
 				},
-				/*
+				
 				plugins: {
 	                ptype: 'cellediting',
 	                pluginId: 'fldCellEditing',
@@ -331,7 +335,7 @@
 							data.view.store.endUpdate();
 						}
 					}
-				},*/
+				},
 				columns: [{
 		            text: '组件编号',
 		            dataIndex: 'ComID',
@@ -377,7 +381,7 @@
 				   xtype: 'actioncolumn',
 				   items:[
 					  {iconCls: 'edit',tooltip: '编辑',handler: 'editDataSetFld'},
-					  /** '-',  **/
+					  *//** '-',  **//*
 					  {iconCls: 'remove',tooltip: '删除',handler: 'deleteDataSetFLd'}
 				   ]
 				}],
@@ -397,17 +401,17 @@
 					emptyMsg: '没有数据显示',
 					plugins: new Ext.ux.ProgressBarPager()
 				}
-			}
+			}*/
 		]
 	}],
     buttons: [{
 		text: '保存',
 		iconCls:"save",
-		handler: 'onFilterInfoSave'
+		handler: 'onFilterInfoSave2'
 	}, {
 		text: '确定',
 		iconCls:"ensure",
-		handler: 'onFilterInfoEnsure'
+		handler: 'onFilterInfoEnsure2'
 	}, {
 		text: '关闭',
 		iconCls:"close",
