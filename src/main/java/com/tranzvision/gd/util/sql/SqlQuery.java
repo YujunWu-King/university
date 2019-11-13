@@ -3,16 +3,15 @@
  */
 package com.tranzvision.gd.util.sql;
 
-import java.util.List;
-import java.util.Map;
-
+import com.tranzvision.gd.util.base.VarType2Class;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import com.tranzvision.gd.util.base.VarType2Class;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author SHIHUA
@@ -97,6 +96,20 @@ public class SqlQuery {
 
 		return null;
 	}
+	
+	
+	@SuppressWarnings("unchecked")
+	public <T> List<T> queryForList(String sql, Object[] args, String elmType) {
+
+		try {
+			return (List<T>) jdbcTemplate.queryForList(sql, args, varType2Class.change2Class(elmType));
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+	
 
 	public Map<String, Object> queryForMap(String sql) {
 

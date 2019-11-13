@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -52,6 +53,9 @@ public class TZGDObject {
 
 	@Autowired
 	private SQLObjectManager sqlObjectManager;
+
+	@Autowired
+	private GetHardCodePoint getHardCodePoint;
 
 	@Autowired
 	private HTMLObjectManager htmlObjectManager;
@@ -723,6 +727,15 @@ public class TZGDObject {
 		}
 
 		return tmpEngineProcess;
+	}
+
+	/**
+	 * hardcode点取值
+	 * @param hdp
+	 * @return
+	 */
+	public String getHardCodeVal(String hdp){
+		return getHardCodePoint.getHardCodePointVal(hdp);
 	}
 	
 	public JdbcTemplate getJdbcTemplate(){

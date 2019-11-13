@@ -129,7 +129,7 @@
                 sortable: true,
                 dataIndex: 'userName',
                 width: 75
-            },{
+            },/*{
                 text: '班级号',
                 sortable: true,
                 dataIndex: 'classID',
@@ -141,12 +141,13 @@
                 dataIndex: 'appInsID',
                 hidden:true,
                 width: 75
-            },{
+            },*/{
                 text: '面试申请号',
                 sortable: true,
                 dataIndex: 'mshId',
-                width: 95
-            },{
+                width: 95,
+                flex:1
+            },/*{
                 text: '性别',
                sortable: true,
 				dataIndex: 'userSex',
@@ -162,14 +163,7 @@
     					return "女";
     				}
                 }
-        }
-    				//var index = sexStore.find('TValue',value);   
-    				//if(index!=-1){   
-    				//	   return sexStore.getAt(index).data.TSDesc;   
-    				//}   
-    				//return value;     				 
-    			
-            ,{
+            },*/{
                 text: '手机',
                 sortable: true,
                 dataIndex: 'userPhone',
@@ -179,8 +173,7 @@
                 sortable: true,
                 dataIndex: 'userEmail',
                 width: 180
-            },
-            {
+            },/*{
             	text:'批次名称',
             	sortable: true,
                 dataIndex: 'bitch',
@@ -198,7 +191,7 @@
                 dataIndex: 'fillProportion',
         //        dataIndex:'nationId',
                 width: 100
-            },{
+            },*/{
                 text: '账号激活状态',
                 sortable: true,
                 dataIndex: 'jihuoZt',
@@ -223,7 +216,7 @@
                 sortable: true,
                 dataIndex: 'zcTime',
                 width: 130
-            },{
+            },/*{
                 text: '锁定状态',
                 sortable: true,
                 dataIndex: 'acctlock',
@@ -291,14 +284,14 @@
     				//}   
     	//			//return value;     				 
                 }
-            },
+            },*/
             {
 			   xtype: 'actioncolumn',
 			   text: '操作',	
                menuDisabled: true,
 			   menuText: '操作',
                sortable: false,
-			   "with":50,
+			   width:50,
 			   align: 'center',
 			   			 items:[
 			   			  {text: '查看',iconCls: 'view',tooltip: '查看',handler:'viewUserByRow'},

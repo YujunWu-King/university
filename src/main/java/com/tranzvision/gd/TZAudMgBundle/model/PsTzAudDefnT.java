@@ -31,6 +31,26 @@ public class PsTzAudDefnT {
 
     private Date syncdttm;
 
+    private String tzDynaXML;
+
+    private String tzDynaEntity;
+
+    public String getTzDynaXML() {
+        return tzDynaXML;
+    }
+
+    public void setTzDynaXML(String tzDynaXML) {
+        this.tzDynaXML = tzDynaXML;
+    }
+
+    public String getTzDynaEntity() {
+        return tzDynaEntity;
+    }
+
+    public void setTzDynaEntity(String tzDynaEntity) {
+        this.tzDynaEntity = tzDynaEntity;
+    }
+
     public String getTzAudId() {
         return tzAudId;
     }

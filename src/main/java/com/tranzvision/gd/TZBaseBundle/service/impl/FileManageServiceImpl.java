@@ -3,25 +3,20 @@
  */
 package com.tranzvision.gd.TZBaseBundle.service.impl;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-
-import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
-
+import com.tranzvision.gd.TZBaseBundle.controller.FileUploadController;
+import com.tranzvision.gd.TZBaseBundle.service.FileManageService;
+import com.tranzvision.gd.util.base.CommonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.tranzvision.gd.TZBaseBundle.controller.FileUploadController;
-import com.tranzvision.gd.TZBaseBundle.service.FileManageService;
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
 
 /**
  * 文件管理相关方法实现类
@@ -49,19 +44,16 @@ public class FileManageServiceImpl implements FileManageService {
 		if (!path.startsWith(ctxPath)) {
 			path = ctxPath + path;
 		}
-		
+
 		realPath = request.getServletContext().getRealPath(path);
-		System.out.println("第一次"+realPath);
 		if (null == realPath) {
 			try {
 				realPath = request.getSession().getServletContext().getRealPath(path);
-				System.out.println("第二次"+realPath);
 			} catch (Exception e) {
 				e.printStackTrace();
 				return "";
 			}
 		}
-		System.out.println("第三次"+realPath);
 		if (!"".equals(ctxPath)) {
 			String ctxPathName = ctxPath.replace("/", "");
 			if (realPath.contains("/")) {
@@ -104,6 +96,63 @@ public class FileManageServiceImpl implements FileManageService {
 			stream = new BufferedOutputStream(new FileOutputStream(serverFile));
 			stream.write(fileBytes);
 			stream.close();
+
+			if (!Charset.defaultCharset().equals("UTF-8")) {
+				CommonUtil.change(dir.getAbsolutePath() + File.separator + fileName);
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			throw new Exception(e.getMessage());
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new Exception(e.getMessage());
+		}
+
+		if (serverFile.exists()) {
+			// 文件存在则创建成功
+			logger.info("Saved file:" + parentRealPath + File.separator + fileName + " success.");
+			return true;
+		}
+
+		return false;
+	}
+	
+	/**
+	 * 文件上传专用
+	 * @param parentPath
+	 * @param fileName
+	 * @param fileBytes
+	 * @param type
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public boolean CreateFile(String parentPath, String fileName, byte[] fileBytes,int type) throws Exception {
+
+		String parentRealPath = this.getRealPath(parentPath);
+
+		File dir = new File(parentRealPath);
+		// System.out.println(dir.getAbsolutePath());
+		if (!dir.exists()) {
+			dir.mkdirs();
+		}
+
+		File serverFile = new File(dir.getAbsolutePath() + File.separator + fileName);
+		if (serverFile.exists()) {
+			// 文件已存在则返回
+			return false;
+		}
+
+		BufferedOutputStream stream;
+
+		try {
+			stream = new BufferedOutputStream(new FileOutputStream(serverFile));
+			stream.write(fileBytes);
+			stream.close();
+
+//			if (!Charset.defaultCharset().equals("UTF-8")) {
+//				CommonUtil.change(dir.getAbsolutePath() + File.separator + fileName);
+//			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			throw new Exception(e.getMessage());
@@ -153,6 +202,57 @@ public class FileManageServiceImpl implements FileManageService {
 			stream = new BufferedOutputStream(new FileOutputStream(serverFile));
 			stream.write(fileBytes);
 			stream.close();
+			
+			if (!Charset.defaultCharset().equals("UTF-8")) {
+				CommonUtil.change(dir.getAbsolutePath() + File.separator + fileName);
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			throw new Exception(e.getMessage());
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new Exception(e.getMessage());
+		}
+
+		if (serverFile.exists()) {
+			// 文件存在则创建成功
+			logger.info("Updated file:" + parentRealPath + File.separator + fileName + " success.");
+			return true;
+		}
+
+		return false;
+	}
+	
+	@Override
+	public boolean UpdateFile(String parentPath, String fileName, byte[] fileBytes,int i) throws Exception {
+
+		// String parentRealPath =
+		// request.getServletContext().getRealPath(parentPath);
+		String parentRealPath = this.getRealPath(parentPath);
+
+		File dir = new File(parentRealPath);
+		// System.out.println(dir.getAbsolutePath());
+		if (!dir.exists()) {
+			dir.mkdirs();
+		}
+
+		File serverFile = new File(dir.getAbsolutePath() + File.separator + fileName);
+		if (serverFile.exists()) {
+			// 文件存在则删除
+			serverFile.delete();
+		}
+
+		BufferedOutputStream stream;
+
+		try {
+			stream = new BufferedOutputStream(new FileOutputStream(serverFile));
+			stream.write(fileBytes);
+			stream.close();
+			
+			// if (!Charset.defaultCharset().equals("UTF-8")) {
+			// CommonUtil.change(dir.getAbsolutePath() + File.separator +
+			// fileName);
+			// }
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			throw new Exception(e.getMessage());
@@ -181,7 +281,7 @@ public class FileManageServiceImpl implements FileManageService {
 	public boolean DeleteFile(String parentPath, String fileName) {
 		// String parentRealPath =
 		// request.getServletContext().getRealPath(parentPath);
-		//System.out.println("parentPath:"+parentPath);
+		// System.out.println("parentPath:"+parentPath);
 		String parentRealPath = this.getRealPath(parentPath);
 
 		File dir = new File(parentRealPath);
@@ -251,12 +351,15 @@ public class FileManageServiceImpl implements FileManageService {
 		String fileRealPath = this.getRealPath(filePath);
 		File imageFile = new File(fileRealPath);
 		if (!imageFile.exists()) {
+			System.out.println("not exists");
 			logger.info("Get image width & height failed.The image:" + fileRealPath + " is not exists");
 			return aryImgWH;
 		}
-
+		System.out.println("fileRealPath:"+fileRealPath);
+		System.out.println("imageFile:"+imageFile);
 		try {
 			java.awt.image.BufferedImage img = ImageIO.read(imageFile);
+			System.out.println("img:"+img);
 			aryImgWH.add(0, img.getWidth());
 			aryImgWH.add(1, img.getHeight());
 		} catch (IOException e) {

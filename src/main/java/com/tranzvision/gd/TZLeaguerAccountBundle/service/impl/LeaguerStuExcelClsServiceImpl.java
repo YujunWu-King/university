@@ -1,19 +1,5 @@
 package com.tranzvision.gd.TZLeaguerAccountBundle.service.impl;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzBmbDceTMapper;
 import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzExcelDattTMapper;
 import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzExcelDrxxTMapper;
@@ -29,10 +15,16 @@ import com.tranzvision.gd.batch.engine.base.BaseEngine;
 import com.tranzvision.gd.batch.engine.base.EngineParameters;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
-import com.tranzvision.gd.util.poi.excel.ExcelHandle2;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 
@@ -95,7 +87,7 @@ public class LeaguerStuExcelClsServiceImpl extends FrameworkImpl {
 					mapList.put("processInstance", rowList[3]);
 					mapList.put("applicationEngineStatus", rowList[4]);
 					if(rowList[5] != null && !"".equals(rowList[5])){
-						mapList.put("fileUrl", request.getContextPath() + rowList[5]);
+						mapList.put("fileUrl", request.getContextPath() + "/DownExcelTServlet?insid=" + rowList[3]);
 					}else{
 						mapList.put("fileUrl", "");
 					}
@@ -141,76 +133,79 @@ public class LeaguerStuExcelClsServiceImpl extends FrameworkImpl {
 				
 				List<String> oprIdArray = new ArrayList<String>();
 				List<Map<String, Object>> oprList = null;
-				if ("A".equals(strResultSource))
-				{
-					oprIdArray = (List<String>)jacksonUtil.getList("applicantsList");
-				} else
-				{
-					String oprid =tzLoginServiceImpl.getLoginedManagerOprid(request);
-					String isSzgly = jdbcTemplate.queryForObject(
-							"SELECT 'Y' FROM PSROLEUSER A,PSROLEDEFN B WHERE A.ROLENAME=B.ROLENAME AND A.ROLEUSER = ? AND A.ROLENAME LIKE '%SZGD%'",
-							new Object[] { oprid }, "String");
-					if ("Y".equals(isSzgly)){
-						//苏州管理员只导出常住地是江苏的人
-						searchSql=searchSql+"AND TZ_LEN_PROID = '江苏'";
-					}
-					oprList = jdbcTemplate.queryForList(searchSql);
-					if (oprList != null && oprList.size() > 0)
-					{
-						for (int i102 = 0; i102 < oprList.size(); i102++)
-						{
-							String oprId = oprList.get(i102).get("OPRID").toString();
-							oprIdArray.add(oprId);
-						}
-
-					}
-				}
-				String strOprIdList = "";
-				String strAppInsId = "";
+				String strAppInsIdList = "";
 				int dcCount = 0;
-				int i = 0;
-				
-				for(i = 0; i < oprIdArray.size(); i++){
-					if("".equals(strOprIdList)){
-						strOprIdList = oprIdArray.get(i);
-					}else{
-						strOprIdList = strOprIdList + "," + oprIdArray.get(i);
-					}
-					dcCount = dcCount + 1;
-					/*
-					List<Map<String, Object>> list = null;
-					try {
-						System.out.println(oprIdArray.get(i));
-						list = jdbcTemplate.queryForList("SELECT TZ_MSH_ID FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?",
-								new Object[] { oprIdArray.get(i) });
-						
-						if (list != null && list.size() > 0) {
-							for (int i101 = 0; i101 < list.size(); i101++) {
-								strAppInsId =  list.get(i101).get("TZ_APP_INS_ID").toString();
-								System.out.println("报名表实例" + strAppInsId);
-								if(!"null".equals(strAppInsId) && !"".equals(strAppInsId))
-								{
-									if("".equals(strAppInsIdList)){
-										strAppInsIdList = strAppInsId;
-									}else{
-										strAppInsIdList = strAppInsIdList + "," + strAppInsId;
-									}
-									dcCount = dcCount + 1;
-								}
+				if ("A".equals(strResultSource) || "B".equals(strResultSource)){
+					
+					if ("A".equals(strResultSource))
+					{
+						oprIdArray = (List<String>)jacksonUtil.getList("applicantsList");
+					} else
+					{
+						oprList = jdbcTemplate.queryForList(searchSql);
+						if (oprList != null && oprList.size() > 0)
+						{
+							for (int i102 = 0; i102 < oprList.size(); i102++)
+							{
+								String oprId = oprList.get(i102).get("OPRID").toString();
+								oprIdArray.add(oprId);
 							}
 						}
-
-					} catch (Exception e) {	
-						System.out.println(e.toString());
-					}*/
+					}
 					
+					String strAppInsId = "";
+					
+					int i = 0;
+					
+					for(i = 0; i < oprIdArray.size(); i++){
+						List<Map<String, Object>> list = null;
+						try {
+							System.out.println(oprIdArray.get(i));
+							list = jdbcTemplate.queryForList("SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE OPRID=?",
+									new Object[] { oprIdArray.get(i) });
+							
+							if (list != null && list.size() > 0) {
+								for (int i101 = 0; i101 < list.size(); i101++) {
+									strAppInsId =  list.get(i101).get("TZ_APP_INS_ID").toString();
+									System.out.println("报名表实例" + strAppInsId);
+									if(!"null".equals(strAppInsId) && !"".equals(strAppInsId))
+									{
+										if("".equals(strAppInsIdList)){
+											strAppInsIdList = strAppInsId;
+										}else{
+											strAppInsIdList = strAppInsIdList + "," + strAppInsId;
+										}
+										dcCount = dcCount + 1;
+									}
+								}
+							}
+	
+						} catch (Exception e) {	
+							System.out.println(e.toString());
+						}
+						
+					}
+				}else if("C".equals(strResultSource) || "D".equals(strResultSource)){
+					List<String> appInsIdArray = (List<String>)jacksonUtil.getList("applicantsList");
+					
+					int i = 0;
+					for(i = 0; i < appInsIdArray.size(); i++){
+						String strAppInsId = String.valueOf(appInsIdArray.get(i));
+						if("".equals(strAppInsIdList)){
+							strAppInsIdList = strAppInsId;
+						}else{
+							strAppInsIdList = strAppInsIdList + "," + strAppInsId;
+						}
+					}
 				}
 				
 				String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 				String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 				String downloadPath = getSysHardCodeVal.getDownloadPath();
+				downloadPath = request.getServletContext().getRealPath(downloadPath);
+				downloadPath = downloadPath.replaceAll("\\\\", "/");
 				String expDirPath = downloadPath + "/" + orgid + "/" + getDateNow() + "/" + "EXPORTBMBEXCEL";
-				String absexpDirPath = request.getServletContext().getRealPath(expDirPath);
+				String absexpDirPath = expDirPath;
 				
 				
 				/*生成运行控制ID*/
@@ -222,20 +217,17 @@ public class LeaguerStuExcelClsServiceImpl extends FrameworkImpl {
 				psTzBmbDceT.setRunCntlId(runCntlId);
 				psTzBmbDceT.setTzAppTplId(appFormModalID);
 				psTzBmbDceT.setTzExportTmpId(excelTpl);
-				psTzBmbDceT.setTzAudList(strOprIdList);
+				psTzBmbDceT.setTzAudList(strAppInsIdList);
 				psTzBmbDceT.setTzExcelName(excelName);
 				psTzBmbDceT.setTzRelUrl(expDirPath);
 				psTzBmbDceT.setTzJdUrl(absexpDirPath);
 				psTzBmbDceTMapper.insert(psTzBmbDceT);
 				
-				//processinstance = getSeqNum.getSeqNum("TZ_EXCEL_DRXX_T", "PROCESSINSTANCE");
-				//processinstance = getSeqNum.getSeqNum("PSPRCSRQST", "PROCESSINSTANCE");
 				String currentAccountId = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
 				String currentOrgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 				
-				BaseEngine tmpEngine = tZGDObject.createEngineProcess(currentOrgId, "TZ_GD_EXCEL_DB2");
-				
-				
+				System.out.println("currentOrgId+++++1234+++++++"+currentOrgId);
+				BaseEngine tmpEngine = tZGDObject.createEngineProcess("SAIF", "TZ_GD_EXCEL_DB");
 				//指定调度作业的相关参数
 				EngineParameters schdProcessParameters = new EngineParameters();
 
@@ -248,8 +240,10 @@ public class LeaguerStuExcelClsServiceImpl extends FrameworkImpl {
 				//调度作业
 				tmpEngine.schedule(schdProcessParameters);
 				
-				processinstance=tmpEngine.getProcessInstanceID();
-				//如果调度失败不插入表
+				//processinstance = getSeqNum.getSeqNum("TZ_EXCEL_DRXX_T", "PROCESSINSTANCE");
+				//processinstance = getSeqNum.getSeqNum("PSPRCSRQST", "PROCESSINSTANCE");
+				processinstance = tmpEngine.getProcessInstanceID();
+				
 				if(processinstance>0){
 					PsTzExcelDrxxT psTzExcelDrxxT = new PsTzExcelDrxxT();
 					psTzExcelDrxxT.setProcessinstance(processinstance);
@@ -263,7 +257,6 @@ public class LeaguerStuExcelClsServiceImpl extends FrameworkImpl {
 					psTzExcelDrxxT.setTzIsViewAtt("Y");
 					psTzExcelDrxxTMapper.insert(psTzExcelDrxxT);
 					
-					
 					int numSeq = getSeqNum.getSeqNum("TZ_GD_DCE_AE", "TZ_EXCEL_ID");
 					String strExcelID = oprid + "_" + s_dt + "_" + String.valueOf(numSeq);
 					PsTzExcelDattT psTzExcelDattT = new PsTzExcelDattT();
@@ -274,7 +267,7 @@ public class LeaguerStuExcelClsServiceImpl extends FrameworkImpl {
 					psTzExcelDattT.setTzFjRecName("TZ_APP_CC_T");
 					psTzExcelDattT.setTzFwqFwlj(""); 
 					psTzExcelDattTMapper.insert(psTzExcelDattT);
-
+	
 					Psprcsrqst psprcsrqst = new Psprcsrqst();
 					psprcsrqst.setPrcsinstance(processinstance);
 					psprcsrqst.setRunId(runCntlId);
@@ -282,17 +275,10 @@ public class LeaguerStuExcelClsServiceImpl extends FrameworkImpl {
 					psprcsrqst.setRundttm(new Date());
 					psprcsrqst.setRunstatus("5");
 					psprcsrqstMapper.insert(psprcsrqst);
-					
 				}
-				
-				
-				
-				
 				//TzGdBmgDcExcelClass tzGdBmgDcExcelClass = new TzGdBmgDcExcelClass();
 				//tzGdBmgDcExcelClass.tzGdDcBmbExcel(runCntlId);
 				//this.tzGdDceAe(runCntlId, processinstance,expDirPath,absexpDirPath);
-
-				
 			}
 
 		} catch (Exception e) {

@@ -16,11 +16,13 @@
     <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
     <result column="SYNCID" property="syncid" jdbcType="INTEGER" />
     <result column="SYNCDTTM" property="syncdttm" jdbcType="TIMESTAMP" />
+    <result column="TZ_DYNA_XML" property="tzDynaXML" jdbcType="VARCHAR" />
+    <result column="TZ_DYNA_ENTITY" property="tzDynaEntity" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     TZ_AUD_ID, TZ_JG_ID, TZ_AUD_NAM, TZ_AUD_STAT, TZ_AUD_TYPE, TZ_AUD_MS, TZ_AUD_SQL, 
     TZ_LXFS_LY, ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, 
-    SYNCID, SYNCDTTM
+    SYNCID, SYNCDTTM, TZ_DYNA_XML, TZ_DYNA_ENTITY
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -33,16 +35,16 @@
     where TZ_AUD_ID = #{tzAudId,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.tranzvision.gd.TZAudMgBundle.model.PsTzAudDefnT" >
-    insert into PS_TZ_AUD_DEFN_T (TZ_AUD_ID, TZ_JG_ID, TZ_AUD_NAM, 
-      TZ_AUD_STAT, TZ_AUD_TYPE, TZ_AUD_MS, 
-      TZ_AUD_SQL, TZ_LXFS_LY, ROW_ADDED_DTTM, 
-      ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, 
-      SYNCID, SYNCDTTM)
+    insert into PS_TZ_AUD_DEFN_T (TZ_AUD_ID, TZ_JG_ID, TZ_AUD_NAM,
+      TZ_AUD_STAT, TZ_AUD_TYPE, TZ_AUD_MS,
+      TZ_AUD_SQL, TZ_LXFS_LY, ROW_ADDED_DTTM,
+      ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID,
+      SYNCID, SYNCDTTM, TZ_DYNA_XML, TZ_DYNA_ENTITY)
     values (#{tzAudId,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, #{tzAudNam,jdbcType=VARCHAR}, 
       #{tzAudStat,jdbcType=VARCHAR}, #{tzAudType,jdbcType=VARCHAR}, #{tzAudMs,jdbcType=VARCHAR}, 
       #{tzAudSql,jdbcType=VARCHAR}, #{tzLxfsLy,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, 
       #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, 
-      #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP})
+      #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}, #{tzDynaXML,jdbcType=VARCHAR}, #{tzDynaEntity,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZAudMgBundle.model.PsTzAudDefnT" >
     insert into PS_TZ_AUD_DEFN_T
@@ -89,6 +91,12 @@
       <if test="syncdttm != null" >
         SYNCDTTM,
       </if>
+      <if test="tzDynaXML != null" >
+        TZ_DYNA_XML,
+      </if>
+      <if test="tzDynaEntity != null" >
+        TZ_DYNA_ENTITY,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="tzAudId != null" >
@@ -132,6 +140,12 @@
       </if>
       <if test="syncdttm != null" >
         #{syncdttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzDynaXML != null" >
+        #{tzDynaXML,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDynaEntity != null" >
+        #{tzDynaEntity,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -177,6 +191,12 @@
       <if test="syncdttm != null" >
         SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
       </if>
+      <if test="tzDynaXML != null" >
+        TZ_DYNA_XML = #{tzDynaXML,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDynaEntity != null" >
+        TZ_DYNA_ENTITY = #{tzDynaEntity,jdbcType=VARCHAR},
+      </if>
     </set>
     where TZ_AUD_ID = #{tzAudId,jdbcType=VARCHAR}
   </update>
@@ -194,7 +214,9 @@
       ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
       ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
       SYNCID = #{syncid,jdbcType=INTEGER},
-      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP}
+      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      TZ_DYNA_XML = #{tzDynaXML,jdbcType=VARCHAR},
+      TZ_DYNA_ENTITY = #{tzDynaEntity,jdbcType=VARCHAR}
     where TZ_AUD_ID = #{tzAudId,jdbcType=VARCHAR}
   </update>
 </mapper>

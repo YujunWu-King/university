@@ -3,11 +3,10 @@
  */
 package com.tranzvision.gd.TZBaseBundle.service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * 定义文件管理相关方法
@@ -27,10 +26,21 @@ public interface FileManageService {
 	 * @throws Exception
 	 */
 	public boolean CreateFile(String parentPath, String fileName, byte[] fileBytes) throws Exception;
+	
+	/**
+	 * 上传文件用的--不指定字符集
+	 * @param parentPath
+	 * @param fileName
+	 * @param fileBytes
+	 * @param i
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean CreateFile(String parentPath, String fileName, byte[] fileBytes, int i) throws Exception;
 
 	/**
 	 * 在服务器上更新一个文件内容
-	 * 
+	 *
 	 * @param parentPath
 	 * @param fileName
 	 * @param fileBytes
@@ -38,6 +48,17 @@ public interface FileManageService {
 	 * @throws Exception
 	 */
 	public boolean UpdateFile(String parentPath, String fileName, byte[] fileBytes) throws Exception;
+
+	/**
+	 * 上传文件用的，不指定字符集
+	 * @param parentPath
+	 * @param fileName
+	 * @param fileBytes
+	 * @param i
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean UpdateFile(String parentPath, String fileName, byte[] fileBytes, int i) throws Exception;
 
 	/**
 	 * 在服务器上删除一个文件

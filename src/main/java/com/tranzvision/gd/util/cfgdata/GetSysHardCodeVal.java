@@ -30,6 +30,11 @@ public class GetSysHardCodeVal {
 	private String sysDefaultLanguage;
 
 	/**
+	 * 平台数据库类型
+	 */
+	/*private String dataBaseType;*/
+
+	/**
 	 * 平台机构ID
 	 */
 	private String platformOrgID;
@@ -155,6 +160,11 @@ public class GetSysHardCodeVal {
 	private String fileUploadAllowedExtensions;
 
 	/**
+	 * Dynamic CRM URL
+	 */
+	private String dynamicDomainUrl;
+
+	/**
 	 * 构造函数，系统固定参数配置
 	 */
 	public GetSysHardCodeVal() {
@@ -167,6 +177,8 @@ public class GetSysHardCodeVal {
 			sysHardCodeValProps = PropertiesLoaderUtils.loadProperties(resource);
 
 			sysDefaultLanguage = sysHardCodeValProps.getProperty("SysDefaultLanguage");
+
+			/*dataBaseType = sysHardCodeValProps.getProperty("DataBaseType");*/
 
 			platformOrgID = sysHardCodeValProps.getProperty("PlatformOrgID");
 
@@ -215,6 +227,8 @@ public class GetSysHardCodeVal {
 
 			boxKey = sysHardCodeValProps.getProperty("BoxKey");
 
+			dynamicDomainUrl = sysHardCodeValProps.getProperty("DynamicDomainUrl");
+
 			orgVoiceFileUploadPath = sysHardCodeValProps.getProperty("OrgVoiceFileUploadPath");
 			
 			fileUploadAllowedExtensions = sysHardCodeValProps.getProperty("FileUploadAllowedExtensions");
@@ -240,6 +254,10 @@ public class GetSysHardCodeVal {
 		}
 		return tmp;
 	}
+
+	/*public String getDataBaseType() {
+		return dataBaseType;
+	}*/
 
 	public String getSysDefaultLanguage() {
 		return sysDefaultLanguage;
@@ -335,6 +353,10 @@ public class GetSysHardCodeVal {
 
 	public String getBoxKey() {
 		return boxKey;
+	}
+
+	public String getDynamicDomainUrl() {
+		return dynamicDomainUrl;
 	}
 
 	public String getFileUploadAllowedExtensions() {

@@ -3,21 +3,16 @@
  */
 package com.tranzvision.gd.util.poi.excel;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFRichTextString;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.Date;
 import java.util.HashMap;
-
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.DateUtil;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFRichTextString;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  * 读取“导出Excel模板”的工具类
@@ -87,11 +82,11 @@ public class ExcelUtil {
 					nf.setGroupingUsed(false);// true时的格式：1,234,567,890
 					return nf.format(cell.getNumericCellValue());// 数值类型的数据为double，所以需要转换一下
 				}
-			case org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING:
+			case Cell.CELL_TYPE_STRING:
 				return cell.getStringCellValue().trim();
-			case org.apache.poi.ss.usermodel.Cell.CELL_TYPE_FORMULA:
+			case Cell.CELL_TYPE_FORMULA:
 				return cell.getCellFormula();
-			case org.apache.poi.ss.usermodel.Cell.CELL_TYPE_BLANK:
+			case Cell.CELL_TYPE_BLANK:
 			default:
 				return "";
 			}
@@ -103,7 +98,7 @@ public class ExcelUtil {
 
 	/**
 	 * 读数据模板
-	 * 
+	 *
 	 * @param 模板地址
 	 * @throws IOException
 	 */
@@ -129,7 +124,7 @@ public class ExcelUtil {
 
 	/**
 	 * 读模板数据的样式值置等信息
-	 * 
+	 *
 	 * @param keyMap
 	 * @param sheet
 	 */
@@ -179,7 +174,7 @@ public class ExcelUtil {
 
 	/**
 	 * 获取格式，不适于循环方法中使用，wb.createCellStyle()次数超过4000将抛异常
-	 * 
+	 *
 	 * @param keyMap
 	 * @param key
 	 * @return
@@ -197,7 +192,7 @@ public class ExcelUtil {
 
 	/**
 	 * Excel单元格输出
-	 * 
+	 *
 	 * @param sheet
 	 * @param row
 	 *            行
@@ -237,7 +232,7 @@ public class ExcelUtil {
 
 	/**
 	 * 根据表格样式判断是否为日期格式
-	 * 
+	 *
 	 * @param cellStyle
 	 * @return
 	 */
@@ -248,7 +243,7 @@ public class ExcelUtil {
 		int i = cellStyle.getDataFormat();
 		String f = cellStyle.getDataFormatString();
 
-		return org.apache.poi.ss.usermodel.DateUtil.isADateFormat(i, f);
+		return DateUtil.isADateFormat(i, f);
 	}
 
 	/**

@@ -3,32 +3,27 @@
  */
 package com.tranzvision.gd.TZBaseBundle.controller;
 
+import com.tranzvision.gd.TZApplicationTemplateBundle.service.impl.ExcelDRbyModel;
+import com.tranzvision.gd.TZApplicationTemplateBundle.service.impl.PdfPrintbyModel;
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzWebsiteLoginServiceImpl;
+import com.tranzvision.gd.TZBaseBundle.service.impl.FileManageServiceImpl;
+import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
+import com.tranzvision.gd.util.security.TzFilterIllegalCharacter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-
-import com.tranzvision.gd.TZApplicationTemplateBundle.service.impl.PdfPrintbyModel;
-import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
-import com.tranzvision.gd.TZAuthBundle.service.impl.TzWebsiteLoginServiceImpl;
-import com.tranzvision.gd.TZBaseBundle.service.impl.FileManageServiceImpl;
-import com.tranzvision.gd.TZUniPrintBundle.service.impl.PdfTemplateInfo;
-import com.tranzvision.gd.util.base.JacksonUtil;
-import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
-import com.tranzvision.gd.util.security.TzFilterIllegalCharacter;
 
 /**
  * @author SHIHUA
@@ -40,6 +35,7 @@ import com.tranzvision.gd.util.security.TzFilterIllegalCharacter;
  */
 @Controller
 @RequestMapping(value = "/")
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class FileUploadController {
 
 	@Autowired
@@ -74,15 +70,40 @@ public class FileUploadController {
 		String language = String.valueOf(allRequestParams.get("language"));
 		String funcdir = String.valueOf(allRequestParams.get("filePath"));
 		String istmpfile = String.valueOf(allRequestParams.get("tmp"));
+		String impl = String.valueOf(allRequestParams.get("impl"));
 		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 		String rootPath = getSysHardCodeVal.getOrgFileUploadPath();
 
-		String retJson = this.doSaveFile(orgid, rootPath, funcdir, language, istmpfile, file, "");
+		String retJson = this.doSaveFile(orgid, rootPath, funcdir, language, istmpfile, file, "", impl);
 
 		return retJson;
 	}
 
-	
+	/**
+	 * Upload single file using Spring Controller 存储在 orgupload目录
+	 * 
+	 * @param request
+	 * @param response
+	 * @param allRequestParams
+	 * @param file
+	 * @return
+	 */
+	@RequestMapping(value = "UpMobileDServlet", method = RequestMethod.POST, produces = "text/html;charset=UTF-8")
+	public @ResponseBody String orgUploadMobileFileHandler(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam Map<String, Object> allRequestParams,
+			@RequestParam("orguploadMobilefile") MultipartFile file) {
+		// String limitSize = allRequestParams.get("limitSize");
+		String language = String.valueOf(allRequestParams.get("language"));
+		String funcdir = String.valueOf(allRequestParams.get("filePath"));
+		String istmpfile = String.valueOf(allRequestParams.get("tmp"));
+		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+		String rootPath = getSysHardCodeVal.getOrgFileUploadPath();
+
+		String retJson = this.doSaveFile(orgid, rootPath, funcdir, language, istmpfile, file, "", "");
+
+		return retJson;
+	}
+
 	/**
 	 * Upload single file using Spring Controller 存储在 bmb目录
 	 * 
@@ -104,7 +125,41 @@ public class FileUploadController {
 		String rootPath = getSysHardCodeVal.getBmbSinglePdfDir();
 		// 最终生成文件路径/bmb/singlepdf/" + orgid + "/时间/" + Template+"/"+tplid + 里面
 
-		String retJson = this.doSaveFile(orgid, rootPath, tplid, language, istmpfile, file);
+		String retJson = this.doSaveFile(orgid, rootPath, tplid, language, istmpfile, file, 0);
+
+		return retJson;
+	}
+
+	@RequestMapping(value = "UploadExcelServlet", method = RequestMethod.POST, produces = "text/html;charset=UTF-8")
+	public @ResponseBody String bmbUploadExcelHandler(HttpServletRequest request, HttpServletResponse response,
+														  @RequestParam Map<String, Object> allRequestParams, @RequestParam("pdfuploadfile") MultipartFile file) {
+		// String limitSize = allRequestParams.get("limitSize");
+
+		String language = String.valueOf(allRequestParams.get("language"));
+		String tplid = String.valueOf(allRequestParams.get("tplid"));
+		String istmpfile = String.valueOf(allRequestParams.get("tmp"));
+		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+		String rootPath = getSysHardCodeVal.getBmbSinglePdfDir();
+		// 最终生成文件路径/bmb/singlepdf/" + orgid + "/时间/" + Template+"/"+tplid + 里面
+
+		String retJson = this.doSaveFile(orgid, rootPath, tplid, language, istmpfile, file, 2);
+
+		return retJson;
+	}
+
+	@RequestMapping(value = "UpExcelServlet", method = RequestMethod.POST, produces = "text/html;charset=UTF-8")
+	public @ResponseBody String bmbUploadExcelFileHandler(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam Map<String, Object> allRequestParams, @RequestParam("pdfuploadfile") MultipartFile file) {
+		// String limitSize = allRequestParams.get("limitSize");
+
+		String language = String.valueOf(allRequestParams.get("language"));
+		String tplid = String.valueOf(allRequestParams.get("tplid"));
+		String istmpfile = String.valueOf(allRequestParams.get("tmp"));
+		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+		String rootPath = getSysHardCodeVal.getBmbSinglePdfDir();
+		// 最终生成文件路径/bmb/singlepdf/" + orgid + "/时间/" + Template+"/"+tplid + 里面
+
+		String retJson = this.doSaveFile(orgid, rootPath, tplid, language, istmpfile, file, 1);
 
 		return retJson;
 	}
@@ -120,10 +175,12 @@ public class FileUploadController {
 	 * @param language
 	 * @param istmpfile
 	 * @param file
+	 * @param type
+	 *            0 PDF 1 EXcel
 	 * @return
 	 */
 	private String doSaveFile(String orgid, String rootPath, String tplid, String language, String istmpfile,
-			MultipartFile file) {
+			MultipartFile file, int type) {
 
 		String templateID = tplid;
 
@@ -205,14 +262,19 @@ public class FileUploadController {
 						if (sysFileName.indexOf('/') != -1)
 							sysFileName = sysFileName.substring(sysFileName.lastIndexOf('/') + 1);
 
-						createResult = fileManageServiceImpl.CreateFile(parentPath, sysFileName, bytes);
+						createResult = fileManageServiceImpl.CreateFile(parentPath, sysFileName, bytes, 1);
 
 						createTimes--;
 					}
 					if (createResult) {
-						PdfPrintbyModel ppm = new PdfPrintbyModel();
+						if (type == 0) {
+							PdfPrintbyModel ppm = new PdfPrintbyModel();
 
-						ppm.addFile(templateID, accessPath + sysFileName, filename);
+							ppm.addFile(templateID, accessPath + sysFileName, filename);
+						} else if (type == 1) {
+							ExcelDRbyModel ppm = new ExcelDRbyModel();
+							ppm.addFile(templateID, accessPath + sysFileName, filename);
+						}
 
 						Map<String, Object> mapFile = new HashMap<String, Object>();
 						mapFile.put("filename", filename);
@@ -281,9 +343,9 @@ public class FileUploadController {
 			// Map<String, Object> mapRet = new HashMap<String, Object>();
 			// mapRet.put("success", false);
 			// mapRet.put("msg", "缺少参数siteid。");
-			retJson = this.doSaveFile(orgid, rootPath, funcdir, language, istmpfile, file, siteid);
+			retJson = this.doSaveFile(orgid, rootPath, funcdir, language, istmpfile, file, siteid, "");
 		} else {
-			retJson = this.doSaveFile(orgid, rootPath, funcdir, language, istmpfile, file, siteid);
+			retJson = this.doSaveFile(orgid, rootPath, funcdir, language, istmpfile, file, siteid, "");
 		}
 		return retJson;
 	}
@@ -330,7 +392,7 @@ public class FileUploadController {
 	*/
 
 	private String doSaveFile(String orgid, String rootPath, String funcdir, String language, String istmpfile,
-			MultipartFile file, String siteid) {
+			MultipartFile file, String siteid, String impl) {
 
 		// 过滤功能目录名称中的特殊字符
 		if (null != funcdir && !"".equals(funcdir) && !"null".equals(funcdir)) {
@@ -427,12 +489,9 @@ public class FileUploadController {
 								.toString();
 						if (sysFileName.indexOf('/') != -1)
 							sysFileName = sysFileName.substring(sysFileName.lastIndexOf('/') + 1);
-
-						createResult = fileManageServiceImpl.CreateFile(parentPath, sysFileName, bytes);
-
+						createResult = fileManageServiceImpl.CreateFile(parentPath, sysFileName, bytes, 1);
 						createTimes--;
 					}
-
 					if (createResult) {
 						// 看是否是图片，如果是，则获取图片的宽、高
 						if (getSysHardCodeVal.getImageSuffix().contains(suffix.toLowerCase())) {
@@ -506,7 +565,6 @@ public class FileUploadController {
 		} else {
 			return true;
 		}
-
 	}
 
 	private boolean checkSize(long filesize) {
@@ -555,188 +613,10 @@ public class FileUploadController {
 		String retJson = "";
 
 		if ("".equals(siteid)) {
-			retJson = this.doSaveFile(orgid, rootPath, funcdir, language, istmpfile, file, siteid);
+			retJson = this.doSaveFile(orgid, rootPath, funcdir, language, istmpfile, file, siteid, "");
 		} else {
-			retJson = this.doSaveFile(orgid, rootPath, funcdir, language, istmpfile, file, siteid);
+			retJson = this.doSaveFile(orgid, rootPath, funcdir, language, istmpfile, file, siteid, "");
 		}
 		return retJson;
 	}
-	
-	
-	/**
-	 * Upload single file using Spring Controller 存储在 打印模板目录
-	 * luyan 2017-12-6
-	 * 
-	 * @param request
-	 * @param response
-	 * @param allRequestParams
-	 * @param file
-	 * @return
-	 */
-	@RequestMapping(value = "UpPdfPServlet", method = RequestMethod.POST, produces = "text/html;charset=UTF-8")
-	public @ResponseBody String printUploadFileHandler(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam Map<String, Object> allRequestParams, @RequestParam("pdfuploadfile") MultipartFile file) {
-
-		// String limitSize = allRequestParams.get("limitSize");
-		String language = String.valueOf(allRequestParams.get("language"));
-		String tplid = String.valueOf(allRequestParams.get("tplid"));
-		String istmpfile = String.valueOf(allRequestParams.get("tmp"));
-		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-		String rootPath = getSysHardCodeVal.getPrintSinglePdfDir();
-		// 最终生成文件路径/print/singlepdf/" + orgid + "/时间/" + Template+"/"+tplid + 里面
-
-		String retJson = this.doSaveFilePrint(orgid, rootPath, tplid, language, istmpfile, file);
-
-		return retJson;
-	}
-	
-	
-	/**
-	 * 上传打印 PDF模板 存储在/print/singlepdf/" + orgid + "/时间/" + Template+/+tplid + "里面
-	 * luyan 2017-12-6
-	 * 
-	 * 
-	 * @param orgid
-	 * @param rootPath
-	 *            根目录 从配置文件读取 是 /print/singlepdf/
-	 * @param tplid
-	 *            模板ID
-	 * @param language
-	 * @param istmpfile
-	 * @param file
-	 * @return
-	 */
-	private String doSaveFilePrint(String orgid, String rootPath, String tplid, String language, String istmpfile,
-			MultipartFile file) {
-
-		String templateID = tplid;
-
-		// 过滤功能目录名称中的特殊字符
-		if (null != tplid && !"".equals(tplid) && !"null".equals(tplid)) {
-			tplid = "/template/" + tzFilterIllegalCharacter.filterDirectoryIllegalCharacter(tplid);
-		} else {
-			tplid = "";
-		}
-
-		if (null == orgid || "".equals(orgid)) {
-			orgid = "orgidnull";
-		}
-		orgid = orgid.toLowerCase();
-
-		// 是否临时文件的标记
-		if (null == istmpfile || !"null".equals(tplid)) {
-			istmpfile = "0";
-		}
-
-		boolean success = false;
-		Object messages = null;
-		String filename = "";
-		try {
-			filename = file.getOriginalFilename();
-		} catch (Exception e) {
-
-		}
-
-		if (!file.isEmpty()) {
-			try {
-				long fileSize = 0L;
-				String suffix = filename.substring(filename.lastIndexOf(".") + 1);
-				success = this.checkFormat(suffix);
-				if (!success) {
-					if ("ENG".equals(language)) {
-						messages = "Invalid file format.";
-					} else {
-						messages = "上传的文件格式错误";
-					}
-				} else {
-					fileSize = file.getSize();
-					// System.out.println(fileSize);
-					success = this.checkSize(fileSize);
-					if (!success) {
-						if ("ENG".equals(language)) {
-							messages = "The file is too large. Please re-upload.";
-						} else {
-							messages = "上传的文件太大";
-						}
-					}
-				}
-
-				if (success) {
-
-					byte[] bytes = file.getBytes();
-
-					// Creating the directory to store file
-					String tmpFilePath = getSysHardCodeVal.getTmpFileUploadPath();
-					String parentPath = "";
-
-					if ("1".equals(istmpfile)) {
-						// 若是临时文件，则存储在临时文件目录
-						parentPath = tmpFilePath + "/" + orgid + "/" + this.getDateNow() + tplid;
-					} else {
-						// /print/singlepdf/" + orgid + "/时间/" + Template+/+tplid
-						// + "
-						parentPath = rootPath + "/" + orgid + "/" + this.getDateNow() + tplid;
-					}
-					String accessPath = parentPath + "/";
-
-					boolean createResult = false;
-					int createTimes = 5;
-					String sysFileName = "";
-					while (!createResult && createTimes > 0) {
-						// Create the file on server
-						sysFileName = (new StringBuilder(String.valueOf(getNowTime()))).append(".").append(suffix)
-								.toString();
-						if (sysFileName.indexOf('/') != -1)
-							sysFileName = sysFileName.substring(sysFileName.lastIndexOf('/') + 1);
-
-						createResult = fileManageServiceImpl.CreateFile(parentPath, sysFileName, bytes);
-
-						createTimes--;
-					}
-					if (createResult) {
-						PdfTemplateInfo pti = new PdfTemplateInfo();
-
-						pti.addFile(templateID, accessPath + sysFileName, filename);
-
-						Map<String, Object> mapFile = new HashMap<String, Object>();
-						mapFile.put("filename", filename);
-						mapFile.put("sysFileName", sysFileName);
-						mapFile.put("size", String.valueOf(fileSize / 1024L) + "k");
-						// mapFile.put("path", parentPath);
-						mapFile.put("accessPath", accessPath);
-						messages = mapFile;
-					} else {
-						if ("ENG".equals(language)) {
-							messages = "Upload failed. Please re-try.";
-						} else {
-							messages = "上传失败，请重试。";
-						}
-					}
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				success = false;
-				if ("ENG".equals(language)) {
-					messages = "Server Exception.";
-				} else {
-					messages = "服务器发生异常";
-				}
-			}
-		} else {
-			if ("ENG".equals(language)) {
-				messages = "You failed to upload [" + filename + "] because the file was empty.";
-			} else {
-				messages = "上传失败，文件 [" + filename + "] 是一个空文件。";
-			}
-		}
-
-		Map<String, Object> mapRet = new HashMap<String, Object>();
-		mapRet.put("success", success);
-		mapRet.put("msg", messages == null ? "" : messages);
-		JacksonUtil jacksonUtil = new JacksonUtil();
-		return jacksonUtil.Map2json(mapRet);
-
-	}
-	
-	
 }

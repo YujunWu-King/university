@@ -1,23 +1,19 @@
 package com.tranzvision.gd.TZLeaguerAccountBundle.service.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.tranzvision.gd.TZAccountMgBundle.dao.PsoprdefnMapper;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
-import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzRegUserTMapper;
 import com.tranzvision.gd.util.base.JacksonUtil;
-import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 申请用户管理中，申请材料列表
@@ -31,7 +27,7 @@ public class LeaguerStuAppListServiceImpl extends FrameworkImpl {
 	@Autowired
 	private FliterForm fliterForm;
 	@Autowired
-	private SqlQuery SqlQuery;
+	private com.tranzvision.gd.util.sql.SqlQuery SqlQuery;
 	@Autowired
 	private HttpServletRequest request;
 	@Autowired
@@ -39,7 +35,7 @@ public class LeaguerStuAppListServiceImpl extends FrameworkImpl {
 	@Autowired
 	private PsoprdefnMapper psoprdefnMapper;
 	@Autowired
-	private PsTzRegUserTMapper PsTzRegUserTMapper;
+	private com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzRegUserTMapper PsTzRegUserTMapper;
 	@Autowired
 	private TZGDObject tzGdObject;
 		
@@ -61,8 +57,9 @@ public class LeaguerStuAppListServiceImpl extends FrameworkImpl {
 		    
 		    String oprid = jacksonUtil.getString("oprid");		   
 		    
-		    String strSql = "SELECT A.TZ_APP_INS_ID,A.TZ_APP_FORM_STA,T.TZ_CLASS_ID,(SELECT C.TZ_CLASS_NAME FROM PS_TZ_CLASS_INF_T C WHERE T.TZ_CLASS_ID=C.TZ_CLASS_ID) TZ_CLASS_NAME,T.TZ_BATCH_ID,(SELECT BT.TZ_BATCH_NAME FROM PS_TZ_CLS_BATCH_T BT WHERE BT.TZ_CLASS_ID=T.TZ_CLASS_ID AND T.TZ_BATCH_ID=BT.TZ_BATCH_ID limit 0,1) TZ_BATCH_NAME FROM PS_TZ_APP_INS_T A,PS_TZ_FORM_WRK_T T WHERE A.TZ_APP_INS_ID=T.TZ_APP_INS_ID AND T.OPRID=?";
-		    List<Map<String, Object>> list = SqlQuery.queryForList(strSql,new Object[]{oprid});
+		    String tzsql1 = tzGdObject.getSQLText("SQL.TZLeaguerAccountBundle.LeaguerSALSI01");
+//		    String strSql = "SELECT A.TZ_APP_INS_ID,A.TZ_APP_FORM_STA,T.TZ_CLASS_ID,(SELECT C.TZ_CLASS_NAME FROM PS_TZ_CLASS_INF_T C WHERE T.TZ_CLASS_ID=C.TZ_CLASS_ID) TZ_CLASS_NAME,T.TZ_BATCH_ID,(SELECT BT.TZ_BATCH_NAME FROM PS_TZ_CLS_BATCH_T BT WHERE BT.TZ_CLASS_ID=T.TZ_CLASS_ID AND T.TZ_BATCH_ID=BT.TZ_BATCH_ID limit 0,1) TZ_BATCH_NAME FROM PS_TZ_APP_INS_T A,PS_TZ_FORM_WRK_T T WHERE A.TZ_APP_INS_ID=T.TZ_APP_INS_ID AND T.OPRID=?";
+		    List<Map<String, Object>> list = SqlQuery.queryForList(tzsql1,new Object[]{oprid});
 		    if(list!=null&&list.size()>0){			
 			
 			for(Object useObj:list){
@@ -75,13 +72,21 @@ public class LeaguerStuAppListServiceImpl extends FrameworkImpl {
         		    String strClassName = result1.get("TZ_CLASS_NAME")==null ? "" : String.valueOf(result1.get("TZ_CLASS_NAME"));
         		    String strBatchId = result1.get("TZ_BATCH_ID")==null ? "" : String.valueOf(result1.get("TZ_BATCH_ID"));
         		    String strBatchName = result1.get("TZ_BATCH_NAME")==null ? "" : String.valueOf(result1.get("TZ_BATCH_NAME"));
+        		    
+        		    String autoTags = "";
+        		    if(!"".equals(appInsId)){
+        		    	autoTags = SqlQuery.queryForObject("select TZ_ZDBQ from PS_TZ_KS_ZDBQ_VW where TZ_APP_INS_ID=?", 
+        		    			new Object[]{ appInsId }, "String");
+        		    }
+        		    
         		    mapList.put("appInsId", appInsId);
         		    mapList.put("appClassId", strClassId);
         		    mapList.put("appBatchId", strBatchId);
         		    mapList.put("appInfo", strClassName);
         		    mapList.put("appSubStatus", appSubStatus);
         		    mapList.put("batchName", strBatchName);
-        		    mapList.put("oprID", oprid);        		    
+        		    mapList.put("oprID", oprid);
+        		    mapList.put("autoTags", autoTags);
         		    
         		    listData.add(mapList);
 			}
