@@ -380,6 +380,7 @@ public class FilterFldClassServiceImpl extends FrameworkImpl {
 				// 信息内容;
 
 				Map<String, Object> jsonObject = jacksonUtil.getMap("update");
+				String type = (String) jacksonUtil.getString("type");
 				String str_com_id = (String) jsonObject.get("ComID");
 				String str_page_id = (String) jsonObject.get("PageID");
 				String str_view_name = (String) jsonObject.get("ViewMc");
@@ -396,7 +397,6 @@ public class FilterFldClassServiceImpl extends FrameworkImpl {
 				String str_prompt_fld = (String) jsonObject.get("promptFld");
 				String str_prompt_desc = (String) jsonObject.get("promptDesc");
 				String num_max_String = (String) jsonObject.get("maxNum");
-				String type = (String) jsonObject.get("type");
 				int num_max_num = 0;
 				if (!"".equals(num_max_String) && StringUtils.isNumeric(num_max_String)) {
 					num_max_num = Integer.parseInt(num_max_String);
