@@ -238,6 +238,19 @@
 			<version>0.0.1</version>
 		</dependency>
 
+		<!--json解析包 -->
+		<dependency>
+			<groupId>net.sf.ezmorph</groupId>
+			<artifactId>ezmorph</artifactId>
+			<version>1.0.6</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.json-lib</groupId>
+			<artifactId>json-lib</artifactId>
+			<version>2.2.3</version>
+			<classifier>jdk15</classifier><!-- 指定jdk版本 -->
+		</dependency>
+
 		<!-- 百度编辑器用到的json解析包 -->
 		<dependency>
 			<groupId>org.json</groupId>
@@ -289,7 +302,11 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>${comlang3.version}</version>
 		</dependency>
-
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-text</artifactId>
+			<version>1.4</version>
+		</dependency>
 		<dependency>
 			<groupId>com.sun.phobos</groupId>
 			<artifactId>freemarker</artifactId>
@@ -348,6 +365,11 @@
 		</dependency>
 		<!-- qrcode jar包 end -->
 
+		<dependency>
+			<groupId>fr.opensagres.xdocreport</groupId>
+			<artifactId>org.apache.poi.xwpf.converter.pdf</artifactId>
+			<version>1.0.5</version>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
@@ -437,5 +459,14 @@
 				</plugin> -->
 
 		</plugins>
+		<resources>
+			<!-- mapper.xml文件在java目录下 -->
+			<resource>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**/*.xml</include>
+				</includes>
+			</resource>
+		</resources>
 	</build>
 </project>

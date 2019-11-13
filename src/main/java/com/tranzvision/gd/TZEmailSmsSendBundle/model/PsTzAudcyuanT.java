@@ -23,6 +23,8 @@ public class PsTzAudcyuanT extends PsTzAudcyuanTKey {
 
     private String tzBmbId;
 
+    private String tzmsGuid;
+
     public String getTzAudXm() {
         return tzAudXm;
     }
@@ -109,5 +111,13 @@ public class PsTzAudcyuanT extends PsTzAudcyuanTKey {
 
     public void setTzBmbId(String tzBmbId) {
         this.tzBmbId = tzBmbId == null ? null : tzBmbId.trim();
+    }
+
+    public String getTzmsGuid() {
+        return tzmsGuid;
+    }
+
+    public void setTzmsGuid(String tzmsGuid) {
+        this.tzmsGuid = tzmsGuid == null ? null : tzmsGuid.trim();
     }
 }

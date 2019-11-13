@@ -42,8 +42,18 @@ public class PsTzDxyjfsrwTbl {
     private String tzSenderAlias;
 
     private String tzEmlIfPrt;
+    
+    private String tzEmlIsOne;
 
-    private String tzMlsmQfpcId;
+    public String getTzEmlIsOne() {
+		return tzEmlIsOne;
+	}
+
+	public void setTzEmlIsOne(String tzEmlIsOne) {
+		this.tzEmlIsOne = tzEmlIsOne;
+	}
+
+	private String tzMlsmQfpcId;
 
     private String rowAddedOprid;
 
