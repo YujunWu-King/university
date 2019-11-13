@@ -651,7 +651,6 @@
 	    var ViewMc = selRec.get("ViewMc");
 	    var appClassMc = selRec.get("appClassMc");
 	    var typeName = selRec.get("typeName");
-	    alert(typeName)
 	    if(typeName == '0'){
 	    	this.editFilterByID(ComID,PageID,ViewMc);
 	    }
