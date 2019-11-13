@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzWebsiteLoginServiceImpl;
+import com.tranzvision.gd.TZBaseBundle.controller.GetVerificationController;
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdObjectServiceImpl;
 import com.tranzvision.gd.TZSitePageBundle.service.impl.TzWebsiteServiceImpl;
 import com.tranzvision.gd.TZWeChatBundle.dao.PsTzOpenidTblMapper;
@@ -249,6 +250,24 @@ public class TzWebsiteLoginController {
 	@ResponseBody
 	public String doLogin(HttpServletRequest request, HttpServletResponse response) {
 
+		/** 校验登录ajax请求Begin **/
+		//String requestedWith = request.getHeader("x-requested-with");
+		//if (requestedWith != null && requestedWith.equalsIgnoreCase("XMLHttpRequest")) {
+			String verification = request.getParameter("verification");
+			boolean errorFlag = false;
+			if (verification != null) {
+				errorFlag = GetVerificationController.VERIFICATION_LIST.contains(verification);
+				if (errorFlag)
+					GetVerificationController.VERIFICATION_LIST.remove(verification);
+			}
+			if (!errorFlag) {
+				response.setStatus(404);
+				return null;
+				//return "{\"comContent\": \"\",\"state\":{\"errcode\":1,\"errdesc\": \"非法访问\",\"timeout\":  false ,\"authorizedInfo\": {}}}";
+			}
+		//}
+		/** 校验登录ajax请求End **/
+		
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		jacksonUtil.json2Map(request.getParameter("tzParams"));
 

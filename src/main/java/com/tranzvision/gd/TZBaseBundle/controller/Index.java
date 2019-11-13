@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.common.base.Strings;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzWebsiteLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdKjComServiceImpl;
@@ -205,6 +206,17 @@ public class Index {
 		 */
 		
 		//logger.info("dispatcher---");
+		/** 校验dispatcher分发ajax请求Begin **/
+		// 校验逻辑修改，1.如果是ajax请求，一定需要校验
+		// 2. 参数里面 且strOprType为html的不校验
+		// 4. 其他都需要校验
+		boolean isCheck = false;
+		String requestedWith = request.getHeader("x-requested-with");
+		if (requestedWith != null && requestedWith.equalsIgnoreCase("XMLHttpRequest")) {
+			isCheck = true;
+		}
+		/** 校验dispatcher分发ajax请求End **/
+		
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		// 组件配置的类引用ID;
 		String tmpClassId = request.getParameter("classid");
@@ -317,6 +329,66 @@ public class Index {
 		
 		// 操作类型;
 		String strOprType = "";
+		
+		try {
+			jacksonUtil.json2Map(strParams);
+
+			strOprType = jacksonUtil.getString("OperateType");
+			if (!isCheck) {
+				if (strOprType.toLowerCase().equals("html")) {
+					isCheck = false;
+				} else {
+					isCheck = true;
+				}
+			}
+			System.out.println("is CSRF Check：" + isCheck);
+
+			if (isCheck) {
+				String verification = request.getParameter("verification");
+				boolean errorFlag = false;
+				if (verification != null) {
+					errorFlag = GetVerificationController.VERIFICATION_LIST.contains(verification);
+					if (errorFlag)
+						GetVerificationController.VERIFICATION_LIST.remove(verification);
+				}
+				if (!errorFlag) {
+					response.setStatus(404);
+					return null;
+				}
+			}
+
+			/* 校验ComID、PageID */
+			String ComID = jacksonUtil.getString("ComID");
+			String PageID = jacksonUtil.getString("PageID");
+			// System.out.println("ComID==============" + ComID + ",PageID================"
+			// + PageID);
+			if (!Strings.isNullOrEmpty(ComID)) {
+				if (!Strings.isNullOrEmpty(PageID)) {
+					/* ComID和PageID都不空 */
+					String ComPageExistSql = "SELECT 'Y' FROM PS_TZ_AQ_PAGZC_TBL WHERE TZ_COM_ID=? AND TZ_PAGE_ID=? LIMIT 0,1";
+					String ComPageExist = jdbcTemplate.queryForObject(ComPageExistSql, new Object[] { ComID, PageID },
+							"String");
+					if (!"Y".equals(ComPageExist)) {
+						response.setStatus(404);
+						return null;
+					}
+				} else {
+					String ComExistSql = "SELECT 'Y' FROM PS_TZ_AQ_COMZC_TBL WHERE TZ_COM_ID=? LIMIT 0,1";
+					String ComExist = jdbcTemplate.queryForObject(ComExistSql, new Object[] { ComID }, "String");
+					if (!"Y".equals(ComExist)) {
+						response.setStatus(404);
+						return null;
+					}
+				}
+
+			}
+
+			/* 校验ComID、PageID */
+
+		} catch (Exception e) {
+			response.setStatus(404);
+			return null;
+		}
 		
 		/* 防止参数携带js攻击 */
 		if (strParams.toLowerCase().contains("<script")) {
