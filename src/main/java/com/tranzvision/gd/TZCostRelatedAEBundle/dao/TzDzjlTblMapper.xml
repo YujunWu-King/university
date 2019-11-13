@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tranzvision.gd.TZCostRelatedAEBundle.dao.TzDzjlTblMapper">
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZCostRelatedAEBundle.model.TzDzjlTbl">
+    <id column="TZ_DZ_ID" jdbcType="VARCHAR" property="tzDzId" />
+    <result column="TZ_JR_ID" jdbcType="VARCHAR" property="tzJrId" />
+    <result column="TZ_OBJ_ID" jdbcType="VARCHAR" property="tzObjId" />
+    <result column="TZ_OBJ_TYPE" jdbcType="VARCHAR" property="tzObjType" />
+    <result column="TZ_DZ_JIE" jdbcType="DECIMAL" property="tzDzJie" />
+    <result column="TZ_NOTES" jdbcType="VARCHAR" property="tzNotes" />
+    <result column="TZ_SK_TYPE" jdbcType="VARCHAR" property="tzSkType" />
+    <result column="TZ_DZ_DATE" jdbcType="DATE" property="tzDzDate" />
+    <result column="TZ_LK_UINT" jdbcType="VARCHAR" property="tzLkUint" />
+    <result column="TZ_SYNC_STA" jdbcType="VARCHAR" property="tzSyncSta" />
+    <result column="TZ_SYNC_DTTM" jdbcType="TIMESTAMP" property="tzSyncDttm" />
+    <result column="TZ_SYNC_OPRID" jdbcType="VARCHAR" property="tzSyncOprid" />
+    <result column="TZ_LR_OPRID" jdbcType="VARCHAR" property="tzLrOprid" />
+    <result column="TZ_LR_DTTM" jdbcType="TIMESTAMP" property="tzLrDttm" />
+    <result column="TZ_JF_TYPE" jdbcType="VARCHAR" property="tzJfType" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    TZ_DZ_ID, TZ_JR_ID, TZ_OBJ_ID, TZ_OBJ_TYPE, TZ_DZ_JIE, TZ_NOTES, TZ_SK_TYPE, TZ_DZ_DATE, 
+    TZ_LK_UINT, TZ_SYNC_STA, TZ_SYNC_DTTM, TZ_SYNC_OPRID, TZ_LR_OPRID, TZ_LR_DTTM, TZ_JF_TYPE
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from TZ_DZJL_TBL
+    where TZ_DZ_ID = #{tzDzId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from TZ_DZJL_TBL
+    where TZ_DZ_ID = #{tzDzId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZCostRelatedAEBundle.model.TzDzjlTbl">
+    insert into TZ_DZJL_TBL (TZ_DZ_ID, TZ_JR_ID, TZ_OBJ_ID, 
+      TZ_OBJ_TYPE, TZ_DZ_JIE, TZ_NOTES, 
+      TZ_SK_TYPE, TZ_DZ_DATE, TZ_LK_UINT, 
+      TZ_SYNC_STA, TZ_SYNC_DTTM, TZ_SYNC_OPRID, 
+      TZ_LR_OPRID, TZ_LR_DTTM, TZ_JF_TYPE
+      )
+    values (#{tzDzId,jdbcType=VARCHAR}, #{tzJrId,jdbcType=VARCHAR}, #{tzObjId,jdbcType=VARCHAR}, 
+      #{tzObjType,jdbcType=VARCHAR}, #{tzDzJie,jdbcType=DECIMAL}, #{tzNotes,jdbcType=VARCHAR}, 
+      #{tzSkType,jdbcType=VARCHAR}, #{tzDzDate,jdbcType=DATE}, #{tzLkUint,jdbcType=VARCHAR}, 
+      #{tzSyncSta,jdbcType=VARCHAR}, #{tzSyncDttm,jdbcType=TIMESTAMP}, #{tzSyncOprid,jdbcType=VARCHAR}, 
+      #{tzLrOprid,jdbcType=VARCHAR}, #{tzLrDttm,jdbcType=TIMESTAMP}, #{tzJfType,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZCostRelatedAEBundle.model.TzDzjlTbl">
+    insert into TZ_DZJL_TBL
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="tzDzId != null">
+        TZ_DZ_ID,
+      </if>
+      <if test="tzJrId != null">
+        TZ_JR_ID,
+      </if>
+      <if test="tzObjId != null">
+        TZ_OBJ_ID,
+      </if>
+      <if test="tzObjType != null">
+        TZ_OBJ_TYPE,
+      </if>
+      <if test="tzDzJie != null">
+        TZ_DZ_JIE,
+      </if>
+      <if test="tzNotes != null">
+        TZ_NOTES,
+      </if>
+      <if test="tzSkType != null">
+        TZ_SK_TYPE,
+      </if>
+      <if test="tzDzDate != null">
+        TZ_DZ_DATE,
+      </if>
+      <if test="tzLkUint != null">
+        TZ_LK_UINT,
+      </if>
+      <if test="tzSyncSta != null">
+        TZ_SYNC_STA,
+      </if>
+      <if test="tzSyncDttm != null">
+        TZ_SYNC_DTTM,
+      </if>
+      <if test="tzSyncOprid != null">
+        TZ_SYNC_OPRID,
+      </if>
+      <if test="tzLrOprid != null">
+        TZ_LR_OPRID,
+      </if>
+      <if test="tzLrDttm != null">
+        TZ_LR_DTTM,
+      </if>
+      <if test="tzJfType != null">
+        TZ_JF_TYPE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="tzDzId != null">
+        #{tzDzId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJrId != null">
+        #{tzJrId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzObjId != null">
+        #{tzObjId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzObjType != null">
+        #{tzObjType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDzJie != null">
+        #{tzDzJie,jdbcType=DECIMAL},
+      </if>
+      <if test="tzNotes != null">
+        #{tzNotes,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSkType != null">
+        #{tzSkType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDzDate != null">
+        #{tzDzDate,jdbcType=DATE},
+      </if>
+      <if test="tzLkUint != null">
+        #{tzLkUint,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSyncSta != null">
+        #{tzSyncSta,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSyncDttm != null">
+        #{tzSyncDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzSyncOprid != null">
+        #{tzSyncOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLrOprid != null">
+        #{tzLrOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLrDttm != null">
+        #{tzLrDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzJfType != null">
+        #{tzJfType,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZCostRelatedAEBundle.model.TzDzjlTbl">
+    update TZ_DZJL_TBL
+    <set>
+      <if test="tzJrId != null">
+        TZ_JR_ID = #{tzJrId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzObjId != null">
+        TZ_OBJ_ID = #{tzObjId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzObjType != null">
+        TZ_OBJ_TYPE = #{tzObjType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDzJie != null">
+        TZ_DZ_JIE = #{tzDzJie,jdbcType=DECIMAL},
+      </if>
+      <if test="tzNotes != null">
+        TZ_NOTES = #{tzNotes,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSkType != null">
+        TZ_SK_TYPE = #{tzSkType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDzDate != null">
+        TZ_DZ_DATE = #{tzDzDate,jdbcType=DATE},
+      </if>
+      <if test="tzLkUint != null">
+        TZ_LK_UINT = #{tzLkUint,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSyncSta != null">
+        TZ_SYNC_STA = #{tzSyncSta,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSyncDttm != null">
+        TZ_SYNC_DTTM = #{tzSyncDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzSyncOprid != null">
+        TZ_SYNC_OPRID = #{tzSyncOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLrOprid != null">
+        TZ_LR_OPRID = #{tzLrOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLrDttm != null">
+        TZ_LR_DTTM = #{tzLrDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzJfType != null">
+        TZ_JF_TYPE = #{tzJfType,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_DZ_ID = #{tzDzId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZCostRelatedAEBundle.model.TzDzjlTbl">
+    update TZ_DZJL_TBL
+    set TZ_JR_ID = #{tzJrId,jdbcType=VARCHAR},
+      TZ_OBJ_ID = #{tzObjId,jdbcType=VARCHAR},
+      TZ_OBJ_TYPE = #{tzObjType,jdbcType=VARCHAR},
+      TZ_DZ_JIE = #{tzDzJie,jdbcType=DECIMAL},
+      TZ_NOTES = #{tzNotes,jdbcType=VARCHAR},
+      TZ_SK_TYPE = #{tzSkType,jdbcType=VARCHAR},
+      TZ_DZ_DATE = #{tzDzDate,jdbcType=DATE},
+      TZ_LK_UINT = #{tzLkUint,jdbcType=VARCHAR},
+      TZ_SYNC_STA = #{tzSyncSta,jdbcType=VARCHAR},
+      TZ_SYNC_DTTM = #{tzSyncDttm,jdbcType=TIMESTAMP},
+      TZ_SYNC_OPRID = #{tzSyncOprid,jdbcType=VARCHAR},
+      TZ_LR_OPRID = #{tzLrOprid,jdbcType=VARCHAR},
+      TZ_LR_DTTM = #{tzLrDttm,jdbcType=TIMESTAMP},
+      TZ_JF_TYPE = #{tzJfType,jdbcType=VARCHAR}
+    where TZ_DZ_ID = #{tzDzId,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -207,9 +207,9 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 		mapRet.put("root", "[]");
 		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
 		JacksonUtil jacksonUtil = new JacksonUtil();
-		System.out.println("tzQuery");
+		System.out.println("enter tzQueryList");
 		try {
-			String[][] orderByArr;
+			/*String[][] orderByArr;
 			
 			String sort = request.getParameter("sort");
 			if (sort != null && !"".equals(sort)) {
@@ -285,25 +285,22 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 
 			} else {
 				orderByArr = new String[][] {{ "TZ_FILL_PROPORTION", "ASC" }};
-			}
-			
+			}*/
 
+			// 排序字段如果没有不要赋值
+			String[][] orderByArr = new String[][] {new String[]{"TZ_ZHCE_DT","DESC"}};
 			// json数据要的结果字段;
-			String[] resultFldArray = { "OPRID", "TZ_REALNAME", "TZ_GENDER", "TZ_EMAIL", "TZ_MOBILE", "TZ_JIHUO_ZT",
-					"TZ_ZHCE_DT", "ACCTLOCK", "TZ_BLACK_NAME", "NATIONAL_ID", "TZ_MSH_ID", "TZ_CLASS_NAME",
-					"TZ_CLASS_ID", "TZ_APP_INS_ID","TZ_FILL_PROPORTION","TZ_BATCH_NAME" ,"TZ_RESULT_CODE","TZ_APP_FORM_STA","TZ_REMARK"};
-			
-			
-			
+			String[] resultFldArray = { "OPRID", "TZ_REALNAME", "TZ_MOBILE", "TZ_EMAIL","TZ_JIHUO_ZT", "TZ_ZHCE_DT","TZ_MSH_ID","TZ_JG_ID"};
+
 		
 			// 可配置搜索通用函数;
 		
 			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, strParams, numLimit, numStart, errorMsg);
 		//	System.out.println(obj[1]);
-			String TZ_FILL_PROPORTION = "";
+			/*String TZ_FILL_PROPORTION = "";
 			String strBmbTplSQL = "SELECT TZ_APP_MODAL_ID FROM PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID=?";
 			String viewNameSQL = "";
-			String strBmbTpl="";
+			String strBmbTpl="";*/
 			if (obj != null && obj.length > 0) {
 
 				ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
@@ -313,13 +310,14 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 				//	System.out.println(rowList[0]);
 					Map<String, Object> mapList = new HashMap<String, Object>();
 					mapList.put("OPRID", rowList[0]);
-					mapList.put("userName", rowList[1]);
-					mapList.put("userSex", rowList[2]);
-					mapList.put("userEmail", rowList[3]);
-					mapList.put("userPhone", rowList[4]);
-					mapList.put("jihuoZt", rowList[5]);
-					mapList.put("zcTime", rowList[6]);
-					mapList.put("acctlock", rowList[7]);
+					mapList.put("TZ_REALNAME", rowList[1]);
+					mapList.put("TZ_MOBILE", rowList[2]);
+					mapList.put("TZ_EMAIL", rowList[3]);
+					mapList.put("TZ_JIHUO_ZT", rowList[4]);
+					mapList.put("TZ_ZHCE_DT", rowList[5]);
+					mapList.put("TZ_MSH_ID", rowList[6]);
+					mapList.put("TZ_JG_ID", rowList[7]);
+					/*mapList.put("acctlock", rowList[7]);
 					mapList.put("hmdUser", rowList[8]);
 					mapList.put("nationId", rowList[9]);
 					mapList.put("mshId", rowList[10]);
@@ -327,24 +325,24 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 					mapList.put("bitch", rowList[15]);
 					mapList.put("ms_result", rowList[16]);
 					mapList.put("tj_zt", rowList[17]);
-					mapList.put("remark", rowList[18]!=null?stripHtml(rowList[18]):rowList[18]);
+					mapList.put("remark", rowList[18]!=null?stripHtml(rowList[18]):rowList[18]);*/
 				//	mapList.put("zcTime", rowList[9]);
 				//	mapList.put("acctlock", rowList[10]);
 				//	mapList.put("hmdUser", rowList[11]);
-					mapList.put("classID", rowList[12]);
-					mapList.put("appInsID", rowList[13]);
-					TZ_FILL_PROPORTION =  rowList[14];
-					int leng = 0;
+					//mapList.put("classID", rowList[12]);
+					//mapList.put("appInsID", rowList[13]);
+					/*TZ_FILL_PROPORTION =  rowList[14];
+					int leng = 0;*/
 					
 					
-					strBmbTpl = jdbcTemplate.queryForObject(strBmbTplSQL, new Object[] { rowList[12] },
-							"String");
+					/*strBmbTpl = jdbcTemplate.queryForObject(strBmbTplSQL, new Object[] { rowList[12] },
+							"String");*/
 					
 				//	 System.out.println("班级id"+rowList[12]);
-					if (strBmbTpl == null) {
+					/*if (strBmbTpl == null) {
 						strBmbTpl = "";
-					}
-					if (!strBmbTpl.equals("")) {
+					}*/
+					/*if (!strBmbTpl.equals("")) {
 						// 报名表总页数
 						// 情况1：双层报名表
 						viewNameSQL = "select count(1) from PS_TZ_APP_XXXPZ_T where  TZ_APP_TPL_ID=? and TZ_COM_LMC=? and TZ_FPAGE_BH !=?";
@@ -359,14 +357,14 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 									"Integer");
 							// System.out.println("长度2"+leng);
 						}
-					}
+					}*/
 					// 最后一页不算
 					// if (leng > 1) {
 					// leng = leng - 1;
 					// }
 					// System.out.println("实例id"+rowList[13]);
 					// System.out.println("长度3"+leng);
-					mapList.put("fillProportion", TzGdBmglStuClsServiceImpl.getBMBFillProportion(rowList[13], leng,TZ_FILL_PROPORTION));
+					//mapList.put("fillProportion", TzGdBmglStuClsServiceImpl.getBMBFillProportion(rowList[13], leng,TZ_FILL_PROPORTION));
 					listData.add(mapList);
 
 				}

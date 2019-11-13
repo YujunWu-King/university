@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tranzvision.gd.TZCostRelatedAEBundle.dao.TzKpjlTblMapper">
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZCostRelatedAEBundle.model.TzKpjlTbl">
+    <id column="TZ_KP_NBID" jdbcType="VARCHAR" property="tzKpNbid" />
+    <result column="TZ_DZ_ID" jdbcType="VARCHAR" property="tzDzId" />
+    <result column="TZ_KP_JINE" jdbcType="DECIMAL" property="tzKpJine" />
+    <result column="TZ_KP_DATE" jdbcType="DATE" property="tzKpDate" />
+    <result column="TZ_KPFY_NO" jdbcType="VARCHAR" property="tzKpfyNo" />
+    <result column="TZ_FP_NO" jdbcType="VARCHAR" property="tzFpNo" />
+    <result column="TZ_DZFP_URL" jdbcType="VARCHAR" property="tzDzfpUrl" />
+    <result column="TZ_FP_TITLE" jdbcType="VARCHAR" property="tzFpTitle" />
+    <result column="TZ_KP_STATUS" jdbcType="VARCHAR" property="tzKpStatus" />
+    <result column="TZ_NAME" jdbcType="VARCHAR" property="tzName" />
+    <result column="TZ_MOBILE" jdbcType="VARCHAR" property="tzMobile" />
+    <result column="TZ_EMAIL" jdbcType="VARCHAR" property="tzEmail" />
+    <result column="TZ_FP_TYPE" jdbcType="VARCHAR" property="tzFpType" />
+    <result column="TZ_NSRSB_NO" jdbcType="VARCHAR" property="tzNsrsbNo" />
+    <result column="TZ_KP_OPRID" jdbcType="VARCHAR" property="tzKpOprid" />
+    <result column="TZ_KP_TIME" jdbcType="TIMESTAMP" property="tzKpTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    TZ_KP_NBID, TZ_DZ_ID, TZ_KP_JINE, TZ_KP_DATE, TZ_KPFY_NO, TZ_FP_NO, TZ_DZFP_URL, 
+    TZ_FP_TITLE, TZ_KP_STATUS, TZ_NAME, TZ_MOBILE, TZ_EMAIL, TZ_FP_TYPE, TZ_NSRSB_NO, 
+    TZ_KP_OPRID, TZ_KP_TIME
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from TZ_KPJL_TBL
+    where TZ_KP_NBID = #{tzKpNbid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from TZ_KPJL_TBL
+    where TZ_KP_NBID = #{tzKpNbid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZCostRelatedAEBundle.model.TzKpjlTbl">
+    insert into TZ_KPJL_TBL (TZ_KP_NBID, TZ_DZ_ID, TZ_KP_JINE, 
+      TZ_KP_DATE, TZ_KPFY_NO, TZ_FP_NO, 
+      TZ_DZFP_URL, TZ_FP_TITLE, TZ_KP_STATUS, 
+      TZ_NAME, TZ_MOBILE, TZ_EMAIL, 
+      TZ_FP_TYPE, TZ_NSRSB_NO, TZ_KP_OPRID, 
+      TZ_KP_TIME)
+    values (#{tzKpNbid,jdbcType=VARCHAR}, #{tzDzId,jdbcType=VARCHAR}, #{tzKpJine,jdbcType=DECIMAL}, 
+      #{tzKpDate,jdbcType=DATE}, #{tzKpfyNo,jdbcType=VARCHAR}, #{tzFpNo,jdbcType=VARCHAR}, 
+      #{tzDzfpUrl,jdbcType=VARCHAR}, #{tzFpTitle,jdbcType=VARCHAR}, #{tzKpStatus,jdbcType=VARCHAR}, 
+      #{tzName,jdbcType=VARCHAR}, #{tzMobile,jdbcType=VARCHAR}, #{tzEmail,jdbcType=VARCHAR}, 
+      #{tzFpType,jdbcType=VARCHAR}, #{tzNsrsbNo,jdbcType=VARCHAR}, #{tzKpOprid,jdbcType=VARCHAR}, 
+      #{tzKpTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertForeach" parameterType="java.util.List" useGeneratedKeys="false">
+    insert into TZ_KPJL_TBL (TZ_KP_NBID, TZ_DZ_ID, TZ_KP_JINE,
+    TZ_KP_DATE, TZ_KPFY_NO, TZ_FP_NO,
+    TZ_DZFP_URL, TZ_FP_TITLE, TZ_KP_STATUS,
+    TZ_NAME, TZ_MOBILE, TZ_EMAIL,
+    TZ_FP_TYPE, TZ_NSRSB_NO, TZ_KP_OPRID,
+    TZ_KP_TIME)
+    values
+    <foreach collection="list" item="item" index="index" separator=",">
+      (
+      #{item.tzKpNbid,jdbcType=VARCHAR}, #{item.tzDzId,jdbcType=VARCHAR}, #{item.tzKpJine,jdbcType=DECIMAL},
+      #{item.tzKpDate,jdbcType=DATE}, #{item.tzKpfyNo,jdbcType=VARCHAR}, #{item.tzFpNo,jdbcType=VARCHAR},
+      #{item.tzDzfpUrl,jdbcType=VARCHAR}, #{item.tzFpTitle,jdbcType=VARCHAR}, #{item.tzKpStatus,jdbcType=VARCHAR},
+      #{item.tzName,jdbcType=VARCHAR}, #{item.tzMobile,jdbcType=VARCHAR}, #{item.tzEmail,jdbcType=VARCHAR},
+      #{item.tzFpType,jdbcType=VARCHAR}, #{item.tzNsrsbNo,jdbcType=VARCHAR}, #{item.tzKpOprid,jdbcType=VARCHAR},
+      #{item.tzKpTime,jdbcType=TIMESTAMP}
+      )
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZCostRelatedAEBundle.model.TzKpjlTbl">
+    insert into TZ_KPJL_TBL
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="tzKpNbid != null">
+        TZ_KP_NBID,
+      </if>
+      <if test="tzDzId != null">
+        TZ_DZ_ID,
+      </if>
+      <if test="tzKpJine != null">
+        TZ_KP_JINE,
+      </if>
+      <if test="tzKpDate != null">
+        TZ_KP_DATE,
+      </if>
+      <if test="tzKpfyNo != null">
+        TZ_KPFY_NO,
+      </if>
+      <if test="tzFpNo != null">
+        TZ_FP_NO,
+      </if>
+      <if test="tzDzfpUrl != null">
+        TZ_DZFP_URL,
+      </if>
+      <if test="tzFpTitle != null">
+        TZ_FP_TITLE,
+      </if>
+      <if test="tzKpStatus != null">
+        TZ_KP_STATUS,
+      </if>
+      <if test="tzName != null">
+        TZ_NAME,
+      </if>
+      <if test="tzMobile != null">
+        TZ_MOBILE,
+      </if>
+      <if test="tzEmail != null">
+        TZ_EMAIL,
+      </if>
+      <if test="tzFpType != null">
+        TZ_FP_TYPE,
+      </if>
+      <if test="tzNsrsbNo != null">
+        TZ_NSRSB_NO,
+      </if>
+      <if test="tzKpOprid != null">
+        TZ_KP_OPRID,
+      </if>
+      <if test="tzKpTime != null">
+        TZ_KP_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="tzKpNbid != null">
+        #{tzKpNbid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDzId != null">
+        #{tzDzId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzKpJine != null">
+        #{tzKpJine,jdbcType=DECIMAL},
+      </if>
+      <if test="tzKpDate != null">
+        #{tzKpDate,jdbcType=DATE},
+      </if>
+      <if test="tzKpfyNo != null">
+        #{tzKpfyNo,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFpNo != null">
+        #{tzFpNo,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDzfpUrl != null">
+        #{tzDzfpUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFpTitle != null">
+        #{tzFpTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="tzKpStatus != null">
+        #{tzKpStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="tzName != null">
+        #{tzName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMobile != null">
+        #{tzMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEmail != null">
+        #{tzEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFpType != null">
+        #{tzFpType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzNsrsbNo != null">
+        #{tzNsrsbNo,jdbcType=VARCHAR},
+      </if>
+      <if test="tzKpOprid != null">
+        #{tzKpOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzKpTime != null">
+        #{tzKpTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZCostRelatedAEBundle.model.TzKpjlTbl">
+    update TZ_KPJL_TBL
+    <set>
+      <if test="tzDzId != null">
+        TZ_DZ_ID = #{tzDzId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzKpJine != null">
+        TZ_KP_JINE = #{tzKpJine,jdbcType=DECIMAL},
+      </if>
+      <if test="tzKpDate != null">
+        TZ_KP_DATE = #{tzKpDate,jdbcType=DATE},
+      </if>
+      <if test="tzKpfyNo != null">
+        TZ_KPFY_NO = #{tzKpfyNo,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFpNo != null">
+        TZ_FP_NO = #{tzFpNo,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDzfpUrl != null">
+        TZ_DZFP_URL = #{tzDzfpUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFpTitle != null">
+        TZ_FP_TITLE = #{tzFpTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="tzKpStatus != null">
+        TZ_KP_STATUS = #{tzKpStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="tzName != null">
+        TZ_NAME = #{tzName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMobile != null">
+        TZ_MOBILE = #{tzMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEmail != null">
+        TZ_EMAIL = #{tzEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFpType != null">
+        TZ_FP_TYPE = #{tzFpType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzNsrsbNo != null">
+        TZ_NSRSB_NO = #{tzNsrsbNo,jdbcType=VARCHAR},
+      </if>
+      <if test="tzKpOprid != null">
+        TZ_KP_OPRID = #{tzKpOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzKpTime != null">
+        TZ_KP_TIME = #{tzKpTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where TZ_KP_NBID = #{tzKpNbid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZCostRelatedAEBundle.model.TzKpjlTbl">
+    update TZ_KPJL_TBL
+    set TZ_DZ_ID = #{tzDzId,jdbcType=VARCHAR},
+      TZ_KP_JINE = #{tzKpJine,jdbcType=DECIMAL},
+      TZ_KP_DATE = #{tzKpDate,jdbcType=DATE},
+      TZ_KPFY_NO = #{tzKpfyNo,jdbcType=VARCHAR},
+      TZ_FP_NO = #{tzFpNo,jdbcType=VARCHAR},
+      TZ_DZFP_URL = #{tzDzfpUrl,jdbcType=VARCHAR},
+      TZ_FP_TITLE = #{tzFpTitle,jdbcType=VARCHAR},
+      TZ_KP_STATUS = #{tzKpStatus,jdbcType=VARCHAR},
+      TZ_NAME = #{tzName,jdbcType=VARCHAR},
+      TZ_MOBILE = #{tzMobile,jdbcType=VARCHAR},
+      TZ_EMAIL = #{tzEmail,jdbcType=VARCHAR},
+      TZ_FP_TYPE = #{tzFpType,jdbcType=VARCHAR},
+      TZ_NSRSB_NO = #{tzNsrsbNo,jdbcType=VARCHAR},
+      TZ_KP_OPRID = #{tzKpOprid,jdbcType=VARCHAR},
+      TZ_KP_TIME = #{tzKpTime,jdbcType=TIMESTAMP}
+    where TZ_KP_NBID = #{tzKpNbid,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZApplicationVerifiedBundle.dao.TzMsMsrqTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZApplicationVerifiedBundle.model.TzMsMsrqT" >
+    <id column="TZ_BMB_ID" property="tzBmbId" jdbcType="VARCHAR" />
+    <result column="TZ_MS_DATE" property="tzMsDate" jdbcType="VARCHAR" />
+    <result column="TZ_QD_DATE" property="tzQdDate" jdbcType="VARCHAR" />
+    <result column="TZ_MS_SITE" property="tzMsSite" jdbcType="VARCHAR" />
+    <result column="TZ_NOTES" property="tzNotes" jdbcType="VARCHAR" />
+    <result column="TZ_ADD_ID" property="tzAddId" jdbcType="VARCHAR" />
+    <result column="TZ_ADD_DATE" property="tzAddDate" jdbcType="VARCHAR" />
+    <result column="TZ_LAST_ID" property="tzLastId" jdbcType="VARCHAR" />
+    <result column="TZ_LAST_DATE" property="tzLastDate" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_BMB_ID, TZ_MS_DATE, TZ_QD_DATE, TZ_MS_SITE, TZ_NOTES, TZ_ADD_ID, TZ_ADD_DATE, 
+    TZ_LAST_ID, TZ_LAST_DATE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from TZ_MS_MSRQ_T
+    where TZ_BMB_ID = #{tzBmbId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from TZ_MS_MSRQ_T
+    where TZ_BMB_ID = #{tzBmbId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZApplicationVerifiedBundle.model.TzMsMsrqT" >
+    insert into TZ_MS_MSRQ_T (TZ_BMB_ID, TZ_MS_DATE, TZ_QD_DATE, 
+      TZ_MS_SITE, TZ_NOTES, TZ_ADD_ID, 
+      TZ_ADD_DATE, TZ_LAST_ID, TZ_LAST_DATE
+      )
+    values (#{tzBmbId,jdbcType=VARCHAR}, #{tzMsDate,jdbcType=VARCHAR}, #{tzQdDate,jdbcType=VARCHAR}, 
+      #{tzMsSite,jdbcType=VARCHAR}, #{tzNotes,jdbcType=VARCHAR}, #{tzAddId,jdbcType=VARCHAR}, 
+      #{tzAddDate,jdbcType=VARCHAR}, #{tzLastId,jdbcType=VARCHAR}, #{tzLastDate,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZApplicationVerifiedBundle.model.TzMsMsrqT" >
+    insert into TZ_MS_MSRQ_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzBmbId != null" >
+        TZ_BMB_ID,
+      </if>
+      <if test="tzMsDate != null" >
+        TZ_MS_DATE,
+      </if>
+      <if test="tzQdDate != null" >
+        TZ_QD_DATE,
+      </if>
+      <if test="tzMsSite != null" >
+        TZ_MS_SITE,
+      </if>
+      <if test="tzNotes != null" >
+        TZ_NOTES,
+      </if>
+      <if test="tzAddId != null" >
+        TZ_ADD_ID,
+      </if>
+      <if test="tzAddDate != null" >
+        TZ_ADD_DATE,
+      </if>
+      <if test="tzLastId != null" >
+        TZ_LAST_ID,
+      </if>
+      <if test="tzLastDate != null" >
+        TZ_LAST_DATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzBmbId != null" >
+        #{tzBmbId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMsDate != null" >
+        #{tzMsDate,jdbcType=VARCHAR},
+      </if>
+      <if test="tzQdDate != null" >
+        #{tzQdDate,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMsSite != null" >
+        #{tzMsSite,jdbcType=VARCHAR},
+      </if>
+      <if test="tzNotes != null" >
+        #{tzNotes,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAddId != null" >
+        #{tzAddId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAddDate != null" >
+        #{tzAddDate,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLastId != null" >
+        #{tzLastId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLastDate != null" >
+        #{tzLastDate,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZApplicationVerifiedBundle.model.TzMsMsrqT" >
+    update TZ_MS_MSRQ_T
+    <set >
+      <if test="tzMsDate != null" >
+        TZ_MS_DATE = #{tzMsDate,jdbcType=VARCHAR},
+      </if>
+      <if test="tzQdDate != null" >
+        TZ_QD_DATE = #{tzQdDate,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMsSite != null" >
+        TZ_MS_SITE = #{tzMsSite,jdbcType=VARCHAR},
+      </if>
+      <if test="tzNotes != null" >
+        TZ_NOTES = #{tzNotes,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAddId != null" >
+        TZ_ADD_ID = #{tzAddId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAddDate != null" >
+        TZ_ADD_DATE = #{tzAddDate,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLastId != null" >
+        TZ_LAST_ID = #{tzLastId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLastDate != null" >
+        TZ_LAST_DATE = #{tzLastDate,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_BMB_ID = #{tzBmbId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZApplicationVerifiedBundle.model.TzMsMsrqT" >
+    update TZ_MS_MSRQ_T
+    set TZ_MS_DATE = #{tzMsDate,jdbcType=VARCHAR},
+      TZ_QD_DATE = #{tzQdDate,jdbcType=VARCHAR},
+      TZ_MS_SITE = #{tzMsSite,jdbcType=VARCHAR},
+      TZ_NOTES = #{tzNotes,jdbcType=VARCHAR},
+      TZ_ADD_ID = #{tzAddId,jdbcType=VARCHAR},
+      TZ_ADD_DATE = #{tzAddDate,jdbcType=VARCHAR},
+      TZ_LAST_ID = #{tzLastId,jdbcType=VARCHAR},
+      TZ_LAST_DATE = #{tzLastDate,jdbcType=VARCHAR}
+    where TZ_BMB_ID = #{tzBmbId,jdbcType=VARCHAR}
+  </update>
+</mapper>

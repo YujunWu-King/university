@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tranzvision.gd.TZCostRelatedAEBundle.dao.TzJxjDefnTMapper">
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZCostRelatedAEBundle.model.TzJxjDefnT">
+    <id column="TZ_JXJ_ID" jdbcType="NVARCHAR" property="tzJxjId" />
+    <result column="TZ_JXJ_NAME" jdbcType="NVARCHAR" property="tzJxjName" />
+    <result column="TZ_JXJ_TYPE_ID" jdbcType="NVARCHAR" property="tzJxjTypeId" />
+    <result column="TZ_JXJ_JE" jdbcType="DOUBLE" property="tzJxjJe" />
+    <result column="TZ_JXJ_ZD_STAT" jdbcType="NVARCHAR" property="tzJxjZdStat" />
+    <result column="TZ_JXJ_ZD_TIME" jdbcType="TIMESTAMP" property="tzJxjZdTime" />
+    <result column="TZ_JXJ_YX_STAT" jdbcType="NVARCHAR" property="tzJxjYxStat" />
+    <result column="TZ_ADD_TYPE" jdbcType="NVARCHAR" property="tzAddType" />
+    <result column="TZ_NOTE" jdbcType="NVARCHAR" property="tzNote" />
+    <result column="ROW_ADDED_OPRID" jdbcType="NVARCHAR" property="rowAddedOprid" />
+    <result column="ROW_ADDED_DTTM" jdbcType="TIMESTAMP" property="rowAddedDttm" />
+    <result column="ROW_LASTMANT_OPRID" jdbcType="NVARCHAR" property="rowLastmantOprid" />
+    <result column="ROW_LASTMANT_DTTM" jdbcType="TIMESTAMP" property="rowLastmantDttm" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    TZ_JXJ_ID, TZ_JXJ_NAME, TZ_JXJ_TYPE_ID, TZ_JXJ_JE, TZ_JXJ_ZD_STAT, TZ_JXJ_ZD_TIME, 
+    TZ_JXJ_YX_STAT, TZ_ADD_TYPE, TZ_NOTE, ROW_ADDED_OPRID, ROW_ADDED_DTTM, ROW_LASTMANT_OPRID, 
+    ROW_LASTMANT_DTTM
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from TZ_JXJ_DEFN_T
+    where TZ_JXJ_ID = #{tzJxjId,jdbcType=NVARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from TZ_JXJ_DEFN_T
+    where TZ_JXJ_ID = #{tzJxjId,jdbcType=NVARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZCostRelatedAEBundle.model.TzJxjDefnT">
+    insert into TZ_JXJ_DEFN_T (TZ_JXJ_ID, TZ_JXJ_NAME, TZ_JXJ_TYPE_ID, 
+      TZ_JXJ_JE, TZ_JXJ_ZD_STAT, TZ_JXJ_ZD_TIME, 
+      TZ_JXJ_YX_STAT, TZ_ADD_TYPE, TZ_NOTE, 
+      ROW_ADDED_OPRID, ROW_ADDED_DTTM, ROW_LASTMANT_OPRID, 
+      ROW_LASTMANT_DTTM)
+    values (#{tzJxjId,jdbcType=NVARCHAR}, #{tzJxjName,jdbcType=NVARCHAR}, #{tzJxjTypeId,jdbcType=NVARCHAR}, 
+      #{tzJxjJe,jdbcType=DOUBLE}, #{tzJxjZdStat,jdbcType=NVARCHAR}, #{tzJxjZdTime,jdbcType=TIMESTAMP}, 
+      #{tzJxjYxStat,jdbcType=NVARCHAR}, #{tzAddType,jdbcType=NVARCHAR}, #{tzNote,jdbcType=NVARCHAR}, 
+      #{rowAddedOprid,jdbcType=NVARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=NVARCHAR}, 
+      #{rowLastmantDttm,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertForeach" parameterType="java.util.List" useGeneratedKeys="false">
+    insert into TZ_JXJ_DEFN_T (TZ_JXJ_ID, TZ_JXJ_NAME, TZ_JXJ_TYPE_ID,
+    TZ_JXJ_JE, TZ_JXJ_ZD_STAT, TZ_JXJ_ZD_TIME,
+    TZ_JXJ_YX_STAT, TZ_ADD_TYPE, TZ_NOTE,
+    ROW_ADDED_OPRID, ROW_ADDED_DTTM, ROW_LASTMANT_OPRID,
+    ROW_LASTMANT_DTTM)
+    values
+    <foreach collection="list" item="item" index="index" separator=",">
+      (
+      #{item.tzJxjId,jdbcType=NVARCHAR}, #{item.tzJxjName,jdbcType=NVARCHAR}, #{item.tzJxjTypeId,jdbcType=NVARCHAR},
+      #{item.tzJxjJe,jdbcType=DOUBLE}, #{item.tzJxjZdStat,jdbcType=NVARCHAR}, #{item.tzJxjZdTime,jdbcType=TIMESTAMP},
+      #{item.tzJxjYxStat,jdbcType=NVARCHAR}, #{item.tzAddType,jdbcType=NVARCHAR}, #{item.tzNote,jdbcType=NVARCHAR},
+      #{item.rowAddedOprid,jdbcType=NVARCHAR}, #{item.rowAddedDttm,jdbcType=TIMESTAMP}, #{item.rowLastmantOprid,jdbcType=NVARCHAR},
+      #{item.rowLastmantDttm,jdbcType=TIMESTAMP}
+      )
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZCostRelatedAEBundle.model.TzJxjDefnT">
+    insert into TZ_JXJ_DEFN_T
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="tzJxjId != null">
+        TZ_JXJ_ID,
+      </if>
+      <if test="tzJxjName != null">
+        TZ_JXJ_NAME,
+      </if>
+      <if test="tzJxjTypeId != null">
+        TZ_JXJ_TYPE_ID,
+      </if>
+      <if test="tzJxjJe != null">
+        TZ_JXJ_JE,
+      </if>
+      <if test="tzJxjZdStat != null">
+        TZ_JXJ_ZD_STAT,
+      </if>
+      <if test="tzJxjZdTime != null">
+        TZ_JXJ_ZD_TIME,
+      </if>
+      <if test="tzJxjYxStat != null">
+        TZ_JXJ_YX_STAT,
+      </if>
+      <if test="tzAddType != null">
+        TZ_ADD_TYPE,
+      </if>
+      <if test="tzNote != null">
+        TZ_NOTE,
+      </if>
+      <if test="rowAddedOprid != null">
+        ROW_ADDED_OPRID,
+      </if>
+      <if test="rowAddedDttm != null">
+        ROW_ADDED_DTTM,
+      </if>
+      <if test="rowLastmantOprid != null">
+        ROW_LASTMANT_OPRID,
+      </if>
+      <if test="rowLastmantDttm != null">
+        ROW_LASTMANT_DTTM,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="tzJxjId != null">
+        #{tzJxjId,jdbcType=NVARCHAR},
+      </if>
+      <if test="tzJxjName != null">
+        #{tzJxjName,jdbcType=NVARCHAR},
+      </if>
+      <if test="tzJxjTypeId != null">
+        #{tzJxjTypeId,jdbcType=NVARCHAR},
+      </if>
+      <if test="tzJxjJe != null">
+        #{tzJxjJe,jdbcType=DOUBLE},
+      </if>
+      <if test="tzJxjZdStat != null">
+        #{tzJxjZdStat,jdbcType=NVARCHAR},
+      </if>
+      <if test="tzJxjZdTime != null">
+        #{tzJxjZdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzJxjYxStat != null">
+        #{tzJxjYxStat,jdbcType=NVARCHAR},
+      </if>
+      <if test="tzAddType != null">
+        #{tzAddType,jdbcType=NVARCHAR},
+      </if>
+      <if test="tzNote != null">
+        #{tzNote,jdbcType=NVARCHAR},
+      </if>
+      <if test="rowAddedOprid != null">
+        #{rowAddedOprid,jdbcType=NVARCHAR},
+      </if>
+      <if test="rowAddedDttm != null">
+        #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null">
+        #{rowLastmantOprid,jdbcType=NVARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null">
+        #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZCostRelatedAEBundle.model.TzJxjDefnT">
+    update TZ_JXJ_DEFN_T
+    <set>
+      <if test="tzJxjName != null">
+        TZ_JXJ_NAME = #{tzJxjName,jdbcType=NVARCHAR},
+      </if>
+      <if test="tzJxjTypeId != null">
+        TZ_JXJ_TYPE_ID = #{tzJxjTypeId,jdbcType=NVARCHAR},
+      </if>
+      <if test="tzJxjJe != null">
+        TZ_JXJ_JE = #{tzJxjJe,jdbcType=DOUBLE},
+      </if>
+      <if test="tzJxjZdStat != null">
+        TZ_JXJ_ZD_STAT = #{tzJxjZdStat,jdbcType=NVARCHAR},
+      </if>
+      <if test="tzJxjZdTime != null">
+        TZ_JXJ_ZD_TIME = #{tzJxjZdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzJxjYxStat != null">
+        TZ_JXJ_YX_STAT = #{tzJxjYxStat,jdbcType=NVARCHAR},
+      </if>
+      <if test="tzAddType != null">
+        TZ_ADD_TYPE = #{tzAddType,jdbcType=NVARCHAR},
+      </if>
+      <if test="tzNote != null">
+        TZ_NOTE = #{tzNote,jdbcType=NVARCHAR},
+      </if>
+      <if test="rowAddedOprid != null">
+        ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=NVARCHAR},
+      </if>
+      <if test="rowAddedDttm != null">
+        ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null">
+        ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=NVARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null">
+        ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where TZ_JXJ_ID = #{tzJxjId,jdbcType=NVARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZCostRelatedAEBundle.model.TzJxjDefnT">
+    update TZ_JXJ_DEFN_T
+    set TZ_JXJ_NAME = #{tzJxjName,jdbcType=NVARCHAR},
+      TZ_JXJ_TYPE_ID = #{tzJxjTypeId,jdbcType=NVARCHAR},
+      TZ_JXJ_JE = #{tzJxjJe,jdbcType=DOUBLE},
+      TZ_JXJ_ZD_STAT = #{tzJxjZdStat,jdbcType=NVARCHAR},
+      TZ_JXJ_ZD_TIME = #{tzJxjZdTime,jdbcType=TIMESTAMP},
+      TZ_JXJ_YX_STAT = #{tzJxjYxStat,jdbcType=NVARCHAR},
+      TZ_ADD_TYPE = #{tzAddType,jdbcType=NVARCHAR},
+      TZ_NOTE = #{tzNote,jdbcType=NVARCHAR},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=NVARCHAR},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=NVARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP}
+    where TZ_JXJ_ID = #{tzJxjId,jdbcType=NVARCHAR}
+  </update>
+</mapper>

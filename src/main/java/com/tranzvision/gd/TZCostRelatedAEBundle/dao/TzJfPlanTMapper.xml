@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tranzvision.gd.TZCostRelatedAEBundle.dao.TzJfPlanTMapper">
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZCostRelatedAEBundle.model.TzJfPlanT">
+    <id column="TZ_JFPL_ID" jdbcType="VARCHAR" property="tzJfplId" />
+    <result column="TZ_OBJ_ID" jdbcType="VARCHAR" property="tzObjId" />
+    <result column="TZ_OBJ_TYPE" jdbcType="VARCHAR" property="tzObjType" />
+    <result column="TZ_OBJ_PRJ_ID" jdbcType="VARCHAR" property="tzObjPrjId" />
+    <result column="TZ_OBJ_NAME" jdbcType="NVARCHAR" property="tzObjName" />
+    <result column="TZ_JF_TYPE" jdbcType="VARCHAR" property="tzJfType" />
+    <result column="TZ_JF_DATE" jdbcType="DATE" property="tzJfDate" />
+    <result column="TZ_JF_BZ_JE" jdbcType="DECIMAL" property="tzJfBzJe" />
+    <result column="TZ_JF_TZ_JE" jdbcType="DECIMAL" property="tzJfTzJe" />
+    <result column="TZ_JF_JM_JE" jdbcType="DECIMAL" property="tzJfJmJe" />
+    <result column="TZ_JF_BQYS" jdbcType="DECIMAL" property="tzJfBqys" />
+    <result column="TZ_JF_BQYT" jdbcType="DECIMAL" property="tzJfBqyt" />
+    <result column="TZ_JF_BQSS" jdbcType="DECIMAL" property="tzJfBqss" />
+    <result column="TZ_JF_BQYJ" jdbcType="DECIMAL" property="tzJfBqyj" />
+    <result column="TZ_JF_STAT" jdbcType="VARCHAR" property="tzJfStat" />
+    <result column="ROW_ADDED_OPRID" jdbcType="VARCHAR" property="rowAddedOprid" />
+    <result column="ROW_ADDED_DTTM" jdbcType="TIMESTAMP" property="rowAddedDttm" />
+    <result column="ROW_LASTMANT_OPRID" jdbcType="VARCHAR" property="rowLastmantOprid" />
+    <result column="ROW_LASTMANT_DTTM" jdbcType="TIMESTAMP" property="rowLastmantDttm" />
+    <result column="TZ_REMARKS" jdbcType="VARCHAR" property="tzRemarks" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    TZ_JFPL_ID, TZ_OBJ_ID, TZ_OBJ_TYPE, TZ_OBJ_PRJ_ID, TZ_OBJ_NAME, TZ_JF_TYPE, TZ_JF_DATE, 
+    TZ_JF_BZ_JE, TZ_JF_TZ_JE, TZ_JF_JM_JE, TZ_JF_BQYS, TZ_JF_BQYT, TZ_JF_BQSS, TZ_JF_BQYJ, 
+    TZ_JF_STAT, ROW_ADDED_OPRID, ROW_ADDED_DTTM, ROW_LASTMANT_OPRID, ROW_LASTMANT_DTTM, 
+    TZ_REMARKS
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from TZ_JF_PLAN_T
+    where TZ_JFPL_ID = #{tzJfplId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from TZ_JF_PLAN_T
+    where TZ_JFPL_ID = #{tzJfplId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZCostRelatedAEBundle.model.TzJfPlanT">
+    insert into TZ_JF_PLAN_T (TZ_JFPL_ID, TZ_OBJ_ID, TZ_OBJ_TYPE, 
+      TZ_OBJ_PRJ_ID, TZ_OBJ_NAME, TZ_JF_TYPE, 
+      TZ_JF_DATE, TZ_JF_BZ_JE, TZ_JF_TZ_JE, 
+      TZ_JF_JM_JE, TZ_JF_BQYS, TZ_JF_BQYT, 
+      TZ_JF_BQSS, TZ_JF_BQYJ, TZ_JF_STAT, 
+      ROW_ADDED_OPRID, ROW_ADDED_DTTM, ROW_LASTMANT_OPRID, 
+      ROW_LASTMANT_DTTM, TZ_REMARKS)
+    values (#{tzJfplId,jdbcType=VARCHAR}, #{tzObjId,jdbcType=VARCHAR}, #{tzObjType,jdbcType=VARCHAR}, 
+      #{tzObjPrjId,jdbcType=VARCHAR}, #{tzObjName,jdbcType=NVARCHAR}, #{tzJfType,jdbcType=VARCHAR}, 
+      #{tzJfDate,jdbcType=DATE}, #{tzJfBzJe,jdbcType=DECIMAL}, #{tzJfTzJe,jdbcType=DECIMAL}, 
+      #{tzJfJmJe,jdbcType=DECIMAL}, #{tzJfBqys,jdbcType=DECIMAL}, #{tzJfBqyt,jdbcType=DECIMAL}, 
+      #{tzJfBqss,jdbcType=DECIMAL}, #{tzJfBqyj,jdbcType=DECIMAL}, #{tzJfStat,jdbcType=VARCHAR}, 
+      #{rowAddedOprid,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, 
+      #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{tzRemarks,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertForeach" parameterType="java.util.List" useGeneratedKeys="false">
+    insert into TZ_JF_PLAN_T (TZ_JFPL_ID, TZ_OBJ_ID, TZ_OBJ_TYPE,
+    TZ_OBJ_PRJ_ID, TZ_OBJ_NAME, TZ_JF_TYPE,
+    TZ_JF_DATE, TZ_JF_BZ_JE, TZ_JF_TZ_JE,
+    TZ_JF_JM_JE, TZ_JF_BQYS, TZ_JF_BQYT,
+    TZ_JF_BQSS, TZ_JF_BQYJ, TZ_JF_STAT,
+    ROW_ADDED_OPRID, ROW_ADDED_DTTM, ROW_LASTMANT_OPRID,
+    ROW_LASTMANT_DTTM, TZ_REMARKS)
+    values
+    <foreach collection="list" item="item" index="index" separator=",">
+      (
+      #{item.tzJfplId,jdbcType=VARCHAR}, #{item.tzObjId,jdbcType=VARCHAR}, #{item.tzObjType,jdbcType=VARCHAR},
+      #{item.tzObjPrjId,jdbcType=VARCHAR}, #{item.tzObjName,jdbcType=NVARCHAR}, #{item.tzJfType,jdbcType=VARCHAR},
+      #{item.tzJfDate,jdbcType=DATE}, #{item.tzJfBzJe,jdbcType=DECIMAL}, #{item.tzJfTzJe,jdbcType=DECIMAL},
+      #{item.tzJfJmJe,jdbcType=DECIMAL}, #{item.tzJfBqys,jdbcType=DECIMAL}, #{item.tzJfBqyt,jdbcType=DECIMAL},
+      #{item.tzJfBqss,jdbcType=DECIMAL}, #{item.tzJfBqyj,jdbcType=DECIMAL}, #{item.tzJfStat,jdbcType=VARCHAR},
+      #{item.rowAddedOprid,jdbcType=VARCHAR}, #{item.rowAddedDttm,jdbcType=TIMESTAMP}, #{item.rowLastmantOprid,jdbcType=VARCHAR},
+      #{item.rowLastmantDttm,jdbcType=TIMESTAMP}, #{item.tzRemarks,jdbcType=VARCHAR}
+      )
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZCostRelatedAEBundle.model.TzJfPlanT">
+    insert into TZ_JF_PLAN_T
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="tzJfplId != null">
+        TZ_JFPL_ID,
+      </if>
+      <if test="tzObjId != null">
+        TZ_OBJ_ID,
+      </if>
+      <if test="tzObjType != null">
+        TZ_OBJ_TYPE,
+      </if>
+      <if test="tzObjPrjId != null">
+        TZ_OBJ_PRJ_ID,
+      </if>
+      <if test="tzObjName != null">
+        TZ_OBJ_NAME,
+      </if>
+      <if test="tzJfType != null">
+        TZ_JF_TYPE,
+      </if>
+      <if test="tzJfDate != null">
+        TZ_JF_DATE,
+      </if>
+      <if test="tzJfBzJe != null">
+        TZ_JF_BZ_JE,
+      </if>
+      <if test="tzJfTzJe != null">
+        TZ_JF_TZ_JE,
+      </if>
+      <if test="tzJfJmJe != null">
+        TZ_JF_JM_JE,
+      </if>
+      <if test="tzJfBqys != null">
+        TZ_JF_BQYS,
+      </if>
+      <if test="tzJfBqyt != null">
+        TZ_JF_BQYT,
+      </if>
+      <if test="tzJfBqss != null">
+        TZ_JF_BQSS,
+      </if>
+      <if test="tzJfBqyj != null">
+        TZ_JF_BQYJ,
+      </if>
+      <if test="tzJfStat != null">
+        TZ_JF_STAT,
+      </if>
+      <if test="rowAddedOprid != null">
+        ROW_ADDED_OPRID,
+      </if>
+      <if test="rowAddedDttm != null">
+        ROW_ADDED_DTTM,
+      </if>
+      <if test="rowLastmantOprid != null">
+        ROW_LASTMANT_OPRID,
+      </if>
+      <if test="rowLastmantDttm != null">
+        ROW_LASTMANT_DTTM,
+      </if>
+      <if test="tzRemarks != null">
+        TZ_REMARKS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="tzJfplId != null">
+        #{tzJfplId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzObjId != null">
+        #{tzObjId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzObjType != null">
+        #{tzObjType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzObjPrjId != null">
+        #{tzObjPrjId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzObjName != null">
+        #{tzObjName,jdbcType=NVARCHAR},
+      </if>
+      <if test="tzJfType != null">
+        #{tzJfType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJfDate != null">
+        #{tzJfDate,jdbcType=DATE},
+      </if>
+      <if test="tzJfBzJe != null">
+        #{tzJfBzJe,jdbcType=DECIMAL},
+      </if>
+      <if test="tzJfTzJe != null">
+        #{tzJfTzJe,jdbcType=DECIMAL},
+      </if>
+      <if test="tzJfJmJe != null">
+        #{tzJfJmJe,jdbcType=DECIMAL},
+      </if>
+      <if test="tzJfBqys != null">
+        #{tzJfBqys,jdbcType=DECIMAL},
+      </if>
+      <if test="tzJfBqyt != null">
+        #{tzJfBqyt,jdbcType=DECIMAL},
+      </if>
+      <if test="tzJfBqss != null">
+        #{tzJfBqss,jdbcType=DECIMAL},
+      </if>
+      <if test="tzJfBqyj != null">
+        #{tzJfBqyj,jdbcType=DECIMAL},
+      </if>
+      <if test="tzJfStat != null">
+        #{tzJfStat,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedOprid != null">
+        #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null">
+        #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null">
+        #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null">
+        #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzRemarks != null">
+        #{tzRemarks,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZCostRelatedAEBundle.model.TzJfPlanT">
+    update TZ_JF_PLAN_T
+    <set>
+      <if test="tzObjId != null">
+        TZ_OBJ_ID = #{tzObjId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzObjType != null">
+        TZ_OBJ_TYPE = #{tzObjType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzObjPrjId != null">
+        TZ_OBJ_PRJ_ID = #{tzObjPrjId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzObjName != null">
+        TZ_OBJ_NAME = #{tzObjName,jdbcType=NVARCHAR},
+      </if>
+      <if test="tzJfType != null">
+        TZ_JF_TYPE = #{tzJfType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJfDate != null">
+        TZ_JF_DATE = #{tzJfDate,jdbcType=DATE},
+      </if>
+      <if test="tzJfBzJe != null">
+        TZ_JF_BZ_JE = #{tzJfBzJe,jdbcType=DECIMAL},
+      </if>
+      <if test="tzJfTzJe != null">
+        TZ_JF_TZ_JE = #{tzJfTzJe,jdbcType=DECIMAL},
+      </if>
+      <if test="tzJfJmJe != null">
+        TZ_JF_JM_JE = #{tzJfJmJe,jdbcType=DECIMAL},
+      </if>
+      <if test="tzJfBqys != null">
+        TZ_JF_BQYS = #{tzJfBqys,jdbcType=DECIMAL},
+      </if>
+      <if test="tzJfBqyt != null">
+        TZ_JF_BQYT = #{tzJfBqyt,jdbcType=DECIMAL},
+      </if>
+      <if test="tzJfBqss != null">
+        TZ_JF_BQSS = #{tzJfBqss,jdbcType=DECIMAL},
+      </if>
+      <if test="tzJfBqyj != null">
+        TZ_JF_BQYJ = #{tzJfBqyj,jdbcType=DECIMAL},
+      </if>
+      <if test="tzJfStat != null">
+        TZ_JF_STAT = #{tzJfStat,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedOprid != null">
+        ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null">
+        ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null">
+        ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null">
+        ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzRemarks != null">
+        TZ_REMARKS = #{tzRemarks,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_JFPL_ID = #{tzJfplId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZCostRelatedAEBundle.model.TzJfPlanT">
+    update TZ_JF_PLAN_T
+    set TZ_OBJ_ID = #{tzObjId,jdbcType=VARCHAR},
+      TZ_OBJ_TYPE = #{tzObjType,jdbcType=VARCHAR},
+      TZ_OBJ_PRJ_ID = #{tzObjPrjId,jdbcType=VARCHAR},
+      TZ_OBJ_NAME = #{tzObjName,jdbcType=NVARCHAR},
+      TZ_JF_TYPE = #{tzJfType,jdbcType=VARCHAR},
+      TZ_JF_DATE = #{tzJfDate,jdbcType=DATE},
+      TZ_JF_BZ_JE = #{tzJfBzJe,jdbcType=DECIMAL},
+      TZ_JF_TZ_JE = #{tzJfTzJe,jdbcType=DECIMAL},
+      TZ_JF_JM_JE = #{tzJfJmJe,jdbcType=DECIMAL},
+      TZ_JF_BQYS = #{tzJfBqys,jdbcType=DECIMAL},
+      TZ_JF_BQYT = #{tzJfBqyt,jdbcType=DECIMAL},
+      TZ_JF_BQSS = #{tzJfBqss,jdbcType=DECIMAL},
+      TZ_JF_BQYJ = #{tzJfBqyj,jdbcType=DECIMAL},
+      TZ_JF_STAT = #{tzJfStat,jdbcType=VARCHAR},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      TZ_REMARKS = #{tzRemarks,jdbcType=VARCHAR}
+    where TZ_JFPL_ID = #{tzJfplId,jdbcType=VARCHAR}
+  </update>
+</mapper>

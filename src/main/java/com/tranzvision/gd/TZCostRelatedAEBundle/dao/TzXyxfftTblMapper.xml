@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tranzvision.gd.TZCostRelatedAEBundle.dao.TzXyxfftTblMapper">
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZCostRelatedAEBundle.model.TzXyxfftTbl">
+    <id column="tzms_pro_nbid" jdbcType="VARCHAR" property="tzmsProNbid" />
+    <id column="TZ_APP_INS_ID" jdbcType="BIGINT" property="tzAppInsId" />
+    <id column="TZ_TX_YEAR" jdbcType="VARCHAR" property="tzTxYear" />
+    <id column="TZ_TX_MON" jdbcType="VARCHAR" property="tzTxMon" />
+    <result column="TZ_TX_JINE" jdbcType="DECIMAL" property="tzTxJine" />
+    <result column="TZ_JXJ_JINE" jdbcType="DECIMAL" property="tzJxjJine" />
+    <result column="TZ_XF_JINE" jdbcType="DECIMAL" property="tzXfJine" />
+    <result column="TZ_OPE_OPRID" jdbcType="VARCHAR" property="tzOpeOprid" />
+    <result column="TZ_OPE_DTTM" jdbcType="TIMESTAMP" property="tzOpeDttm" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    tzms_pro_nbid, TZ_APP_INS_ID, TZ_TX_YEAR, TZ_TX_MON, TZ_TX_JINE, TZ_JXJ_JINE, TZ_XF_JINE, 
+    TZ_OPE_OPRID, TZ_OPE_DTTM
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="com.tranzvision.gd.TZCostRelatedAEBundle.model.TzXyxfftTblKey" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from TZ_XYXFFT_TBL
+    where tzms_pro_nbid = #{tzmsProNbid,jdbcType=VARCHAR}
+      and TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+      and TZ_TX_YEAR = #{tzTxYear,jdbcType=VARCHAR}
+      and TZ_TX_MON = #{tzTxMon,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZCostRelatedAEBundle.model.TzXyxfftTblKey">
+    delete from TZ_XYXFFT_TBL
+    where tzms_pro_nbid = #{tzmsProNbid,jdbcType=VARCHAR}
+      and TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+      and TZ_TX_YEAR = #{tzTxYear,jdbcType=VARCHAR}
+      and TZ_TX_MON = #{tzTxMon,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZCostRelatedAEBundle.model.TzXyxfftTbl">
+    insert into TZ_XYXFFT_TBL (tzms_pro_nbid, TZ_APP_INS_ID, TZ_TX_YEAR, 
+      TZ_TX_MON, TZ_TX_JINE, TZ_JXJ_JINE, 
+      TZ_XF_JINE, TZ_OPE_OPRID, TZ_OPE_DTTM
+      )
+    values (#{tzmsProNbid,jdbcType=VARCHAR}, #{tzAppInsId,jdbcType=BIGINT}, #{tzTxYear,jdbcType=VARCHAR}, 
+      #{tzTxMon,jdbcType=VARCHAR}, #{tzTxJine,jdbcType=DECIMAL}, #{tzJxjJine,jdbcType=DECIMAL}, 
+      #{tzXfJine,jdbcType=DECIMAL}, #{tzOpeOprid,jdbcType=VARCHAR}, #{tzOpeDttm,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertForeach" parameterType="com.tranzvision.gd.TZCostRelatedAEBundle.model.TzXyxfftTbl" useGeneratedKeys="false">
+    insert into TZ_XYXFFT_TBL (tzms_pro_nbid, TZ_APP_INS_ID, TZ_TX_YEAR,
+    TZ_TX_MON, TZ_TX_JINE, TZ_JXJ_JINE,
+    TZ_XF_JINE, TZ_OPE_OPRID, TZ_OPE_DTTM
+    )
+    values
+    <foreach collection="list" item="item" separator=",">
+      (
+      #{item.tzmsProNbid,jdbcType=VARCHAR}, #{item.tzAppInsId,jdbcType=BIGINT}, #{item.tzTxYear,jdbcType=VARCHAR},
+      #{item.tzTxMon,jdbcType=VARCHAR}, #{item.tzTxJine,jdbcType=DECIMAL}, #{item.tzJxjJine,jdbcType=DECIMAL},
+      #{item.tzXfJine,jdbcType=DECIMAL}, #{item.tzOpeOprid,jdbcType=VARCHAR}, #{item.tzOpeDttm,jdbcType=TIMESTAMP}
+      )
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZCostRelatedAEBundle.model.TzXyxfftTbl">
+    insert into TZ_XYXFFT_TBL
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="tzmsProNbid != null">
+        tzms_pro_nbid,
+      </if>
+      <if test="tzAppInsId != null">
+        TZ_APP_INS_ID,
+      </if>
+      <if test="tzTxYear != null">
+        TZ_TX_YEAR,
+      </if>
+      <if test="tzTxMon != null">
+        TZ_TX_MON,
+      </if>
+      <if test="tzTxJine != null">
+        TZ_TX_JINE,
+      </if>
+      <if test="tzJxjJine != null">
+        TZ_JXJ_JINE,
+      </if>
+      <if test="tzXfJine != null">
+        TZ_XF_JINE,
+      </if>
+      <if test="tzOpeOprid != null">
+        TZ_OPE_OPRID,
+      </if>
+      <if test="tzOpeDttm != null">
+        TZ_OPE_DTTM,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="tzmsProNbid != null">
+        #{tzmsProNbid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppInsId != null">
+        #{tzAppInsId,jdbcType=BIGINT},
+      </if>
+      <if test="tzTxYear != null">
+        #{tzTxYear,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTxMon != null">
+        #{tzTxMon,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTxJine != null">
+        #{tzTxJine,jdbcType=DECIMAL},
+      </if>
+      <if test="tzJxjJine != null">
+        #{tzJxjJine,jdbcType=DECIMAL},
+      </if>
+      <if test="tzXfJine != null">
+        #{tzXfJine,jdbcType=DECIMAL},
+      </if>
+      <if test="tzOpeOprid != null">
+        #{tzOpeOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOpeDttm != null">
+        #{tzOpeDttm,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZCostRelatedAEBundle.model.TzXyxfftTbl">
+    update TZ_XYXFFT_TBL
+    <set>
+      <if test="tzTxJine != null">
+        TZ_TX_JINE = #{tzTxJine,jdbcType=DECIMAL},
+      </if>
+      <if test="tzJxjJine != null">
+        TZ_JXJ_JINE = #{tzJxjJine,jdbcType=DECIMAL},
+      </if>
+      <if test="tzXfJine != null">
+        TZ_XF_JINE = #{tzXfJine,jdbcType=DECIMAL},
+      </if>
+      <if test="tzOpeOprid != null">
+        TZ_OPE_OPRID = #{tzOpeOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOpeDttm != null">
+        TZ_OPE_DTTM = #{tzOpeDttm,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where tzms_pro_nbid = #{tzmsProNbid,jdbcType=VARCHAR}
+      and TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+      and TZ_TX_YEAR = #{tzTxYear,jdbcType=VARCHAR}
+      and TZ_TX_MON = #{tzTxMon,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZCostRelatedAEBundle.model.TzXyxfftTbl">
+    update TZ_XYXFFT_TBL
+    set TZ_TX_JINE = #{tzTxJine,jdbcType=DECIMAL},
+      TZ_JXJ_JINE = #{tzJxjJine,jdbcType=DECIMAL},
+      TZ_XF_JINE = #{tzXfJine,jdbcType=DECIMAL},
+      TZ_OPE_OPRID = #{tzOpeOprid,jdbcType=VARCHAR},
+      TZ_OPE_DTTM = #{tzOpeDttm,jdbcType=TIMESTAMP}
+    where tzms_pro_nbid = #{tzmsProNbid,jdbcType=VARCHAR}
+      and TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+      and TZ_TX_YEAR = #{tzTxYear,jdbcType=VARCHAR}
+      and TZ_TX_MON = #{tzTxMon,jdbcType=VARCHAR}
+  </update>
+</mapper>

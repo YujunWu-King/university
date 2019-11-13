@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tranzvision.gd.TZCostRelatedAEBundle.dao.TzKsJxjTMapper">
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZCostRelatedAEBundle.model.TzKsJxjT">
+    <id column="TZ_APP_INS_ID" jdbcType="BIGINT" property="tzAppInsId" />
+    <id column="TZ_JXJ_ID" jdbcType="VARCHAR" property="tzJxjId" />
+    <result column="TZ_REMARKS" jdbcType="VARCHAR" property="tzRemarks" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    TZ_APP_INS_ID, TZ_JXJ_ID, TZ_REMARKS
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="com.tranzvision.gd.TZCostRelatedAEBundle.model.TzKsJxjTKey" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from TZ_KS_JXJ_T
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+      and TZ_JXJ_ID = #{tzJxjId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZCostRelatedAEBundle.model.TzKsJxjTKey">
+    delete from TZ_KS_JXJ_T
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+      and TZ_JXJ_ID = #{tzJxjId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZCostRelatedAEBundle.model.TzKsJxjT">
+    insert into TZ_KS_JXJ_T (TZ_APP_INS_ID, TZ_JXJ_ID, TZ_REMARKS
+      )
+    values (#{tzAppInsId,jdbcType=BIGINT}, #{tzJxjId,jdbcType=VARCHAR}, #{tzRemarks,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertForeach" parameterType="java.util.List" useGeneratedKeys="false">
+    insert into TZ_KS_JXJ_T (TZ_APP_INS_ID, TZ_JXJ_ID, TZ_REMARKS)
+    values
+    <foreach collection="list" item="item" index="index" separator=",">
+      (
+      #{item.tzAppInsId,jdbcType=BIGINT}, #{item.tzJxjId,jdbcType=VARCHAR}, #{item.tzRemarks,jdbcType=VARCHAR}
+      )
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZCostRelatedAEBundle.model.TzKsJxjT">
+    insert into TZ_KS_JXJ_T
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="tzAppInsId != null">
+        TZ_APP_INS_ID,
+      </if>
+      <if test="tzJxjId != null">
+        TZ_JXJ_ID,
+      </if>
+      <if test="tzRemarks != null">
+        TZ_REMARKS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="tzAppInsId != null">
+        #{tzAppInsId,jdbcType=BIGINT},
+      </if>
+      <if test="tzJxjId != null">
+        #{tzJxjId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRemarks != null">
+        #{tzRemarks,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZCostRelatedAEBundle.model.TzKsJxjT">
+    update TZ_KS_JXJ_T
+    <set>
+      <if test="tzRemarks != null">
+        TZ_REMARKS = #{tzRemarks,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+      and TZ_JXJ_ID = #{tzJxjId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZCostRelatedAEBundle.model.TzKsJxjT">
+    update TZ_KS_JXJ_T
+    set TZ_REMARKS = #{tzRemarks,jdbcType=VARCHAR}
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+      and TZ_JXJ_ID = #{tzJxjId,jdbcType=VARCHAR}
+  </update>
+</mapper>
