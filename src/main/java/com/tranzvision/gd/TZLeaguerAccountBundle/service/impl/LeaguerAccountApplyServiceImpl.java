@@ -70,9 +70,9 @@ public class LeaguerAccountApplyServiceImpl extends FrameworkImpl {
                     Map<String, Object> mapList = new HashMap<String, Object>();
                     mapList.put("TZ_APP_INS_ID", rowList[0]);
                     if(i==(list.size()-1)){
-                        appInsId=appInsId+rowList[0];
+                        appInsId=appInsId+"'"+rowList[0]+"'";
                     }else{
-                        appInsId=appInsId+rowList[0]+",";
+                        appInsId=appInsId+"'"+rowList[0]+"'"+",";
                     }
                     mapList.put("TZ_REALNAME", rowList[1]);
                     mapList.put("TZ_MSH_ID", rowList[2]);
@@ -91,18 +91,27 @@ public class LeaguerAccountApplyServiceImpl extends FrameworkImpl {
                     listData.add(mapList);
                 }
                 appInsId=appInsId+")";
+                System.out.println("appInsIdStr=====>"+appInsId);
                 String sql="select TZ_APP_INS_ID,count(*) TJX_NUM from PS_TZ_KS_TJX_TBL " +
                         "where TZ_TJX_APP_INS_ID in (select TZ_APP_INS_ID from PS_TZ_APP_INS_T  where TZ_APP_FORM_STA='U') " +
-                        "and TZ_APP_INS_ID in ? group by TZ_APP_INS_ID";
-                List<Map<String, Object>> tjxMapList = SqlQuery.queryForList(sql,new Object[]{appInsId});
-                for(int i=0;i<tjxMapList.size();i++){
-                    String appId=(String)tjxMapList.get(i).get("TZ_APP_INS_ID");
-                    String txjNum=(String)tjxMapList.get(i).get("TJX_NUM");
-                    for(int j=0;j<listData.size();j++){
-                        if(listData.get(j).get("TZ_APP_INS_ID").toString().equals(appId)){
-                            listData.get(j).put("TZ_TJX_NUM",txjNum);
-                            break;
+                        "and TZ_APP_INS_ID in "+appInsId+" group by TZ_APP_INS_ID";
+                System.out.println("sql=====>"+sql);
+                List<Map<String, Object>> tjxMapList = SqlQuery.queryForList(sql);
+                if(tjxMapList.size()>0){
+                        for(int i=0;i<tjxMapList.size();i++){
+                            String appId=tjxMapList.get(i).get("TZ_APP_INS_ID").toString();
+                            String txjNum=tjxMapList.get(i).get("TJX_NUM")==null?"0":tjxMapList.get(i).get("TJX_NUM").toString();
+                            for(int j=0;j<listData.size();j++){
+                                if(listData.get(j).get("TZ_APP_INS_ID").toString().equals(appId)){
+                                    listData.get(j).put("TZ_TJX_NUM",txjNum);
+                                    break;
+                                }
+                            }
                         }
+                }else{
+                    System.out.println("tjxMapList.size()<=0");
+                    for(int j=0;j<listData.size();j++){
+                        listData.get(j).put("TZ_TJX_NUM","0");
                     }
                 }
 

@@ -1,0 +1,1 @@
+SELECT TZ_REG_FIELD_ID from PS_TZ_REG_FIELD_T where TZ_JG_ID=? and TZ_ENABLE='Y' and TZ_REG_FIELD_ID not in ('TZ_PASSWORD','TZ_REPASSWORD') order by TZ_ORDER asc limit 0,10

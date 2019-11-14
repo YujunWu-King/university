@@ -358,7 +358,7 @@
      * @param rowIndex
      * @param colIndex
      */
-    viewPlanDetails:function(grid, rowIndex, colIndex){
+/*    viewPlanDetails:function(grid, rowIndex, colIndex){
         //是否有访问权限
         var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_UM_USERAPPLY_COM"]["TZ_VIEW_JFJH_STD"];
         if( pageResSet == "" || pageResSet == undefined){
@@ -413,7 +413,7 @@
         });
 
         win.show();
-    },
+    },*/
     onWindowClose:function(btn){
         var win = btn.findParentByType("window");
         win.close();

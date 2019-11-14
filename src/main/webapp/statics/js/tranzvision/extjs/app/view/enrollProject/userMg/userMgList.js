@@ -109,17 +109,22 @@
     initComponent: function () {    
     	var store = new KitchenSink.view.enrollProject.userMg.userMgStore();
     	//性别
-    	var sexStore = new KitchenSink.view.common.store.appTransStore("TZ_GENDER");
-    	console.log(sexStore);
+    	//var sexStore = new KitchenSink.view.common.store.appTransStore("TZ_GENDER");
+    	//console.log(sexStore);
     	//账户激活状态
     	var jihuoStore = new KitchenSink.view.common.store.appTransStore("TZ_JIHUO_ZT");
     	//锁定状态
-    	var acctLockStore = new KitchenSink.view.common.store.appTransStore("ACCTLOCK");
+    	//var acctLockStore = new KitchenSink.view.common.store.appTransStore("ACCTLOCK");
     	//黑名单用户
-    	var isYnStore = new KitchenSink.view.common.store.appTransStore("TZ_SF_SALE");
+    	//var isYnStore = new KitchenSink.view.common.store.appTransStore("TZ_SF_SALE");
     	
         Ext.apply(this, {
-            columns: [{ 
+            columns: [{
+				text: '机构ID',
+				dataIndex: 'TZ_JG_ID',
+				width: 20,
+				hidden:true
+			},{
                 text: '用户ID',
                 dataIndex: 'OPRID',
 				width: 20,
@@ -127,7 +132,7 @@
             },{
                 text: '姓名',
                 sortable: true,
-                dataIndex: 'userName',
+                dataIndex: 'TZ_REALNAME',
                 width: 75
             },/*{
                 text: '班级号',
@@ -144,7 +149,7 @@
             },*/{
                 text: '面试申请号',
                 sortable: true,
-                dataIndex: 'mshId',
+                dataIndex: 'TZ_MSH_ID',
                 width: 95,
                 flex:1
             },/*{
@@ -166,12 +171,12 @@
             },*/{
                 text: '手机',
                 sortable: true,
-                dataIndex: 'userPhone',
+                dataIndex: 'TZ_MOBILE',
                 width: 100
             },{
                 text: '电子邮箱',
                 sortable: true,
-                dataIndex: 'userEmail',
+                dataIndex: 'TZ_EMAIL',
                 width: 180
             },/*{
             	text:'批次名称',
@@ -194,7 +199,7 @@
             },*/{
                 text: '账号激活状态',
                 sortable: true,
-                dataIndex: 'jihuoZt',
+                dataIndex: 'TZ_JIHUO_ZT',
                 width: 100,
                 renderer:function(value,metadata,record){
     				if(value == null || value==""){
@@ -214,7 +219,7 @@
             },{
                 text: '创建日期时间',
                 sortable: true,
-                dataIndex: 'zcTime',
+                dataIndex: 'TZ_ZHCE_DT',
                 width: 130
             },/*{
                 text: '锁定状态',

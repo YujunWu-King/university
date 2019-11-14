@@ -236,7 +236,7 @@
                 sortable: true,
                 dataIndex: 'TZ_MSZG',
                 width: 90,
-                renderer:function(v){
+                /*renderer:function(v){
                     if(v){
                         var index = mszgStore.find('TValue',v,0,false,true,true);
                         if(index>-1){
@@ -249,7 +249,7 @@
                         }
                         return "";
                     }
-                }
+                }*/
             },/*{
                 text:'面试笔试成绩',
                 sortable: true,
@@ -260,12 +260,12 @@
                 sortable: true,
                 dataIndex: 'TZ_MSJG',
                 width: 130
-            },{
+            },/*{
                 text:'拟录取结果',
                 sortable: true,
                 dataIndex: 'TZ_LQ_RESULT',
                 width: 90
-            },/*{
+            },*//*{
                 text: '身份证号',
                 sortable: true,
                 dataIndex: 'NATIONAL_ID',
