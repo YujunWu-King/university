@@ -144,6 +144,10 @@ public class TzMEventsDetailsController {
 					break;
 				}
 				
+				if(oprid==null||"".equals(oprid)){
+					regFlag = "";
+				}
+				
 				rtnMap.put("statusText", statusText);
 
 				rtnMap.put("regFlag", regFlag);

@@ -1477,7 +1477,11 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                                         //默认页面的JS类
                                         if(cPResources[defaultPageID] != "" && cPResources[defaultPageID] != undefined)
                                         {
-                                            Ext.syncRequire(cPResources[defaultPageID]["jsClassName"]);
+                                        	if(cPResources[defaultPageID].isexternalURL=="Y"){
+                                           	 
+                                        	}else{
+                                        		Ext.syncRequire(cPResources[defaultPageID]["jsClassName"]);
+                                        	}
                                         }
 
                                         boot.setDescResourseSet(pComID,cResourses);
