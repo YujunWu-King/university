@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @Auther: ZY
- * @Date: 2019/4/28 17:08
+ * @Date: 2019/11/15 17:08
  * @Description: 生成随机UUID，dispatcher分发器校验，防止跨站脚本攻击
  */
 @RestController
