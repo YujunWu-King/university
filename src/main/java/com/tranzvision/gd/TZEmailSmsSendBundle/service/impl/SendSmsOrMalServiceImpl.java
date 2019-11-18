@@ -732,6 +732,7 @@ public class SendSmsOrMalServiceImpl {
 						String oprid = jdbcTemplate.queryForObject(
 								"select OPRID from PS_TZ_AUDCYUAN_T where TZ_AUDIENCE_ID=? and TZ_AUDCY_ID=?",
 								new Object[] {audId,audCyId}, "String");
+						System.out.println("oprid======================>"+oprid);
 						int isRegUser=jdbcTemplate.queryForObject("SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=? AND TZ_RYLX='ZCYH'",new Object[] {oprid},"int");
 						//发送站内信
 						if(isRegUser>0){
