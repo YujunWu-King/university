@@ -111,6 +111,7 @@ public class TzSemPiDecoratedServiceImpl extends FrameworkImpl {
 				m_curOPRID = tzWebsiteLoginServiceImpl.getLoginedUserOprid(request);
 			}
 			
+			
 			if (!m_curOrgID.equals(orgId)) {
 				// 如果当前用户登录的机构与请求的机构不一致，则返回空
 				return "";
@@ -166,7 +167,7 @@ public class TzSemPiDecoratedServiceImpl extends FrameworkImpl {
 			}
 			//我已报名但未过期的活动
 			int actCount = 0;
-			String actSql = "select count(*) from PS_TZ_ART_HD_TBL A,PS_TZ_NAUDLIST_T B where A.TZ_ART_ID=B.TZ_ART_ID and (A.TZ_START_DT<=DATE_FORMAT(CURDATE(), 'yyyy-MM-dd') and A.TZ_START_TM<=DATE_FORMAT(CURDATE(), 'hh24:00:00')) and (A.TZ_END_DT>=DATE_FORMAT(CURDATE(), 'yyyy-MM-dd') and A.TZ_END_TM>=DATE_FORMAT(CURDATE(), 'hh24:00:00')) and B.OPRID=? and B.TZ_NREG_STAT='1'";
+			String actSql = "select count(*) from PS_TZ_ART_HD_TBL A,PS_TZ_NAUDLIST_T B where A.TZ_ART_ID=B.TZ_ART_ID and (A.TZ_START_DT<=DATE_FORMAT(CURDATE(), '%Y-%m-%d') and A.TZ_START_TM<=DATE_FORMAT(CURDATE(), 'hh24:00:00')) and (A.TZ_END_DT>=DATE_FORMAT(CURDATE(), '%Y-%m-%d') and A.TZ_END_TM>=DATE_FORMAT(CURDATE(), 'hh24:00:00')) and B.OPRID=? and B.TZ_NREG_STAT='1'";
 			actCount = jdbcTemplate.queryForObject(actSql, new Object[] { m_curOPRID}, "int");
 			String ActDisplay = "";
 			String strActCount = "";

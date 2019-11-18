@@ -46,7 +46,7 @@ public class TzEventsListServiceImpl extends FrameworkImpl{
 		try {
 			//当前登录机构
 			String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-			
+			String flag = request.getParameter("mobileSign");
 			Date currDate = new Date();
 			Date preDate = this.addToDateForDays(currDate,-7);
 			Date afterDate = this.addToDateForDays(currDate,7);
@@ -59,17 +59,17 @@ public class TzEventsListServiceImpl extends FrameworkImpl{
 			String hd_li_html = "";
 			
 			//前一周活动
-			String preSql = tzGdObject.getSQLText("SQL.TZEventsSignInBundle.TzHappenedEventsListSql");
-			eventsList = sqlQuery.queryForList(preSql, new Object[]{ preDate, currDate, orgId });
-			for(Map<String,Object> eventMap : eventsList){
-				hd_li_html = hd_li_html + parseEventsListHtml(eventMap,ZSGL_URL);
-			}
+//			String preSql = tzGdObject.getSQLText("SQL.TZEventsSignInBundle.TzHappenedEventsListSql");
+//			eventsList = sqlQuery.queryForList(preSql, new Object[]{ preDate, currDate, orgId });
+//			for(Map<String,Object> eventMap : eventsList){
+//				hd_li_html = hd_li_html + parseEventsListHtml(eventMap,ZSGL_URL);
+//			}
 
-			//后一周活动
+			//活动范围是 显示两周内（过去一周内+未来一周内）的活动
 			String afterSql = tzGdObject.getSQLText("SQL.TZEventsSignInBundle.TzUnhappenEventsListSql");
-			eventsList = sqlQuery.queryForList(afterSql, new Object[]{ currDate, afterDate, orgId });
+			eventsList = sqlQuery.queryForList(afterSql, new Object[]{ preDate, afterDate, orgId });
 			for(Map<String,Object> eventMap : eventsList){
-				hd_li_html = hd_li_html + parseEventsListHtml(eventMap,ZSGL_URL);
+				hd_li_html = hd_li_html + parseEventsListHtml(eventMap,ZSGL_URL,flag);
 			}
 			
 			//String str_main_url = ZSGL_URL + "?classid=eventsSign";
@@ -98,7 +98,7 @@ public class TzEventsListServiceImpl extends FrameworkImpl{
 	 * @param commUrl
 	 * @return
 	 */
-	private String parseEventsListHtml(Map<String,Object> eventMap,String commUrl){
+	private String parseEventsListHtml(Map<String,Object> eventMap,String commUrl,String flag){
 		String liHtml = "";
 		try{
 			int yqdCount,wqdCount;
@@ -111,15 +111,21 @@ public class TzEventsListServiceImpl extends FrameworkImpl{
 			String month = eventMap.get("TZ_MONTH") == null ? "" : eventMap.get("TZ_MONTH").toString();
 			String day = eventMap.get("TZ_DAY") == null ? "" : eventMap.get("TZ_DAY").toString();
 			
-			yqdCount = Integer.valueOf(eventMap.get("TZ_YQD_COUNT").toString());
-			wqdCount = Integer.valueOf(eventMap.get("TZ_WQD_COUNT").toString());
+			yqdCount = Integer.valueOf(eventMap.get("TZ_YQD_COUNT")==null?"0":eventMap.get("TZ_YQD_COUNT").toString());
+			wqdCount = Integer.valueOf(eventMap.get("TZ_WQD_COUNT")==null?"0":eventMap.get("TZ_WQD_COUNT").toString());
 			/*报名人数 = 已签到人数  + 未签到人数*/
-			bmCount = yqdCount + wqdCount;
+			bmCount = Integer.valueOf(eventMap.get("TZ_ALL_COUNT")==null?"0":eventMap.get("TZ_ALL_COUNT").toString());
 			//活动报名人URL
-			liLink = commUrl + "?classid=eventsBmrList&tz_act_id="+actId;
+			if("true".equals(flag)){
+				liLink = commUrl + "?classid=moblieSign&tz_act_id="+actId;
+			}else{
+				liLink = commUrl + "?classid=eventsBmrList&tz_act_id="+actId;
+			}
+//			liLink = commUrl + "?classid=eventsBmrList&tz_act_id="+actId;
 			
-			liHtml = tzGdObject.getHTMLText("HTML.TZEventsSignInBundle.TZ_HDQD_HD_LIST_LI_HTML",actTitle,month,day,String.valueOf(bmCount),String.valueOf(yqdCount),String.valueOf(wqdCount),liLink);
-			
+			liHtml = tzGdObject.getHTMLText("HTML.TZEventsSignInBundle.TZ_HDQD_HD_LIST_LI_HTML", actTitle, month,
+					day + '日', String.valueOf(bmCount), String.valueOf(yqdCount), String.valueOf(wqdCount), liLink);
+	
 		}catch(Exception e){
 			e.printStackTrace();
 		}

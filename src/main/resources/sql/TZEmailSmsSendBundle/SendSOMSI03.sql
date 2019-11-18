@@ -1,0 +1,1 @@
+select TZ_YMB_ID from PS_TZ_ZNXTMPL_TBL where TZ_JG_ID=? and TZ_TMPL_ID=? limit 0,1

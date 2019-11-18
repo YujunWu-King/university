@@ -36,6 +36,18 @@
  
 <div class="footer">Copyright © 2018 华东理工大学 版权所有</div>
 <script type="text/javascript">
+	window.onpageshow = function (e) {
+	    if (e.persisted) {
+		    window.location.reload();
+	    	
+	    	//var curWwwPath=window.document.location.href;
+	    	//var pathName=window.document.location.pathname;
+	    	//var pos=curWwwPath.indexOf(pathName);
+	    	//var localhostPaht=curWwwPath.substring(0,pos);
+	    	//window.location.href = localhostPaht + "/dispatcher?classid=eventsSignList&mobileSign=true" +"&"+Math.random();
+	    } 
+	}
+
 	function goToUrl(url){
 		layer.load(2);
 		setTimeout(function(){loadUrl(url);},10);

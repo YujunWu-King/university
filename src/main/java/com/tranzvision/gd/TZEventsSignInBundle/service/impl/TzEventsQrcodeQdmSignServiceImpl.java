@@ -282,30 +282,36 @@ public class TzEventsQrcodeQdmSignServiceImpl extends FrameworkImpl{
 			}
 			
 			if(!"".equals(str_qdm) && str_qdm != null){
-				String sql = "SELECT TZ_BMCY_ZT,TZ_ART_ID,TZ_HD_BMR_ID FROM PS_TZ_NAUDLIST_T WHERE TZ_HD_QDM=? limit 1";
+				String sql = "SELECT TZ_BMCY_ZT,TZ_ART_ID,TZ_HD_BMR_ID,TZ_NREG_STAT FROM PS_TZ_NAUDLIST_T WHERE TZ_HD_QDM=? limit 1";
 				Map<String,Object> bmrMap = sqlQuery.queryForMap(sql, new Object[]{ str_qdm });
 				if(bmrMap != null){
 					String cy_Status = bmrMap.get("TZ_BMCY_ZT") == null ? "" :bmrMap.get("TZ_BMCY_ZT").toString();
 					String str_hd_id = bmrMap.get("TZ_ART_ID") == null ? "" : bmrMap.get("TZ_ART_ID").toString();
 					String str_bmr_id = bmrMap.get("TZ_HD_BMR_ID") == null ? "" : bmrMap.get("TZ_HD_BMR_ID").toString();
-					if("A".equals(cy_Status)){
+					String str_nreg_stat=bmrMap.get("TZ_NREG_STAT") == null ? "" : bmrMap.get("TZ_NREG_STAT").toString();
+					if(!"1".equals(str_nreg_stat)){
 						result = "false";
-						errMsg = "已签到，请不要重复签到！";
+						errMsg = "签到失败,报名状态未审核！";
 					}else{
-						PsTzNaudlistTKey psTzNaudlistTKey = new PsTzNaudlistTKey();
-						psTzNaudlistTKey.setTzArtId(str_hd_id);
-						psTzNaudlistTKey.setTzHdBmrId(str_bmr_id);
-						PsTzNaudlistT psTzNaudlistT = psTzNaudlistTMapper.selectByPrimaryKey(psTzNaudlistTKey);
-						if(psTzNaudlistT != null){
-							psTzNaudlistT.setTzBmcyZt("A");
-							psTzNaudlistT.setTzQdTime(new Date());
-							int rtn = psTzNaudlistTMapper.updateByPrimaryKey(psTzNaudlistT);
-							if(rtn != 0){
-								result = "true";
-								errMsg = "签到成功！";
-							}else{
-								result = "false";
-								errMsg = "签到失败！";
+						if("A".equals(cy_Status)){
+							result = "false";
+							errMsg = "已签到，请不要重复签到！";
+						}else{
+							PsTzNaudlistTKey psTzNaudlistTKey = new PsTzNaudlistTKey();
+							psTzNaudlistTKey.setTzArtId(str_hd_id);
+							psTzNaudlistTKey.setTzHdBmrId(str_bmr_id);
+							PsTzNaudlistT psTzNaudlistT = psTzNaudlistTMapper.selectByPrimaryKey(psTzNaudlistTKey);
+							if(psTzNaudlistT != null){
+								psTzNaudlistT.setTzBmcyZt("A");
+								psTzNaudlistT.setTzQdTime(new Date());
+								int rtn = psTzNaudlistTMapper.updateByPrimaryKey(psTzNaudlistT);
+								if(rtn != 0){
+									result = "true";
+									errMsg = "签到成功！";
+								}else{
+									result = "false";
+									errMsg = "签到失败！";
+								}
 							}
 						}
 					}
@@ -351,8 +357,28 @@ public class TzEventsQrcodeQdmSignServiceImpl extends FrameworkImpl{
 				itemName = itemMap.get("TZ_ZXBM_XXX_NAME").toString();
 				itemType = itemMap.get("TZ_ZXBM_XXX_ZSXS").toString();
 				
-				sql = "SELECT "+ itemID +" FROM PS_TZ_NAUDLIST_T WHERE TZ_ART_ID=? AND TZ_HD_BMR_ID=?";
-				String itemVal = sqlQuery.queryForObject(sql, new Object[]{ str_hd_id, bmr_id }, "String");
+				String itemVal="";
+				switch (itemID) {
+				case "TZ_ZY_SJ":
+					sql = "SELECT TZ_ZY_SJ FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='HDBM' AND TZ_LYDX_ID=?";
+					itemVal = sqlQuery.queryForObject(sql, new Object[]{  bmr_id }, "String");
+					break;
+				case "TZ_ZY_EMAIL":
+					sql = "SELECT TZ_ZY_EMAIL FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='HDBM' AND TZ_LYDX_ID=?";
+					itemVal = sqlQuery.queryForObject(sql, new Object[]{  bmr_id }, "String");
+					break;
+				case "TZ_ZY_COMPANY":
+					sql = "SELECT TZ_ZY_COMPANY FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='HDBM' AND TZ_LYDX_ID=?";
+					itemVal = sqlQuery.queryForObject(sql, new Object[]{  bmr_id }, "String");
+					break;
+				case "TZ_ZY_POSITION":
+					sql = "SELECT TZ_ZY_POSITION FROM PS_TZ_LXFSINFO_TBL WHERE  TZ_LXFS_LY='HDBM' AND TZ_LYDX_ID=?";
+					itemVal = sqlQuery.queryForObject(sql, new Object[]{  bmr_id }, "String");
+					break;
+				default:
+					sql = "SELECT "+ itemID +" FROM PS_TZ_NAUDLIST_T WHERE TZ_ART_ID=? AND TZ_HD_BMR_ID=?";
+					itemVal = sqlQuery.queryForObject(sql, new Object[]{ str_hd_id, bmr_id }, "String");
+				}
 				//下拉框
 				if("2".equals(itemType)){
 					sql = "SELECT TZ_XXX_TRANS_NAME FROM PS_TZ_XXX_TRANS_T WHERE TZ_ART_ID=? AND TZ_ZXBM_XXX_ID=? AND TZ_XXX_TRANS_ID=?";
