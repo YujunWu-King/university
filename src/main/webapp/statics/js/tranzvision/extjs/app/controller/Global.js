@@ -242,7 +242,11 @@ Ext.define('KitchenSink.controller.Global', {
             {
               if(Ext.tzSetCompResourses(comID) == true)
               {
-                handerObject.private_handleRoute(id);
+            	// 处理 外部链接
+            	var flag = handerObject.private_handleOutUrl(comID,id);
+              	if(!flag){
+              		handerObject.private_handleRoute(id);
+              	}
               }
               winObject.hide();
             },
@@ -256,6 +260,33 @@ Ext.define('KitchenSink.controller.Global', {
       {
         me.private_handleRoute(id);
       }
+    },
+    
+    //2019-11-15 处理外部url
+    private_handleOutUrl(comID,id){
+    	var flag = false;
+    	var regResourseSet =  TranzvisionMeikecityAdvanced.Boot.comRegResourseSet[comID];
+    	for(var key in regResourseSet){
+    		var obj = regResourseSet[key];
+    		if(obj!=null && obj!=undefined){
+    			var externalURL = obj.externalURL;
+            	var isNewWin = obj.isNewWin;
+            	var isexternalURL = obj.isexternalURL;
+            	var jsClassName = obj.jsClassName;
+            	if("Y"==isexternalURL){
+            		if(isNewWin=="Y"){
+            			flag = true;
+            			window.open(externalURL);
+            		}else{
+            			flag = false;
+            			window.location.href=externalURL;
+            		}
+            		
+            	}
+    		}
+        	
+    	}
+    	return flag;
     },
 
     private_handleRoute: function(id)

@@ -146,7 +146,6 @@ public class TzSemPiDecoratedServiceImpl extends FrameworkImpl {
 			Map<String, Object> siteMap = jdbcTemplate.queryForMap(infoSql, new Object[] { m_curOPRID,orgId });
 			
 			if (siteMap != null) {
-				System.out.println("siteMap!=null");
 				strName = (String) siteMap.get("TZ_REALNAME");
 				strRegEmail = (String) siteMap.get("TZ_EMAIL");
 				strApplicationNum = (String) siteMap.get("TZ_MSH_ID");
