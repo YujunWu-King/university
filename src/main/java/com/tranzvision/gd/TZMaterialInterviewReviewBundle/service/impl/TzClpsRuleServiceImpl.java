@@ -574,6 +574,13 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 		
 		return strRet;
 	}
+	/**
+	  * 材料面试端账号重置
+	  * 
+	  * @author dingpeng
+	  * @since 2019年11月19日
+	  */
+	//随机生成6位随机数
 	public String setPWord() {
 		String passSJ = "";
 		for(int i=0;i<6;i++) {
