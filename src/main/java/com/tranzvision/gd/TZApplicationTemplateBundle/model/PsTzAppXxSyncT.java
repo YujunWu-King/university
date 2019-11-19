@@ -7,6 +7,8 @@ public class PsTzAppXxSyncT extends PsTzAppXxSyncTKey {
 
     private String tzSyncSep;
 
+    private String tzIsMultiline;
+
     public String getTzQyBz() {
         return tzQyBz;
     }
@@ -29,5 +31,13 @@ public class PsTzAppXxSyncT extends PsTzAppXxSyncTKey {
 
     public void setTzSyncSep(String tzSyncSep) {
         this.tzSyncSep = tzSyncSep == null ? null : tzSyncSep.trim();
+    }
+
+    public String getTzIsMultiline() {
+        return tzIsMultiline;
+    }
+
+    public void setTzIsMultiline(String tzIsMultiline) {
+        this.tzIsMultiline = tzIsMultiline;
     }
 }
