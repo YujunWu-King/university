@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.SendSmsOrMalServiceI
 import com.tranzvision.gd.TZSelfInfoBundle.model.PsTzShjiYzmTbl;
 import com.tranzvision.gd.TZSelfInfoBundle.dao.PsTzShjiYzmTblMapper;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.captcha.PasswordCheck;
 import com.tranzvision.gd.util.captcha.Patchca;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.encrypt.DESUtil;
@@ -713,6 +715,17 @@ public class RegisteSmsServiceImpl extends FrameworkImpl {
 			strLang = jacksonUtil.getString("lang").trim();
 			strCheckCode = jacksonUtil.getString("checkCode").trim();
 			strPwd = jacksonUtil.getString("pwd").trim();
+			PasswordCheck passwordCheck = new PasswordCheck("",strPwd,strPwd);
+			if(StringUtils.isNoneEmpty(strPhone)){
+				passwordCheck.setUserName(strPhone);
+				if(!passwordCheck.weakLoginPassword()){
+					errorMsg[0] = "6";
+					errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE",
+							"847",
+							"校验失败，非法新密码", "Check failed,Illegal new password");
+					return strResult;
+				}
+			}
 			strRePwd = jacksonUtil.getString("repwd").trim();
 			strRePwd = jacksonUtil.getString("repwd").trim();
 			siteid = jacksonUtil.getString("siteid").trim();

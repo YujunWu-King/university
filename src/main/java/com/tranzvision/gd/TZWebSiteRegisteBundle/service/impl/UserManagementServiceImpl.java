@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteRepCssServiceImpl
 import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.ValidateUtil;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzSystemException;
+import com.tranzvision.gd.util.captcha.PasswordCheck;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.encrypt.DESUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
@@ -884,6 +886,32 @@ public class UserManagementServiceImpl extends FrameworkImpl {
 			String strOldPass = jacksonUtil.getString("oldPass");
 			String strNewPass = jacksonUtil.getString("newPass");
 			String strLang = jacksonUtil.getString("lang");
+			if(jacksonUtil.containsKey("BindMobile")&&jacksonUtil.containsKey("BindEmail")){
+                String strnewPass = validateUtil.getMessageTextWithLanguageCd("", strLang, "TZ_SITE_MESSAGE", "854", "密码校验失败",
+                        "Password verification failed");
+                String strIllegal = validateUtil.getMessageTextWithLanguageCd("", strLang, "TZ_SITE_MESSAGE", "227", "非法新密码",
+                        "Illegal new password");
+
+                PasswordCheck passwordCheck = new PasswordCheck("",strNewPass,strNewPass);
+                String strTZ_EMAILZC = "";
+                String strTZ_MOBILEZC = "";
+                strTZ_MOBILEZC=jacksonUtil.getString("BindMobile").trim();
+                strTZ_EMAILZC=jacksonUtil.getString("BindEmail").trim();
+                if(StringUtils.isNotEmpty(strTZ_MOBILEZC)&&!"无".equals(strTZ_MOBILEZC)){
+                    passwordCheck.setUserName(strTZ_MOBILEZC);
+                    if(!passwordCheck.weakLoginPassword()){
+                        return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON",
+                                strnewPass + " " + strIllegal);
+                    }
+                }
+                if(StringUtils.isNotEmpty(strTZ_EMAILZC)&&!"无".equals(strTZ_EMAILZC)){
+                    passwordCheck.setUserName(strTZ_EMAILZC);
+                    if(!passwordCheck.weakLoginPassword()){
+                        return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON",
+                                strnewPass + " " + strIllegal);
+                    }
+                }
+            };
 
 			String strOldPassMsg = validateUtil.getMessageTextWithLanguageCd("", strLang, "TZ_SITE_MESSAGE", "8", "旧密码",
 					"Old Password");

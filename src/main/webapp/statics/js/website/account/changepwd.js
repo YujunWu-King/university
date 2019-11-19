@@ -156,6 +156,7 @@ setInterval(function() {
 
 		$("#J_PwdTip .pw-strength .pw-strength-bar em").html("");
 	}
+	addCheck();
 }, 200);
 
 $("#oldpass").focus(function() {
@@ -214,6 +215,13 @@ $("#btnpass")
 						$("#messTip").show();
 						return false;
 					}
+					if ($('#status_PASSWORD').val() == "2") {
+						$("#messTip").html(
+								'<img src="'+ tzGdFixpwdImgPath +'/alert.png" width="16" height="16" class="alert_img" />'
+										+ "密码格式错误");
+						$("#messTip").show();
+						return false;
+					}
 
 					if ($cfPass.length < 1) {
 						var pass = document.getElementById("cfpass");
@@ -246,10 +254,14 @@ $("#btnpass")
 					 * $newPass;
 					 */
 					var lang = $("#lang").val();
+                    var BindEmail=$("#BindEmail").text();
+                    var BindMobile=$("#BindMobile").text();
 					var pwd = {
 						"oldPass" : $oldPass,
 						"newPass" : $newPass,
-						"lang" : lang
+						"lang" : lang,
+                        "BindEmail" : BindEmail,
+                        "BindMobile" : BindMobile
 					};
 
 					$("#messTip").html('');
@@ -284,3 +296,168 @@ $("#btnpass")
 					});
 					return false;
 				});
+
+/**
+*
+* 张超  增加对密码的新校验
+* 密码必须包含数字和字母
+* 密码中数字和字母不能超过两位
+* 相同的字母和数字不能超过三位
+*/
+function addCheck() {
+   var TZ_PASSWORD=$("#newpass").val();
+   if(TZ_PASSWORD.length<1){
+       $("#J_PwdTip .pw-rule-numAndLetter").css("background-color","");
+       $("#J_PwdTip .pw-rule-continuity").css("background-color","");
+       $("#J_PwdTip .pw-rule-contain").css("background-color","");
+
+       $("#J_PwdTip .pw-rule-numAndLetter .iconfont").html("О");
+       $("#J_PwdTip .pw-rule-numAndLetter .iconfont").css("color","");
+       $("#J_PwdTip .pw-rule-continuity .iconfont").html("О");
+       $("#J_PwdTip .pw-rule-continuity .iconfont").css("color","");
+       $("#J_PwdTip .pw-rule-contain .iconfont").html("О");
+       $("#J_PwdTip .pw-rule-contain .iconfont").css("color","");
+   }else{
+       // console.log(TZ_PASSWORD);
+       //判断密码必须包含数字和字母
+       var  NuM=0;
+       var Letter=0;
+       var charNum=null;
+       for (var i=0;i<TZ_PASSWORD.length;i++){
+           charNum=TZ_PASSWORD.charCodeAt(i);
+           if(charNum>47&&charNum<58){
+               NuM=-1;
+           }else if((charNum>64&&charNum<90)||(charNum>96&&charNum<123)){
+               Letter=-1;
+           }
+       }
+
+       if(NuM*Letter==1){
+           $("#J_PwdTip .pw-rule-numAndLetter .iconfont").html("√");
+           $("#J_PwdTip .pw-rule-numAndLetter .iconfont").css("color","#14c2b3");
+       }else{
+           $('#status_PASSWORD').attr("value", 2);
+           $("#J_PwdTip .pw-rule-numAndLetter .iconfont").html("X");
+           $("#J_PwdTip .pw-rule-numAndLetter .iconfont").css("color","#FF460F");
+       }
+       //连续数字或字母不能超过两位
+       if(TZ_PASSWORD.length>1){
+           var front=null;
+           var after=null;
+           var falg=999999;
+           var derail=0;
+           var falgStatic=true;
+           var newTZ_PASSWORD=TZ_PASSWORD.toLowerCase();
+           for(var i=1;i<newTZ_PASSWORD.length;i++){
+               front=newTZ_PASSWORD.charCodeAt(i);
+               after=newTZ_PASSWORD.charCodeAt(i-1);
+               if(after-front==falg){
+                   derail++;
+               }else{
+                   falg=after-front;
+                   derail=0;
+               }
+               if(derail>0&&(falg==-1||falg==1)){
+                   $('#status_PASSWORD').attr("value", 2);
+                   falgStatic=false;
+                   $("#J_PwdTip .pw-rule-continuity .iconfont").html("X");
+                   $("#J_PwdTip .pw-rule-continuity .iconfont").css("color","#FF460F");
+                   break;
+               }else{
+                   $("#J_PwdTip .pw-rule-continuity .iconfont").html("√");
+                   $("#J_PwdTip .pw-rule-continuity .iconfont").css("color","#14c2b3");
+
+               }
+           }
+           if(falgStatic){
+               var arrPass=new Array();
+               for(var i=0;i<TZ_PASSWORD.length;i++){
+                   arrPass[i]=TZ_PASSWORD.charCodeAt(i);
+               }
+               arrPass.sort(function(a, b){return a - b});
+               if(arrPass.length>2){
+                   for(var i=2 ;i<arrPass.length;i++){
+                       if(((arrPass[i]>47&&arrPass[i]<58)||(arrPass[i]>64&&arrPass[i]<90)||(arrPass[i]>96&&arrPass[i]<123))&&(arrPass[i]==arrPass[i-1]&&arrPass[i-1]==arrPass[i-2])){
+                           $('#status_PASSWORD').attr("value", 2);
+                           $("#J_PwdTip .pw-rule-continuity .iconfont").html("X");
+                           $("#J_PwdTip .pw-rule-continuity .iconfont").css("color","#FF460F");
+                           break;
+                       }else{
+                           $("#J_PwdTip .pw-rule-continuity .iconfont").html("√");
+                           $("#J_PwdTip .pw-rule-continuity .iconfont").css("color","#14c2b3");
+                       }
+                   }
+               }else{
+                   $("#J_PwdTip .pw-rule-continuity .iconfont").html("√");
+                   $("#J_PwdTip .pw-rule-continuity .iconfont").css("color","#14c2b3");
+               }
+           }
+       }else if(TZ_PASSWORD.length>0){
+           $("#J_PwdTip .pw-rule-continuity .iconfont").html("√");
+           $("#J_PwdTip .pw-rule-continuity .iconfont").css("color","#14c2b3");
+       }
+
+       //不能包含手机号和邮箱
+       var TZ_EMAIL=$("#BindEmail").text();
+       var TZ_MOBILE=$("#BindMobile").text();
+       if(!(TZ_MOBILE==""||TZ_MOBILE==undefined||TZ_MOBILE=="undefined"||TZ_MOBILE=="无")){
+           //手机不能为空
+           if(!(TZ_EMAIL==""||TZ_EMAIL==undefined||TZ_EMAIL=="undefined")){
+               // console.log("邮箱不能为空,手机不为空");
+               //邮箱不能为空,手机不为空
+               if(TZ_PASSWORD.indexOf(TZ_EMAIL)==-1&&TZ_PASSWORD.indexOf(TZ_MOBILE)==-1){
+                   $("#J_PwdTip .pw-rule-contain .iconfont").html("√");
+                   $("#J_PwdTip .pw-rule-contain .iconfont").css("color","#14c2b3");
+               }else{
+                   $('#status_PASSWORD').attr("value", 2);
+                   $("#J_PwdTip .pw-rule-contain .iconfont").html("X");
+                   $("#J_PwdTip .pw-rule-contain .iconfont").css("color","#FF460F");
+               }
+           }else{
+               // console.log("邮箱为空，手机不为空");
+               //邮箱为空，手机不为空
+               if(TZ_PASSWORD.indexOf(TZ_MOBILE)==-1){
+                   // console.log("对号");
+                   $("#J_PwdTip .pw-rule-contain .iconfont").html("√");
+                   $("#J_PwdTip .pw-rule-contain .iconfont").css("color","#14c2b3");
+               }else{
+                   // console.log("叉号");
+                   $('#status_PASSWORD').attr("value", 2);
+                   $("#J_PwdTip .pw-rule-contain .iconfont").html("X");
+                   $("#J_PwdTip .pw-rule-contain .iconfont").css("color","#FF460F");
+               }
+           }
+       }else{
+           //手机为空
+           if(!(TZ_EMAIL==""||TZ_EMAIL==undefined||TZ_EMAIL=="undefined"||TZ_EMAIL=="无")){
+               // console.log("邮箱不能为空，手机为空");
+               //邮箱不能为空，手机为空
+               if(TZ_PASSWORD.indexOf(TZ_EMAIL)==-1){
+                   $("#J_PwdTip .pw-rule-contain .iconfont").html("√");
+                   $("#J_PwdTip .pw-rule-contain .iconfont").css("color","#14c2b3");
+               }else{
+                   $('#status_PASSWORD').attr("value", 2);
+                   $("#J_PwdTip .pw-rule-contain .iconfont").html("X");
+                   $("#J_PwdTip .pw-rule-contain .iconfont").css("color","#FF460F");
+               }
+           }else{
+               // console.log("邮箱为空，手机为空");
+               //邮箱为空，手机为空
+               $("#J_PwdTip .pw-rule-contain .iconfont").html("√");
+               $("#J_PwdTip .pw-rule-contain .iconfont").css("color","#14c2b3");
+           }
+       }
+   }
+
+}
+$("#J_PwdTip").ready(function () {
+   addTips();
+});
+function addTips(){
+   $("#J_PwdTip .pw-tip-bd .pw-strength").next().append("<div class=\"pw-rule-item pw-rule-numAndLetter\"><i class=\"iconfont\">О</i><span\n" +
+       "\t\t\t\t\tdata-phase-id=\"u_ui_numAndLetter\">必须包含字母、数字</span></div>\n" +
+       "\t\t\t<div class=\"pw-rule-item pw-rule-continuity\"><i class=\"iconfont\">О</i><span data-phase-id=\"u_ui_continuity\">连续数字、字母和相同数字、字母最多为两位</span></div>\n" +
+       "\t\t\t<div class=\"pw-rule-item pw-rule-contain\"><i class=\"iconfont\">О</i><span\n" +
+       "\t\t\t\t\tdata-phase-id=\"u_ui_contain\">不能包含手机号和邮箱</span></div>");
+
+}

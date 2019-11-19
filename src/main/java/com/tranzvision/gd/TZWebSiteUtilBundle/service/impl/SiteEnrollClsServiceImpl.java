@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +33,7 @@ import com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsInfoTWithBLOBs;
 import com.tranzvision.gd.TZWebSiteRegisteBundle.dao.PsTzDzyxYzmTblMapper;
 import com.tranzvision.gd.TZWebSiteRegisteBundle.model.PsTzDzyxYzmTbl;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.captcha.PasswordCheck;
 import com.tranzvision.gd.util.captcha.Patchca;
 import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
@@ -288,6 +290,33 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				String strTZ_PASSWORD = "";
 				if (dataMap.containsKey("TZ_PASSWORD")) {
 					strTZ_PASSWORD = ((String) dataMap.get("TZ_PASSWORD")).trim();
+					PasswordCheck passwordCheck = new PasswordCheck("",strTZ_PASSWORD,strTZ_PASSWORD);
+					String strTZ_EMAILZC = "";
+					String strTZ_MOBILEZC = "";
+					if(dataMap.containsKey("TZ_MOBILE")){
+						strTZ_MOBILEZC=((String) dataMap.get("TZ_MOBILE")).trim();
+						if(StringUtils.isNotEmpty(strTZ_MOBILEZC)){
+							passwordCheck.setUserName(strTZ_MOBILEZC);
+							if(!passwordCheck.weakLoginPassword()){
+								errMsg[0] = "3";
+								errMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgId, strLang, "TZ_PASSWORD", "52",
+										"密码校验失败，非法密码", "Password verification failed");
+								return strResult;
+							}
+						}
+					}
+					if(dataMap.containsKey("TZ_EMAIL")){
+						strTZ_EMAILZC=((String) dataMap.get("TZ_EMAIL")).trim();
+						if(StringUtils.isNotEmpty(strTZ_EMAILZC)){
+							passwordCheck.setUserName(strTZ_EMAILZC);
+							if(!passwordCheck.weakLoginPassword()){
+								errMsg[0] = "3";
+								errMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgId, strLang, "TZ_PASSWORD", "52",
+										"密码校验失败，非法密码", "Password verification failed");
+								return strResult;
+							}
+						}
+					}
 				}
 
 				// 确认密码;
@@ -1641,6 +1670,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		try {
 			jacksonUtil.json2Map(strParams);
 			strPwd = jacksonUtil.getString("pwd");
+			PasswordCheck passwordCheck = new PasswordCheck("a14aff321da4sd23dc1cww51zz",strPwd,strPwd);
 			strRePwd = jacksonUtil.getString("repwd");
 			strCheckCode = jacksonUtil.getString("checkCode");
 			strLang = jacksonUtil.getString("lang");
@@ -1694,6 +1724,12 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 							"新密码和确认密码不一致", "New Password and Confirm Password is not consistent");
 					return strResult;
 				}
+				if(!passwordCheck.weakLoginPassword()){
+                    errMsg[0] = "9";
+                    errMsg[1] = validateUtil.getMessageTextWithLanguageCd(strJgId, strLang, "TZ_SITE_MESSAGE", "987",
+                            "密码校验失败，非法密码", "Password verification failed");
+                    return strResult;
+                }
 
 				// 修改用户密码
 				String password = DESUtil.encrypt(strPwd, "TZGD_Tranzvision");

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzSystemException;
+import com.tranzvision.gd.util.captcha.PasswordCheck;
 import com.tranzvision.gd.util.cookie.TzCookie;
 import com.tranzvision.gd.util.security.TzFilterIllegalCharacter;
 import com.tranzvision.gd.util.sql.SqlQuery;
@@ -247,14 +248,23 @@ public class EvaluationSystemController {
 		
 		String loginStatus,errorMsg;
 		
+		boolean acountIsWeeks = false;
+		PasswordCheck result = new PasswordCheck( userName, userPwd, userPwd);
+		acountIsWeeks=result.weakLoginPassword();
 		if("Y".equals(accountExist)){
-			tzLoginServiceImpl.doLogin(request, response, orgId, userName, userPwd, code, aryErrorMsg);
-			loginStatus = aryErrorMsg.get(0);
-			errorMsg = aryErrorMsg.get(1);
+			if(acountIsWeeks==false) {
+				loginStatus = "1";
+				errorMsg = "帐号密码为弱密码，请联系管理员重置！";
+			}else {
+				tzLoginServiceImpl.doLogin(request, response, orgId, userName, userPwd, code, aryErrorMsg);
+				loginStatus = aryErrorMsg.get(0);
+				errorMsg = aryErrorMsg.get(1);
+			}
 		}else{
 			loginStatus = "1";
 			errorMsg = "帐号不存在或者无效，请重新输入！";
 		}
+		
 				
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
 		jsonMap.put("success", loginStatus);
