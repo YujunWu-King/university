@@ -2604,7 +2604,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			String loginUrl = contextPath + "/user/login/" + strOrgid.toLowerCase() + "/" + strSiteId;
 
 			String str_content = "";
-			String yzmSQL = "SELECT TZ_DLZH_ID,TZ_YZM_YXQ FROM PS_TZ_DZYX_YZM_TBL WHERE TZ_TOKEN_CODE=? AND TZ_JG_ID=? AND TZ_TOKEN_TYPE = 'EDIT' AND TZ_EFF_FLAG = 'Y' ORDER BY TZ_CNTLOG_ADDTIME DESC limit 0,1";
+			String yzmSQL = "SELECT TZ_DLZH_ID,TZ_YZM_YXQ,TZ_TIMES FROM PS_TZ_DZYX_YZM_TBL WHERE TZ_TOKEN_CODE=? AND TZ_JG_ID=? AND TZ_TOKEN_TYPE = 'EDIT' AND TZ_EFF_FLAG = 'Y' ORDER BY TZ_CNTLOG_ADDTIME DESC limit 0,1";
 			Map<String, Object> yzmMap = jdbcTemplate.queryForMap(yzmSQL, new Object[] { strTokenSign, strOrgid });
 
 			String JGID = jdbcTemplate.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?",
