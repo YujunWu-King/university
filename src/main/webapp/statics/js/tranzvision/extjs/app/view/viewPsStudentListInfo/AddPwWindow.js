@@ -255,7 +255,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.AddPwWindow', {
 					    var classId = form.findField('classId').getValue();
 		                var batchId = form.findField('batchId').getValue();
 		                
-		                var comparams = '{"classId":' + classId + '},{"batchId":' + batchId + '},' + selksList + '';
+		                var comparams = '{"classId":' + classId + '},{"batchId":' + batchId + '},{"type":"PW"},' + selksList + '';
 
 					    var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_JUDGES_STD","OperateType":"U","comParams":{"add":[' + comparams + ']}}';
 					

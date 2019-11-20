@@ -19,8 +19,56 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
      }
      },*/
 	initComponent: function() {
-
-		var store = new KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanelStore();
+/**
+ * 修改人：丁鹏
+ * 时间:2019年11月19日10:09:59
+ * sdstore、storeGly、storeMsz
+ * */
+		let sdstore = Ext.create("Ext.data.Store", {
+            fields: ["TValue", "TSDesc"],
+            data: [{
+                TSDesc: "上午",
+                TValue: 'A'
+            }, {
+                TSDesc: "下午",
+                TValue: 'B'
+            }]
+        });
+        var store = new KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanelStore();
+        var storeGly = new Ext.data.Store({
+            fields: ['glyId', 'glyZh', 'glyName', 'glyLb', 'glyState'],
+            pageSize: 200,
+            autoLoad: true,
+            comParams: '',
+            proxy: new Ext.data.proxy.Ajax(
+                {
+                    url: Ext.tzGetGeneralURL(),
+                    reader:
+                        {
+                            type: 'json',
+                            totalProperty: 'comContent.total',
+                            rootProperty: 'comContent.root',
+                            messageProperty: 'state.errdesc'
+                        }
+                }).setExtraParams({tzParams: '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_RULE_STD","OperateType":"GETGLY","comParams":""}'})
+        });
+        var storeMsz = new Ext.data.Store({
+            fields: ['mszid', 'mszsd', 'mszkssj', 'mszjssj'],
+            pageSize: 200,
+            autoLoad: true,
+            comParams: '',
+            proxy: new Ext.data.proxy.Ajax(
+                {
+                    url: Ext.tzGetGeneralURL(),
+                    reader:
+                        {
+                            type: 'json',
+                            totalProperty: 'comContent.total',
+                            rootProperty: 'comContent.root',
+                            messageProperty: 'state.errdesc'
+                        }
+                }).setExtraParams({tzParams: '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_RULE_STD","OperateType":"MSZLIST","comParams":""}'})
+        });
 
 
 		Ext.apply(this, {
@@ -243,44 +291,51 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 								items: [{
 									xtype: 'numberfield',
 									fieldLabel: '每位考生要求被',
-									allowBlank: false,
+									//allowBlank: false,
 									minValue: 0,
 									maxValue: 20,
 									//value: 0,
 									name: 'ksRevedpwnum',
 									fieldStyle: 'font-weight: bold;',
-									width: 180
+									width: 180,
+									hidden: true
 								}, {
 									columnWidth: .5,
 									xtype: 'displayfield',
 									hideLabel: true,
 									value: '个评委审批',
-									fieldStyle: 'font-weight: bold;margin-top: 7.5px !important;'
-								}, "-",
+									fieldStyle: 'font-weight: bold;margin-top: 7.5px !important;',
+									hidden: true
+								}, 
+								//"-",
 								{
 									xtype: 'numberfield',
 									fieldLabel: '一共',
 									labelWidth: 50,
-									allowBlank: false,
+									//allowBlank: false,
 									minValue: 0,
 									maxValue: 20,
 									//value: 0,
 									name: 'countTeamnum',
 									fieldStyle: 'font-weight: bold;',
-									width: 130
+									width: 130,
+									hidden: true
 								}, {
 									columnWidth: .5,
 									xtype: 'displayfield',
 									hideLabel: true,
 									value: '个评委组',
-									fieldStyle: 'font-weight: bold;margin-top: 7.5px !important;'
-								}, "-",
+									fieldStyle: 'font-weight: bold;margin-top: 7.5px !important;',
+									hidden: true
+								}, 
+								//"-",
 								{
 									text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.addpw", "新增评委"),
 									tooltip: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.adddata", "新增评委"),
 									iconCls: "add",
 									handler: 'addpwInfom'
-								}, "->",
+								}, 
+								//"->",
 								/*{
 									text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.edit1", "编辑"),
 									tooltip: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.editdata", "编辑"),
@@ -307,27 +362,29 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 							columns: [{
 								text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.judgId", "评委账号"),
 								dataIndex: 'judgId',
-								width: 200,
+								width: 130,
 								hidden:true
 							},{
 								text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.judgzh", "评委账号"),
 								dataIndex: 'judzhxx',
-								width: 200
+								width: 130
 							}, {
 								text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.judgName", "评委姓名"),
 								dataIndex: 'judgName',
-								width: 200
+								width: 130
 							}, {
 
 								text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.judgGroupId", "所属评委组"),
 								dataIndex: 'judgGroupId',
 								name: 'judgGroup',
-								width: 130,
+								width: 200,
 								editor: {
-									xtype: 'combobox',
+									xtype: 'tagfield',
+									//xtype: 'combobox',
 									valueField: 'TZ_CLPS_GR_ID',
 									displayField: 'TZ_CLPS_GR_NAME',
-									store: ''
+									store: []
+									//store: ''
 								},
 								flex: 1,
 								
@@ -348,7 +405,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 							}, {								
 								text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.judgState", "评委状态"),
 								dataIndex: 'judgState',
-								width: 200,
+								width: 130,
 								editor: {
 						        xtype: 'combobox',
 						        valueField: 'TValue',
@@ -389,7 +446,243 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 			                    plugins: new Ext.ux.ProgressBarPager()
 			                }
 						}]
-					}]
+					},
+					/**
+					 * 修改：丁鹏
+					 * 时间：2019/11/18
+					 */
+					{
+                        title: "管理员",
+                        xtype: 'form',
+                        name: 'glygrid',
+                        //id: 'glygrid',
+                        minHeight: 285,
+                        autoHeight: true,
+                        style: 'border:0',
+                        items: [{
+                            xtype: 'grid',
+                            columnLines: true,
+                            style: "margin:8px",
+                            name: 'glyLgrid',
+                            layout: 'fit',
+                            minHeight: 200,
+                            autoHeight: true,
+                            plugins: {
+                                ptype: 'cellediting'
+                            },
+                            reference: 'glylistgrid',
+                            dockedItems: [{
+                                xtype: "toolbar",
+                                items: [
+                                    {
+                                        text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.addgly", "新增管理员"),
+                                        tooltip: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.addgly", "新增管理员"),
+                                        iconCls: "add",
+                                        handler: 'addGlyInfom'
+                                    }
+                                ]
+                            }],
+                            columns: [{
+                                text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.glyId", "管理员ID"),
+                                dataIndex: 'glyId',
+                                width: 200,
+                                hidden: true
+                            }, {
+                                text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.glyZh", "管理员账号"),
+                                dataIndex: 'glyZh',
+                                width: 200
+                            }, {
+                                text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.glyName", "管理员姓名"),
+                                dataIndex: 'glyName',
+                                width: 200
+                            }, {
+                                text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.glyLb", "管理员类别"),
+                                dataIndex: 'glyLb',
+                                name: 'glyLb',
+                                width: 200,
+                                editor: {
+                                    xtype: 'combobox',
+                                    valueField: 'TValue',
+                                    displayField: 'TSDesc',
+                                    store: new KitchenSink.view.common.store.appTransStore("TZ_MS_GLY")
+                                },
+                                renderer: 'readervalueLb'
+                            }, {
+                                text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.glyState", "管理员状态"),
+                                dataIndex: 'glyState',
+                                width: 200,
+                                editor: {
+                                    xtype: 'combobox',
+                                    valueField: 'TValue',
+                                    displayField: 'TSDesc',
+                                    hiddenValue: 'TValue',
+                                    store: new KitchenSink.view.common.store.appTransStore("TZ_EFF_STATUS")
+                                },
+                                renderer: function (v) {
+                                    if (v == 'A') {
+                                        return "有效";
+                                    } else {
+                                        return "无效";
+                                    }
+                                }
+                            }, {
+                                text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.handle", "操作"),
+                                menuDisabled: true,
+                                sortable: false,
+                                width: 110,
+                                align: 'center',
+                                xtype: 'actioncolumn',
+                                flex: 1,
+                                items: [{
+                                    iconCls: 'remove',
+                                    tooltip: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.delete", "删除"),
+                                    handler: 'deleteGly'
+                                }]
+                            }],
+                            store: storeGly,
+                            bbar: {
+                                xtype: 'pagingtoolbar',
+                                pageSize: 200,
+                                store: storeGly,
+                                displayInfo: true,
+                                displayMsg: "显示{0}-{1}条，共{2}条",
+                                beforePageText: "第",
+                                afterPageText: "页/共{0}页",
+                                emptyMsg: "没有数据显示",
+                                plugins: new Ext.ux.ProgressBarPager()
+                            }
+                        }]
+                    },
+					{
+                        title: "面试组",
+                        xtype: 'form',
+                        name: 'mszgrid',
+                        minHeight: 285,
+                        autoHeight: true,
+                        style: 'border:0',
+                        items: [{
+                            xtype: 'grid',
+                            columnLines: true,
+                            style: "margin:8px",
+                            name: 'mszLgrid',
+                            layout: 'fit',
+                            minHeight: 200,
+                            autoHeight: true,
+                            dockedItems: [{
+                                xtype: "toolbar",
+                                items: [
+                                    {
+                                        text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.addmsz", "新增面试组"),
+                                        tooltip: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.addmsz", "新增面试组"),
+                                        iconCls: "add",
+                                        handler: 'addMszInfom'
+                                    }
+                                ]
+                            }],
+                            plugins: {
+                                ptype: 'cellediting'
+                            },
+                            reference: 'mszLgrid',
+                            columns: [{
+                                dataIndex: 'mszid',
+                                width: 200,
+                                hidden: true
+                            }, {
+                                text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.msmj", "面试组"),
+                                dataIndex: 'mszmj',
+                                width: 200,
+                                flex: 1,
+                                editor: {
+                                    xtype: 'textfield'
+                                },
+                                allowBlank: false
+                            }, {
+                                text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.mssd", "面试时段"),
+                                dataIndex: 'mszsd',
+                                width: 200,
+                                flex: 1,
+                                editor: {
+                                    xtype: 'combobox',
+                                    valueField: 'TValue',
+                                    displayField: 'TSDesc',
+                                    hiddenValue: 'TValue',
+                                    store: sdstore
+                                },
+                                renderer: function (v) {
+                                    if (v === "A") {
+                                        return "上午"
+                                    } else {
+                                        return "下午"
+                                    }
+                                }
+                            }, {
+                                hidden: true,
+                                text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.mskssj", "开始时间"),
+                                dataIndex: 'mszkssj',
+                                width: 200,
+                                editor: {
+                                    xtype: 'timefield',
+                                    format: 'H:i',
+                                    name: 'StartTime',
+                                    minValue: '07:00'
+                                },
+                                flex: 1,
+                                allowBlank: false,
+                                renderer: function (v) {
+                                    let time = Ext.Date.format(v, 'H:i');
+                                    if (!time) {
+                                        time = v;
+                                    }
+                                    return time;
+                                }
+                            }, {
+                                hidden: true,
+                                text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.msjssj", "结束时间"),
+                                dataIndex: 'mszjssj',
+                                name: 'glyLb',
+                                width: 200,
+                                editor: {
+                                    xtype: 'timefield',
+                                    format: 'H:i',
+                                    name: 'EntTime'
+                                },
+                                flex: 1,
+                                allowBlank: false,
+                                renderer: function (v) {
+                                    let time = Ext.Date.format(v, 'H:i');
+                                    if (!time) {
+                                        time = v;
+                                    }
+                                    return time;
+                                }
+                            }, {
+                                text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.handle", "操作"),
+                                menuDisabled: true,
+                                sortable: false,
+                                width: 110,
+                                align: 'center',
+                                xtype: 'actioncolumn',
+                                flex: 1,
+                                items: [{
+                                    iconCls: 'remove',
+                                    tooltip: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.delete", "删除"),
+                                    handler: 'deleteMsZ'
+                                }]
+                            }],
+                            store: storeMsz,
+                            bbar: {
+                                xtype: 'pagingtoolbar',
+                                pageSize: 200,
+                                store: storeMsz,
+                                displayInfo: true,
+                                displayMsg: "显示{0}-{1}条，共{2}条",
+                                beforePageText: "第",
+                                afterPageText: "页/共{0}页",
+                                emptyMsg: "没有数据显示",
+                                plugins: new Ext.ux.ProgressBarPager()
+                            }
+                        }]
+                    }]
 				}]
 			}],
 

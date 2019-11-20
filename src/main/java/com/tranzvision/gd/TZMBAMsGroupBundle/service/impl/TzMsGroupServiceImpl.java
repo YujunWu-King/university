@@ -225,6 +225,16 @@ public class TzMsGroupServiceImpl extends FrameworkImpl {
 				mapData.put("jgid", JGID);
 
 				mapRet.put("formData", mapData);
+			}else {
+				String sql2 ="SELECT A.TZ_CLASS_NAME,B.TZ_BATCH_NAME FROM PS_TZ_CLASS_INF_T A LEFT JOIN PS_TZ_CLS_BATCH_T B ON A.TZ_CLASS_ID=B.TZ_CLASS_ID where A.TZ_CLASS_ID=? and B.TZ_BATCH_ID=? LIMIT 1 ;";
+				Map<String , Object> strName = sqlQuery.queryForMap(sql2, new Object[] {classId,batchId});
+				String className = (String)strName.get("TZ_CLASS_NAME");
+				String batchName = (String)strName.get("TZ_BATCH_NAME");
+				mapData.put("classId", classId);
+				mapData.put("batchId", batchId);
+				mapData.put("className", className);
+				mapData.put("batchName", batchName);
+				mapRet.put("formData", mapData);
 			}
 
 			strRet = jacksonUtil.Map2json(mapRet);

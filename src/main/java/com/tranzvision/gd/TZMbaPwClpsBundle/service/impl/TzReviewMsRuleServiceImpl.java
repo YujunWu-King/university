@@ -32,6 +32,7 @@ import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.encrypt.DESUtil;
 import com.tranzvision.gd.util.poi.excel.ExcelHandle;
+import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -65,6 +66,8 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 	private PsTzMsPsPwTblMapper psTzMsPsPwTblMapper;
 	@Autowired
 	private PsoprdefnMapper PsoprdefnMapper;
+	@Autowired
+	private GetSeqNum getSeqNum;
 
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {
@@ -290,18 +293,19 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 		int count = 0;
 		try {
 			String Orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-			String teamsql = "SELECT TZ_GRP_COUNT FROM PS_TZ_MSPS_GZ_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? ";
+//			String teamsql = "SELECT TZ_GRP_COUNT FROM PS_TZ_MSPS_GZ_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? ";
+//
+//			String count1 = sqlQuery.queryForObject(teamsql, new Object[] { classId, batchId }, "String");
+//			if (count1 == null) {
+//				count = 999999999;
+//			} else {
+//				count = Integer.valueOf(count1);
+//
+//			}
 
-			String count1 = sqlQuery.queryForObject(teamsql, new Object[] { classId, batchId }, "String");
-			if (count1 == null) {
-				count = 999999999;
-			} else {
-				count = Integer.valueOf(count1);
-
-			}
-
-			String sql = "SELECT TZ_CLPS_GR_ID,TZ_CLPS_GR_NAME FROM PS_TZ_MSPS_GR_TBL WHERE TZ_JG_ID=? ORDER BY  CAST(TZ_CLPS_GR_ID AS UNSIGNED INTEGER) ASC  LIMIT ? ";
-			List<Map<String, Object>> listMap = sqlQuery.queryForList(sql, new Object[] { Orgid, count });
+			String sql = "SELECT TZ_CLPS_GR_ID,TZ_CLPS_GR_NAME FROM PS_TZ_MSPS_GR_TBL WHERE TZ_JG_ID=? ORDER BY  CAST(TZ_CLPS_GR_ID AS UNSIGNED INTEGER) ASC ";
+			List<Map<String, Object>> listMap = sqlQuery.queryForList(sql, new Object[] { Orgid });
+			if(listMap!=null){
 			for (Map<String, Object> map : listMap) {
 				if (Strjudegid.equals("") && Strjudename.equals("")) {
 					Strjudegid = map.get("TZ_CLPS_GR_ID").toString();
@@ -312,6 +316,7 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 
 				}
 
+			}
 			}
 			RetrnStr = Strjudegid + "|" + Strjudename;
 
@@ -694,6 +699,17 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 
 					String judgGroupId = infoData.get("judgGroupId") == null ? ""
 							: String.valueOf(infoData.get("judgGroupId"));
+					StringBuilder tjudgGroupId = new StringBuilder();
+					if(judgGroupId.length()<=2){
+						judgGroupId = "";
+					}else{
+						judgGroupId = judgGroupId.substring(judgGroupId.indexOf("[")+1, judgGroupId.indexOf("]"));
+						String[] split = judgGroupId.split(",");
+						for (String string : split) {
+							tjudgGroupId.append(string.trim()).append(",");
+						}
+						judgGroupId = tjudgGroupId.substring(0, tjudgGroupId.lastIndexOf(","));
+					}
 
 					String judgName = infoData.get("judzhxx") == null ? "" : String.valueOf(infoData.get("judzhxx"));
 
@@ -828,6 +844,117 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 					 * &TZ_CLPS_PW_TBL.ROW_LASTMANT_OPRID.Value = %UserId;
 					 * &TZ_CLPS_PW_TBL.Insert() End-If; End-If; End-If;
 					 */
+				}
+				/**
+				 * 添加管理员和面试组
+				 * 丁鹏
+				 * 时间：2019/11/18
+				 * */
+				if(StringUtils.equals("GLY", strFlag)){
+
+					// 信息内容
+					Map<String, Object> infoData = jacksonUtil.getMap("data");
+
+					String classId = jacksonUtil.getString("classId");
+
+					// .get("classId") == null ? "" :
+					// String.valueOf(infoData.get("classId"));
+					// System.out.println("classID:" + classId);
+					String batchId = jacksonUtil.getString("batchId");
+
+					// infoData.get("batchId") == null ? "" :
+					// String.valueOf(infoData.get("batchId"));
+
+					String glyId = infoData.get("glyId") == null ? "" : String.valueOf(infoData.get("glyId"));
+
+					String glyZh = infoData.get("glyZh") == null ? ""
+							: String.valueOf(infoData.get("glyZh"));
+
+					String glyName = infoData.get("glyName") == null ? "" : String.valueOf(infoData.get("glyName"));
+
+					String glyLb = infoData.get("glyLb") == null ? ""
+							: String.valueOf(infoData.get("glyLb"));
+
+					String glyState = infoData.get("glyState") == null ? "" : String.valueOf(infoData.get("glyState"));
+
+					System.out.println("classId：" + classId + "judgState:" + glyState);
+					String sql = "SELECT COUNT(1) from tz_interview_admin_t where TZ_CLASS_ID =? and TZ_APPLY_PC_ID =? and OPRID=?";
+					int count = sqlQuery.queryForObject(sql, new Object[] { classId, batchId, glyId }, "Integer");
+					if (count > 0) {
+						sqlQuery.update("UPDATE "
+								+ "tz_interview_admin_t "
+								+ "SET status=?,"
+								+ "type=? "
+								+ "WHERE TZ_APPLY_PC_ID=? AND TZ_CLASS_ID=? AND OPRID=?",
+								new Object[] { glyState,glyLb, batchId, classId, glyId });
+
+					} else {
+						errMsg[0] = "1";
+						errMsg[1] = "管理员:" + glyName + "不存在，无法修改！";
+
+					}
+
+				}
+
+				//面试组
+				if(StringUtils.equals("MSZ", strFlag)){
+
+					// 信息内容
+					Map<String, Object> infoData = jacksonUtil.getMap("data");
+
+					String classId = jacksonUtil.getString("classId");
+					String batchId = jacksonUtil.getString("batchId");
+					SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd'T'HH:mm:ss");
+					SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
+
+					String id = infoData.get("mszid") == null ? "null" : String.valueOf(infoData.get("mszid"));
+
+					String mszsd = infoData.get("mszsd") == null ? "" : String.valueOf(infoData.get("mszsd"));
+
+					String mszkssj = infoData.get("mszkssj") == null ? "" : String.valueOf(infoData.get("mszkssj"));
+
+					String mszjssj = infoData.get("mszjssj") == null ? "" : String.valueOf(infoData.get("mszjssj"));
+					
+					String mszmj = infoData.get("mszmj") == null ? "" : String.valueOf(infoData.get("mszmj"));
+					Date dt = new Date();
+					Date dt2 = new Date();
+					
+					if(mszkssj!="") {
+						
+						dt = sdf.parse(mszkssj);
+						mszkssj = sdf2.format(dt);
+					}
+					
+					if(mszjssj!="") {
+						dt2 = sdf.parse(mszjssj);
+						mszjssj = sdf2.format(dt2);
+					}
+					
+					
+					
+					if (!"null".equals(id)) { 
+						sqlQuery.update("UPDATE "
+								+ "TZ_INTERVIEW_GROUP "
+								+ "SET "
+								+ "TZ_START_DTTM=?,"
+								+ "TZ_END_DTTM=?,"
+								+ "TZ_MODIFIED_DTTM=NOW(),"
+								+ "TZ_MODIFIED_OPRID=?,"
+								+ "TZ_GROUP_DESC=?,"
+								+ "TZ_GROUP_SPACE=? "
+								+ "WHERE TZ_APPLY_PC_ID=? AND TZ_CLASS_ID=? AND TZ_GROUP_ID=?",
+								new Object[] { mszkssj,mszjssj,oprId,mszmj,mszsd, batchId, classId, id});
+					} else {
+						String TZ_GROUP_ID  = String.valueOf(getSeqNum.getSeqNum("TZ_INTERVIEW_GROUP", "TZ_GROUP_ID"));
+//						String TZ_GROUP_ID = sqlQuery.queryForObject("SELECT MAX(TZ_GROUP_ID)+1 from TZ_INTERVIEW_GROUP", new Object[]{}, "String");
+//						if(TZ_GROUP_ID==null||"".equals(TZ_GROUP_ID)||"0".equals(TZ_GROUP_ID)){
+//							TZ_GROUP_ID = "1";
+//						}
+						sqlQuery.update("insert into "
+								+ "TZ_INTERVIEW_GROUP "
+								+ "values (?,?,?,?,?,?,?,NOW(),?)",
+								new Object[] { classId,batchId, TZ_GROUP_ID, mszmj, mszsd,mszkssj,mszjssj,oprId});
+					}
 				}
 			}
 		} catch (Exception e) {
