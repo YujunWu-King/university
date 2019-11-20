@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.tranzvision.gd.util.httpclient.CommonUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -615,6 +616,7 @@ public class RegisteSmsServiceImpl extends FrameworkImpl {
 		String strPhone = "";
 
 		String strOrgid = "";
+		String strSiteId = "";
 		String strLang = "";
 		String strYzm = "";
 		String picyzm="";
@@ -625,54 +627,74 @@ public class RegisteSmsServiceImpl extends FrameworkImpl {
 		try {
 			jacksonUtil.json2Map(strParams);
 			if (jacksonUtil.containsKey("phone") && jacksonUtil.containsKey("orgid") && jacksonUtil.containsKey("lang")
-					&& jacksonUtil.containsKey("yzm"))
+					&& jacksonUtil.containsKey("yzm")&& jacksonUtil.containsKey("siteid"))
 				strPhone = jacksonUtil.getString("phone").trim();
 			strOrgid = jacksonUtil.getString("orgid").trim();
+			strSiteId = jacksonUtil.getString("siteid").trim();
 			strLang = jacksonUtil.getString("lang").trim();
 			strYzm = jacksonUtil.getString("yzm").trim();
-			picyzm = jacksonUtil.getString("picyzm").trim();
+			// 客户端是否移动设备访问
+			boolean isMobile = CommonUtils.isMobile(request);
 			Patchca patcha = new Patchca();
-			if (strPhone != null && !"".equals(strPhone) && strOrgid != null && !"".equals(strOrgid) && strYzm != null
-					&& !"".equals(strYzm)&&picyzm != null&& !"".equals(picyzm)) {
-				System.out.println("patchca"+picyzm);
+			if(!isMobile){
+				picyzm = jacksonUtil.getString("picyzm").trim();
 				// 校验验证码
-				//Patchca patchca = new Patchca();
 				if (!patcha.verifyToken(request, picyzm)) {
 					errorMsg[0] = "2";
 					errorMsg[1] ="图片验证码不正确";
-					
+
 					patcha.removeToken(request);
 					return jacksonUtil.Map2json(resMap);
 				}
-				System.out.println("sjyzm===");
+			}
+			if (strPhone != null && !"".equals(strPhone) && strOrgid != null && !"".equals(strOrgid) && strYzm != null
+					&& !"".equals(strYzm)) {
 				// 是否存在有效验证码
 				String sql = "SELECT TZ_YZM_YXQ FROM PS_TZ_SHJI_YZM_TBL  WHERE TZ_EFF_FLAG = 'Y' AND TZ_JG_ID = ? AND TZ_MOBILE_PHONE = ? and TZ_SJYZM= ? LIMIT 0,1";
 				Map<String, Object> yzmMap = jdbcTemplate.queryForMap(sql, new Object[] { strOrgid, strPhone, strYzm });
 
-				if (yzmMap != null) {
-					Date dtYxq = (Date) yzmMap.get("TZ_YZM_YXQ");
-					Date curDate = new Date();
-					if (curDate.before(dtYxq)) {
-						String uuid = UUID.randomUUID().toString().replaceAll("-","");
-						jdbcTemplate.update("INSERT INTO TZ_RESET_UUID_T(TZ_UUID,TZ_PHONE,TZ_YZM) VALUES(?,?,?)",new Object[]{uuid,strPhone,strYzm});
-						
-						resMap.replace("result", "success");
-						resMap.put("uuid",uuid);
-//						strResult = "\"success\"";
-						errorMsg[0] = "0";
+				String sql2= "select TZ_TIMES, TZ_SJYZM from PS_TZ_SHJI_YZM_TBL where TZ_MOBILE_PHONE=? AND TZ_JG_ID=? and TZ_EFF_FLAG = 'Y' AND TZ_SITEI_ID=? ORDER BY TZ_CNTLOG_ADDTIME DESC LIMIT 1";
+				Map<String, Object> map = jdbcTemplate.queryForMap(sql2, new Object[]{strPhone,strOrgid,strSiteId});
+				String TZ_SJYZM = "";
+				int timess  = 0;
+				if(map != null){
+					TZ_SJYZM = map.get("TZ_SJYZM") == null ? ""  : map.get("TZ_SJYZM").toString();
+					timess  = map.get("TZ_TIMES")==null ? 0 : Integer.parseInt(map.get("TZ_TIMES").toString());
+				}
+				sql2 = "update PS_TZ_SHJI_YZM_TBL set TZ_TIMES=? where TZ_JG_ID=? and  TZ_MOBILE_PHONE=? and TZ_SITEI_ID=? and TZ_SJYZM= ?";
+				jdbcTemplate.update(sql2, new Object[]{timess+1,strOrgid,strPhone,strSiteId,TZ_SJYZM});
 
+				//是否超过五次
+				if(timess >= 5){
+					errorMsg[0] = "40";
+					errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"", "",
+							"验证码验证次数超过五次,请重新发送验证码到手机。", "Verification Code has over 5 times!");
+				}else {
+					if (yzmMap != null) {
+						Date dtYxq = (Date) yzmMap.get("TZ_YZM_YXQ");
+						Date curDate = new Date();
+						if (curDate.before(dtYxq)) {
+							String uuid = UUID.randomUUID().toString().replaceAll("-","");
+							jdbcTemplate.update("INSERT INTO TZ_RESET_UUID_T(TZ_UUID,TZ_PHONE,TZ_YZM) VALUES(?,?,?)",new Object[]{uuid,strPhone,strYzm});
+
+							resMap.replace("result", "success");
+							resMap.put("uuid",uuid);
+//						strResult = "\"success\"";
+							errorMsg[0] = "0";
+
+						} else {
+							patcha.removeToken(request);
+
+							errorMsg[0] = "10";
+							errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE",
+									"130", "验证码已失效,请重新发送验证码到手机。", "Verification Code has timed out!");
+						}
 					} else {
 						patcha.removeToken(request);
-					
-						errorMsg[0] = "10";
-						errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE",
-								"130", "验证码已失效,请重新发送验证码到手机。", "Verification Code has timed out!");
+						errorMsg[0] = "20";
+						errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE", "50",
+								"验证码不正确", "Wrong Verification Code!");
 					}
-				} else {
-					patcha.removeToken(request);
-					errorMsg[0] = "20";
-					errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE", "50",
-							"验证码不正确", "Wrong Verification Code!");
 				}
 			} else {
 				patcha.removeToken(request);

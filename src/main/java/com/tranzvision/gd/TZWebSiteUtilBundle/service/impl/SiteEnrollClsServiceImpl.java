@@ -2621,6 +2621,20 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				Date curDate = new Date();
 				if (curDate.before(dtYxq)) {
 					// 有效；
+					//访问一次记录加1，最多访问5次
+					int times  = yzmMap.get("TZ_TIMES")==null ? 0 : Integer.parseInt(yzmMap.get("TZ_TIMES").toString());
+					String addTimesSql = "update PS_TZ_DZYX_YZM_TBL set TZ_TIMES=? WHERE TZ_TOKEN_CODE=? AND TZ_JG_ID=? AND TZ_TOKEN_TYPE = 'EDIT' AND TZ_EFF_FLAG = 'Y'";
+					jdbcTemplate.update(addTimesSql, new Object[]{times+1,strTokenSign,strOrgid});
+					if(times >= 5) {
+						strBeginUrl = strBeginUrl + "?classid=enrollCls&siteid=" + strSiteId + "&orgid=" + strOrgid
+								+ "&lang=" + strLang + "&sen=4";
+						String message = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE",
+								"999", "重置密码链接可用5次，已超出，请重新发送忘记密码邮件！",
+								"The reset password link is available 5 times. It has been exceeded. Please resend the forgot password email!");
+						str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_TIMEOUT_TIP_HMTL", message,
+								strBeginUrl);
+						return str_content;
+					}
 					if ("ENG".equals(strLang)) {
 						str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_UPDATE_PWD_ENG_HTML",
 								strBeginUrl, strTokenSign2, strLang, loginUrl, strStrongMsg, strNotice, contextPath,
@@ -2652,9 +2666,20 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 						strBeginUrl = strBeginUrl + "?classid=enrollCls&siteid=" + strSiteId + "&orgid=" + strOrgid
 								+ "&lang=" + strLang + "&sen=4";
 					}
-					String message = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE",
-							"58", "重置密码时间为30分钟，已超时，请重新发送忘记密码邮件！",
-							"Reset password time for 30 minutes, has timed out, please re send forget password message!");
+					int overTime = 30;
+					String overTimeStr = GetHardCodePoint.getHardCodePointVal("TZ_EMAIL_OVERTIME");
+					try{
+						overTime = Integer.valueOf(overTimeStr);
+					}catch (Exception e) {
+						e.printStackTrace();
+						overTime = 30;
+					}
+					String message = "";
+					if("ENG".equals(strLang)){
+						message = "Reset password time for "+overTime+" minutes, has timed out, please re send forget password message!";
+					}else {
+						message = "重置密码时间为"+overTime+"分钟，已超时，请重新发送忘记密码邮件！";
+					}
 					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_TIMEOUT_TIP_HMTL", message,
 							strBeginUrl);
 					return str_content;

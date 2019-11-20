@@ -3,9 +3,11 @@ package com.tranzvision.gd.TZWebSiteUtilBundle.service.impl;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +45,8 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 	private TzLoginServiceImpl tzLoginServiceImpl;
 	@Autowired
 	private HttpServletRequest request;
+	@Autowired
+	private GetHardCodePoint getHardCodePoint;
 	
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {
@@ -243,10 +247,7 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 		      	siteid =  jacksonUtil.getString("siteid").trim();
 		      	
 		      	// 生成邮件发送令牌;
-		      	String strSeq = "00000000" + String.valueOf(getSeqNum.getSeqNum("TZ_GD_REGCODE", "TZ_GD_EMAIL"));
-		      	strSeq = strSeq.substring(strSeq.length()-8, strSeq.length());
-		      	SimpleDateFormat datetimeFormate = new SimpleDateFormat("yyyyMMddHHmmss");
-				String strYZM = String.valueOf((int)(Math.random()*100000)) + datetimeFormate.format(new Date())+strSeq;
+				String strYZM = UUID.randomUUID().toString().replaceAll("-","");
 				
 				PsTzDzyxYzmTbl psTzDzyxYzmTbl = new PsTzDzyxYzmTbl();
 				psTzDzyxYzmTbl.setTzDlzhId(strDlzhid);
@@ -406,10 +407,7 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 		      	
 		      	
 		      	// 生成邮件发送令牌;
-		      	String strSeq = "00000000" + String.valueOf(getSeqNum.getSeqNum("TZ_GD_ACTCODE", "TZ_GD_EMAIL"));
-		      	strSeq = strSeq.substring(strSeq.length()-8, strSeq.length());
-		      	SimpleDateFormat datetimeFormate = new SimpleDateFormat("yyyyMMddHHmmss");
-				String strYZM = String.valueOf((int)(Math.random()*100000)) + datetimeFormate.format(new Date())+strSeq;
+				String strYZM = UUID.randomUUID().toString().replaceAll("-","");
 				
 				String zhSQL = "SELECT TZ_DLZH_ID FROM PS_TZ_AQ_YHXX_TBL WHERE LOWER(TZ_EMAIL) = LOWER(?) AND LOWER(TZ_JG_ID)=LOWER(?) AND TZ_JIHUO_ZT <>'Y'";
 				strDlzhid = jdbcTemplate.queryForObject(zhSQL, new Object[]{strEmail,strOrgid},"String");
@@ -592,10 +590,7 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 		      	
 		      	
 		      	// 生成邮件发送令牌;
-		      	String strSeq = "00000000" + String.valueOf(getSeqNum.getSeqNum("TZ_GD_ACTCODE", "TZ_GD_EMAIL"));
-		      	strSeq = strSeq.substring(strSeq.length()-8, strSeq.length());
-		      	SimpleDateFormat datetimeFormate = new SimpleDateFormat("yyyyMMddHHmmss");
-				String strYZM = String.valueOf((int)(Math.random()*100000)) + datetimeFormate.format(new Date())+strSeq;
+				String strYZM = UUID.randomUUID().toString().replaceAll("-","");
 				
 				String zhSQL = "SELECT TZ_DLZH_ID FROM PS_TZ_AQ_YHXX_TBL WHERE LOWER(TZ_EMAIL) = LOWER(?) AND LOWER(TZ_JG_ID)=LOWER(?) AND TZ_JIHUO_ZT ='Y'";
 				strDlzhid = jdbcTemplate.queryForObject(zhSQL, new Object[]{strEmail,strOrgid},"String");
@@ -611,7 +606,14 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 
 				Calendar ca=Calendar.getInstance();
 				ca.setTime(new Date());
-				ca.add(Calendar.MINUTE, 30);
+				int overTime = 30;
+				String overTimeStr = getHardCodePoint.getHardCodePointVal("TZ_EMAIL_OVERTIME");
+				try{
+					overTime = Integer.valueOf(overTimeStr);
+				}catch (Exception e) {
+					overTime = 30;
+				}
+				ca.add(Calendar.MINUTE, overTime);
 				Date yxqDate = ca.getTime();
 				psTzDzyxYzmTbl.setTzYzmYxq(yxqDate);
 				
@@ -760,10 +762,7 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 		      	
 		      	
 		      	// 生成邮件发送令牌;
-		      	String strSeq = "00000000" + String.valueOf(getSeqNum.getSeqNum("TZ_GD_CHANGECODE", "TZ_GD_EMAIL"));
-		      	strSeq = strSeq.substring(strSeq.length()-8, strSeq.length());
-		      	SimpleDateFormat datetimeFormate = new SimpleDateFormat("yyyyMMddHHmmss");
-				String strYZM = String.valueOf((int)(Math.random()*100000)) + datetimeFormate.format(new Date())+strSeq;
+				String strYZM = UUID.randomUUID().toString().replaceAll("-","");
 				
 				PsTzDzyxYzmTbl psTzDzyxYzmTbl = new PsTzDzyxYzmTbl();
 				psTzDzyxYzmTbl.setTzDlzhId(strDlzhid);
