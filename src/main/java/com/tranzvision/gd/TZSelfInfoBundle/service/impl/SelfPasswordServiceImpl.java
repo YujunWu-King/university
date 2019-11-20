@@ -1,7 +1,10 @@
 package com.tranzvision.gd.TZSelfInfoBundle.service.impl;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +13,9 @@ import com.tranzvision.gd.TZAccountMgBundle.model.Psoprdefn;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.captcha.PasswordCheck;
 import com.tranzvision.gd.util.encrypt.DESUtil;
+import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
  * 
@@ -26,6 +31,8 @@ public class SelfPasswordServiceImpl extends FrameworkImpl {
 	private HttpServletRequest request;
 	@Autowired
 	private PsoprdefnMapper psoprdefnMapper;
+	@Autowired
+	private SqlQuery jdbcTemplate;
 	
 	@Override
 	public String tzUpdate(String[] actData, String[] errMsg) {
@@ -72,7 +79,22 @@ public class SelfPasswordServiceImpl extends FrameworkImpl {
 				 errMsg[1] = "新密码不能为空";
 				 return strRet;
 			 }
-			 
+			//弱密码校验
+			 String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+			 String sql="select  TZ_JG_ID from PS_TZ_AQ_YHXX_TBL where OPRID=?";
+			 Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[]{oprid});
+			 String tzjgid=map.get("TZ_JG_ID")==null?"":String.valueOf(map.get("TZ_JG_ID"));
+			 PasswordCheck passwordCheck=new PasswordCheck("",strNewPass,strNewPass);
+			 if(StringUtils.isNotEmpty(tzjgid)){
+				 passwordCheck.setUserName(tzjgid);
+			 }else{
+				 passwordCheck.setUserName("jsd64f190dsf63k23zmcna12dva");
+			 }
+			 if(!passwordCheck.weakLoginPassword()){
+				 errMsg[0] = "1";
+				 errMsg[1] = "弱密码校验没通过";
+				 return strRet;
+			 }
 			 strNewPass = DESUtil.encrypt(strNewPass, "TZGD_Tranzvision");
 			 psoprdefn.setOperpswd(strNewPass);
 			 psoprdefnMapper.updateByPrimaryKeySelective(psoprdefn);

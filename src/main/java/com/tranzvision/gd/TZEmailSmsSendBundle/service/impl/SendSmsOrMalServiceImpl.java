@@ -1,5 +1,6 @@
 package com.tranzvision.gd.TZEmailSmsSendBundle.service.impl;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -8,9 +9,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import java.io.File;
-
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +19,6 @@ import com.tranzvision.gd.TZEmailSmsQFBundle.dao.PsTzZnxMsgTMapper;
 import com.tranzvision.gd.TZEmailSmsQFBundle.dao.PsTzZnxRecTMapper;
 import com.tranzvision.gd.TZEmailSmsQFBundle.dao.PsTzZnxfslshiTblMapper;
 import com.tranzvision.gd.TZEmailSmsQFBundle.dao.PsTzZnxzwlshiTblMapper;
-import com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzDxyjQfDyTWithBLOBs;
 import com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzZnxAttchTBL;
 import com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzZnxMsgT;
 import com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzZnxRecT;
@@ -48,6 +45,7 @@ import com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzDxzwlshiTbl;
 import com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzMalBcAddT;
 import com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzMalCcAddT;
 import com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzRwzxshilTbl;
+import com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzYjfjlshiTbl;
 import com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzYjfslshiTbl;
 import com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzYjfsrizhTbl;
 import com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzYjmbshliTbl;
@@ -57,7 +55,6 @@ import com.tranzvision.gd.util.mailer.TranzvisionMail;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.tsinghua.sms.SendSmsService;
-import com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzYjfjlshiTbl;
 
 /**
  * 邮件短信发送；原：TZ_SMS_MAL:SendSmsOrMal
@@ -137,6 +134,10 @@ public class SendSmsOrMalServiceImpl {
 	private PsTzZnxRecTMapper psTzZnxRecTMapper;
 	@Autowired
 	private PsTzZnxAttchTBLMapper psTzZnxAttchTBLMapper;
+	@Autowired
+	SqlQuery sqlQuery;
+	@Autowired
+	private CreateTaskServiceImpl createTaskServiceImpl;
 
 	// 连接邮件服务器
 	public boolean connectToMailServer(TranzvisionMail mailer, String emailServerId, String strTaskId) {
@@ -725,6 +726,31 @@ public class SendSmsOrMalServiceImpl {
 							this.writeLsMalData(strRwSlId, emailAddrAdd, malSubjectContent, content, "FAIL", strTaskId,
 									prcsinstanceId,audCyId);
 							this.writeLsMalAttchData(strRwSlId, strTaskId);
+						}
+						
+						//判断是否是注册用户
+						String oprid = jdbcTemplate.queryForObject(
+								"select OPRID from PS_TZ_AUDCYUAN_T where TZ_AUDIENCE_ID=? and TZ_AUDCY_ID=?",
+								new Object[] {audId,audCyId}, "String");
+						System.out.println("oprid======================>"+oprid);
+						int isRegUser=jdbcTemplate.queryForObject("SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=? AND TZ_RYLX='ZCYH'",new Object[] {oprid},"int");
+						//发送站内信
+						if(isRegUser>0){
+							System.out.print("sendZnx Start");
+							String taskId = createTaskServiceImpl.createTaskInsTiming(strJgId, "TZ_ZSB_SEND", "ZNX", "A");
+				            // 创建短信、邮件发送的听众;
+				            String createAudience = createTaskServiceImpl.createAudienceTiming(taskId, strJgId, "站内信", "");
+				            
+							String sqlName = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
+							String name = sqlQuery.queryForObject(sqlName, new Object[]{ oprid }, "String");
+				            // 为听众添加听众成员
+				             boolean addAudCy = createTaskServiceImpl.addAudCy(createAudience, name, "", "", "", "",
+				                        "", "", oprid, "", "","");
+				          
+				             createTaskServiceImpl.updateZnxSendContent(taskId, content);
+				             createTaskServiceImpl.updateZnxSendTitle(taskId, malSubjectContent);
+				            this.send(taskId, "");
+				            
 						}
 
 					}

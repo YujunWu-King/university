@@ -7,7 +7,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="google" content="notranslate" />
 	<meta charset="utf-8">
-    <title>宁波（中国）供应链创新学院</title>
+    <title>创景云招生管理门户</title>
     <script type="text/javascript">
 		var TzUniversityContextPath = "${contextPath}";
 	</script>

@@ -4,6 +4,13 @@ SELECT
     TZ_START_DT,
     date_format(TZ_START_DT,'%m月') TZ_MONTH,
    	date_format(TZ_START_DT,'%d') TZ_DAY,
+   	 (SELECT 
+            COUNT(1)
+        FROM
+            PS_TZ_NAUDLIST_T
+        WHERE
+            TZ_ART_ID = A.TZ_ART_ID
+                AND TZ_NREG_STAT = '1') TZ_ALL_COUNT,
     (SELECT 
             COUNT(1)
         FROM

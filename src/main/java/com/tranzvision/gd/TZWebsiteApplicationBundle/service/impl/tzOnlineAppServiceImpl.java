@@ -124,6 +124,9 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 	@Autowired
 	private PsTzClassInfTMapper psTzClassInfTMapper;
 
+	@Autowired
+	private TzOnlineAppSyncImpl tzOnlineAppSync;
+
 	// 张浪添加，2017-09-25
 	// 用于控制每台服务器访问量的信号变量，避免考生同时保存、提交操作过量对服务器造成过大压力,每台服务器允许5(默认5，hardcode[TZ_APPONL_XHL_COUNT]定义)个人进行排队执行保存、提交操作，其他人阻塞等待
 	private static Semaphore onlineAppViewLockCounter = new Semaphore(5, true);
@@ -2001,6 +2004,15 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 						strMsg = tzOnlineAppEngineImpl.saveAppForm(strTplId, numAppInsId, tempClassId, strAppOprId,
 								strData, strTplType, strIsGuest, strAppInsVersionDb, strAppInsState, strBatchId,
 								strClassId, strPwd, strOtype, isPwd, strRefLetterId, isMobile, strAppOrgId, isWeChart);
+
+						// 如果是推荐信就不保存扩展表
+						if (!"".equals(strRefLetterId) && strRefLetterId != null) {
+							System.out.println("TJXID===>"+strRefLetterId);
+						} else {
+							// 报名表高级设置同步
+							tzOnlineAppSync.appSyncMain(numAppInsId, strTplId, strAppOprId);
+						}
+
 						if ("".equals(strMsg)) {
 							strMsg = tzOnlineAppEngineImpl.checkFiledValid(numAppInsId, strTplId, strPageId, "submit",
 									strTplType, strClassId, strBatchId, strLanguage, strIsAdmin);
@@ -2210,6 +2222,14 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 						// }
 						// }
 
+						// 如果是推荐信就不保存扩展表
+						if (!"".equals(strRefLetterId) && strRefLetterId != null) {
+							System.out.println("THXID===>"+strRefLetterId);
+						} else {
+							// 报名表高级设置同步
+							tzOnlineAppSync.appSyncMain(numAppInsId, strTplId, strAppOprId);
+						}
+
 						// 提交数据
 						// String strMsgAlter = "";
 						if ("".equals(strMsg)) {
@@ -2245,6 +2265,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 						if (StringUtils.equals("Y", strIsAdmin) && StringUtils.equals("Y", strIsEdit)) {
 							// 如果是管理员并且可编辑的话继续 By WRL@20161027
 							tzOnlineAppEngineImpl.savaContactInfo(numAppInsId, strTplId, strAppOprId);
+							// 报名表高级设置同步
+							tzOnlineAppSync.appSyncMain(numAppInsId, strTplId, strAppOprId);
 						} else {
 							strMsg = tzOnlineAppEngineImpl.submitAppForm(numAppInsId, strClassId, strAppOprId,
 									strTplType, strBatchId, strPwd, isPwd);
@@ -2254,6 +2276,9 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 									// 同步报名人联系方式 提交成功后保存数据
 									tzOnlineAppEngineImpl.savaAppKsInfoExt(numAppInsId, strAppOprId);
 								}
+
+								// 报名表高级设置同步
+								tzOnlineAppSync.appSyncMain(numAppInsId, strTplId, strAppOprId);
 
 								tzOnlineAppEngineImpl.savaContactInfo(numAppInsId, strTplId, strAppOprId);
 								// 发送邮件
