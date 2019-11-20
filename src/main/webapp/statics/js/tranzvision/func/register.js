@@ -572,7 +572,7 @@ $(document).ready(function(){
 			}
 			
 			num4 = num1 + num2 + num3;
-			if(num4 < 1){
+			if(num4 < 1&&num5!=1){
 				$("#J_PwdTip .pw-strength-1").css("background-color","");
 				$("#J_PwdTip .pw-strength-2").css("background-color","");
 				$("#J_PwdTip .pw-strength-3").css("background-color","");

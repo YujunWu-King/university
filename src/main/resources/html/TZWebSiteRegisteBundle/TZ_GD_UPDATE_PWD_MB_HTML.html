@@ -7,32 +7,89 @@
 <link href="page_stylecss" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="%bind(:7)/statics/js/lib/jquery/jquery.min.js"></script>
 <script type="text/javascript">
-$(document).ready(function(){ 
-	create_yzm();//获取验证码
-	$("#reNewPassword").val("");
-	$("#reNewPassword").val("");
-	$("#yzm").val("");	
-	$("#status_password").val("");
-	$("#status_yzm").val("");	
-	$("#NewPassword").on("focus",function(){
-		var top = $("#NewPassword").position().top;
-		var left = $("#NewPassword").position().left;
-		var height = $("#NewPassword").height()
-		var width = $("#NewPassword").width()
-		var hi = $("#J_PwdTip").height();
+	$(document).ready(function(){ 
+		create_yzm();//获取验证码
+		$("#reNewPassword").val("");
+		$("#reNewPassword").val("");
+		$("#yzm").val("");	
+		$("#status_password").val("");
+		$("#status_yzm").val("");	
+    }).on("click", "#submitPassword", function () {
+		var pwd=$("#NewPassword").val();
+		var repwd=$("#reNewPassword").val();
+		pwd=encodeURI(pwd);
+		repwd=encodeURI(repwd);
+	    var strYZM=$("#yzm").val();
+		var passwordFlg=$("#status_password").val();
+		var yzmFlg=$("#status_yzm").val();
+		if(passwordFlg =='0' && yzmFlg=='0'){
+	        var tzParams1 = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_SMS_STD","OperateType":"QF","comParams":{"pwd":"'+pwd+'","repwd":"'+repwd+'","checkCode":"'+strYZM+'","phone":"%bind(:2)","lang":"%bind(:3)","orgid":"%bind(:4)","siteid":"%bind(:10)","sen":"5"}}';
+	        var tzParams2 = {};
+	        tzParams2.ComID = "TZ_SITE_UTIL_COM";
+	        tzParams2.PageID = "TZ_SITE_SMS_STD";
+	        tzParams2.OperateType = "QF";
+	        tzParams2.comParams = {};
+	        tzParams2.comParams.pwd = pwd;
+	        tzParams2.comParams.repwd = repwd;
+	        tzParams2.comParams.checkCode = strYZM;
+	        tzParams2.comParams.phone = "%bind(:2)";
+	        tzParams2.comParams.lang = "%bind(:3)";
+	        tzParams2.comParams.sen = "5";
+	        tzParams2.comParams.orgid = "%bind(:4)";
+	        tzParams2.comParams.siteid = "%bind(:10)";
+
+
+	        var tzParams = "";
+	        if(JSON && JSON.stringify)
+	        {
+	          tzParams = JSON.stringify(tzParams2);
+	        }
+	        else
+	        {
+	          tzParams = tzParams1;
+	        }
+
+			$.ajax({
+				type: "post",
+				async :false,
+				data:{
+					tzParams:tzParams
+				},
+				url:"%bind(:1)",
+				dataType: "json",
+				success: function(result){
+					if(result.comContent.result =="success"){
+						alert("密码修改成功！");
+						window.location.href=result.comContent.jumpurl;
+					}else{
+						create_yzm();//重新获取验证码
+						alert(result.state.errdesc);					
+					}
+				}
+			})
 		
-		left = left + width + 15;
-		top = top + (height - hi) / 2;
-		$("#J_PwdTip").css("display","block");
-		$("#J_PwdTip").css("left",left);
-		$("#J_PwdTip").css("top",top);
+		}else{
+			check_password();
+		}
+		create_yzm();//重新获取验证码
+		document.getElementById("updatePassWord").reset(); 
+		$("#status_password").val('');
+		$("#status_yzm").val('');
 	});
-	$("#NewPassword").on("blur",function(){
-		$("#J_PwdTip").css("display","none");
-	});
+	function loseFo(){
+        var top = $("#NewPassword").position().top;
+        var left = $("#NewPassword").position().left;
+        var height = $("#NewPassword").height()
+        var width = $("#NewPassword").width()
+        var hi = $("#J_PwdTip").height();
 
-
-setInterval(function(){
+        left = left + width + 15;
+        top = top + (height - hi) / 2;
+        $("#J_PwdTip").css("display","block");
+        $("#J_PwdTip").css("left",left);
+        $("#J_PwdTip").css("top",top);
+    }
+	setInterval(function(){
 		var val = $("#NewPassword").val();
 		if(val != "" && val != null){
 			var patrn;
@@ -62,7 +119,6 @@ setInterval(function(){
 					num = num + 1;
 				}else{
 					num5=1;
-					$("#vastaicP_zc").val("3");
 				}
 				
 			}
@@ -116,7 +172,7 @@ setInterval(function(){
 			}
 			
 			num4 = num1 + num2 + num3;
-			if(num4 < 1){
+			if(num4 < 1&&num5!=1){
 				$("#J_PwdTip .pw-strength-1").css("background-color","");
 				$("#J_PwdTip .pw-strength-2").css("background-color","");
 				$("#J_PwdTip .pw-strength-3").css("background-color","");
@@ -193,69 +249,6 @@ setInterval(function(){
 		}
 		addCheck();
 	},200);
-	
-    }).on("click", "#submitPassword", function () {
-		var pwd=$("#NewPassword").val();
-		var repwd=$("#reNewPassword").val();
-		pwd=encodeURI(pwd);
-		repwd=encodeURI(repwd);
-	    var strYZM=$("#yzm").val();
-		var passwordFlg=$("#status_password").val();
-		var yzmFlg=$("#status_yzm").val();
-		if(passwordFlg =='0' && yzmFlg=='0'){
-	        var tzParams1 = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_SMS_STD","OperateType":"QF","comParams":{"pwd":"'+pwd+'","repwd":"'+repwd+'","checkCode":"'+strYZM+'","phone":"%bind(:2)","lang":"%bind(:3)","orgid":"%bind(:4)","siteid":"%bind(:10)","sen":"5"}}';
-	        var tzParams2 = {};
-	        tzParams2.ComID = "TZ_SITE_UTIL_COM";
-	        tzParams2.PageID = "TZ_SITE_SMS_STD";
-	        tzParams2.OperateType = "QF";
-	        tzParams2.comParams = {};
-	        tzParams2.comParams.pwd = pwd;
-	        tzParams2.comParams.repwd = repwd;
-	        tzParams2.comParams.checkCode = strYZM;
-	        tzParams2.comParams.phone = "%bind(:2)";
-	        tzParams2.comParams.lang = "%bind(:3)";
-	        tzParams2.comParams.sen = "5";
-	        tzParams2.comParams.orgid = "%bind(:4)";
-	        tzParams2.comParams.siteid = "%bind(:10)";
-
-
-	        var tzParams = "";
-	        if(JSON && JSON.stringify)
-	        {
-	          tzParams = JSON.stringify(tzParams2);
-	        }
-	        else
-	        {
-	          tzParams = tzParams1;
-	        }
-
-			$.ajax({
-				type: "post",
-				async :false,
-				data:{
-					tzParams:tzParams
-				},
-				url:"%bind(:1)",
-				dataType: "json",
-				success: function(result){
-					if(result.comContent.result =="success"){
-						alert("密码修改成功！");
-						window.location.href=result.comContent.jumpurl;
-					}else{
-						create_yzm();//重新获取验证码
-						alert(result.state.errdesc);					
-					}
-				}
-			})
-		
-		}else{
-			check_password();
-		}
-		create_yzm();//重新获取验证码
-		document.getElementById("updatePassWord").reset(); 
-		$("#status_password").val('');
-		$("#status_yzm").val('');
-	})
 
 	document.onkeydown = function(e){
 		var ev = document.all ? window.event : e;
@@ -263,7 +256,7 @@ setInterval(function(){
 				$("#submitPassword").trigger("click");
 		}
 	}
-	
+
 //获取URL传递的参数 
 function getQueryString(name) {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
@@ -328,6 +321,7 @@ function check_yzm(val){
 
 //判断输入的密码是否一致
 function check_password(){
+	$("#J_PwdTip").css("display","none");
 	var password =$("#NewPassword").val();
 	var repassword=$("#reNewPassword").val();
 	if(password !=''){
@@ -367,11 +361,6 @@ function check_password(){
 								$("#new_pwd_style").removeClass("alert_display_none");
 								$("#new_repwd_style").addClass("alert_display_none");
 						}
- 						if($("#vastaicP_zc").val()=="3"){
- 		                    $('#password_status').html("不能包含特许字符");
- 		                    $('#status_password').attr("value", 1);
- 		                    $("#new_pwd_style").removeClass("alert_display_none")
- 		                }
 				 if($("#status_PASSWORD").val()=="2"){
 				     $('#password_status').html("密码格式错误");
 				     $('#status_password').attr("value", 1);
@@ -577,7 +566,6 @@ function addCheck() {
 </head>
 <body style="overflow-x:hidden;">
 <!-- content start -->
-<input id="vastaicP_zc" hidden="hidden" value=""/>
 <div id="main">
 <form action="" method="post" enctype="multipart/form-data" name="updatePassWord" id="updatePassWord">
 <div class="padding_div_40px2"></div>
@@ -594,7 +582,7 @@ function addCheck() {
     <div class="main_full_line_left"><span class="reg_title_star">*</span>新密码：</div>
   
     <div class="main_full_line_right">
-      <input name="NewPassword" type="password" class="input_251px" id="NewPassword" onblur="check_password()"/>
+      <input name="NewPassword" type="password" class="input_251px" id="NewPassword" onblur="check_password()" onfocus="loseFo()"/>
 	  <input id="status_PASSWORD" type="hidden" name="status_PASSWORD" value="1">
 		<div class="pw-tip" id="J_PwdTip" style="display:none;position:absolute;">
 		<i class="pw-tip-arr"></i>

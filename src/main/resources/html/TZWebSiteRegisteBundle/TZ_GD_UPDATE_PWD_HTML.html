@@ -14,188 +14,6 @@ $(document).ready(function(){
 	$("#yzm").val("");	
 	$("#status_password").val("");
 	$("#status_yzm").val("");	
-	
-	$("#NewPassword").on("focus",function(){
-		var top = $("#NewPassword").position().top;
-		var left = $("#NewPassword").position().left;
-		var height = $("#NewPassword").height()
-		var width = $("#NewPassword").width()
-		var hi = $("#J_PwdTip").height();
-		
-		left = left + width + 15;
-		top = top + (height - hi) / 2;
-		$("#J_PwdTip").css("display","block");
-		$("#J_PwdTip").css("left",left);
-		$("#J_PwdTip").css("top",top);
-	});
-	$("#NewPassword").on("blur",function(){
-		$("#J_PwdTip").css("display","none");
-	});
-
-
-	setInterval(function(){
-		var val = $("#NewPassword").val();
-		if(val != "" && val != null){
-			var patrn;
-			var num = 0;
-			var num1 = 0;
-			var num2 = 0;
-			var num3 = 0;
-			var num4 = 0;
-			var num5=0;
-			var num6=0;
-			var str1 = 0;
-			var str2 = 0;
-			var cr;
-			for (var i=0;i<val.length ;i++ )
-			{
-				 cr = val.charAt(i);
-						
-				
-				/*
-				patrn= /[^\d\w\s]/;
-				if (patrn.test(val)){
-					num = num + 1;
-				}
-				*/
-				patrn= /\w/;
-				if (patrn.test(cr)){
-					num = num + 1;
-				}else{
-					num5=1;
-					$("#vastaicP_zc").val("3");
-				}
-				
-			}
-			
-				patrn= /[A-Z]/;
-				if (patrn.test(val)){
-					num6 = num6+1;
-				}
-				patrn= /[a-z]/;
-				if (patrn.test(val)){
-					num6 = num6+1;
-				}
-				patrn= /[0-9]/;
-				if (patrn.test(val)){
-					num6 = num6+1;
-				}
-				patrn= /[_]/;
-				if (patrn.test(val)){
-					num6 = num6+1;
-				}
-
-			if(val.length >= 6 && val.length <= 32){
-				num1 = 1;				
-				$("#J_PwdTip .pw-rule-length .iconfont").html("√");
-				$("#J_PwdTip .pw-rule-length .iconfont").css("color","#14c2b3");
-			}else{
-				num1 = 0;
-				$("#J_PwdTip .pw-rule-length .iconfont").html("X");
-				$("#J_PwdTip .pw-rule-length .iconfont").css("color","#FF460F");
-			}
-			
-			if(num > 0 && num5==0){
-				num2 = 1;
-				$("#J_PwdTip .pw-rule-legal .iconfont").html("√");
-				$("#J_PwdTip .pw-rule-legal .iconfont").css("color","#14c2b3");
-			}else{
-				
-				num2 = 0;
-				$("#J_PwdTip .pw-rule-legal .iconfont").html("X");
-				$("#J_PwdTip .pw-rule-legal .iconfont").css("color","#FF460F");
-			}
-			
-			if(num5==0 && num6>1){
-				num3 = 1;
-				$("#J_PwdTip .pw-rule-multi .iconfont").html("√");
-				$("#J_PwdTip .pw-rule-multi .iconfont").css("color","#14c2b3");
-			}else{
-				num3 = 0;
-				$("#J_PwdTip .pw-rule-multi .iconfont").html("X");
-				$("#J_PwdTip .pw-rule-multi .iconfont").css("color","#FF460F");
-			}
-			
-			num4 = num1 + num2 + num3;
-			if(num4 < 1){
-				$("#J_PwdTip .pw-strength-1").css("background-color","");
-				$("#J_PwdTip .pw-strength-2").css("background-color","");
-				$("#J_PwdTip .pw-strength-3").css("background-color","");
-				
-				$("#J_PwdTip .pw-rule-length .iconfont").html("О");
-				$("#J_PwdTip .pw-rule-length .iconfont").css("color","");
-				$("#J_PwdTip .pw-rule-legal .iconfont").html("О");
-				$("#J_PwdTip .pw-rule-legal .iconfont").css("color","");
-				$("#J_PwdTip .pw-rule-multi .iconfont").html("О");
-				$("#J_PwdTip .pw-rule-multi .iconfont").css("color","");
-				
-				$("#J_PwdTip .pw-strength .pw-strength-bar em").html("");
-				$("#J_PwdTip .pw-strength .pw-strength-bar em").css("color","");
-				
-				$("#J_PwdTip .pw-strength .pw-strength-bar em").html("");
-			}
-			if(num4 >= 1){
-				$("#J_PwdTip .pw-strength-1").css("background-color","#FF460F");
-				$("#J_PwdTip .pw-strength-2").css("background-color","");
-				$("#J_PwdTip .pw-strength-3").css("background-color","");
-				if ($("#lang").val()=="ENG"){
-					$("#J_PwdTip .pw-strength .pw-strength-bar em").html("weak");
-					$("#J_PwdTip .pw-strength .pw-strength-bar em").css("color","#FF460F");
-				}else{
-					$("#J_PwdTip .pw-strength .pw-strength-bar em").html("低");
-					$("#J_PwdTip .pw-strength .pw-strength-bar em").css("color","#FF460F");
-				}
-			}
-			if(num4 >= 2){
-				$("#J_PwdTip .pw-strength-2").css("background-color","#FF460F");
-				$("#J_PwdTip .pw-strength-3").css("background-color","");
-				if ($("#lang").val()=="ENG"){
-					$("#J_PwdTip .pw-strength .pw-strength-bar em").html("average");
-					$("#J_PwdTip .pw-strength .pw-strength-bar em").css("color","#0A9E00");
-				}else{
-					$("#J_PwdTip .pw-strength .pw-strength-bar em").html("中");
-					$("#J_PwdTip .pw-strength .pw-strength-bar em").css("color","#FF460F");
-				}
-			}
-
-			if(num5==0 && num4>=3 && num>10){
-				$("#J_PwdTip .pw-strength-1").css("background-color","#0A9E00");
-				$("#J_PwdTip .pw-strength-2").css("background-color","#0A9E00");
-				$("#J_PwdTip .pw-strength-3").css("background-color","#0A9E00");
-				if ($("#lang").val()=="ENG"){
-				
-					$("#J_PwdTip .pw-strength .pw-strength-bar em").html("strong");
-					$("#J_PwdTip .pw-strength .pw-strength-bar em").css("color","#0A9E00");
-				}else{
-					$("#J_PwdTip .pw-strength .pw-strength-bar em").html("高");
-					$("#J_PwdTip .pw-strength .pw-strength-bar em").css("color","#0A9E00");
-				}
-			}
-
-			if(num4 >= 3){
-				$('#status_PASSWORD').attr("value", 0);
-			}else{
-				$('#status_PASSWORD').attr("value", 1);
-			}
-			
-		}else{
-			$("#J_PwdTip .pw-strength-1").css("background-color","");
-			$("#J_PwdTip .pw-strength-2").css("background-color","");
-			$("#J_PwdTip .pw-strength-3").css("background-color","");
-			
-			$("#J_PwdTip .pw-rule-length .iconfont").html("О");
-			$("#J_PwdTip .pw-rule-length .iconfont").css("color","");
-			$("#J_PwdTip .pw-rule-legal .iconfont").html("О");
-			$("#J_PwdTip .pw-rule-legal .iconfont").css("color","");
-			$("#J_PwdTip .pw-rule-multi .iconfont").html("О");
-			$("#J_PwdTip .pw-rule-multi .iconfont").css("color","");
-			
-			$("#J_PwdTip .pw-strength .pw-strength-bar em").html("");
-		}
-		addCheck();
-	},200);
-	
-	
     }).on("click", "#submitPassword", function () {
 			var pwd=$("#NewPassword").val();
 			var repwd=$("#reNewPassword").val();
@@ -253,8 +71,180 @@ $(document).ready(function(){
 			document.getElementById("updatePassWord").reset(); 
 			$("#status_password").val('');
 		    $("#status_yzm").val('');
-	})
+	});
+function loseFo(){
+    var top = $("#NewPassword").position().top;
+    var left = $("#NewPassword").position().left;
+    var height = $("#NewPassword").height()
+    var width = $("#NewPassword").width()
+    var hi = $("#J_PwdTip").height();
 
+    left = left + width + 15;
+    top = top + (height - hi) / 2;
+    $("#J_PwdTip").css("display","block");
+    $("#J_PwdTip").css("left",left);
+    $("#J_PwdTip").css("top",top);
+};
+setInterval(function(){
+	var val = $("#NewPassword").val();
+	if(val != "" && val != null){
+		var patrn;
+		var num = 0;
+		var num1 = 0;
+		var num2 = 0;
+		var num3 = 0;
+		var num4 = 0;
+		var num5=0;
+		var num6=0;
+		var str1 = 0;
+		var str2 = 0;
+		var cr;
+		for (var i=0;i<val.length ;i++ )
+		{
+			 cr = val.charAt(i);
+					
+			
+			/*
+			patrn= /[^\d\w\s]/;
+			if (patrn.test(val)){
+				num = num + 1;
+			}
+			*/
+			patrn= /\w/;
+			if (patrn.test(cr)){
+				num = num + 1;
+			}else{
+				num5=1;
+			}
+			
+		}
+		
+			patrn= /[A-Z]/;
+			if (patrn.test(val)){
+				num6 = num6+1;
+			}
+			patrn= /[a-z]/;
+			if (patrn.test(val)){
+				num6 = num6+1;
+			}
+			patrn= /[0-9]/;
+			if (patrn.test(val)){
+				num6 = num6+1;
+			}
+			patrn= /[_]/;
+			if (patrn.test(val)){
+				num6 = num6+1;
+			}
+
+		if(val.length >= 6 && val.length <= 32){
+			num1 = 1;				
+			$("#J_PwdTip .pw-rule-length .iconfont").html("√");
+			$("#J_PwdTip .pw-rule-length .iconfont").css("color","#14c2b3");
+		}else{
+			num1 = 0;
+			$("#J_PwdTip .pw-rule-length .iconfont").html("X");
+			$("#J_PwdTip .pw-rule-length .iconfont").css("color","#FF460F");
+		}
+		
+		if(num > 0 && num5==0){
+			num2 = 1;
+			$("#J_PwdTip .pw-rule-legal .iconfont").html("√");
+			$("#J_PwdTip .pw-rule-legal .iconfont").css("color","#14c2b3");
+		}else{
+			
+			num2 = 0;
+			$("#J_PwdTip .pw-rule-legal .iconfont").html("X");
+			$("#J_PwdTip .pw-rule-legal .iconfont").css("color","#FF460F");
+		}
+		
+		if(num5==0 && num6>1){
+			num3 = 1;
+			$("#J_PwdTip .pw-rule-multi .iconfont").html("√");
+			$("#J_PwdTip .pw-rule-multi .iconfont").css("color","#14c2b3");
+		}else{
+			num3 = 0;
+			$("#J_PwdTip .pw-rule-multi .iconfont").html("X");
+			$("#J_PwdTip .pw-rule-multi .iconfont").css("color","#FF460F");
+		}
+		
+		num4 = num1 + num2 + num3;
+		if(num4 < 1&&num5!=1){
+			$("#J_PwdTip .pw-strength-1").css("background-color","");
+			$("#J_PwdTip .pw-strength-2").css("background-color","");
+			$("#J_PwdTip .pw-strength-3").css("background-color","");
+			
+			$("#J_PwdTip .pw-rule-length .iconfont").html("О");
+			$("#J_PwdTip .pw-rule-length .iconfont").css("color","");
+			$("#J_PwdTip .pw-rule-legal .iconfont").html("О");
+			$("#J_PwdTip .pw-rule-legal .iconfont").css("color","");
+			$("#J_PwdTip .pw-rule-multi .iconfont").html("О");
+			$("#J_PwdTip .pw-rule-multi .iconfont").css("color","");
+			
+			$("#J_PwdTip .pw-strength .pw-strength-bar em").html("");
+			$("#J_PwdTip .pw-strength .pw-strength-bar em").css("color","");
+			
+			$("#J_PwdTip .pw-strength .pw-strength-bar em").html("");
+		}
+		if(num4 >= 1){
+			$("#J_PwdTip .pw-strength-1").css("background-color","#FF460F");
+			$("#J_PwdTip .pw-strength-2").css("background-color","");
+			$("#J_PwdTip .pw-strength-3").css("background-color","");
+			if ($("#lang").val()=="ENG"){
+				$("#J_PwdTip .pw-strength .pw-strength-bar em").html("weak");
+				$("#J_PwdTip .pw-strength .pw-strength-bar em").css("color","#FF460F");
+			}else{
+				$("#J_PwdTip .pw-strength .pw-strength-bar em").html("低");
+				$("#J_PwdTip .pw-strength .pw-strength-bar em").css("color","#FF460F");
+			}
+		}
+		if(num4 >= 2){
+			$("#J_PwdTip .pw-strength-2").css("background-color","#FF460F");
+			$("#J_PwdTip .pw-strength-3").css("background-color","");
+			if ($("#lang").val()=="ENG"){
+				$("#J_PwdTip .pw-strength .pw-strength-bar em").html("average");
+				$("#J_PwdTip .pw-strength .pw-strength-bar em").css("color","#0A9E00");
+			}else{
+				$("#J_PwdTip .pw-strength .pw-strength-bar em").html("中");
+				$("#J_PwdTip .pw-strength .pw-strength-bar em").css("color","#FF460F");
+			}
+		}
+
+		if(num5==0 && num4>=3 && num>10){
+			$("#J_PwdTip .pw-strength-1").css("background-color","#0A9E00");
+			$("#J_PwdTip .pw-strength-2").css("background-color","#0A9E00");
+			$("#J_PwdTip .pw-strength-3").css("background-color","#0A9E00");
+			if ($("#lang").val()=="ENG"){
+			
+				$("#J_PwdTip .pw-strength .pw-strength-bar em").html("strong");
+				$("#J_PwdTip .pw-strength .pw-strength-bar em").css("color","#0A9E00");
+			}else{
+				$("#J_PwdTip .pw-strength .pw-strength-bar em").html("高");
+				$("#J_PwdTip .pw-strength .pw-strength-bar em").css("color","#0A9E00");
+			}
+		}
+
+		if(num4 >= 3){
+			$('#status_PASSWORD').attr("value", 0);
+		}else{
+			$('#status_PASSWORD').attr("value", 1);
+		}
+		
+	}else{
+		$("#J_PwdTip .pw-strength-1").css("background-color","");
+		$("#J_PwdTip .pw-strength-2").css("background-color","");
+		$("#J_PwdTip .pw-strength-3").css("background-color","");
+		
+		$("#J_PwdTip .pw-rule-length .iconfont").html("О");
+		$("#J_PwdTip .pw-rule-length .iconfont").css("color","");
+		$("#J_PwdTip .pw-rule-legal .iconfont").html("О");
+		$("#J_PwdTip .pw-rule-legal .iconfont").css("color","");
+		$("#J_PwdTip .pw-rule-multi .iconfont").html("О");
+		$("#J_PwdTip .pw-rule-multi .iconfont").css("color","");
+		
+		$("#J_PwdTip .pw-strength .pw-strength-bar em").html("");
+	}
+	addCheck();
+},200);
 //获取URL传递的参数 
 function getQueryString(name) {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
@@ -319,6 +309,7 @@ function check_yzm(val){
 
 //判断输入的密码是否一致
 function check_password(){
+	$("#J_PwdTip").css("display","none");
 	var password =$("#NewPassword").val();
 	var repassword=$("#reNewPassword").val();
 	if(password !=''){
@@ -363,11 +354,6 @@ function check_password(){
 					        $('#status_password').attr("value", 1);
 					        $("#new_pwd_style").removeClass("alert_display_none");
 					    }
-					 	if($("#vastaicP_zc").val()=="3"){
-                            $('#password_status').html("不能包含特许字符");
-                            $('#status_password').attr("value", 1);
-                            $("#new_pwd_style").removeClass("alert_display_none")
-                        }
 		}else {
 			$('#password_status').html("密码不能为空！");
 			$('#status_password').attr("value", 1); 
@@ -572,7 +558,6 @@ function addCheck() {
 </head>
 <body>
 <!-- content start -->
-<input id="vastaicP_zc" hidden="hidden" value=""/>
 <input id="staticSignTips" value="" hidden="hidden"/>
 <div id="main">
 <form action="" method="post" enctype="multipart/form-data" name="updatePassWord" id="updatePassWord">
@@ -590,7 +575,7 @@ function addCheck() {
     <div class="main_full_line_left"><span class="reg_title_star">*</span>新密码：</div>
   
     <div class="main_full_line_right">
-      <input name="NewPassword" type="password" class="input_251px" id="NewPassword" onblur="check_password()"/>
+      <input name="NewPassword" type="password" class="input_251px" id="NewPassword" onblur="check_password()" onfocus="loseFo()"/>
 	  <input id="status_PASSWORD" type="hidden" name="status_PASSWORD" value="1">
 		<div class="pw-tip" id="J_PwdTip" style="display:none;position:absolute;">
 		<i class="pw-tip-arr"></i>
