@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +33,7 @@ import com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsInfoTWithBLOBs;
 import com.tranzvision.gd.TZWebSiteRegisteBundle.dao.PsTzDzyxYzmTblMapper;
 import com.tranzvision.gd.TZWebSiteRegisteBundle.model.PsTzDzyxYzmTbl;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.captcha.PasswordCheck;
 import com.tranzvision.gd.util.captcha.Patchca;
 import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
@@ -288,6 +290,33 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				String strTZ_PASSWORD = "";
 				if (dataMap.containsKey("TZ_PASSWORD")) {
 					strTZ_PASSWORD = ((String) dataMap.get("TZ_PASSWORD")).trim();
+					PasswordCheck passwordCheck = new PasswordCheck("",strTZ_PASSWORD,strTZ_PASSWORD);
+					String strTZ_EMAILZC = "";
+					String strTZ_MOBILEZC = "";
+					if(dataMap.containsKey("TZ_MOBILE")){
+						strTZ_MOBILEZC=((String) dataMap.get("TZ_MOBILE")).trim();
+						if(StringUtils.isNotEmpty(strTZ_MOBILEZC)){
+							passwordCheck.setUserName(strTZ_MOBILEZC);
+							if(!passwordCheck.weakLoginPassword()){
+								errMsg[0] = "3";
+								errMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgId, strLang, "TZ_PASSWORD", "52",
+										"密码校验失败，非法密码", "Password verification failed");
+								return strResult;
+							}
+						}
+					}
+					if(dataMap.containsKey("TZ_EMAIL")){
+						strTZ_EMAILZC=((String) dataMap.get("TZ_EMAIL")).trim();
+						if(StringUtils.isNotEmpty(strTZ_EMAILZC)){
+							passwordCheck.setUserName(strTZ_EMAILZC);
+							if(!passwordCheck.weakLoginPassword()){
+								errMsg[0] = "3";
+								errMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgId, strLang, "TZ_PASSWORD", "52",
+										"密码校验失败，非法密码", "Password verification failed");
+								return strResult;
+							}
+						}
+					}
 				}
 
 				// 确认密码;
@@ -1641,6 +1670,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		try {
 			jacksonUtil.json2Map(strParams);
 			strPwd = jacksonUtil.getString("pwd");
+			PasswordCheck passwordCheck = new PasswordCheck("a14aff321da4sd23dc1cww51zz",strPwd,strPwd);
 			strRePwd = jacksonUtil.getString("repwd");
 			strCheckCode = jacksonUtil.getString("checkCode");
 			strLang = jacksonUtil.getString("lang");
@@ -1694,6 +1724,12 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 							"新密码和确认密码不一致", "New Password and Confirm Password is not consistent");
 					return strResult;
 				}
+				if(!passwordCheck.weakLoginPassword()){
+                    errMsg[0] = "9";
+                    errMsg[1] = validateUtil.getMessageTextWithLanguageCd(strJgId, strLang, "TZ_SITE_MESSAGE", "987",
+                            "密码校验失败，非法密码", "Password verification failed");
+                    return strResult;
+                }
 
 				// 修改用户密码
 				String password = DESUtil.encrypt(strPwd, "TZGD_Tranzvision");
@@ -2568,7 +2604,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			String loginUrl = contextPath + "/user/login/" + strOrgid.toLowerCase() + "/" + strSiteId;
 
 			String str_content = "";
-			String yzmSQL = "SELECT TZ_DLZH_ID,TZ_YZM_YXQ FROM PS_TZ_DZYX_YZM_TBL WHERE TZ_TOKEN_CODE=? AND TZ_JG_ID=? AND TZ_TOKEN_TYPE = 'EDIT' AND TZ_EFF_FLAG = 'Y' ORDER BY TZ_CNTLOG_ADDTIME DESC limit 0,1";
+			String yzmSQL = "SELECT TZ_DLZH_ID,TZ_YZM_YXQ,TZ_TIMES FROM PS_TZ_DZYX_YZM_TBL WHERE TZ_TOKEN_CODE=? AND TZ_JG_ID=? AND TZ_TOKEN_TYPE = 'EDIT' AND TZ_EFF_FLAG = 'Y' ORDER BY TZ_CNTLOG_ADDTIME DESC limit 0,1";
 			Map<String, Object> yzmMap = jdbcTemplate.queryForMap(yzmSQL, new Object[] { strTokenSign, strOrgid });
 
 			String JGID = jdbcTemplate.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?",
@@ -2585,6 +2621,20 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				Date curDate = new Date();
 				if (curDate.before(dtYxq)) {
 					// 有效；
+					//访问一次记录加1，最多访问5次
+					int times  = yzmMap.get("TZ_TIMES")==null ? 0 : Integer.parseInt(yzmMap.get("TZ_TIMES").toString());
+					String addTimesSql = "update PS_TZ_DZYX_YZM_TBL set TZ_TIMES=? WHERE TZ_TOKEN_CODE=? AND TZ_JG_ID=? AND TZ_TOKEN_TYPE = 'EDIT' AND TZ_EFF_FLAG = 'Y'";
+					jdbcTemplate.update(addTimesSql, new Object[]{times+1,strTokenSign,strOrgid});
+					if(times >= 5) {
+						strBeginUrl = strBeginUrl + "?classid=enrollCls&siteid=" + strSiteId + "&orgid=" + strOrgid
+								+ "&lang=" + strLang + "&sen=4";
+						String message = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE",
+								"999", "重置密码链接可用5次，已超出，请重新发送忘记密码邮件！",
+								"The reset password link is available 5 times. It has been exceeded. Please resend the forgot password email!");
+						str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_TIMEOUT_TIP_HMTL", message,
+								strBeginUrl);
+						return str_content;
+					}
 					if ("ENG".equals(strLang)) {
 						str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_UPDATE_PWD_ENG_HTML",
 								strBeginUrl, strTokenSign2, strLang, loginUrl, strStrongMsg, strNotice, contextPath,
@@ -2616,9 +2666,20 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 						strBeginUrl = strBeginUrl + "?classid=enrollCls&siteid=" + strSiteId + "&orgid=" + strOrgid
 								+ "&lang=" + strLang + "&sen=4";
 					}
-					String message = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE",
-							"58", "重置密码时间为30分钟，已超时，请重新发送忘记密码邮件！",
-							"Reset password time for 30 minutes, has timed out, please re send forget password message!");
+					int overTime = 30;
+					String overTimeStr = GetHardCodePoint.getHardCodePointVal("TZ_EMAIL_OVERTIME");
+					try{
+						overTime = Integer.valueOf(overTimeStr);
+					}catch (Exception e) {
+						e.printStackTrace();
+						overTime = 30;
+					}
+					String message = "";
+					if("ENG".equals(strLang)){
+						message = "Reset password time for "+overTime+" minutes, has timed out, please re send forget password message!";
+					}else {
+						message = "重置密码时间为"+overTime+"分钟，已超时，请重新发送忘记密码邮件！";
+					}
 					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_TIMEOUT_TIP_HMTL", message,
 							strBeginUrl);
 					return str_content;

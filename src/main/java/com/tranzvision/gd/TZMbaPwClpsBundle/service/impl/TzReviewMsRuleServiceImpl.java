@@ -29,6 +29,7 @@ import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPsGzTbl;
 import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPsPwTbl;
 import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzPwExtTbl;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.captcha.PasswordCheck;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.encrypt.DESUtil;
 import com.tranzvision.gd.util.poi.excel.ExcelHandle;
@@ -512,6 +513,7 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 		Date nowtime = new Date();
 
 		String oldpwdisY = "SELECT COUNT(1) FROM PS_TZ_PW_EXT_T WHERE TZ_JG_ID=? AND OPRID=?";
+		String sqlUName = "SELECT TZ_DLZH_ID FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_JG_ID=? AND OPRID=?";
 		try {
 			Random random = new Random();
 			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
@@ -519,6 +521,7 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 			List<Map<String, Object>> jsonArray = null;
 			JacksonUtil jacksonUtil = new JacksonUtil();
 			String[] actData = null;
+			String uName = "";
 			// 解析前台返回的Json 成数组
 			jacksonUtil.json2Map(strParams);
 			if (jacksonUtil.containsKey("export")) {
@@ -537,7 +540,15 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 				strForm = actData[i];
 				jacksonUtil.json2Map(strForm);
 				judgId = jacksonUtil.getString("judgId");
-				newpawd = String.valueOf(random.nextInt(max) % (max - min + 1) + min);
+				uName = sqlQuery.queryForObject(sqlUName, new Object[] { orgid, judgId }, "String");
+				boolean flag = false;
+				
+				//newpawd = uName + String.valueOf(random.nextInt(max) % (max - min + 1) + min);
+				while(!flag) {
+					newpawd = "ms" + String.valueOf(random.nextInt(max) % (max - min + 1) + min);
+					PasswordCheck result = new PasswordCheck(uName,newpawd,newpawd);
+					flag = result.weakLoginPassword();
+				}
 
 				PsTzPwExtTbl psTzPwExtTbl = new PsTzPwExtTbl();
 				psTzPwExtTbl.setTzJgId(orgid);

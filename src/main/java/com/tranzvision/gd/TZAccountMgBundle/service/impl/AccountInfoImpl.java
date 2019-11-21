@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,7 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZOrganizationMgBundle.dao.PsTzJgMgrTMapper;
 import com.tranzvision.gd.TZOrganizationMgBundle.model.PsTzJgMgrTKey;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.captcha.PasswordCheck;
 import com.tranzvision.gd.util.encrypt.DESUtil;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
@@ -112,6 +114,22 @@ public class AccountInfoImpl extends FrameworkImpl {
 					String rylx = (String) infoData.get("rylx");
 					// 账号密码;
 					String password = (String) infoData.get("password");
+					//弱密码校验
+					String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+					String sql="select  TZ_JG_ID from PS_TZ_AQ_YHXX_TBL where OPRID=?";
+					Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[]{oprid});
+					String tzjgid=map.get("TZ_JG_ID")==null?"":String.valueOf(map.get("TZ_JG_ID"));
+					PasswordCheck passwordCheck=new PasswordCheck("",password,password);
+					if(StringUtils.isNotEmpty(tzjgid)){
+						passwordCheck.setUserName(tzjgid);
+					}else{
+						passwordCheck.setUserName("jsd64f190dsf63k23zmcna12dva");
+					}
+					if(!passwordCheck.weakLoginPassword()){
+						errMsg[0] = "1";
+						errMsg[1] = "弱密码校验没通过";
+						return strRet;
+					}
 					password = DESUtil.encrypt(password, "TZGD_Tranzvision");
 					// 锁定账号;
 					String acctLock = "";

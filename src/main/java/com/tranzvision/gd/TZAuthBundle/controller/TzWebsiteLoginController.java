@@ -27,6 +27,7 @@ import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteEnrollClsServiceI
 import com.tranzvision.gd.util.base.Global;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzSystemException;
+import com.tranzvision.gd.util.captcha.PasswordCheck;
 import com.tranzvision.gd.util.cookie.TzCookie;
 import com.tranzvision.gd.util.encrypt.DESUtil;
 import com.tranzvision.gd.util.httpclient.CommonUtils;
@@ -422,7 +423,18 @@ public class TzWebsiteLoginController {
 							jsonMap.put("url", indexUrl);
 
 						}
-
+						PasswordCheck passwordCheck = new PasswordCheck(strUserName, strPassWord, strPassWord);
+						System.out.println("strUserName="+strUserName+";strPassWord="+strPassWord);
+						System.out.println("!passwordCheck.weakLoginPassword()="+!passwordCheck.weakLoginPassword());
+						if(!passwordCheck.weakLoginPassword()){
+							int errorCode = 2;
+							String strErrorDesc = gdObjectServiceImpl.getMessageTextWithLanguageCd(request,
+									"TZGD_FWINIT_MSGSET", "TZGD_FWINIT_00103", strLang, "登录异常，未找到适合报名的班级","No suitable class was registered.");
+							jsonMap.put("success", "false");
+							jsonMap.put("errorCode", errorCode);
+							jsonMap.put("errorDesc", strErrorDesc);
+							return jacksonUtil.Map2json(jsonMap);
+						}
 					} else {
 
 						int errorCode = 2;

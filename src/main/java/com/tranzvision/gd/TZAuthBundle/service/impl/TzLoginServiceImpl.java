@@ -22,6 +22,7 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.GdObjectServiceImpl;
 import com.tranzvision.gd.TZOnTrialBundle.dao.PsTzOnTrialTMapper;
 import com.tranzvision.gd.TZOnTrialBundle.model.PsTzOnTrialTWithBLOBs;
 import com.tranzvision.gd.util.base.TzSystemException;
+import com.tranzvision.gd.util.captcha.PasswordCheck;
 import com.tranzvision.gd.util.captcha.Patchca;
 import com.tranzvision.gd.util.cfgdata.GetCookieSessionProps;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
@@ -203,7 +204,14 @@ public class TzLoginServiceImpl implements TzLoginService {
 				}
 
 			}
-
+			PasswordCheck passwordCheck = new PasswordCheck(userName, userPwd, userPwd);
+			System.out.println("userName="+userName+";userPwd="+userPwd);
+			System.out.println("!passwordCheck.weakLoginPassword()"+!passwordCheck.weakLoginPassword());
+			if(!passwordCheck.weakLoginPassword()){
+				errorMsg.add("2");
+				errorMsg.add("登录失败，密码格式错误。");
+				return false;
+			}
 			// 读取用户信息
 			PsTzAqYhxxTblKey psTzAqYhxxTblKey = new PsTzAqYhxxTblKey();
 			psTzAqYhxxTblKey.setTzDlzhId(dataMap.get("TZ_DLZH_ID").toString());

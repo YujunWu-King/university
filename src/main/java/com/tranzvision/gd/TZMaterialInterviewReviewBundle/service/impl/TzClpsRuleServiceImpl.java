@@ -27,6 +27,7 @@ import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzClpsGzTblKey;
 import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzPwExtT;
 import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzPwExtTKey;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.captcha.PasswordCheck;
 import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.encrypt.DESUtil;
@@ -573,7 +574,21 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 		
 		return strRet;
 	}
-	
+	/**
+	  * 材料面试端账号重置
+	  * 
+	  * @author dingpeng
+	  * @since 2019年11月19日
+	  */
+	//随机生成6位随机数
+	public String setPWord() {
+		String passSJ = "";
+		for(int i=0;i<6;i++) {
+			double rand = Math.random();
+			passSJ =passSJ + (char)(rand * ('9'-'0')+'0');
+		}
+		return passSJ;
+	} 
 	
 	/*批量重置评委密码*/
 	public String resetPassword(String strParams,String[] errMsg) {
@@ -593,51 +608,99 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 			
 			for(Object judgeId : listJudge) {
 				String sql = "SELECT TZ_MOBILE FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_JG_ID=? AND OPRID=?";
+				String sql2 = "SELECT TZ_DLZH_ID FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_JG_ID=? AND OPRID=?";
 				String mobile = sqlQuery.queryForObject(sql, new Object[] {currentOrgId,judgeId},"String");
-				
+				String uName = sqlQuery.queryForObject(sql2, new Object[] {currentOrgId,judgeId}, "String");
 				if(mobile!=null && !"".equals(mobile)) {
+					mobile = "cl" + mobile ;
+					String password =  DESUtil.encrypt(mobile, "TZGD_Tranzvision");
+					boolean flag = false;
+					boolean flag1 = false;
+					PasswordCheck result = new PasswordCheck(uName,mobile,mobile);
+					flag = result.weakLoginPassword();
+					if(flag==true) {
+						Psoprdefn psoprdefn = new Psoprdefn();
+						psoprdefn = psoprdefnMapper.selectByPrimaryKey(String.valueOf(judgeId));	
+						if(psoprdefn==null) {
+							psoprdefn = new Psoprdefn();
+							psoprdefn.setOprid(String.valueOf(judgeId));
+							psoprdefn.setOperpswd(password);
+							psoprdefn.setAcctlock(Short.valueOf("0"));
+							psoprdefn.setLastupddttm(new Date());
+							psoprdefn.setLastupdoprid(currentOprid);
+							psoprdefnMapper.insert(psoprdefn);
+						} else {
+							psoprdefn.setOprid(String.valueOf(judgeId));
+							psoprdefn.setOperpswd(password);
+							psoprdefn.setLastupddttm(new Date());
+							psoprdefn.setLastupdoprid(currentOprid);
+							psoprdefnMapper.updateByPrimaryKeySelective(psoprdefn);	
+						}
+							
+			
 					
-					String password = DESUtil.encrypt(mobile, "TZGD_Tranzvision");
-		
-					Psoprdefn psoprdefn = new Psoprdefn();
-					psoprdefn = psoprdefnMapper.selectByPrimaryKey(String.valueOf(judgeId));
-				
-					if(psoprdefn==null) {
-						psoprdefn = new Psoprdefn();
-						psoprdefn.setOprid(String.valueOf(judgeId));
-						psoprdefn.setOperpswd(password);
-						psoprdefn.setAcctlock(Short.valueOf("0"));
-						psoprdefn.setLastupddttm(new Date());
-						psoprdefn.setLastupdoprid(currentOprid);
-						psoprdefnMapper.insert(psoprdefn);
-					} else {
-						psoprdefn.setOprid(String.valueOf(judgeId));
-						psoprdefn.setOperpswd(password);
-						psoprdefn.setLastupddttm(new Date());
-						psoprdefn.setLastupdoprid(currentOprid);
-						psoprdefnMapper.updateByPrimaryKeySelective(psoprdefn);	
-					}
+						//评委初始密码表
+						PsTzPwExtTKey psTzPwExtTKey = new PsTzPwExtTKey();
+						psTzPwExtTKey.setTzJgId(currentOrgId);
+						psTzPwExtTKey.setOprid(String.valueOf(judgeId));
 						
-		
-				
-					//评委初始密码表
-					PsTzPwExtTKey psTzPwExtTKey = new PsTzPwExtTKey();
-					psTzPwExtTKey.setTzJgId(currentOrgId);
-					psTzPwExtTKey.setOprid(String.valueOf(judgeId));
+						PsTzPwExtT psTzPwExtT = psTzPwExtTMapper.selectByPrimaryKey(psTzPwExtTKey);
+						if(psTzPwExtT==null) {
+							psTzPwExtT = new PsTzPwExtT();
+							psTzPwExtT.setTzJgId(currentOrgId);
+							psTzPwExtT.setOprid(String.valueOf(judgeId));
+							psTzPwExtT.setTzCsPassword(mobile);
+							psTzPwExtTMapper.insert(psTzPwExtT);
+						} else {
+							psTzPwExtT.setTzJgId(currentOrgId);
+							psTzPwExtT.setOprid(String.valueOf(judgeId));
+							psTzPwExtT.setTzCsPassword(mobile);
+							psTzPwExtTMapper.updateByPrimaryKeySelective(psTzPwExtT);
+						}	
+					}else{
+						while(!flag1) {
+							mobile = "cl" + setPWord();
+							password =  DESUtil.encrypt(mobile, "TZGD_Tranzvision");
+							PasswordCheck result2 = new PasswordCheck(uName,mobile,mobile);
+							flag1= result2.weakLoginPassword();
+						}
+						Psoprdefn psoprdefn = new Psoprdefn();
+						psoprdefn = psoprdefnMapper.selectByPrimaryKey(String.valueOf(judgeId));
+						
+						if(psoprdefn==null) {
+							psoprdefn = new Psoprdefn();
+							psoprdefn.setOprid(String.valueOf(judgeId));
+							psoprdefn.setOperpswd(password);
+							psoprdefn.setAcctlock(Short.valueOf("0"));
+							psoprdefn.setLastupddttm(new Date());
+							psoprdefn.setLastupdoprid(currentOprid);
+							psoprdefnMapper.insert(psoprdefn);
+						} else {
+							psoprdefn.setOprid(String.valueOf(judgeId));
+							psoprdefn.setOperpswd(password);
+							psoprdefn.setLastupddttm(new Date());
+							psoprdefn.setLastupdoprid(currentOprid);
+							psoprdefnMapper.updateByPrimaryKeySelective(psoprdefn);	
+						}
 					
-					PsTzPwExtT psTzPwExtT = psTzPwExtTMapper.selectByPrimaryKey(psTzPwExtTKey);
-					if(psTzPwExtT==null) {
-						psTzPwExtT = new PsTzPwExtT();
-						psTzPwExtT.setTzJgId(currentOrgId);
-						psTzPwExtT.setOprid(String.valueOf(judgeId));
-						psTzPwExtT.setTzCsPassword(mobile);
-						psTzPwExtTMapper.insert(psTzPwExtT);
-					} else {
-						psTzPwExtT.setTzJgId(currentOrgId);
-						psTzPwExtT.setOprid(String.valueOf(judgeId));
-						psTzPwExtT.setTzCsPassword(mobile);
-						psTzPwExtTMapper.updateByPrimaryKeySelective(psTzPwExtT);
-					}	
+						PsTzPwExtTKey psTzPwExtTKey = new PsTzPwExtTKey();
+						psTzPwExtTKey.setTzJgId(currentOrgId);
+						psTzPwExtTKey.setOprid(String.valueOf(judgeId));
+						
+						PsTzPwExtT psTzPwExtT = psTzPwExtTMapper.selectByPrimaryKey(psTzPwExtTKey);
+						if(psTzPwExtT==null) {
+							psTzPwExtT = new PsTzPwExtT();
+							psTzPwExtT.setTzJgId(currentOrgId);
+							psTzPwExtT.setOprid(String.valueOf(judgeId));
+							psTzPwExtT.setTzCsPassword(mobile);
+							psTzPwExtTMapper.insert(psTzPwExtT);
+						} else {
+							psTzPwExtT.setTzJgId(currentOrgId);
+							psTzPwExtT.setOprid(String.valueOf(judgeId));
+							psTzPwExtT.setTzCsPassword(mobile);
+							psTzPwExtTMapper.updateByPrimaryKeySelective(psTzPwExtT);
+						}
+					}
 				}
 			}
 			
