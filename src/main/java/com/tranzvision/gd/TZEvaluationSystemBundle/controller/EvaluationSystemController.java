@@ -22,11 +22,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzSystemException;
-<<<<<<< .mine
 import com.tranzvision.gd.util.captcha.Patchca;
-=======
 import com.tranzvision.gd.util.captcha.PasswordCheck;
->>>>>>> .theirs
 import com.tranzvision.gd.util.cookie.TzCookie;
 import com.tranzvision.gd.util.security.TzFilterIllegalCharacter;
 import com.tranzvision.gd.util.sql.SqlQuery;
@@ -204,7 +201,7 @@ public class EvaluationSystemController {
 
 		ArrayList<String> aryErrorMsg = new ArrayList<String>();
 
-<<<<<<< .mine
+
 		// 验证评委帐号有效性
 		String sqlAccount = "select 'Y' from PS_TZ_AQ_YHXX_TBL where upper(TZ_JG_ID)=? and TZ_DLZH_ID=? and TZ_JIHUO_ZT='Y' "
 				+ "and (exists(select 1 from PS_TZ_JUSR_REL_TBL where OPRID = PS_TZ_AQ_YHXX_TBL.OPRID AND TZ_JUGTYP_ID=?)"
@@ -214,19 +211,11 @@ public class EvaluationSystemController {
 
 		String loginStatus, errorMsg;
 
-		if ("Y".equals(accountExist)) {
-=======
-		//验证评委帐号有效性		
-		String sqlAccount = "select 'Y' from PS_TZ_AQ_YHXX_TBL where upper(TZ_JG_ID)=? and TZ_DLZH_ID=? and TZ_JIHUO_ZT='Y' and exists(select 1 from PS_TZ_JUSR_REL_TBL where OPRID = PS_TZ_AQ_YHXX_TBL.OPRID AND TZ_JUGTYP_ID=?)";
-		String accountExist = sqlQuery.queryForObject(sqlAccount,new Object[]{orgId,userName,judgeType},"String");
-		
-		String loginStatus,errorMsg;
-		
 		boolean acountIsWeeks = false;
 		PasswordCheck result = new PasswordCheck( userName, userPwd, userPwd);
 		acountIsWeeks=result.weakLoginPassword();
 		if("Y".equals(accountExist)){
->>>>>>> .theirs
+			
 			if(acountIsWeeks==false) {
 				loginStatus = "1";
 				errorMsg = "帐号密码为弱密码，请联系管理员重置！";
@@ -239,13 +228,8 @@ public class EvaluationSystemController {
 			loginStatus = "1";
 			errorMsg = "帐号不存在或者无效，请重新输入！";
 		}
-<<<<<<< .mine
 
 
-=======
-		
-				
->>>>>>> .theirs
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
 		jsonMap.put("success", loginStatus);
 		jsonMap.put("error", errorMsg);
