@@ -563,7 +563,7 @@
                                 reference: 'viewAppGrid',
                                 style:"margin-top:10px",
                                 store: {
-                                    type: 'stuAppStore'
+                                    type: 'stuAppStore1'
                                 },
                                 viewConfig: {
                                     enableTextSelection: true

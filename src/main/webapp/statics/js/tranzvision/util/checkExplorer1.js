@@ -1,4 +1,4 @@
-function checkExplorer(language){
+function checkExplorer1(language){
 	
 	var checkBZ = false;
 	var explorer = window.navigator.userAgent ;
@@ -75,5 +75,5 @@ function checkExplorer(language){
 
 $(document).ready(function(){
 	var lang = $("#lang").val();
-	checkExplorer(lang);
+	checkExplorer1(lang);
 })

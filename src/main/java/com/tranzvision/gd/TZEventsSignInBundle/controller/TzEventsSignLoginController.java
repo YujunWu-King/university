@@ -120,7 +120,8 @@ public class TzEventsSignLoginController {
 				String str_qdm_qd_url = ZSGL_URL + "?classid=signCode";
 				//活动管理url
 				String str_hdgl_url = ZSGL_URL + "?classid=eventsSignList";
-				
+				//手机签到URL
+				String str_moblie_url=ZSGL_URL+"?classid=eventsSignList&mobileSign=true";
 				//ajax请求url
 				Map<String,Object> ajaxParamsMap = new HashMap<String,Object>();
 				ajaxParamsMap.put("ComID", "TZ_HD_SIGN_COM");
@@ -130,7 +131,7 @@ public class TzEventsSignLoginController {
 				String str_ajax_url  =  ZSGL_URL + "?tzParams=" + URLEncoder.encode(jacksonUtil.Map2json(ajaxParamsMap),"UTF-8");
 			
 				eventSignInHtml = tzGdObject.getHTMLText("HTML.TZEventsSignInBundle.TZ_PHONE_ACTSIGN_HTML",
-						contextPath,str_wxsys_qd_url,str_qdr_xq_url,str_qdm_qd_url,str_hdgl_url,corpid,timestamp,nonceStr,signature,str_ajax_url);
+						contextPath,str_wxsys_qd_url,str_qdr_xq_url,str_qdm_qd_url,str_hdgl_url,corpid,timestamp,nonceStr,signature,str_ajax_url,str_moblie_url);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

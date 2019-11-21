@@ -437,7 +437,7 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 			String ishasSql = "SELECT 'Y' FROM PS_TZ_OPR_PHT_GL_T WHERE OPRID = ?";
 			if(jacksonUtil.containsKey("appInsId")){
 				String appInsId = jacksonUtil.getString("appInsId");
-				oprId=sqlQuery.queryForObject("select  OPRID from ps_tz_form_wrk_t where TZ_APP_INS_ID=?", new Object[]{appInsId}, "String");
+				oprId=sqlQuery.queryForObject("select  OPRID from PS_TZ_FORM_WRK_T where TZ_APP_INS_ID=?", new Object[]{appInsId}, "String");
 			}
 			String isHas = sqlQuery.queryForObject(ishasSql, new Object[] { oprId }, "String");
 			if (StringUtils.equals("Y", isHas)) {

@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzException;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.httpclient.HttpClientService;
+import com.tranzvision.gd.util.log.Calling;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 import com.tranzvision.gd.util.wechart.TzGetAccessToken;  
@@ -59,6 +61,8 @@ public class TzWeChartJSSDKSign {
 	//获取opnid
 	private static final String gz_getopenid_url = "https://api.weixin.qq.com/sns/oauth2/access_token";
 	
+	//记录日志
+		private static final Logger logger = Logger.getLogger("TencentWechart");
 
 	/**
 	 * 获取微信公众号的全局唯一票据access_token
@@ -282,6 +286,9 @@ public class TzWeChartJSSDKSign {
     	String jsapi_ticket = "";
     	jsapi_ticket = this.getWxJsapiTicket(appId, secret, wxType);
     	
+    	Calling call = new Calling(getClass().getName());
+    	JacksonUtil jacksonUtil = new JacksonUtil();
+    	
         Map<String, String> ret = new HashMap<String, String>();
         String nonce_str = create_nonce_str();
         String timestamp = create_timestamp();
@@ -293,6 +300,11 @@ public class TzWeChartJSSDKSign {
                   "&noncestr=" + nonce_str +
                   "&timestamp=" + timestamp +
                   "&url=" + url;
+        
+        logger.info("======>>>> 获取微信公众号JS-SDK使用权限签名开始，当前位置：" + call.getCurrentLocation());
+		logger.info("调用的具体位置： " + call.getCallerName());
+		logger.info("签名string: " + string1);
+		
         try{
             MessageDigest crypt = MessageDigest.getInstance("SHA-1");
             crypt.reset();
@@ -300,8 +312,10 @@ public class TzWeChartJSSDKSign {
             signature = byteToHex(crypt.digest());
         }catch (NoSuchAlgorithmException e){
             e.printStackTrace();
+            logger.error("生成签名失败", e);
         }catch (UnsupportedEncodingException e){
             e.printStackTrace();
+            logger.error("生成签名失败", e);
         }
 
         ret.put("url", url);
@@ -310,6 +324,8 @@ public class TzWeChartJSSDKSign {
         ret.put("timestamp", timestamp);
         ret.put("signature", signature);
 
+        logger.info("签名返回Map: " + jacksonUtil.Object2Json(ret));
+        
         return ret;
     }
     

@@ -302,6 +302,22 @@ public class JacksonUtil {
 		}
 		return jsonMap.containsKey(key);
 	}
+	
+	/**
+	 * 将Object转换为json并返回
+	 * @param o
+	 * @return
+	 */
+	public String Object2Json(Object o){
+		String jsonStr = "";
+		ObjectMapper MAPPER = new ObjectMapper();
+		try {
+			jsonStr = MAPPER.writeValueAsString(o);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+		return jsonStr;
+	}
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub

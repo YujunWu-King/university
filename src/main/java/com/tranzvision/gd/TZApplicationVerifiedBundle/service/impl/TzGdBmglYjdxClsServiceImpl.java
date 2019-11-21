@@ -155,9 +155,10 @@ public class TzGdBmglYjdxClsServiceImpl extends FrameworkImpl {
 
 								if (sOprID != null && !"".equals(sOprID) && sAppInsID != 0) {
 									/* 为听众添加成员:姓名，称谓，报名人联系方式 */
-									String strName = jdbcTemplate.queryForObject(
+									/*String strName = jdbcTemplate.queryForObject(
 											tzGdObject.getSQLText("SQL.TZApplicationVerifiedBundle.strName"),
-											new Object[] { sOprID }, "String");
+											new Object[] { sOprID }, "String");*/
+									String strName = jdbcTemplate.queryForObject("SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=? limit 0,1",new Object[]{sOprID},"String");
 
 									String mainMobilePhone = "", backupMobilePhone = "", mainEmail = "",
 											backupEmail = "", wechat = "";
@@ -197,9 +198,10 @@ public class TzGdBmglYjdxClsServiceImpl extends FrameworkImpl {
 						sOprID = jacksonUtil.getString("oprID");
 						sAppInsID = jacksonUtil.getString("appInsID");
 						/* 为听众添加成员:姓名，称谓，报名人联系方式 */
-						String strName = jdbcTemplate.queryForObject(
+						/*String strName = jdbcTemplate.queryForObject(
 								tzGdObject.getSQLText("SQL.TZApplicationVerifiedBundle.strName"),
-								new Object[] { sOprID }, "String");
+								new Object[] { sOprID }, "String");*/
+						String strName = jdbcTemplate.queryForObject("SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=? limit 0,1",new Object[]{sOprID},"String");
 
 						String mainMobilePhone = "", backupMobilePhone = "", mainEmail = "", backupEmail = "",
 								wechat = "";

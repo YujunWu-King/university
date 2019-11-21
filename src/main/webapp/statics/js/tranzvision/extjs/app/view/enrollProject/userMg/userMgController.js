@@ -2007,7 +2007,7 @@
         var personList = [];
         for (var i = 0; i < checkLen; i++) {
             var oprID = selList[i].get('OPRID');
-            var appInsID = selList[i].get('mshId');
+            var appInsID = selList[i].get('TZ_MSH_ID');
             personList.push({"oprID": oprID, "appInsID": appInsID});
         };
         Ext.tzSetCompResourses("TZ_BMGL_BMBSH_COM");// 设置组件

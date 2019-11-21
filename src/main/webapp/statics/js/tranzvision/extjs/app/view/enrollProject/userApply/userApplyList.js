@@ -126,7 +126,7 @@
     	//黑名单用户
     	//var isYnStore = new KitchenSink.view.common.store.appTransStore("TZ_SF_SALE");
     	
-    	var appStateStore = new KitchenSink.view.common.store.appTransStore("TZ_APP_FORM_STA");
+    	var appStateStore = new KitchenSink.view.common.store.appTransStore("TZ_APPFORM_STATE");
         //var mszgStore = new KitchenSink.view.common.store.appTransStore("TZ_IS_MSZG");
     	
         Ext.apply(this, {

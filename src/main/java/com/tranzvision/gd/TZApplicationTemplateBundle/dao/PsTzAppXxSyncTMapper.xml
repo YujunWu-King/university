@@ -8,9 +8,10 @@
     <result column="TZ_QY_BZ" property="tzQyBz" jdbcType="VARCHAR" />
     <result column="TZ_SYNC_ORDER" property="tzSyncOrder" jdbcType="INTEGER" />
     <result column="TZ_SYNC_SEP" property="tzSyncSep" jdbcType="VARCHAR" />
+    <result column="TZ_IS_MULTILINE" property="tzIsMultiline" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    TZ_APP_TPL_ID, TZ_XXX_BH, TZ_SYNC_TYPE, TZ_QY_BZ, TZ_SYNC_ORDER, TZ_SYNC_SEP
+    TZ_APP_TPL_ID, TZ_XXX_BH, TZ_SYNC_TYPE, TZ_QY_BZ, TZ_SYNC_ORDER, TZ_SYNC_SEP, TZ_IS_MULTILINE
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzAppXxSyncTKey" >
     select 
@@ -28,10 +29,10 @@
   </delete>
   <insert id="insert" parameterType="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzAppXxSyncT" >
     insert into PS_TZ_APPXX_SYNC_T (TZ_APP_TPL_ID, TZ_XXX_BH, TZ_SYNC_TYPE, 
-      TZ_QY_BZ, TZ_SYNC_ORDER, TZ_SYNC_SEP
+      TZ_QY_BZ, TZ_SYNC_ORDER, TZ_SYNC_SEP,TZ_IS_MULTILINE
       )
     values (#{tzAppTplId,jdbcType=VARCHAR}, #{tzXxxBh,jdbcType=VARCHAR}, #{tzSyncType,jdbcType=VARCHAR}, 
-      #{tzQyBz,jdbcType=VARCHAR}, #{tzSyncOrder,jdbcType=INTEGER}, #{tzSyncSep,jdbcType=VARCHAR}
+      #{tzQyBz,jdbcType=VARCHAR}, #{tzSyncOrder,jdbcType=INTEGER}, #{tzSyncSep,jdbcType=VARCHAR}, #{tzIsMultiline,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzAppXxSyncT" >
@@ -55,6 +56,9 @@
       <if test="tzSyncSep != null" >
         TZ_SYNC_SEP,
       </if>
+      <if test="tzIsMultiline != null" >
+        TZ_IS_MULTILINE,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="tzAppTplId != null" >
@@ -75,6 +79,9 @@
       <if test="tzSyncSep != null" >
         #{tzSyncSep,jdbcType=VARCHAR},
       </if>
+      <if test="tzIsMultiline != null" >
+        #{tzIsMultiline,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzAppXxSyncT" >
@@ -89,6 +96,9 @@
       <if test="tzSyncSep != null" >
         TZ_SYNC_SEP = #{tzSyncSep,jdbcType=VARCHAR},
       </if>
+      <if test="tzIsMultiline != null" >
+        TZ_IS_MULTILINE = #{tzIsMultiline,jdbcType=VARCHAR},
+      </if>
     </set>
     where TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR}
       and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
@@ -98,7 +108,8 @@
     update PS_TZ_APPXX_SYNC_T
     set TZ_QY_BZ = #{tzQyBz,jdbcType=VARCHAR},
       TZ_SYNC_ORDER = #{tzSyncOrder,jdbcType=INTEGER},
-      TZ_SYNC_SEP = #{tzSyncSep,jdbcType=VARCHAR}
+      TZ_SYNC_SEP = #{tzSyncSep,jdbcType=VARCHAR},
+      TZ_IS_MULTILINE = #{tzIsMultiline,jdbcType=VARCHAR}
     where TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR}
       and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
       and TZ_SYNC_TYPE = #{tzSyncType,jdbcType=VARCHAR}

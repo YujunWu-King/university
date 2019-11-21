@@ -293,7 +293,6 @@ function openFszl(){
 				  },
 			  success: function(layero, index){
 				  queryFszl();
-				  
 				  var date = new Date();
 				  var dateStr = date.getFullYear() +""+ (date.getMonth() + 1) +""+ date.getDate();
 				  layui.use('upload', function(){
@@ -304,6 +303,7 @@ function openFszl(){
 					    elem: '#test1', //绑定元素
 					    url: '/UpdServlet', //上传接口
 					    accept: 'file', //允许上传的文件类型
+					    size: 2048,  //设置允许上传的文件最大大小
 					    exts: 'docx|jpg|xlsx|doc|pdf|gif|bmp',
 					    field:'orguploadfile',
 					    multiple: true,//多附件上传
@@ -313,6 +313,7 @@ function openFszl(){
 						    	//orguploadfile: '213'
 					    	},
 					    before: function(){
+					    		alert("enter before");
 	                            index = layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
 	                            //loading层
 	                            index = top.layer.load(1, {
@@ -328,7 +329,8 @@ function openFszl(){
 	                        console.log(obj.aborted); //请求失败的文件数
 	                    },
 					    done: function(res){
-					    	layer.close(index)
+					    	alert("enter done");
+					    	layer.close(index);
 					    	//上传完毕回调
 					    	var accessPath = res.msg.accessPath;
 					    	var filename = res.msg.filename;
@@ -371,7 +373,7 @@ function openFszl(){
 					    }
 					  });
 					});
-				  }
+			  }
 		});
 	})
 }
