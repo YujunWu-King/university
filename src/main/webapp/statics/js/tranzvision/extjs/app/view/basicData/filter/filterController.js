@@ -290,7 +290,7 @@
 		}
     },
     
-    addFilterInfoClass: function(ComID,PageID,appClassMc) {
+    addFilterInfoClass: function(ComID,PageID,ViewMc,appClassMc) {
 		//是否有访问权限
 		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_GD_FILTER_COM"]["TZ_FILTER_DEF_STD"];
 		if( pageResSet == "" || pageResSet == undefined){
@@ -346,12 +346,10 @@
 			form.findField("ComID").addCls("lanage_1");
 			form.findField("PageID").setReadOnly(true);
 			form.findField("PageID").addCls("lanage_1");
-			form.findField("appClassMc").setReadOnly(true);
-			form.findField("appClassMc").addCls("lanage_1");
 			//页面注册信息列表
 			var grid = panel.child('grid');
 			//参数
-			var tzParams = '{"ComID":"TZ_GD_FILTER_COM","PageID":"TZ_FILTER_DEFN_STD","OperateType":"QF","comParams":{"ComID":"'+ComID+'","PageID":"'+PageID+'","appClassMc":"'+appClassMc+'","type":"1"}}';
+			var tzParams = '{"ComID":"TZ_GD_FILTER_COM","PageID":"TZ_FILTER_DEFN_STD","OperateType":"QF","comParams":{"ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'","appClassMc":"'+appClassMc+'","type":"1"}}';
 			//加载数据
 			Ext.tzLoad(tzParams,function(responseData){
 				//组件注册信息数据
@@ -367,7 +365,7 @@
 			var queryID;
 			queryID = "1";
 			var grid1 = panel.down('grid[name=filterGrid]');
-			var tzStoreParams1 = '{"queryID":"' + queryID + '","ComID":"'+ComID+'","PageID":"'+PageID+'","appClassMc":"'+appClassMc+'","type":"1"}';
+			var tzStoreParams1 = '{"queryID":"' + queryID + '","ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'","appClassMc":"'+appClassMc+'","type":"1"}';
 			grid1.store.tzStoreParams = tzStoreParams1;
 			//grid1.store.load();
 			
@@ -421,7 +419,7 @@
 	    	this.editFilterByID(ComID,PageID,ViewMc);
 	    }
 	    if(typeName == '1'){
-	    	this.editFilterByID2(ComID,PageID,appClassMc);
+	    	this.editFilterByID2(ComID,PageID,ViewMc,appClassMc);
 	    }
   },
  editFilterByID: function(ComID,PageID,ViewMc){
@@ -526,7 +524,7 @@
 		}
 		
 	},
-	editFilterByID2: function(ComID,PageID,appClassMc){
+	editFilterByID2: function(ComID,PageID,ViewMc,appClassMc){
 		//是否有访问权限
 		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_GD_FILTER_COM"]["TZ_FILTER_DEF_STD"];
 		if( pageResSet == "" || pageResSet == undefined){
@@ -584,12 +582,10 @@
 			form.findField("ComID").addCls("lanage_1");
 			form.findField("PageID").setReadOnly(true);
 			form.findField("PageID").addCls("lanage_1");
-			form.findField("appClassMc").setReadOnly(true);
-			form.findField("appClassMc").addCls("lanage_1");
 			//页面注册信息列表
 			var grid = panel.child('grid');
 			//参数
-			var tzParams = '{"ComID":"TZ_GD_FILTER_COM","PageID":"TZ_FILTER_DEFN_STD","OperateType":"QF","comParams":{"ComID":"'+ComID+'","PageID":"'+PageID+'","appClassMc":"'+appClassMc+'","type":"1"}}';
+			var tzParams = '{"ComID":"TZ_GD_FILTER_COM","PageID":"TZ_FILTER_DEFN_STD","OperateType":"QF","comParams":{"ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'","appClassMc":"'+appClassMc+'","type":"1"}}';
 			//加载数据
 			Ext.tzLoad(tzParams,function(responseData){
 				//组件注册信息数据
@@ -602,7 +598,7 @@
 
 			queryID = "1";
 			var grid1 = panel.down('grid[name=filterGrid]');
-			var tzStoreParams1 = '{"queryID":"' + queryID + '","ComID":"'+ComID+'","PageID":"'+PageID+'","appClassMc":"'+appClassMc+'","type":"1"}';
+			var tzStoreParams1 = '{"queryID":"' + queryID + '","ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'","appClassMc":"'+appClassMc+'","type":"1"}';
 			grid1.store.tzStoreParams = tzStoreParams1;
 			//grid1.store.load();
 			
@@ -655,7 +651,7 @@
 	    	this.editFilterByID(ComID,PageID,ViewMc);
 	    }
 	    if(typeName == '1'){
-	    	this.editFilterByID2(ComID,PageID,appClassMc);
+	    	this.editFilterByID2(ComID,PageID,ViewMc,appClassMc);
 	    }
     },
 	deleteFilterBL: function(view, rowIndex){
@@ -695,7 +691,7 @@
 							tu.addFilterInfo(formParams["ComID"],formParams["PageID"],formParams["ViewMc"]);
 						}
 						if(typeName=='1'){
-							tu.addFilterInfoClass(formParams["ComID"],formParams["PageID"],formParams["appClassMc"]);
+							tu.addFilterInfoClass(formParams["ComID"],formParams["PageID"],formParams["ViewMc"],formParams["appClassMc"]);
 						}
 						
 						

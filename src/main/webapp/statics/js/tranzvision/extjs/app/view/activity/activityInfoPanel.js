@@ -417,7 +417,7 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
 							  		type: 'column'
 							  	},
 							  	bodyStyle:'padding:10px 0 0 0',
-							  	xtype: 'form',  
+							  	xtype: 'form',
 									items: [{
 										columnWidth:.65,
             				xtype: "fileuploadfield",  
@@ -426,7 +426,7 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
 										buttonOnly:true,
 										listeners:{
 											change:function(file, value, eOpts){
-												addAttach(file, value, "IMG");
+												addAttach(file, value, "IMG",0);
 											}
 										}	
         					},{
@@ -470,7 +470,7 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
 									buttonOnly:true,
 									listeners:{
 										change:function(file, value, eOpts){
-											addAttach (file, value, "TPJ");
+											addAttach (file, value, "TPJ",1);
 										}
 									}
 				    			}]
@@ -591,12 +591,12 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
     								items:[{
 		            			xtype: 'fileuploadfield',
 		            			buttonText: '上传附件',
-											name: 'orguploadfile',  
+											name: 'orguploadfile',
 											buttonOnly:true,
 											width: 88,
 											listeners:{
 												change:function(file, value, eOpts){
-													addAttach(file, value, "ATTACHMENT");
+													addAttach(file, value, "ATTACHMENT",2);
 												}
 											}
     								}]
@@ -1159,6 +1159,15 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
 		}]
 });
 
+/*function checkFileSize(){
+	var flag=true;
+	var fileUpload=document.getElementsByName("orguploadfile");
+	var upLoadFileSize = fileUpload[0].files[0].size;
+	if(upLoadFileSize/(1024*1024) > 10){
+		flag=false;
+	}
+	return flag;
+}*/
 
 function deleteImage( bt, e, eOpts){
 	bt.findParentByType("tabpanel").down('image[name=titileImage]').setSrc("");
@@ -1166,168 +1175,195 @@ function deleteImage( bt, e, eOpts){
 }
 
 
-function addAttach(file, value, attachmentType){
+function addAttach(file, value, attachmentType,id){
 	
 	var form = file.findParentByType("form").getForm();
-	
-	if(value != ""){
-		if(attachmentType=="IMG" || attachmentType=="TPJ"){ 
-			var fix = value.substring(value.lastIndexOf(".") + 1,value.length);
-			if(fix.toLowerCase() != "jpg" && fix.toLowerCase() != "jpeg" && fix.toLowerCase() != "png" && fix.toLowerCase() != "gif" && fix.toLowerCase() != "bmp"){
-				Ext.MessageBox.alert("提示","请上传jpg|jpeg|png|gif|bmp格式的图片。");
-				form.reset();
-				return;
-			};	
-		}
-	
-		//如果是附件则存在在附件的url中，如果是图片在存放在图片的url中;
-		var dateStr = Ext.Date.format(new Date(), 'Ymd');
-		   
-		
-		var upUrl = "";
-		if(attachmentType=="ATTACHMENT"){ 
-			//upUrl = file.findParentByType("activityInfo").child("form").getForm().findField("saveAttachAccessUrl").getValue();
-			if(upUrl==""){
-				//Ext.Msg.alert("错误","未定义上传附件的路径，请与管理员联系");
-				//return;
-				upUrl = TzUniversityContextPath + '/UpdServlet?filePath=activity';
-			}else{
-				/*
-				if(upUrl.length == (upUrl.lastIndexOf("/")+1)){
-				   upUrl = TzUniversityContextPath + '/UpdServlet?filePath='+upUrl+dateStr;
-				}else{
-				   upUrl = TzUniversityContextPath + '/UpdServlet?filePath='+upUrl+"/"+dateStr;
+		if(value != ""){
+			if(attachmentType=="IMG"){
+				var fix = value.substring(value.lastIndexOf(".") + 1,value.length);
+				if(fix.toLowerCase() != "jpg" && fix.toLowerCase() != "jpeg" && fix.toLowerCase() != "png" && fix.toLowerCase() != "gif" && fix.toLowerCase() != "bmp"){
+					Ext.MessageBox.alert("提示","请上传jpg|jpeg|png|gif|bmp格式的图片。");
+					form.reset();
+					return;
 				}
-				*/
-				upUrl = TzUniversityContextPath + '/UpdServlet?filePath=activity';
-			}
-		}else{
-			//upUrl = file.findParentByType("activityInfo").child("form").getForm().findField("saveImageAccessUrl").getValue();
-			if(upUrl==""){
-				//Ext.Msg.alert("错误","未定义上传图片的路径，请与管理员联系");
-				//return;
-				upUrl = TzUniversityContextPath + '/UpdServlet?filePath=activity';
-			}else{
-				/*
-				if(upUrl.length == (upUrl.lastIndexOf("/")+1)){
-				   upUrl = TzUniversityContextPath + '/UpdServlet?filePath='+upUrl+dateStr;
-				}else{
-				   upUrl = TzUniversityContextPath + '/UpdServlet?filePath='+upUrl+"/"+dateStr;
+				var fileUpload=document.getElementsByName("orguploadfile")[0];
+				var upLoadFileSize = fileUpload.files[0].size;
+				if(upLoadFileSize/(1024*1024) > 10){
+					Ext.MessageBox.alert("提示", "上传图片的大小不能大于10M");
+					form.reset();
+					return;
 				}
-				*/
-				upUrl = TzUniversityContextPath + '/UpdServlet?filePath=activity';
 			}
-		}
-		
-		var myMask = new Ext.LoadMask({
-	    msg    : '加载中...',
-	    target : Ext.getCmp('tranzvision-framework-content-panel')
-		});
-		
-		 myMask.show();
-	
-		form.submit({
-			url: upUrl,
-			//waitMsg: '图片正在上传，请耐心等待....',
-			success: function (form, action) {
-				var tzParams; 
-			  var picViewCom;
-			
-			  if(attachmentType=="TPJ"){
-			  	picViewCom = file.findParentByType("tabpanel").down('dataview[name=picView]');
-			  	tzParams = '{"order":' + picViewCom.getStore().getCount() + ',"attachmentType":"'+attachmentType+'","data":' + Ext.JSON.encode(action.result.msg) + '}';
-			  }else{
-			  	tzParams = '{"attachmentType":"' + attachmentType + '","data":' + Ext.JSON.encode(action.result.msg) + '}';
-			  }
-				
-				tzParams = '{"ComID":"TZ_HD_MANAGER_COM","PageID":"TZ_HD_INFO_STD","OperateType":"HTML","comParams":' + tzParams +'}';
-				
-				Ext.Ajax.request({
-				    //url: '/psc/TZDEV/EMPLOYEE/CRM/s/WEBLIB_GD_ATT_D.TZ_GD_ATT_FILE.FieldFormula.Iscript_AddArtAttach',
-				    url: Ext.tzGetGeneralURL,
-				    params: {
-				        tzParams: tzParams
-				    },
-				    success: function(response){
-				    	var responseText = eval( "(" + response.responseText + ")" );
-				        if(responseText.success == 0){
-				        	
-				        	var accessPath = action.result.msg.accessPath;
-				        	var sltPath = action.result.msg.accessPath;
-				        	if(accessPath.length == (accessPath.lastIndexOf("/")+1)){
-				        		accessPath = accessPath + action.result.msg.sysFileName;
-				        		//sltPath = sltPath + "MINI_"+action.result.msg.sysFileName;
-				        		sltPath = sltPath + responseText.minPicSysFileName;
-				        	}else{
-				        		accessPath = accessPath + "/" + action.result.msg.sysFileName;
-				        		//sltPath = sltPath+ "/" + "MINI_"+action.result.msg.sysFileName;
-				        		sltPath = sltPath+ "/" + responseText.minPicSysFileName;
-				        	}
-				        	
-				        	
-				        	//viewStore.reload();
-				        	if(attachmentType=="IMG"){ 
-				        		//Ext.getCmp( "titileImage").setSrc(TzUniversityContextPath + accessPath);
-				        		//Ext.getCmp( "titleImageUrl").setValue(accessPath);
-				        		file.findParentByType("tabpanel").down('image[name=titileImage]').setSrc(TzUniversityContextPath + accessPath);
-				        		file.findParentByType("form").findParentByType("form").down('hiddenfield[name=titleImageUrl]').setValue(accessPath);
-				        		//Ext.ComponentQuery.query('image[name=titileImage]')[0].setSrc(TzUniversityContextPath + accessPath);
+			if(attachmentType=="TPJ"){
+				var fix = value.substring(value.lastIndexOf(".") + 1,value.length);
+				if(fix.toLowerCase() != "jpg" && fix.toLowerCase() != "jpeg" && fix.toLowerCase() != "png" && fix.toLowerCase() != "gif" && fix.toLowerCase() != "bmp"){
+					Ext.MessageBox.alert("提示","请上传jpg|jpeg|png|gif|bmp格式的图片。");
+					form.reset();
+					return;
+				}
+				var fileUpload=document.getElementsByName("orguploadfile")[1];
+				var upLoadFileSize = fileUpload.files[0].size;
+				if(upLoadFileSize/(1024*1024) > 10){
+					Ext.MessageBox.alert("提示", "上传图片的大小不能大于10M");
+					form.reset();
+					return;
+				}
+			}
+
+			//如果是附件则存在在附件的url中，如果是图片在存放在图片的url中;
+			var dateStr = Ext.Date.format(new Date(), 'Ymd');
+
+
+			var upUrl = "";
+			if(attachmentType=="ATTACHMENT"){
+				var fileUpload=document.getElementsByName("orguploadfile")[2];
+				var upLoadFileSize = fileUpload.files[0].size;
+				if(upLoadFileSize/(1024*1024) > 10){
+					Ext.MessageBox.alert("提示", "上传文件的大小不能大于10M");
+					form.reset();
+					return;
+				}
+				//upUrl = file.findParentByType("activityInfo").child("form").getForm().findField("saveAttachAccessUrl").getValue();
+				if(upUrl==""){
+					//Ext.Msg.alert("错误","未定义上传附件的路径，请与管理员联系");
+					//return;
+					upUrl = TzUniversityContextPath + '/UpdServlet?filePath=activity';
+				}else{
+					/*
+					if(upUrl.length == (upUrl.lastIndexOf("/")+1)){
+					   upUrl = TzUniversityContextPath + '/UpdServlet?filePath='+upUrl+dateStr;
+					}else{
+					   upUrl = TzUniversityContextPath + '/UpdServlet?filePath='+upUrl+"/"+dateStr;
+					}
+					*/
+					upUrl = TzUniversityContextPath + '/UpdServlet?filePath=activity';
+				}
+			}else{
+				//upUrl = file.findParentByType("activityInfo").child("form").getForm().findField("saveImageAccessUrl").getValue();
+				if(upUrl==""){
+					//Ext.Msg.alert("错误","未定义上传图片的路径，请与管理员联系");
+					//return;
+					upUrl = TzUniversityContextPath + '/UpdServlet?filePath=activity';
+				}else{
+					/*
+					if(upUrl.length == (upUrl.lastIndexOf("/")+1)){
+					   upUrl = TzUniversityContextPath + '/UpdServlet?filePath='+upUrl+dateStr;
+					}else{
+					   upUrl = TzUniversityContextPath + '/UpdServlet?filePath='+upUrl+"/"+dateStr;
+					}
+					*/
+					upUrl = TzUniversityContextPath + '/UpdServlet?filePath=activity';
+				}
+			}
+
+			var myMask = new Ext.LoadMask({
+				msg    : '加载中...',
+				target : Ext.getCmp('tranzvision-framework-content-panel')
+			});
+
+			myMask.show();
+
+			form.submit({
+					url: upUrl,
+					//waitMsg: '图片正在上传，请耐心等待....',
+					success: function (form, action) {
+						var tzParams;
+						var picViewCom;
+
+						if(attachmentType=="TPJ"){
+							picViewCom = file.findParentByType("tabpanel").down('dataview[name=picView]');
+							tzParams = '{"order":' + picViewCom.getStore().getCount() + ',"attachmentType":"'+attachmentType+'","data":' + Ext.JSON.encode(action.result.msg) + '}';
+						}else{
+							tzParams = '{"attachmentType":"' + attachmentType + '","data":' + Ext.JSON.encode(action.result.msg) + '}';
+						}
+
+						tzParams = '{"ComID":"TZ_HD_MANAGER_COM","PageID":"TZ_HD_INFO_STD","OperateType":"HTML","comParams":' + tzParams +'}';
+
+						Ext.Ajax.request({
+							//url: '/psc/TZDEV/EMPLOYEE/CRM/s/WEBLIB_GD_ATT_D.TZ_GD_ATT_FILE.FieldFormula.Iscript_AddArtAttach',
+							url: Ext.tzGetGeneralURL,
+							params: {
+								tzParams: tzParams
+							},
+							success: function(response){
+								var responseText = eval( "(" + response.responseText + ")" );
+								if(responseText.success == 0){
+
+									var accessPath = action.result.msg.accessPath;
+									var sltPath = action.result.msg.accessPath;
+									if(accessPath.length == (accessPath.lastIndexOf("/")+1)){
+										accessPath = accessPath + action.result.msg.sysFileName;
+										//sltPath = sltPath + "MINI_"+action.result.msg.sysFileName;
+										sltPath = sltPath + responseText.minPicSysFileName;
+									}else{
+										accessPath = accessPath + "/" + action.result.msg.sysFileName;
+										//sltPath = sltPath+ "/" + "MINI_"+action.result.msg.sysFileName;
+										sltPath = sltPath+ "/" + responseText.minPicSysFileName;
+									}
+
+
+									//viewStore.reload();
+									if(attachmentType=="IMG"){
+										//Ext.getCmp( "titileImage").setSrc(TzUniversityContextPath + accessPath);
+										//Ext.getCmp( "titleImageUrl").setValue(accessPath);
+										file.findParentByType("tabpanel").down('image[name=titileImage]').setSrc(TzUniversityContextPath + accessPath);
+										file.findParentByType("form").findParentByType("form").down('hiddenfield[name=titleImageUrl]').setValue(accessPath);
+										//Ext.ComponentQuery.query('image[name=titileImage]')[0].setSrc(TzUniversityContextPath + accessPath);
 										//Ext.ComponentQuery.query('hiddenfield[name=titleImageUrl]')[0].setValue(accessPath);
-				        	
-				  					
-				  				}
-				  				
-				  				if(attachmentType=="ATTACHMENT"){ 
+
+
+									}
+
+									if(attachmentType=="ATTACHMENT"){
 										//var applyItemGrid = this.lookupReference('attachmentGrid');
 										var applyItemGrid = file.findParentByType("grid")
 										var r = Ext.create('KitchenSink.view.activity.attachmentModel', {
 											"attachmentID": action.result.msg.sysFileName,
 											"attachmentName": "<a href='"+accessPath+"' target='_blank'>"+action.result.msg.filename+"</a>",
 											"attachmentUrl": accessPath,
-    								});
-    	 							applyItemGrid.store.insert(0,r);
-				  				}
-				  				
-				  				if(attachmentType=="TPJ"){
-				  					 
-				  					  var viewStore = picViewCom.store;
-				  					  var picsCount = viewStore.getCount();
-				  				
-				  					  var r = Ext.create('KitchenSink.view.activity.picModel', {
-    											"sysFileName": action.result.msg.sysFileName ,
-													"index": picsCount+1,
-    											"src": accessPath,
-    											"caption": action.result.msg.filename,
-    											"picURL": "",
-    											"sltUrl": sltPath
-    									});
+										});
+										applyItemGrid.store.insert(0,r);
+									}
 
-    									viewStore.insert(picsCount ,r);
-    									viewStore.loadData(r,true);
-    									
-    									
-				  					 // Ext.Msg.alert("",Ext.JSON.encode(action.result.msg));
-				  				}
-				        }else{
-				        	Ext.Msg.alert("提示", responseText.message);
-				        }
-				    },
-				    failure: function (response) {
+									if(attachmentType=="TPJ"){
+
+										var viewStore = picViewCom.store;
+										var picsCount = viewStore.getCount();
+
+										var r = Ext.create('KitchenSink.view.activity.picModel', {
+											"sysFileName": action.result.msg.sysFileName ,
+											"index": picsCount+1,
+											"src": accessPath,
+											"caption": action.result.msg.filename,
+											"picURL": "",
+											"sltUrl": sltPath
+										});
+
+										viewStore.insert(picsCount ,r);
+										viewStore.loadData(r,true);
+
+
+										// Ext.Msg.alert("",Ext.JSON.encode(action.result.msg));
+									}
+								}else{
+									Ext.Msg.alert("提示", responseText.message);
+								}
+							},
+							failure: function (response) {
 								Ext.MessageBox.alert("错误", "上传失败");
-						}
+							}
+						});
+						//重置表单
+						myMask.hide();
+						form.reset();
+					},
+					failure: function (form, action) {
+						myMask.hide();
+						Ext.MessageBox.alert("错误", action.result.msg);
+					}
 				});
-				//重置表单
-				myMask.hide();
-				form.reset();
-			},
-			failure: function (form, action) {
-				myMask.hide();
-				Ext.MessageBox.alert("错误", action.result.msg);
-			}
-		});
-		
-		
-	}
+		}
+
 }
 
 

@@ -62,16 +62,8 @@ public class FilterFldClassServiceImpl extends FrameworkImpl {
 			psTzFilterFldTKey.setTzComId(str_com_id);
 			psTzFilterFldTKey.setTzPageId(str_page_id);
 			psTzFilterFldTKey.setTzFilterFld(str_field_name);
-			if("0".equals(type)){
-				psTzFilterFldTKey.setTzViewName(str_view_name);
-				psTzFilterFldTKey.setTzAppClassName("");
-				psTzFilterFldT = psTzFilterFldTMapper.selectByPrimaryKey(psTzFilterFldTKey);
-			}
-			if("1".equals(type)){
-				psTzFilterFldTKey.setTzViewName("");
-				psTzFilterFldTKey.setTzAppClassName(str_class_name);
-				psTzFilterFldT = psTzFilterFldTMapper.selectByPrimaryKey2(psTzFilterFldTKey);
-			}
+			psTzFilterFldTKey.setTzViewName(str_view_name);
+			psTzFilterFldT = psTzFilterFldTMapper.selectByPrimaryKey(psTzFilterFldTKey);
 
 			if (psTzFilterFldT != null) {
 				int maxNum = 0;
@@ -95,6 +87,8 @@ public class FilterFldClassServiceImpl extends FrameworkImpl {
 				map.put("fltFldQzLx", psTzFilterFldT.getTzFltFldQzType());
 				map.put("translateValueFld", psTzFilterFldT.getTzZhzjhId());
 				map.put("fltFldNoUpperLower", psTzFilterFldT.getTzNoUporlow());
+				map.put("fieldType", psTzFilterFldT.getTzFieldType());
+				
 				
 				//DeepQuery相关字段
 				map.put("deepQueryFlg", psTzFilterFldT.getTzDeepqueryFlg());
@@ -162,20 +156,13 @@ public class FilterFldClassServiceImpl extends FrameworkImpl {
 						psTzFilterYsfTKey.setTzFilterFld(str_field_name);
 						psTzFilterYsfTKey.setTzFilterYsf(str_field_ysfid);
 						PsTzFilterYsfT psTzFilterYsfT = new PsTzFilterYsfT();
-						if("0".equals(type)){
-							psTzFilterYsfTKey.setTzViewName(str_view_name);
-							psTzFilterYsfTKey.setTzAppClassName("");
-							psTzFilterYsfT = psTzFilterYsfTMapper.selectByPrimaryKey(psTzFilterYsfTKey);
-						}
-						if("1".equals(type)){
-							psTzFilterYsfTKey.setTzViewName("");
-							psTzFilterYsfTKey.setTzAppClassName(str_class_name);
-							psTzFilterYsfT = psTzFilterYsfTMapper.selectByPrimaryKey2(psTzFilterYsfTKey);
-						}
+						psTzFilterYsfTKey.setTzViewName(str_view_name);
+						psTzFilterYsfT = psTzFilterYsfTMapper.selectByPrimaryKey(psTzFilterYsfTKey);
 						String str_is_qy = "", str_is_oprt = "";
 						if (psTzFilterYsfT != null) {
 							str_is_qy = psTzFilterYsfT.getTzFilterBdyQy();
 							str_is_oprt = psTzFilterYsfT.getTzIsDefOprt();
+							str_class_name = psTzFilterYsfT.getTzAppClassName();
 						}
 						Map<String, Object> mapList = new HashMap<String, Object>();
 						mapList.put("ComID", str_com_id);
@@ -260,9 +247,11 @@ public class FilterFldClassServiceImpl extends FrameworkImpl {
 				Map<String, Object> jsonObject = jacksonUtil.getMap("add");
 				String str_com_id = (String) jsonObject.get("ComID");
 				String str_page_id = (String) jsonObject.get("PageID");
+				String str_view_name = (String) jsonObject.get("ViewMc");
 				String str_class_name = (String) jsonObject.get("appClassMc");
 				String str_field_name = (String) jsonObject.get("FieldMc");
 				String str_field_desc = (String) jsonObject.get("fieldDesc");
+				String str_field_type = (String) jsonObject.get("fieldType");
 				String num_max_String = (String) jsonObject.get("maxNum");
 				int num_max_num = 0;
 				String sql = "select count(1) from PS_TZ_FILTER_FLD_T WHERE TZ_COM_ID=? AND TZ_PAGE_ID=? AND TZ_APP_CLASS_NAME=?";
@@ -286,7 +275,7 @@ public class FilterFldClassServiceImpl extends FrameworkImpl {
 				PsTzFilterFldT psTzFilterFldT = new PsTzFilterFldT();
 				psTzFilterFldT.setTzComId(str_com_id);
 				psTzFilterFldT.setTzPageId(str_page_id);
-				psTzFilterFldT.setTzViewName("");
+				psTzFilterFldT.setTzViewName(str_view_name);
 				psTzFilterFldT.setTzAppClassName(str_class_name);
 				psTzFilterFldT.setTzFilterFld(str_field_name);
 				psTzFilterFldT.setTzFilterFldDesc(str_field_desc);
@@ -301,6 +290,7 @@ public class FilterFldClassServiceImpl extends FrameworkImpl {
 				psTzFilterFldT.setTzFltFldQzType(fltFldQzLx);
 				psTzFilterFldT.setTzZhzjhId(translateValueFld);
 				psTzFilterFldT.setTzNoUporlow(fltFldNoUpperLower);
+				psTzFilterFldT.setTzFieldType(str_field_type);
 				
 				psTzFilterFldT.setTzDeepqueryFlg(deepQueryFlg);
 				psTzFilterFldT.setTzDeepqueryView(deepQueryView);
@@ -329,14 +319,14 @@ public class FilterFldClassServiceImpl extends FrameworkImpl {
 							}
 
 							String isExist = "";
-							String isExistSQL = "select 'Y' from PS_TZ_FILTER_YSF_T WHERE TZ_COM_ID=? AND  TZ_PAGE_ID=? AND TZ_APP_CLASS_NAME=? AND TZ_FILTER_FLD=? AND TZ_FILTER_YSF=?";
+							String isExistSQL = "select 'Y' from PS_TZ_FILTER_YSF_T WHERE TZ_COM_ID=? AND  TZ_PAGE_ID=? AND TZ_VIEW_NAME=? AND TZ_FILTER_FLD=? AND TZ_FILTER_YSF=?";
 							isExist = jdbcTemplate.queryForObject(isExistSQL, new Object[] { str_com_id, str_page_id,
-									str_class_name, str_field_name, str_fldysf_name }, "String");
+									str_view_name, str_field_name, str_fldysf_name }, "String");
 
 							PsTzFilterYsfT psTzFilterYsfT = new PsTzFilterYsfT();
 							psTzFilterYsfT.setTzComId(str_com_id);
 							psTzFilterYsfT.setTzPageId(str_page_id);
-							psTzFilterYsfT.setTzViewName("");
+							psTzFilterYsfT.setTzViewName(str_view_name);
 							psTzFilterYsfT.setTzAppClassName(str_class_name);
 							psTzFilterYsfT.setTzFilterFld(str_field_name);
 							psTzFilterYsfT.setTzFilterYsf(str_fldysf_name);
@@ -392,6 +382,7 @@ public class FilterFldClassServiceImpl extends FrameworkImpl {
 					str_class_name = "";
 				}
 				String str_field_name = (String) jsonObject.get("FieldMc");
+				String str_field_type = (String) jsonObject.get("fieldType");
 				String str_field_desc = (String) jsonObject.get("fieldDesc");
 				String str_prompt_tbl = (String) jsonObject.get("promptTab");
 				String str_prompt_fld = (String) jsonObject.get("promptFld");
@@ -430,6 +421,7 @@ public class FilterFldClassServiceImpl extends FrameworkImpl {
 				psTzFilterFldT.setTzFltFldQzType(fltFldQzLx);
 				psTzFilterFldT.setTzZhzjhId(translateValueFld);
 				psTzFilterFldT.setTzNoUporlow(fltFldNoUpperLower);
+				psTzFilterFldT.setTzFieldType(str_field_type);
 				
 				psTzFilterFldT.setTzDeepqueryFlg(deepQueryFlg);
 				psTzFilterFldT.setTzDeepqueryView(deepQueryView);
@@ -458,9 +450,9 @@ public class FilterFldClassServiceImpl extends FrameworkImpl {
 							}
 
 							String isExist = "";
-							String isExistSQL = "select 'Y' from PS_TZ_FILTER_YSF_T WHERE TZ_COM_ID=? AND  TZ_PAGE_ID=? AND TZ_VIEW_NAME=? AND TZ_APP_CLASS_NAME=? AND TZ_FILTER_FLD=? AND TZ_FILTER_YSF=?";
+							String isExistSQL = "select 'Y' from PS_TZ_FILTER_YSF_T WHERE TZ_COM_ID=? AND  TZ_PAGE_ID=? AND TZ_VIEW_NAME=? AND TZ_FILTER_FLD=? AND TZ_FILTER_YSF=?";
 							isExist = jdbcTemplate.queryForObject(isExistSQL, new Object[] { str_com_id, str_page_id,
-									str_view_name,str_class_name, str_field_name, str_fldysf_name }, "String");
+									str_view_name, str_field_name, str_fldysf_name }, "String");
 
 							PsTzFilterYsfT psTzFilterYsfT = new PsTzFilterYsfT();
 							psTzFilterYsfT.setTzComId(str_com_id);
@@ -482,51 +474,49 @@ public class FilterFldClassServiceImpl extends FrameworkImpl {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				if("0".equals(type)){
-					try {
-						List<Map<String, Object>> jsonArray4 = (List<Map<String, Object>>) updateListJson.get("data2");
-						
-						if (jsonArray4 != null && jsonArray4.size() > 0) {
-							String deleteSQL = "delete from PS_TZ_FLTPRM_FLD_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? and TZ_FILTER_FLD=?";
-							jdbcTemplate.update(deleteSQL,new Object[]{str_com_id,str_page_id,str_view_name,str_field_name});
-							for (int i = 0; i < jsonArray4.size(); i++) {
-								jObj = jsonArray4.get(i);
-								String str_fldgl_name = (String) jObj.get("FieldGL");
-								
-								PsTzFltprmFldT psTzFltprmFld = new PsTzFltprmFldT();
-								psTzFltprmFld.setTzComId(str_com_id);
-								psTzFltprmFld.setTzPageId(str_page_id);
-								psTzFltprmFld.setTzViewName(str_view_name);
-								psTzFltprmFld.setTzFilterFld(str_field_name);
-								psTzFltprmFld.setTzFilterGlFld(str_fldgl_name);
-								psTzFltprmFld.setTzFilterOrder(i +1);
-								psTzFltprmFldTMapper.insert(psTzFltprmFld);
-							}
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+				try {
+					List<Map<String, Object>> jsonArray4 = (List<Map<String, Object>>) updateListJson.get("data2");
 					
-					try {
-						
-						List<Map<String, Object>> jsonArray3 = (List<Map<String, Object>>) updateListJson.get("data3");
-						if (jsonArray3 != null && jsonArray3.size() > 0) {
+					if (jsonArray4 != null && jsonArray4.size() > 0) {
+						String deleteSQL = "delete from PS_TZ_FLTPRM_FLD_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? and TZ_FILTER_FLD=?";
+						jdbcTemplate.update(deleteSQL,new Object[]{str_com_id,str_page_id,str_view_name,str_field_name});
+						for (int i = 0; i < jsonArray4.size(); i++) {
+							jObj = jsonArray4.get(i);
+							String str_fldgl_name = (String) jObj.get("FieldGL");
 							
-							for (int i = 0; i < jsonArray3.size(); i++) {
-								jObj = jsonArray3.get(i);
-								String str_field_gl = (String) jObj.get("FieldGL");
-								
-								String deleteSQL = "delete from PS_TZ_FLTPRM_FLD_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? and TZ_FILTER_FLD=? and TZ_FILTER_GL_FLD=?";
-								jdbcTemplate.update(deleteSQL,new Object[]{str_com_id,str_page_id,str_view_name,str_field_name,str_field_gl});
-							}
+							PsTzFltprmFldT psTzFltprmFld = new PsTzFltprmFldT();
+							psTzFltprmFld.setTzComId(str_com_id);
+							psTzFltprmFld.setTzPageId(str_page_id);
+							psTzFltprmFld.setTzViewName(str_view_name);
+							psTzFltprmFld.setTzFilterFld(str_field_name);
+							psTzFltprmFld.setTzFilterGlFld(str_fldgl_name);
+							psTzFltprmFld.setTzFilterOrder(i +1);
+							psTzFltprmFldTMapper.insert(psTzFltprmFld);
 						}
-					} catch (Exception e) {
-						e.printStackTrace();
 					}
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 				
-				
+				try {
+					
+					List<Map<String, Object>> jsonArray3 = (List<Map<String, Object>>) updateListJson.get("data3");
+					if (jsonArray3 != null && jsonArray3.size() > 0) {
+						
+						for (int i = 0; i < jsonArray3.size(); i++) {
+							jObj = jsonArray3.get(i);
+							String str_field_gl = (String) jObj.get("FieldGL");
+							
+							String deleteSQL = "delete from PS_TZ_FLTPRM_FLD_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? and TZ_FILTER_FLD=? and TZ_FILTER_GL_FLD=?";
+							jdbcTemplate.update(deleteSQL,new Object[]{str_com_id,str_page_id,str_view_name,str_field_name,str_field_gl});
+						}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
+				
+				
 		} catch (Exception e) {
 			e.printStackTrace();
 			errMsg[0] = "1";

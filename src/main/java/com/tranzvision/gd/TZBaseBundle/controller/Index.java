@@ -11,7 +11,9 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.common.base.Strings;
@@ -26,7 +28,8 @@ import com.tranzvision.gd.util.cookie.TzCookie;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 @Controller
-@RequestMapping(value = "/")
+@RequestMapping(value = "/",method={RequestMethod.POST,RequestMethod.GET})
+@CrossOrigin(origins="*")
 public class Index {
 	/**
 	 * Cookie存储的系统语言信息
@@ -341,7 +344,6 @@ public class Index {
 					isCheck = true;
 				}
 			}
-			System.out.println("is CSRF Check：" + isCheck);
 
 			if (isCheck) {
 				String verification = request.getParameter("verification");

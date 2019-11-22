@@ -30,6 +30,8 @@ public class FliterForm extends FrameworkImpl {
 	private HttpServletRequest request;
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
+	@Autowired
+	private FliterForClassEngine fliterForClassEngine;
 
 	/* 获取组件注册信息 */
 	public String tzQuery(String strParams, String[] errorMsg) {
@@ -71,6 +73,11 @@ public class FliterForm extends FrameworkImpl {
 			// viewname;
 			String viewName = cfgArr[2];
 
+			/*** update by caoy 增加配置类的处理，如果recname 以CLASS_开头哪么认为是配置的类 ***/
+			if (viewName.startsWith("CLASS_")) {
+				return fliterForClassEngine.tzQuery(strParams, errorMsg);
+			}
+
 			int tableNameCount = 0;
 			String tableName = viewName;
 			String tableNameSql = "select COUNT(1) from information_schema.tables where TABLE_NAME=?";
@@ -87,7 +94,7 @@ public class FliterForm extends FrameworkImpl {
 			String operatorReadOnly = "true";
 			// 是否存在;
 			String isExist = "";
-			String sql = "select 'Y' Exist ,TZ_ADVANCE_MODEL,TZ_RESULT_MAX_NUM from PS_TZ_FILTER_DFN_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=?";
+			String sql = "select 'Y' Exist ,TZ_ADVANCE_MODEL,TZ_RESULT_MAX_NUM from PS_TZ_FILTER_DFN_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? and TZ_TYPE=0";
 
 			Map<String, Object> map = null;
 			try {
@@ -425,6 +432,21 @@ public class FliterForm extends FrameworkImpl {
 
 	/******* 可配置搜索,返回搜索结果JSON **********/
 	@SuppressWarnings("unchecked")
+
+	/**
+	 * 
+	 * Description:可配置搜索,返回搜索结果JSON update by caoy 2019年11月21日 增加配置的类的处理 Create
+	 * Time: 2019年11月21日 下午1:36:37
+	 * 
+	 * @author feifei
+	 * @param resultFldArray
+	 * @param orderByArr
+	 * @param strParams
+	 * @param numLimit
+	 * @param numStart
+	 * @param errorMsg
+	 * @return
+	 */
 	public Object[] searchFilter(String[] resultFldArray, String[][] orderByArr, String strParams, int numLimit,
 			int numStart, String[] errorMsg) {
 		JacksonUtil jacksonUtil = new JacksonUtil();
@@ -442,7 +464,7 @@ public class FliterForm extends FrameworkImpl {
 
 		// 返回多少个字段;
 		int resultFldNum = resultFldArray.length;
-	//	System.out.println("resultFldNum:"+resultFldNum);
+		// System.out.println("resultFldNum:"+resultFldNum);
 		// 列表内容;
 		// String strContent = "";
 		int numTotal = 0;
@@ -465,7 +487,13 @@ public class FliterForm extends FrameworkImpl {
 			String comId = comPageRecArr[0];
 			String pageId = comPageRecArr[1];
 			String recname = comPageRecArr[2];
-		  //  System.out.println("recname="+recname);
+			// System.out.println("recname="+recname);
+
+			/*** update by caoy 增加配置类的处理，如果recname 以CLASS_开头哪么认为是配置的类 ***/
+			if (recname.startsWith("CLASS_")) {
+				return fliterForClassEngine.searchFilter(resultFldArray, orderByArr, strParams, numLimit, numStart,
+						errorMsg);
+			}
 
 			// 得到总条数;
 			int tableNameCount = 0;
@@ -478,7 +506,7 @@ public class FliterForm extends FrameworkImpl {
 			}
 
 			String exist = "";
-			String existSQL = "SELECT 'Y' EXIST,TZ_RESULT_MAX_NUM from PS_TZ_FILTER_DFN_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=?";
+			String existSQL = "SELECT 'Y' EXIST,TZ_RESULT_MAX_NUM from PS_TZ_FILTER_DFN_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=?  and TZ_TYPE=0";
 			Map<String, Object> map = null;
 			try {
 				map = jdbcTemplate.queryForMap(existSQL, new Object[] { comId, pageId, recname });

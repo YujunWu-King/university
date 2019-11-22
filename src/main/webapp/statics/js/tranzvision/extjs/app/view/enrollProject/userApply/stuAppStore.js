@@ -1,6 +1,6 @@
 Ext.define('KitchenSink.view.enrollProject.userApply.stuAppStore', {
     extend: 'Ext.data.Store',
-    alias: 'store.stuAppStore',
+    alias: 'store.stuAppStore1',
     model: 'KitchenSink.view.enrollProject.userApply.stuAppModel',
 	autoLoad: false,
 	pageSize: 20,

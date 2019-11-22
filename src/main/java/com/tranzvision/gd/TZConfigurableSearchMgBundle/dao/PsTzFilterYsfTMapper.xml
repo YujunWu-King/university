@@ -5,9 +5,9 @@
     <id column="TZ_COM_ID" property="tzComId" jdbcType="VARCHAR" />
     <id column="TZ_PAGE_ID" property="tzPageId" jdbcType="VARCHAR" />
     <id column="TZ_VIEW_NAME" property="tzViewName" jdbcType="VARCHAR" />
-    <id column="TZ_APP_CLASS_NAME" property="tzAppClassName" jdbcType="VARCHAR" />
     <id column="TZ_FILTER_FLD" property="tzFilterFld" jdbcType="VARCHAR" />
     <id column="TZ_FILTER_YSF" property="tzFilterYsf" jdbcType="VARCHAR" />
+    <result column="TZ_APP_CLASS_NAME" property="tzAppClassName" jdbcType="VARCHAR" />
     <result column="TZ_FILTER_BDY_QY" property="tzFilterBdyQy" jdbcType="VARCHAR" />
     <result column="TZ_IS_DEF_OPRT" property="tzIsDefOprt" jdbcType="VARCHAR" />
   </resultMap>
@@ -113,7 +113,6 @@
     where TZ_COM_ID = #{tzComId,jdbcType=VARCHAR}
       and TZ_PAGE_ID = #{tzPageId,jdbcType=VARCHAR}
       and TZ_VIEW_NAME = #{tzViewName,jdbcType=VARCHAR}
-      and TZ_APP_CLASS_NAME = #{tzAppClassName,jdbcType=VARCHAR}
       and TZ_FILTER_FLD = #{tzFilterFld,jdbcType=VARCHAR}
       and TZ_FILTER_YSF = #{tzFilterYsf,jdbcType=VARCHAR}
   </update>

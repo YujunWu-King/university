@@ -18,6 +18,12 @@ public class TestParent extends FrameworkImpl {
 		// TODO Auto-generated constructor stub
 	}
 	
+	public static void main(String[] args) throws Exception {
+		String recname="CLASS_USER_BM";
+		recname = recname.substring(recname.indexOf("_")+1, recname.length());
+		System.out.println(recname);
+	}
+	
 	
 
 }

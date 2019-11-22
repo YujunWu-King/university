@@ -10,6 +10,8 @@ public class PsTzFilterFldTKey {
     private String tzAppClassName;
 
     private String tzFilterFld;
+    
+    private String tzFieldType;
 
     public String getTzComId() {
         return tzComId;
@@ -50,4 +52,13 @@ public class PsTzFilterFldTKey {
     public void setTzFilterFld(String tzFilterFld) {
         this.tzFilterFld = tzFilterFld == null ? null : tzFilterFld.trim();
     }
+
+	public String getTzFieldType() {
+		return tzFieldType;
+	}
+
+	public void setTzFieldType(String tzFieldType) {
+		this.tzFieldType = tzFieldType;
+	}
+    
 }
