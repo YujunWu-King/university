@@ -66,7 +66,7 @@ public class TzMsGroupServiceImpl extends FrameworkImpl {
 			// 排序字段如果没有不要赋值
 			String[][] orderByArr = new String[][] { { "TZ_APP_INS_ID", "ASC" } };
 
-			String sql = tzSQLObject.getSQLText("SQL.TZMbaPwClps.TZ_GROUP");
+			String sql = tzSQLObject.getSQLText("SQL.TZMbaPwClps.TZ_GROUP",true);
 
 			// json数据要的结果字段;
 			String[] resultFldArray = { "OPRID", "TZ_APP_INS_ID", "TZ_CLASS_ID", "TZ_APPLY_PC_ID",
@@ -97,7 +97,6 @@ public class TzMsGroupServiceImpl extends FrameworkImpl {
 					mapList.put("msJxNo", rowList[7]);
 
 					map = sqlQuery.queryForMap(sql, new Object[] { rowList[2], rowList[3], rowList[1] });
-
 					if (map != null) {
 						TZ_GROUP_ID = map.get("TZ_GROUP_ID") == null ? "" : map.get("TZ_GROUP_ID").toString();
 						TZ_GROUP_DATE = map.get("TZ_GROUP_DATE") == null ? "" : map.get("TZ_GROUP_DATE").toString();
@@ -105,8 +104,9 @@ public class TzMsGroupServiceImpl extends FrameworkImpl {
 						TZ_GROUP_NAME = map.get("TZ_GROUP_NAME") == null ? "" : map.get("TZ_GROUP_NAME").toString();
 						judgeGroupName = map.get("TZ_CLPS_GR_NAME") == null ? ""
 								: map.get("TZ_CLPS_GR_NAME").toString();
-						TZ_CLPS_GR_ID = map.get("TZ_CLPS_GR_ID") == null ? ""
-								: map.get("TZ_CLPS_GR_ID").toString();
+						TZ_CLPS_GR_ID = map.get("TZ_PS_GR_ID") == null ? ""
+								: map.get("TZ_PS_GR_ID").toString();
+						System.out.println();
 						if (TZ_GROUP_DATE != null) {
 						} else {
 							TZ_GROUP_DATE = "暂无时间安排";

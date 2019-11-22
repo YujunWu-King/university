@@ -832,6 +832,174 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
         tabPanel.setActiveTab(1);
         
         win.show();
+    },
+    /**
+     * 评委组分组保存-迁移
+     * author:丁鹏
+     * time:2019年11月22日15:45:42
+     * */
+    //评委组分组保存
+    onMsGroupSave: function (btn) {
+        var panelGrid = this.lookupReference('pageGrid');
+        var panel = btn.findParentByType("stuInfoPanel");
+        grid = panel.down('grid');
+        //获取窗口
+        var win = btn.findParentByType("window");
+        //资源信息表单
+        let chg = panelGrid.getStore().getModifiedRecords();
+        //var grid= Ext.getCmp('pageGrid');
+        if (!!chg.length) {
+            /*保存资源信息*/
+            var ret = this.savePlstMsComInfo(win, panelGrid, grid);
+        }
+    },
+    /**
+     * 评委组分组确定-迁移
+     * author：丁鹏
+     * time：2019年11月22日15:46:23
+     * */
+    //评委组分组确定
+    onMsGroupEnsure: function (btn) {
+        var panelGrid = this.lookupReference('pageGrid');
+        var panel = btn.findParentByType("stuInfoPanel");
+        grid = panel.down('grid');
+        //获取窗口
+        var win = btn.findParentByType("window");
+        //资源信息表单
+        let chg = panelGrid.getStore().getModifiedRecords();
+        var form = win.child("form").getForm();
+        if (!!chg.length) {
+            /*保存资源信息*/
+            this.savePlstMsComInfo(win, panelGrid, grid);
+            //关闭窗口
+            win.close();
+        } else {
+            win.close();
+        }
+    },
+    /**
+     * 组内排序保存-实际操作-迁移
+     * author：丁鹏
+     * time：2019年11月22日15:48:35
+     * */
+    savePlstMsComInfo: function (win, panelGrid, grid) {
+        let me = this;
+        //资源信息表单
+        var form = win.child("form").getForm();
+        var classId = form.findField("classID").getValue();
+        var batchId = form.findField("batchID").getValue();
+        var jugGroupId = Ext.ComponentQuery.query("combo[name='jugGroupId']")[0].getValue();
+        var msGroupId = Ext.ComponentQuery.query("combo[name='msGroupId']")[0].getValue();
+        //表单数据
+        var formParams = form.getValues();
+
+        //更新操作参数
+        // var comParams = "";
+        // var processComParams = "";
+        //授权组件页面列表
+
+        //var mspsksGrid = Ext.getCmp('mspsksGrid');
+        //授权组件页面数据
+        var store = panelGrid.getStore();
+        var editRecs = store.getModifiedRecords();
+        var tzParamspw = '{"ComID":"TZ_MSXCFZ_COM","PageID":"TZ_MSGL_ZNPX_STD","OperateType":"saveOrder","comParams":{' +
+            '"classId":' + classId + ',' +
+            '"batchId":' + batchId + ',' +
+            '"jugGroupId":' + jugGroupId + ',' +
+            '"msGroupId":' + msGroupId + ',' +
+            '"data":' + Ext.JSON.encode(editRecs.map(item => {
+                return item.data
+            })) + '}}';
+
+        if (tzParamspw != "") {
+            Ext.tzLoad(tzParamspw, function (result) {
+                grid.getStore().reload();
+            });
+        } else {
+            return false;
+        }
+    },
+    changeGroupToMs(btn, newValue, oldValue, eOpts) {
+        var panelGrid = this.lookupReference('pageGrid');
+        var panel = btn.findParentByType("stuInfoPanel");
+        var form = panel.down('form').getForm();
+        var classID = form.findField('classId').getValue();
+        var batchID = form.findField('batchId').getValue();
+        var jugGroupId = newValue;
+        var msGroupId = Ext.ComponentQuery.query("combo[name='msGroupId']")[0].getValue();
+        if (!!jugGroupId && !!msGroupId) {
+            var comParamsObj = {
+                ComID: 'TZ_MSXCFZ_COM',
+                PageID: 'TZ_MSGL_ZNPX_STD',
+                OperateType: 'GETSTUDATA',
+                comParams: {
+                    classId: classID,
+                    batchId: batchID,
+                    jugGroupId: jugGroupId,
+                    msGroupId: msGroupId
+                }
+            }
+            this.queryStudent(comParamsObj, panelGrid);
+        } else {
+            var comParamsObj = {
+                ComID: 'TZ_MSXCFZ_COM',
+                PageID: 'TZ_MSGL_ZNPX_STD',
+                OperateType: 'GETMSDATA',
+                comParams: {
+                    classId: classID,
+                    batchId: batchID,
+                    jugGroupId: jugGroupId
+                }
+            }
+            var tzParams = Ext.JSON.encode(comParamsObj);
+            Ext.tzLoad(tzParams, function (respData) {
+                let MSDATA = respData.MSDATA;
+                if (!!MSDATA) {
+                    let mszData = Ext.ComponentQuery.query("combo[name='msGroupId']")[0];
+                    mszData.setStore(Ext.create('Ext.data.Store', {
+                        fields: ['TZ_GROUP_ID', 'TZ_GROUP_DESC'],
+                        data: MSDATA
+                    }));
+                }
+            });
+        }
+    },
+    changeMsToGrid(btn, newValue, oldValue, eOpts) {
+        var panelGrid = this.lookupReference('pageGrid');
+        var panel = btn.findParentByType("stuInfoPanel");
+        var form = panel.down('form').getForm();
+        var classID = form.findField('classId').getValue();
+        var batchID = form.findField('batchId').getValue();
+        var jugGroupId = Ext.ComponentQuery.query("combo[name='jugGroupId']")[0].getValue();
+        var msGroupId = newValue;
+        var comParamsObj = {
+            ComID: 'TZ_MSXCFZ_COM',
+            PageID: 'TZ_MSGL_ZNPX_STD',
+            OperateType: 'GETSTUDATA',
+            comParams: {
+                classId: classID,
+                batchId: batchID,
+                jugGroupId: jugGroupId,
+                msGroupId: msGroupId
+            }
+        }
+        if (!!jugGroupId && !!msGroupId) {
+            this.queryStudent(comParamsObj, panelGrid);
+        }
+    },
+    queryStudent(com, panelGrid, grid) {
+        panelGrid.getStore().removeAll();
+        var tzParams = Ext.JSON.encode(com);
+        Ext.tzLoad(tzParams, function (respData) {
+            let SDATA = respData.SDATA;
+            if (!!SDATA) {
+                panelGrid.setStore(Ext.create('Ext.data.Store', {
+                    fields: [{name: 'ins'}, {name: 'sXh'}, {name: 'sName'}, {name: 'msh'}],
+                    data: SDATA
+                }));
+                panelGrid.getStore().reload();
+            }
+        });
     }
 	
 });

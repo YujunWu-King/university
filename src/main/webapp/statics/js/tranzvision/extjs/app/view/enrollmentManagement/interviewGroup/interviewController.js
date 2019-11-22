@@ -68,11 +68,13 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.interviewContro
         var appInsId =form.findField("appInsId").getValue();
 	   	var classId = form.findField("classID").getValue();
 	   	var batchId = form.findField("batchID").getValue();
+	   	var jugGroupId = form.findField("jugGroupId").getValue();
 
 	   	
 	   	console.log(appInsId);
 	   	console.log(classId);
 	   	console.log(batchId);
+	   	console.log(jugGroupId);
         
         //表单数据
         var formParams = form.getValues();
@@ -101,9 +103,9 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.interviewContro
         	   flag=flag+1;
            }
            if (comParamspw=='') {
-        	   comParamspw='{"classId":'+classId+',"batchId":'+batchId+',"appinsId":"'+appInsId+'","data":' + Ext.JSON.encode(editRecs[i].data) + '}'; 
+        	   comParamspw='{"classId":'+classId+',"batchId":'+batchId+',"appinsId":"'+appInsId+'","jugGroupId":"' + jugGroupId + '","data":' + Ext.JSON.encode(editRecs[i].data) + '}'; 
            } else {
-        	   comParamspw = comParamspw + ',' +'{"classId":'+classId+',"batchId":'+batchId+',"appinsId":"'+appInsId+'","data":' + Ext.JSON.encode(editRecs[i].data) + '}'; 
+        	   comParamspw = comParamspw + ',' +'{"classId":'+classId+',"batchId":'+batchId+',"appinsId":"'+appInsId+'","jugGroupId":"' + jugGroupId + '","data":' + Ext.JSON.encode(editRecs[i].data) + '}'; 
                
            }
            
@@ -123,12 +125,24 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.interviewContro
        // var panel = win.findParentByType("panel");
         //var permForm = panel.child("form").getForm();
         var panelGrid=win.findParentByType("stuInfoPanel").down("grid");
-        if(tzParamspw!=""){
-            Ext.tzSubmit(tzParamspw,function(){
-                 //pageGrid.store.reload();
-            },"",true,this);
+//        var panelGrid = win.findParentByType("mspsksGrid").down("grid");
+//        if(tzParamspw!=""){
+//            Ext.tzSubmit(tzParamspw,function(){
+//                 //pageGrid.store.reload();
+//            },"",true,this);
+//            return true;
+//       }
+        if (tzParamspw != "") {
+            Ext.tzSubmit(tzParamspw, function (result) {
+                panelGrid.getStore().reload();
+                Ext.MessageBox.show(
+                    {
+                        msg: result.MSG,
+                        buttons: Ext.Msg.OK
+                    });
+            }, '', true, this);
             return true;
-       }else{
+        }else{
             return false;
         }
         
@@ -551,6 +565,96 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.interviewContro
 			
 		});
         win.show();
+    },
+    /**
+     * 评委组清空分组 保存 实际操作迁移
+     * author：丁鹏
+     * time：2019年11月22日14:10:40
+     * */
+    //评委组清空分组 保存 实际操作
+    clearGroupInfo(btn) {
+        var panel = btn.findParentByType("stuInfoPanel");
+        let panelGrid = panel.down('grid');
+        let selectData = panelGrid.getSelectionModel().getSelection();
+
+        if (!selectData.length) {
+            Ext.MessageBox.alert("提示", "请您选择需要清空分组信息的学生！");
+
+        } else {
+            let ins = selectData.map(item => {
+                return item.data.appInsId
+            }).join(",");
+            Ext.MessageBox.confirm("提示", "您是否确认清空分组信息，确认则进行清空!", (result) => {
+                if ("yes" === result || "ok" === result) {
+                    var form = panel.down('form').getForm();
+                    var classID = form.findField('classId').getValue();
+                    var batchID = form.findField('batchId').getValue();
+                    var comParamsObj = {
+                        ComID: 'TZ_MSXCFZ_COM',
+                        PageID: 'TZ_MSGL_MSFZ_STD',
+                        OperateType: 'clearGroupInfo',
+                        comParams: {
+                            classId: classID,
+                            batchId: batchID,
+                            insId: ins
+                        }
+                    }
+                    var tzParams = Ext.JSON.encode(comParamsObj);
+                    Ext.tzLoad(tzParams, function (respData) {
+                        var panelGrid = panel.down("grid");
+                        panelGrid.getStore().reload();
+                        Ext.MessageBox.alert("提示", "清除分组信息成功!");
+                    });
+                } else {
+
+                }
+            });
+        }
+    },
+    /**
+     * 组内排序按钮-迁移
+     * author：丁鹏
+     * time：2019年11月22日14:13:03
+     * */
+    groupOrder(btn) {
+        var panel = btn.findParentByType("stuInfoPanel");
+        var form = panel.down('form').getForm();
+        var classID = form.findField('classId').getValue();
+        var batchID = form.findField('batchId').getValue();
+
+        //是否有访问权限
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_MSXCFZ_COM"]["TZ_MSGL_ZNPX_STD"];
+        if (pageResSet == "" || pageResSet == undefined) {
+            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt", "提示"), Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.nmyqx", "您没有权限"));
+            return;
+        }
+        //该功能对应的JS类
+        var className = pageResSet["jsClassName"];
+        if (className == "" || className == undefined) {
+            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt", "提示"), Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.wzdgjs", "未找到该功能页面对应的JS类，请检查配置。"));
+            return;
+        }
+        //console.log(className);
+        var win = this.lookupReference('interviewGroupXhWindow');
+        if (!win) {
+            Ext.syncRequire(className);
+            ViewClass = Ext.ClassManager.get(className);
+            //新建类
+            //win = new ViewClass();
+            win = new ViewClass({
+                    classID: classID,
+                    batchID: batchID
+                }
+            );
+            this.getView().add(win);
+        }
+        //操作类型设置为更新
+        win.on('afterrender', function (panel) {
+            var wform = panel.child('form').getForm();
+            wform.setValues({classID: classID, batchID: batchID});
+        });
+        win.show();
+
     }
 
 });

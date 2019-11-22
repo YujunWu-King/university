@@ -144,6 +144,20 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.interviewGroupW
                         editor:{xtype:'textfield',allowBlank:false},
                         flex:1
                     },{
+                        text: '面试时段',
+                        dataIndex: 'space',
+                        minWidth: 250,
+                        sortable: false,
+                        flex: 1,
+                        renderer(v) {
+                            if (v === "A") {
+                                v = '上午';
+                            } else {
+                                v = "下午";
+                            }
+                            return v;
+                        }
+                    },{
                         text: '已经安排人数',
                         dataIndex: 'suNum',
                         minWidth: 250,
