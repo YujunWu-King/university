@@ -240,7 +240,8 @@
     },
     onFilterInfoSave2: function(btn){
 		var from = this.getView().child("form").getForm();
-		var actType = this.getView().actType;
+		var comView = this.getView();
+		var actType = comView.actType;
 		if (from.isValid()) {
 			var actType = this.getView().actType;
 			var comSiteParams = from.getValues();
@@ -334,6 +335,9 @@
 			//提交参数
 			var tzParams = '{"ComID":"TZ_GD_FILTER_COM","PageID":"TZ_FILTER_FLD_STD","OperateType":"U","comParams":{'+comParams+'}}';
 			Ext.tzSubmit(tzParams,function(){
+				comView.actType = 'update';
+				store1.tzStoreParams='{"queryID":"1","ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'","FieldMc":"'+FieldMc+'","type":"1"}';
+				store2.tzStoreParams='{"queryID":"2","ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'","FieldMc":"'+FieldMc+'","type":"1"}';
 				store1.reload();
 				store2.reload();
 			},"",true,this);
