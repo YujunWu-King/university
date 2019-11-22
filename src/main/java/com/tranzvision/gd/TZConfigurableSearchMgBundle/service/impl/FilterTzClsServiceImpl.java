@@ -39,8 +39,8 @@ public class FilterTzClsServiceImpl extends FrameworkImpl{
 					result = "{\"success\":0,\"message\":\"\"}";
 				}
 			}else if("1".equals(str_type_name)){
-				String sql = "select 'Y' from PS_TZ_FILTER_DFN_T WHERE TZ_COM_ID=? AND  TZ_PAGE_ID=? AND  TZ_APP_CLASS_NAME=? ";
-				String isExist =  jdbcTemplate.queryForObject(sql, new Object[]{str_com_id,str_page_id,str_class_name},"String");
+				String sql = "select 'Y' from PS_TZ_FILTER_DFN_T WHERE TZ_COM_ID=? AND  TZ_PAGE_ID=? AND  TZ_VIEW_NAME=? ";
+				String isExist =  jdbcTemplate.queryForObject(sql, new Object[]{str_com_id,str_page_id,str_view_name},"String");
 				if("Y".equals(isExist)){
 					result = "{\"success\":1,\"message\":\"" + "试图添加的值已存在，请指定新值。" + "\"}";
 				}else{

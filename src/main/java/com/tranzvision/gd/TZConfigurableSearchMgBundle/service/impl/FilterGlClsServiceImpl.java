@@ -87,13 +87,13 @@ public class FilterGlClsServiceImpl extends FrameworkImpl {
 				String str_com_id = jacksonUtil.getString("ComID");
 				String str_page_id = jacksonUtil.getString("PageID");
 				String str_view_name = jacksonUtil.getString("ViewMc");
-				String str_class_name = jacksonUtil.getString("appClassMc");
+				//String str_class_name = jacksonUtil.getString("appClassMc");
 				
 				PsTzFilterDfnTKey psTzFilterDfnTKey = new PsTzFilterDfnTKey();
 				psTzFilterDfnTKey.setTzComId(str_com_id);
 				psTzFilterDfnTKey.setTzPageId(str_page_id);
 				psTzFilterDfnTKey.setTzViewName(str_view_name);
-				psTzFilterDfnTKey.setTzAppClassName(str_class_name);
+				//psTzFilterDfnTKey.setTzAppClassName(str_class_name);
 				psTzFilterDfnTMapper.deleteByPrimaryKey(psTzFilterDfnTKey);
 
 			}

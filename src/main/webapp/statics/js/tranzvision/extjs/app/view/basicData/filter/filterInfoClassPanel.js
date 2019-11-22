@@ -63,6 +63,10 @@
             fieldLabel: '程序类名称',
             readOnly:true,
 			cls:"lanage_1",
+            name: 'ViewMc'
+        },{
+            xtype: 'textfield',
+            fieldLabel: '程序类路径',
             name: 'appClassMc'
         },{
             xtype: 'textfield',
@@ -158,11 +162,11 @@
 					hidden: true
 				},
 				{
-					text: '视图',
+					text: '视图/程序类名称',
 					dataIndex: 'ViewMc',
 					hidden: true
 				},{
-					text: '程序类名称',
+					text: '程序类路径',
 					dataIndex: 'appClassMc',
 					hidden: true
 				},{

@@ -43,8 +43,13 @@
             name: 'PageID'
         }, {
             xtype: 'hiddenfield',
-            fieldLabel: '视图名称',
-            name: 'appClassMc'
+            fieldLabel: '程序类名称',
+            name: 'ViewMc'
+        },{
+            xtype: 'hiddenfield',
+            fieldLabel: '程序类路径',
+            name: 'appClassMc',
+            hidden:true
         },{
 			xtype: 'textfield',
 			fieldLabel: '字段名称',
@@ -56,107 +61,118 @@
 			//readOnly:true,
 			name: 'fieldDesc'
 		},{
+       	 	xtype: 'combobox',
+       	 	fieldLabel: '字段类型',
+    	 	valueField: 'TValue',
+	        displayField: 'TLDesc',
+	        store: new KitchenSink.view.common.store.appTransStore("TZ_FIELD_TYPE"),
+	        allowBlank: false,
+			editable:false,
+			value: '01',
+	        queryMode: 'local',
+			name: 'fieldType'
+		},{
         	 xtype: 'combobox',
         	 fieldLabel: '取值类型',
         	 valueField: 'TValue',
            displayField: 'TLDesc',
-           store: new KitchenSink.view.common.store.appTransStore("TZ_FLT_FLD_Q_TYPE"),
+           store: new KitchenSink.view.common.store.appTransStore("TZ_FLT_FLD_QZ_TYPE"),
            queryMode: 'local',
     			 name: 'fltFldQzLx',
             listeners: {
 				"change": function( cbox , newValue, oldValue){
 					
 					var translateValueFld = cbox.findParentByType("form").getForm().findField("translateValueFld");
-					/*var promptTab = cbox.findParentByType("form").getForm().findField("promptTab");
+					var promptTab = cbox.findParentByType("form").getForm().findField("promptTab");
 					var promptFld = cbox.findParentByType("form").getForm().findField("promptFld");
-					var promptDesc = cbox.findParentByType("form").getForm().findField("promptDesc");*/
+					var promptDesc = cbox.findParentByType("form").getForm().findField("promptDesc");
 					var fldIsDown = cbox.findParentByType("form").getForm().findField("fldIsDown");
 					
 					if(newValue=="A"){
 						translateValueFld.allowBlank = true;
-						/*promptTab.allowBlank = false;
+						promptTab.allowBlank = false;
 						promptFld.allowBlank = false;
-						promptDesc.allowBlank = false;*/
+						promptDesc.allowBlank = false;
 						
 						translateValueFld.setValue("");
 						translateValueFld.hide();
 						fldIsDown.show();
-						/*promptTab.show();
+						promptTab.show();
 						promptFld.show();
-						promptDesc.show();*/
+						promptDesc.show();
 						
 					}else if(newValue=="B"){
 						translateValueFld.allowBlank = false ;
-						/*promptTab.allowBlank = true;
+						promptTab.allowBlank = true;
 						promptFld.allowBlank = true;
 						promptDesc.allowBlank = true;
-						*/
+						
 						translateValueFld.show();
-						/*promptTab.setValue("");
+						promptTab.setValue("");
 						promptFld.setValue("");
-						promptDesc.setValue("");*/
+						promptDesc.setValue("");
 						fldIsDown.hide();
-						/*promptTab.hide();
+						promptTab.hide();
 						promptFld.hide();
-						promptDesc.hide();*/
+						promptDesc.hide();
 					}else{
 						translateValueFld.allowBlank = true ;
-						/*promptTab.allowBlank = true;
+						promptTab.allowBlank = true;
 						promptFld.allowBlank = true;
-						promptDesc.allowBlank = true;*/
+						promptDesc.allowBlank = true;
 						
 						translateValueFld.setValue("");
-						/*promptTab.setValue("");
+						promptTab.setValue("");
 						promptFld.setValue("");
-						promptDesc.setValue("");*/
+						promptDesc.setValue("");
 						
 						translateValueFld.hide();
 						fldIsDown.hide();
-						/*promptTab.hide();
+						promptTab.hide();
 						promptFld.hide();
-						promptDesc.hide();*/
+						promptDesc.hide();
 					}
 				},
 				"afterrender": function(cbox){
 					var newValue = cbox.getValue();
 					var translateValueFld = cbox.findParentByType("form").getForm().findField("translateValueFld");
-					/*var promptTab = cbox.findParentByType("form").getForm().findField("promptTab");
+					var promptTab = cbox.findParentByType("form").getForm().findField("promptTab");
 					var promptFld = cbox.findParentByType("form").getForm().findField("promptFld");
-					var promptDesc = cbox.findParentByType("form").getForm().findField("promptDesc");*/
+					var promptDesc = cbox.findParentByType("form").getForm().findField("promptDesc");
 					var fldIsDown = cbox.findParentByType("form").getForm().findField("fldIsDown");
 					if(newValue=="A"){
 						translateValueFld.allowBlank = true ;
-						/*promptTab.allowBlank = false;
+						promptTab.allowBlank = false;
 						promptFld.allowBlank = false;
-						promptDesc.allowBlank = false;*/
+						promptDesc.allowBlank = false;
 						
 						translateValueFld.hide();
 						fldIsDown.show();
-						/*promptTab.show();
+						promptTab.show();
 						promptFld.show();
-						promptDesc.show();*/
+						promptDesc.show();
 					}else if(newValue=="B"){
 						translateValueFld.allowBlank = false ;
-						/*promptTab.allowBlank = true;
+						promptTab.allowBlank = true;
 						promptFld.allowBlank = true;
-						promptDesc.allowBlank = true;*/
+						promptDesc.allowBlank = true;
 						
 						translateValueFld.show();
 						fldIsDown.hide();
-						/*promptTab.hide();
+						promptTab.hide();
 						promptFld.hide();
-						promptDesc.hide();*/
+						promptDesc.hide();
 					}else{
 						translateValueFld.allowBlank = true;
-						/*promptTab.allowBlank = true;
+						promptTab.allowBlank = true;
 						promptFld.allowBlank = true;
-						promptDesc.allowBlank = true;*/
+						promptDesc.allowBlank = true;
 						
 						translateValueFld.hide();
 						fldIsDown.hide();
-						/*promptTab.hide();
+						promptTab.hide();
 						promptFld.hide();
-						promptDesc.hide();*/
+						promptDesc.hide();
 					}
 				}
 			}
@@ -164,7 +180,7 @@
 			xtype: 'textfield',
 			fieldLabel: 'Translate Value字段名',
 			name: 'translateValueFld'
-		},/*{
+		},{
 			xtype: 'textfield',
 			fieldLabel: 'Prompt表名称',
 			name: 'promptTab'
@@ -189,7 +205,7 @@
 	             handler: "pmtSearchPromptDescTmp"
 	          }
 	        }
-		},*/{
+		},{
             xtype: 'textfield',
             fieldLabel: '返回搜索结果最大行数',
             name: 'maxNum'
@@ -296,7 +312,7 @@
 						}
 					}
 				}]
-			}/*,{
+			},{
 	        	xtype: 'grid',
 	        	name:'promptFld',
 				minHeight: 360,
@@ -383,7 +399,7 @@
 		            dataIndex: 'fieldDesc',
 		            width: 450
 		        }]
-		     *//***** ,
+		     /***** ,
 				bbar: {
 					xtype: 'pagingtoolbar',
 					pageSize: 5,
@@ -399,8 +415,8 @@
 					afterPageText: '页/共{0}页',
 					emptyMsg: '没有数据显示',
 					plugins: new Ext.ux.ProgressBarPager()
-				}  ****//*
-			}*/]
+				}  ****/
+			}]
         }]
 	}],
     buttons: [{
