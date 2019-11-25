@@ -290,11 +290,15 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.interviewContro
             }
         });
     },
-    
+    /**
+     * 面试现场分组-默认页面可配置查询-修改视图为TZ_BMBSH_ECUST_VW0
+     * author：丁鹏
+     * 时间：2019年11月25日16:33:13
+     * */
     // 默认页面可配置查询
     queryClass:function(btn){
         Ext.tzShowCFGSearch({
-            cfgSrhId: 'TZ_MSXCFZ_COM.TZ_MSGL_CLASS_STD.TZ_BMBSH_ECUST_VW',
+            cfgSrhId: 'TZ_MSXCFZ_COM.TZ_MSGL_CLASS_STD.TZ_BMBSH_ECUST_VW0',
             condition:{
                 TZ_DLZH_ID:TranzvisionMeikecityAdvanced.Boot.loginUserId,
                 TZ_JG_ID:Ext.tzOrgID
