@@ -296,54 +296,58 @@ public class FilterFldClassServiceImpl extends FrameworkImpl {
 				psTzFilterFldT.setTzDeepqueryView(deepQueryView);
 				psTzFilterFldT.setTzDeepqueryFld(deepQueryFld);
 				
-				
-				psTzFilterFldTMapper.insertSelective(psTzFilterFldT);
-				
-				Map<String, Object> jObj = null;
-				Map<String, Object> updateListJson = jacksonUtil.getMap("updateList");
-				try {
-					
-					List<Map<String, Object>> jsonArray2 = (List<Map<String, Object>>) updateListJson.get("data1");
-					
-					if (jsonArray2 != null && jsonArray2.size() > 0) {
-						for (int i = 0; i < jsonArray2.size(); i++) {
-							jObj = jsonArray2.get(i);
-							String str_fldysf_name = (String) jObj.get("FieldYsfID");
-							boolean is_qy = (boolean) jObj.get("isQy");
-							String str_is_qy = "";
-							String str_is_oprt = (String) jObj.get("isOprt");
-							if (is_qy == true) {
-								str_is_qy = "1";
-							} else {
-								str_is_qy = "0";
-							}
+				sql = "select count(1) from PS_TZ_FILTER_FLD_T WHERE TZ_COM_ID=? AND TZ_PAGE_ID=? AND TZ_APP_CLASS_NAME=? AND TZ_FILTER_FLD=?";
+				int filterTotal = jdbcTemplate.queryForObject(sql, new Object[] { str_com_id, str_page_id, str_class_name ,str_field_name},
+						"Integer");
+				if(filterTotal>0){
+					errMsg[0] = "1";
+					errMsg[1] = "字段名已存在，请重新添加";
+				}else{
+					psTzFilterFldTMapper.insertSelective(psTzFilterFldT);
+					Map<String, Object> jObj = null;
+					Map<String, Object> updateListJson = jacksonUtil.getMap("updateList");
+					try {
+						List<Map<String, Object>> jsonArray2 = (List<Map<String, Object>>) updateListJson.get("data1");
+						
+						if (jsonArray2 != null && jsonArray2.size() > 0) {
+							for (int i = 0; i < jsonArray2.size(); i++) {
+								jObj = jsonArray2.get(i);
+								String str_fldysf_name = (String) jObj.get("FieldYsfID");
+								boolean is_qy = (boolean) jObj.get("isQy");
+								String str_is_qy = "";
+								String str_is_oprt = (String) jObj.get("isOprt");
+								if (is_qy == true) {
+									str_is_qy = "1";
+								} else {
+									str_is_qy = "0";
+								}
 
-							String isExist = "";
-							String isExistSQL = "select 'Y' from PS_TZ_FILTER_YSF_T WHERE TZ_COM_ID=? AND  TZ_PAGE_ID=? AND TZ_VIEW_NAME=? AND TZ_FILTER_FLD=? AND TZ_FILTER_YSF=?";
-							isExist = jdbcTemplate.queryForObject(isExistSQL, new Object[] { str_com_id, str_page_id,
-									str_view_name, str_field_name, str_fldysf_name }, "String");
+								String isExist = "";
+								String isExistSQL = "select 'Y' from PS_TZ_FILTER_YSF_T WHERE TZ_COM_ID=? AND  TZ_PAGE_ID=? AND TZ_VIEW_NAME=? AND TZ_FILTER_FLD=? AND TZ_FILTER_YSF=?";
+								isExist = jdbcTemplate.queryForObject(isExistSQL, new Object[] { str_com_id, str_page_id,
+										str_view_name, str_field_name, str_fldysf_name }, "String");
 
-							PsTzFilterYsfT psTzFilterYsfT = new PsTzFilterYsfT();
-							psTzFilterYsfT.setTzComId(str_com_id);
-							psTzFilterYsfT.setTzPageId(str_page_id);
-							psTzFilterYsfT.setTzViewName(str_view_name);
-							psTzFilterYsfT.setTzAppClassName(str_class_name);
-							psTzFilterYsfT.setTzFilterFld(str_field_name);
-							psTzFilterYsfT.setTzFilterYsf(str_fldysf_name);
-							psTzFilterYsfT.setTzFilterBdyQy(str_is_qy);
-							psTzFilterYsfT.setTzIsDefOprt(str_is_oprt);
+								PsTzFilterYsfT psTzFilterYsfT = new PsTzFilterYsfT();
+								psTzFilterYsfT.setTzComId(str_com_id);
+								psTzFilterYsfT.setTzPageId(str_page_id);
+								psTzFilterYsfT.setTzViewName(str_view_name);
+								psTzFilterYsfT.setTzAppClassName(str_class_name);
+								psTzFilterYsfT.setTzFilterFld(str_field_name);
+								psTzFilterYsfT.setTzFilterYsf(str_fldysf_name);
+								psTzFilterYsfT.setTzFilterBdyQy(str_is_qy);
+								psTzFilterYsfT.setTzIsDefOprt(str_is_oprt);
 
-							if ("Y".equals(isExist)) {
-								psTzFilterYsfTMapper.updateByPrimaryKeySelective(psTzFilterYsfT);
-							} else {
-								psTzFilterYsfTMapper.insert(psTzFilterYsfT);
+								if ("Y".equals(isExist)) {
+									psTzFilterYsfTMapper.updateByPrimaryKeySelective(psTzFilterYsfT);
+								} else {
+									psTzFilterYsfTMapper.insert(psTzFilterYsfT);
+								}
 							}
 						}
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
-				} catch (Exception e) {
-					e.printStackTrace();
 				}
-
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
