@@ -401,7 +401,11 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 		return jacksonUtil.Map2json(mapRet);
 
 	}
-
+/**
+ * 面试评委批量导出修改
+ * author：丁鹏
+ * time：2019年11月25日11:46:55
+ * */
 	@SuppressWarnings("unchecked")
 	public String exportpwinform(String strParams, String[] errorMsg) {
 		String RetrnStr = "";
@@ -463,17 +467,37 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 				judgId = jacksonUtil.getString("judgId");
 				judgName = jacksonUtil.getString("judgName");
 				judgGroupId = jacksonUtil.getString("judgGroupId");
+				if(judgGroupId.contains(",")==true) {
+					String[] judgGroupId2 = judgGroupId.split(",");
+					String pwgroup2="";
+					String[] pwgroup1=new String[judgGroupId2.length];
+					for(int k=0;k<judgGroupId2.length;k++) {
+						pwgroup = sqlQuery.queryForObject(pwgroupsql, new Object[] { judgGroupId2[k] }, "String");
+						pwgroup1[k] = pwgroup;
+						
+					}
+					pwgroup2 = String.join(",", pwgroup1);
+					pwpwd = sqlQuery.queryForObject(pwpwdsql, new Object[] { judgId, orgid }, "String");
 
-				pwgroup = sqlQuery.queryForObject(pwgroupsql, new Object[] { judgGroupId }, "String");
+					mapData.put("pwoprid", judzhxx);
+					mapData.put("pwname", judgName);
+					mapData.put("pwgroup", pwgroup2);
+					mapData.put("pwpassword", pwpwd);
 
-				pwpwd = sqlQuery.queryForObject(pwpwdsql, new Object[] { judgId, orgid }, "String");
+					dataList.add(mapData);
+				}else {
+					pwgroup = sqlQuery.queryForObject(pwgroupsql, new Object[] { judgGroupId }, "String");
 
-				mapData.put("pwoprid", judzhxx);
-				mapData.put("pwname", judgName);
-				mapData.put("pwgroup", pwgroup);
-				mapData.put("pwpassword", pwpwd);
+					pwpwd = sqlQuery.queryForObject(pwpwdsql, new Object[] { judgId, orgid }, "String");
 
-				dataList.add(mapData);
+					mapData.put("pwoprid", judzhxx);
+					mapData.put("pwname", judgName);
+					mapData.put("pwgroup", pwgroup);
+					mapData.put("pwpassword", pwpwd);
+
+					dataList.add(mapData);}
+
+				
 
 			}
 
