@@ -43,6 +43,8 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.interviewContro
             /*保存资源信息*/
             var ret=this.savePlstComInfo(win);
         }
+        var panelGrid=win.down("grid");
+        panelGrid.getStore().reload();
     },
 
     //评委组分组确定

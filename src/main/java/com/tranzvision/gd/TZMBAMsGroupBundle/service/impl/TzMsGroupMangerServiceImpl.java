@@ -51,7 +51,7 @@ public class TzMsGroupMangerServiceImpl extends FrameworkImpl {
 
 		//String strReturn = "";
 		//String name = "";
-		//String check = "";
+		String check = "";
 		String gropid = "";
 		int sum = 0;
 		String strnum;
@@ -80,7 +80,7 @@ public class TzMsGroupMangerServiceImpl extends FrameworkImpl {
 				System.out.println("appinsId:" + appinsId);
 
 				data = jacksonUtil.getMap("data");
-				//check = data.get("check") == null ? "" : data.get("check").toString();
+				check = data.get("check") == null ? "" : data.get("check").toString();
 				//name = data.get("groupName") == null ? "" : data.get("groupName").toString();
 				gropid = data.get("groupID").toString();
 				//System.out.println(check);
@@ -106,7 +106,7 @@ public class TzMsGroupMangerServiceImpl extends FrameworkImpl {
 				}
 				//sqlQuery.update(updatesql, new Object[] { name, gropid });
 				appinsIds = appinsId.split(",");
-				//if (check.equals("true") || check.equals("Y")) {
+				if (check.equals("true") || check.equals("Y")) {
 				String Oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 				for(String ins : appinsIds) {
 
@@ -214,7 +214,7 @@ public class TzMsGroupMangerServiceImpl extends FrameworkImpl {
 //							sqlQuery.update(sql, new Object[] { gropid, sum, classId, batchId, appinsId });
 //						}
 //					}
-				//}
+				}
 			}
 			//System.out.println(errorMsg.length()+"***********7************"+errorMsg.toString());
 			if(errorMsg.length()>3){

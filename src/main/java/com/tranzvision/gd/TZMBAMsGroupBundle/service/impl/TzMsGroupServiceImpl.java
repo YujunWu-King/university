@@ -106,7 +106,6 @@ public class TzMsGroupServiceImpl extends FrameworkImpl {
 								: map.get("TZ_CLPS_GR_NAME").toString();
 						TZ_CLPS_GR_ID = map.get("TZ_PS_GR_ID") == null ? ""
 								: map.get("TZ_PS_GR_ID").toString();
-						System.out.println();
 						if (TZ_GROUP_DATE != null) {
 						} else {
 							TZ_GROUP_DATE = "暂无时间安排";
