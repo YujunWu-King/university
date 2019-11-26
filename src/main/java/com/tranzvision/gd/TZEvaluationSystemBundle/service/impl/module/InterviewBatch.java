@@ -62,12 +62,12 @@ public class InterviewBatch{
 			}
 			//批次列表
 			String sql = "SELECT a.TZ_CLASS_ID,a.TZ_APPLY_PC_ID,d.TZ_CLASS_NAME,"+
-					" (SELECT TZ_BATCH_NAME FROM ps_tz_cls_batch_t "+
+					" (SELECT TZ_BATCH_NAME FROM PS_TZ_CLS_BATCH_T "+
 					" WHERE TZ_CLASS_ID = a.TZ_CLASS_ID AND TZ_BATCH_ID =a.TZ_APPLY_PC_ID) AS TZ_BATCH_NAME "+
 					" FROM PS_TZ_PRJ_INF_T c INNER JOIN PS_TZ_CLASS_INF_T d ON (c.tz_prj_id = d.tz_prj_id) "+
 					" INNER JOIN PS_TZ_MSPS_GZ_TBL a ON d.TZ_CLASS_ID = a.TZ_CLASS_ID "+
 					" WHERE a.TZ_DQPY_ZT = 'A' AND c.TZ_IS_OPEN = 'Y' AND c.tz_jg_id = ?"+
-					" AND (exists(select 1 from ps_TZ_MSPS_PW_TBL "+
+					" AND (exists(select 1 from PS_TZ_MSPS_PW_TBL "+
 					" where TZ_CLASS_ID = a.TZ_CLASS_ID AND TZ_APPLY_PC_ID = a.TZ_APPLY_PC_ID and tz_pwei_zhzt='A' and TZ_pwei_oprid = ?)"+
 					" or exists(select 1 from tz_interview_admin_t "+
 					" where TZ_CLASS_ID = a.TZ_CLASS_ID AND TZ_APPLY_PC_ID = a.TZ_APPLY_PC_ID and oprid=? and type='QD' and status='A'))";
