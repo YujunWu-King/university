@@ -64,7 +64,7 @@ public class InterviewCheckin extends FrameworkImpl {
 		if (jsonObject.containsKey("appInsId")) {
 			String appInsId = jsonObject.get("appInsId").toString();
 			String isScore = sqlQuery.queryForObject(
-					"SELECT TOP 1 'Y' FROM ps_TZ_MP_PW_KS_TBL where TZ_CLASS_ID = ? AND TZ_APPLY_PC_ID = ? AND TZ_APP_INS_ID = ? and TZ_SCORE_INS_ID > 0",
+					"SELECT TOP 1 'Y' FROM PS_TZ_MP_PW_KS_TBL where TZ_CLASS_ID = ? AND TZ_APPLY_PC_ID = ? AND TZ_APP_INS_ID = ? and TZ_SCORE_INS_ID > 0",
 					new Object[] { CLASSID, BATCHID, appInsId }, "String");
 
 			// 判断学生是否已经被打分
@@ -143,7 +143,7 @@ public class InterviewCheckin extends FrameworkImpl {
 				sql += " AND TZ_REALNAME LIKE '%" + key + "%'";
 			}
 
-			sql += " ORDER BY TZ_CHECKIN_DTTM ASC,TZ_REALNAME collate Chinese_PRC_CS_AS_KS_WS";
+			sql += " ORDER BY TZ_CHECKIN_DTTM ASC,TZ_REALNAME";
 
 			List<Map<String, Object>> list = sqlQuery.queryForList(sql, new Object[] { classId, batchId });
 			ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
@@ -152,7 +152,7 @@ public class InterviewCheckin extends FrameworkImpl {
 			for (int i = 0; i < list.size(); i++) {
 				Map<String, Object> mapList = new HashMap<String, Object>();
 
-				Long TZ_APP_INS_ID = (Long) list.get(i).get("TZ_APP_INS_ID");
+				Long TZ_APP_INS_ID = Long.valueOf(String.valueOf(list.get(i).get("TZ_APP_INS_ID")));
 				String TZ_REALNAME = (String) list.get(i).get("TZ_REALNAME");
 				String NATIONAL_ID = (String) list.get(i).get("NATIONAL_ID");
 				String TZ_COMPANY_NAME = (String) list.get(i).get("TZ_COMPANY_NAME");
@@ -164,7 +164,7 @@ public class InterviewCheckin extends FrameworkImpl {
 				}
 
 				String photo = sqlQuery.queryForObject(
-						"SELECT B.TZ_ATT_A_URL + B.TZ_ATTACHSYSFILENA FROM PS_TZ_OPR_PHT_GL_T A,PS_TZ_OPR_PHOTO_T B WHERE A.TZ_ATTACHSYSFILENA = B.TZ_ATTACHSYSFILENA AND EXISTS(SELECT 1 FROM ps_tz_form_wrk_t WHERE TZ_APP_INS_ID=? AND OPRID=A.OPRID)",
+						"SELECT B.TZ_ATT_A_URL + B.TZ_ATTACHSYSFILENA FROM PS_TZ_OPR_PHT_GL_T A,PS_TZ_OPR_PHOTO_T B WHERE A.TZ_ATTACHSYSFILENA = B.TZ_ATTACHSYSFILENA AND EXISTS(SELECT 1 FROM PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID=? AND OPRID=A.OPRID)",
 						new Object[] { TZ_APP_INS_ID }, "String");
 
 				mapList.put("company", TZ_COMPANY_NAME);
@@ -182,6 +182,7 @@ public class InterviewCheckin extends FrameworkImpl {
 			rtnMap.put("error_decription", "处理成功");
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			errorMsg[0] = "1";
 			errorMsg[1] = e.toString();
 		}
@@ -233,7 +234,7 @@ public class InterviewCheckin extends FrameworkImpl {
 				// return jacksonUtil.Map2json(rtnMap);
 				// }else{
 				String signature = jsonObject.get("signature").toString();
-				sql = "update ps_tz_msps_ksh_tbl set TZ_CHECKIN_DTTM=?,TZ_SIGNATURE=?,ROW_LASTMANT_DTTM=?,ROW_LASTMANT_OPRID=? where";
+				sql = "update PS_TZ_MSPS_KSH_TBL set TZ_CHECKIN_DTTM=?,TZ_SIGNATURE=?,ROW_LASTMANT_DTTM=?,ROW_LASTMANT_OPRID=? where";
 				sql += " TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and  TZ_APP_INS_ID=?";
 
 				// 获取当前的时间
@@ -291,7 +292,7 @@ public class InterviewCheckin extends FrameworkImpl {
 				;
 
 				// 撤销签到的sql语句
-				sql = "update ps_tz_msps_ksh_tbl set TZ_CHECKIN_DTTM=?,TZ_SIGNATURE=?,ROW_LASTMANT_DTTM=?,ROW_LASTMANT_OPRID=? where";
+				sql = "update PS_TZ_MSPS_KSH_TBL set TZ_CHECKIN_DTTM=?,TZ_SIGNATURE=?,ROW_LASTMANT_DTTM=?,ROW_LASTMANT_OPRID=? where";
 				sql += "  TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and  TZ_APP_INS_ID=?";
 				sqlQuery.update(sql, new Object[] { timestamp, null, new Timestamp(new Date().getTime()),
 						lastmant_oprid, classId, batchId, appInsId });
@@ -307,6 +308,7 @@ public class InterviewCheckin extends FrameworkImpl {
 		} catch (Exception e) {
 			errorMsg[0] = "1";
 			errorMsg[1] = e.toString();
+			e.printStackTrace();
 		}
 
 		return jacksonUtil.Map2json(rtnMap);
@@ -349,7 +351,7 @@ public class InterviewCheckin extends FrameworkImpl {
 					"select 'Y' from PS_TZ_MSPS_GZ_TBL WHERE TZ_DQPY_ZT <> 'A' and TZ_CLASS_ID = ? AND TZ_APPLY_PC_ID = ?",
 					new Object[] { CLASSID, BATCHID }, "String");
 			queryForObject2 = sqlQuery.queryForObject(
-					"select 'Y' from ps_TZ_MSPS_PW_TBL WHERE tz_pwei_zhzt NOT IN ('A', 'N') and TZ_pwei_oprid = ? AND TZ_CLASS_ID = ? AND TZ_APPLY_PC_ID = ?",
+					"select 'Y' from PS_TZ_MSPS_PW_TBL WHERE tz_pwei_zhzt NOT IN ('A', 'N') and TZ_pwei_oprid = ? AND TZ_CLASS_ID = ? AND TZ_APPLY_PC_ID = ?",
 					new Object[] { OPRID, CLASSID, BATCHID }, "String");
 		} catch (Exception e) {
 			e.printStackTrace();
