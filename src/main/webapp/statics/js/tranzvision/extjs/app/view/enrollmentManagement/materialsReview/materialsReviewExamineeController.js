@@ -79,7 +79,8 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 
         cmp.on('afterrender',function(win){
             var store = win.child('grid').getStore();
-            var tzStoreParams = '{"cfgSrhId": "TZ_REVIEW_CL_COM.TZ_CLPS_ADDKS_STD.TZ_CLPS_ADDKS_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value":"'+classId+'","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-value":"'+batchId+'"}}';
+            //var tzStoreParams = '{"cfgSrhId": "TZ_REVIEW_CL_COM.TZ_CLPS_ADDKS_STD.TZ_CLPS_ADDKS_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value":"'+classId+'","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-value":"'+batchId+'"}}';
+            var tzStoreParams = '{"cfgSrhId": "TZ_REVIEW_CL_COM.TZ_CLPS_ADDKS_STD.TZ_CLPS_ADDKS_VW","condition":{}}';
             store.tzStoreParams = tzStoreParams;
             store.load();
         });
@@ -94,7 +95,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
         Ext.tzShowCFGSearch({
             cfgSrhId: 'TZ_REVIEW_CL_COM.TZ_CLPS_ADDKS_STD.TZ_CLPS_ADDKS_VW',
             condition:{
-                TZ_CLASS_ID:classId
+                //TZ_CLASS_ID:classId
             },
             callback: function(seachCfg){
                 var store = btn.findParentByType("grid").store;
@@ -139,6 +140,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
             }
 
             for(var x =0;x<selectLength;x++){
+            	selectRecords[x].data.classId = classId;
                 selectRecords[x].data.batchId = batchId;
                 if(editJson!="") {
                     editJson = editJson + ',' + '{"typeFlag":"EXAMINEE","data":' + Ext.JSON.encode(selectRecords[x].data) + '}';
