@@ -673,6 +673,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 			if (tableNameCount <= 0) {
 				tableName = "PS_" + recname;
 			}
+			
 
 			// 类型为number的值;
 			String intTypeString = "TINYINT,SMALLINT,MEDIUMINT,INT,INTEGER,BIGINT,FLOAT,DOUBLE,DECIMAL";
@@ -688,12 +689,20 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 			String columnNanme = "";
 			String dateType = "";
 			if (list != null) {
+				/**
+				 * modify by tangmt 20191128
+				 * bug 查出结果跟column不对应
+				 * reason resultFldTypeSQL查出的column和result中字段不对应
+				 */
+				List <String>resultColumnList =  new ArrayList<String>();
+				
 				for (i = 0; i < list.size(); i++) {
 					columnNanme = (String) list.get(i).get("COLUMN_NAME");
 					if (result.contains(columnNanme)) {
+						resultColumnList.add(columnNanme);
 						//dateType = ((String) list.get(i).get("DATA_TYPE")).toUpperCase();
 						dateType = (list.get(i).get("DATA_TYPE").toString()).toUpperCase();
-
+						
 						if (intTypeString.contains(dateType)) {
 							// 数字;
 							resultSelectFlds = resultSelectFlds + ", CONCAT(ifnull(" + columnNanme + ",'0'),'')";
@@ -715,8 +724,11 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 							// 字符串;
 							resultSelectFlds = resultSelectFlds + ", ifnull(" + columnNanme + ",'')";
 						}
+						
 					}
 				}
+				String [] a = new String[resultColumnList.size()];
+				aryResult = resultColumnList.toArray(a);
 			}
 
 			if ("".equals(resultSelectFlds)) {
@@ -726,7 +738,6 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 			} else {
 				resultSelectFlds = resultSelectFlds.substring(1);
 			}
-
 			// 搜索条件;
 			String sqlWhere = "";
 			if (jacksonUtil.containsKey("presetFields")) {
@@ -1076,7 +1087,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 			} else {
 				sqlList = "SELECT " + resultSelectFlds + " FROM " + tableName + sqlWhere + " limit ?,?";
 			}
-
+//			System.out.println("sqlList=>"+sqlList);
 			List<Map<String, Object>> resultlist = null;
 			if (numLimit != 0) {
 				resultlist = jdbcTemplate.queryForList(sqlList, new Object[] { numStart, numLimit });
@@ -1089,10 +1100,11 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 			for (int resultlist_i = 0; resultlist_i < resultlist.size(); resultlist_i++) {
 				Map<String, Object> resultMap = resultlist.get(resultlist_i);
 				j = 0;
-
+				
 				Map<String, Object> mapJson = new HashMap<String, Object>();
 				for (Object vl : resultMap.values()) {
 					mapJson.put(aryResult[j], vl);
+//					System.out.println("aryResult=>"+aryResult[j]+":"+vl);
 					j++;
 				}
 
@@ -1105,7 +1117,8 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 			errMsgArr[0] = "1";
 			errMsgArr[1] = e.toString();
 		}
-
+//		System.out.println("total"+total);
+		
 		Map<String, Object> mapRet = new HashMap<String, Object>();
 		mapRet.put("total", total);
 		mapRet.put("root", listJson);
