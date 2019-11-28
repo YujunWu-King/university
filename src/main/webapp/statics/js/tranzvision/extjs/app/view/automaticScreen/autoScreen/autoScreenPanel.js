@@ -1,4 +1,4 @@
-﻿Ext.define('KitchenSink.view.automaticScreen.autoScreenPanel', {
+Ext.define('KitchenSink.view.automaticScreen.autoScreen.autoScreenPanel', {
     extend: 'Ext.panel.Panel',
 	requires: [
         'Ext.data.*',
@@ -7,16 +7,16 @@
         'Ext.toolbar.Paging',
         'Ext.ux.ProgressBarPager',
         'tranzvision.extension.grid.column.Link',
-        'KitchenSink.view.automaticScreen.autoScreenStore',
-        'KitchenSink.view.automaticScreen.autoScreenController',
+        'KitchenSink.view.automaticScreen.autoScreen.autoScreenStore',
+        'KitchenSink.view.automaticScreen.autoScreen.autoScreenController',
         'KitchenSink.view.automaticScreen.export.exportExcelWindow',
         'KitchenSink.view.automaticScreen.export.exportExcelController'
     ],
     xtype: 'autoScreen',
-	controller: 'autoScreenController',
+	controller: 'autoScreenControllerBase',
 	//multiColumnSort: true,
 	
-	title: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.autoScreenMs","面试打分"),
+	title: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.autoScreen","自动初筛"),
 	bodyStyle:'overflow-y:auto;overflow-x:hidden',
 	
 	listeners:{
@@ -29,35 +29,21 @@
 	
 	constructor: function(config){
 		var className,
-			itemColumns = [],
-			itemMsColumns = [],
-			itemZjColumns = [];
+			itemColumns = [];
 		this.paramsConfig = config;
 		this.classId = config.classId;
 		this.batchId = config.batchId;
 		this.batchName = config.batchName;
 		className = config.className;
 		
-		/*var tzParams ='{"ComID":"TZ_AUTO_SCREEN_COM","PageID":"TZ_AUTO_SCREEN_STD","OperateType":"queryScoreColumns","comParams":{"classId":"'+ config.classId +'"}}';
+		var tzParams ='{"ComID":"TZ_AUTO_BASE_COM","PageID":"TZ_AUTO_SCREEN_BS","OperateType":"queryScoreColumns","comParams":{"classId":"'+ config.classId +'"}}';
 		Ext.tzLoadAsync(tzParams,function(respData){
 			className = respData.className;
 			itemColumns = respData.columns;
-		});*/
-		var tzParamsMs ='{"ComID":"TZ_AUTO_SCREEN_COM","PageID":"TZ_AUTO_SCREEN_STD","OperateType":"queryScoreMsColumns","comParams":{"classId":"'+ config.classId +'"}}';
-		Ext.tzLoadAsync(tzParamsMs,function(respData){
-			className = respData.className;
-			itemMsColumns = respData.columns;
 		});
-		/*var tzParamsZj ='{"ComID":"TZ_AUTO_SCREEN_COM","PageID":"TZ_AUTO_SCREEN_STD","OperateType":"queryScoreZjColumns","comParams":{"classId":"'+ config.classId +'"}}';
-		Ext.tzLoadAsync(tzParamsZj,function(respData){
-			className = respData.className;
-			itemZjColumns = respData.columns;
-		});*/
 		
 		this.className = className;
 		this.itemColumns = itemColumns;
-		this.itemMsColumns = itemMsColumns;
-		this.itemZjColumns = itemZjColumns;
 		
 		this.callParent();	
 	},
@@ -67,9 +53,7 @@
     	var me = this;
     	var config = me.paramsConfig;
     	config.itemColumns = me.itemColumns;
-    	config.itemMsColumns = me.itemMsColumns;
-    	config.itemZjColumns = me.itemZjColumns;
-    	var store = new KitchenSink.view.automaticScreen.autoScreenStore(config);
+    	var store = new KitchenSink.view.automaticScreen.autoScreen.autoScreenStore(config);
     	
     	//定义grid的columns
     	var columns = [{
@@ -93,7 +77,7 @@
 			menuDisabled: true,
 			sortable: false,
 			hideable:false,
-			width:120
+			width:90
 		}]
     	
     	//成绩项分值列
@@ -124,96 +108,20 @@
 				}]
     		});
     	}
-    	//专家打分分值列
-    	var itemZjColumns = this.itemZjColumns;
-    	for(var i=0; i<itemZjColumns.length; i++){
-    		var colWidth = 100;
-    		var descr = itemZjColumns[i].columnDescr;
-    		var strLen = descr.length;
-    		if(strLen > 0){
-    			colWidth = strLen*15 + 20;
-    			if(colWidth<90) colWidth = 90;
-    			if(colWidth>140) colWidth = 140;
-    		}
-    		
-    		columns.push({
-    			xtype: 'linkcolumn',
-    			text: descr,
-    			dataIndex: itemZjColumns[i].columnId,
-    			width:colWidth,
-    			menuDisabled: true,
-    			sortable: false,
-    			hideable:false,
-    			items:[{
-    				getText: function(v, meta, rec) {
-    					return v;
-    				},
-    				handler: 'onClickNumber'
-    			}]
-    		});
-    	}
-    	//面试成绩项分值列
-    	var itemMsColumns = this.itemMsColumns;
-    	for(var i=0; i<itemMsColumns.length; i++){
-    		var colWidth = 100;
-    		var descr = itemMsColumns[i].columnDescr;
-    		var strLen = descr.length;
-    		if(strLen > 0){
-    			colWidth = strLen*15 + 20;
-    			if(colWidth<90) colWidth = 120;
-    			if(colWidth>140) colWidth = 140;
-    		}
-    		
-    		columns.push({
-    			xtype: 'linkcolumn',
-    			text: descr,
-    			dataIndex: itemMsColumns[i].columnId,
-    			width:colWidth,
-    			menuDisabled: true,
-    			sortable: false,
-    			hideable:false,
-    			items:[{
-    				getText: function(v, meta, rec) {
-    					return v;
-    				},
-    				handler: 'onClickNumber'
-    			}]
-    		});
-    	}
     	
     	columns.push({
-    		xtype: 'linkcolumn',
     		text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.total","总分"),
 			dataIndex: 'total',
 			width:80,
-			hideable:false,
-			items:[{
-				getText: function(v, meta, rec) {
-					return v;
-				},
-				handler: 'onClickNumber'
-			}]
-    	},{
-    		text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.total","总分"),
-			dataIndex: 'total_label',
-			hidden:true,
-			width:100,
-			hideable:false
-    	},{
-    		text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.msResult","面试结果"),
-			dataIndex: 'msResult',
-			width:100,
 			hideable:false
     	},{
     		text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.ranking","排名"),
 			dataIndex: 'ranking',
-			hidden:true,
 			width:80,
 			hideable:false
     	},{
     		text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.negativeList","负面清单"),
 			dataIndex: 'negativeList',
-			hidden:true,
 			minWidth:200,
 			menuDisabled: true,
 			sortable: false,
@@ -239,7 +147,6 @@
     	},{
     		text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.autoLabel","自动标签"),
 			dataIndex: 'autoLabel',
-			hidden:true,
 			minWidth:200,
 			menuDisabled: true,
 			sortable: false,
@@ -265,7 +172,6 @@
     	},{
     		text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.manualLabel","手工标签"),
 			dataIndex: 'manualLabel',
-			hidden:true,
 			minWidth:200,
 			menuDisabled: true,
 			sortable: false,
@@ -292,7 +198,6 @@
     		xtype:'checkcolumn',
     		text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.status","是否淘汰"),
 			dataIndex: 'status',
-			hidden:true,
 			menuDisabled: true,
 			sortable: false,
 			hideable:false,
@@ -376,12 +281,8 @@
 	    				xtype:"toolbar",
 	    				items:[
 	    					{text:"查询",tooltip:"查询数据",iconCls: "query",handler:"searchAutoScreenStu"},"-",
-	    					/*{text:"运行自动初筛",tooltip:"运行自动初筛",iconCls:"set",handler:"runAutoScreenEngine"},"-",*/
-	    					{text:"计算面试分数",tooltip:"计算面试分数",iconCls:"set",handler:"runMSEngine"},"-",
-	    					{text:"计算总分",tooltip:"计算总分",iconCls:"set",handler:"runSumEngine"},"-",
-	    					{text:"批量发布面试结果",tooltip:"批量发布面试结果",iconCls:"set",handler:"runRleaseEngine"},"-",
-	    					
-	    					/*{
+	    					{text:"运行自动初筛",tooltip:"运行自动初筛",iconCls:"set",handler:"runAutoScreenEngine"},"-",
+	    					{
 	    						xtype:'button',
 	    						text:'设置淘汰状态',
 	    						iconCls:  'set',
@@ -397,8 +298,8 @@
 	    							text:'根据名次批量淘汰',handler:'setWeedOutByRank'
 	    						}]
 	    					},
-	    					'->', */
-	    					/*{
+	    					'->',
+	    					{
 	    						xtype:'splitbutton',
 	    						text:'更多操作',
 	    						iconCls:  'list',
@@ -415,7 +316,7 @@
 	    						},{
 	    							text:'查看并下载导出结果',iconCls:"download", handler:'downloadExportFile'
 	    						}]
-	    					}*/
+	    					}
 	    				]
 	    			}],
 	    			
