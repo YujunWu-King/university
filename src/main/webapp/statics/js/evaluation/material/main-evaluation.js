@@ -4,9 +4,9 @@ var getNextFlag = true;
 function createMainPageHeader(jsonObject)
 {
 	//创建评委评审主页面页头区
-	
+
 	var desc = Ext.String.format(jsonObject['ps_description']);
-	
+
 	var mainPageHeader = Ext.create('Ext.panel.Panel',{
 			//title: '报考年份：' + jsonObject['ps_baok_nf'] + '，报考批次：' + jsonObject['ps_baok_pc'] + '，报考项目：' + jsonObject['ps_baok_zy'],
 			title: '评审说明',
@@ -23,7 +23,7 @@ function createMainPageHeader(jsonObject)
 				html:'<p>通知与说明显示区</p>'
 			}
 	});
-	
+
 	return mainPageHeader;
 }
 
@@ -36,24 +36,24 @@ function getDataModelForPJFTJGrid(jsonObject)
 {
 	var statisticsGridDataModel = {gridFields:[],gridColumns:[],gridData:[]};
 	var tmpArray = jsonObject['ps_data_cy']['ps_tjzb_btmc'];
-	
+
 	PJFTJGridColumnHeaderTextAry = new Array();
-	
+
 	for(var i=0;i<tmpArray.length;i++)
-	{	
+	{
 		var colName = '00' + (i + 1);
 		colName = 'col' + colName.substr(colName.length - 2);
-		
+
 		PJFTJGridColumnHeaderTextAry.push(tmpArray[i][colName]);
-		
+
 		if(tmpArray[i]['ps_grp_flg'] == 'Y')
 		{
 			var tmpObject = {text:tmpArray[i][colName],columns:[]};
-												
+
 			for(var j=0;j<tmpArray[i]['ps_sub_col'].length;j++)
 			{
 				var subColName = '00' + (j + 1);
-				
+
 				subColName = 'sub_col' + subColName.substr(subColName.length - 2);
 				var tmpColumn = {
               						text     : tmpArray[i]['ps_sub_col'][j][subColName],
@@ -62,11 +62,11 @@ function getDataModelForPJFTJGrid(jsonObject)
               						resizable: true,
               						dataIndex: colName + '_' + subColName
               					};
-				
+
 				tmpObject['columns'].push(tmpColumn);
 				statisticsGridDataModel['gridFields'].push({name:colName + '_' + subColName});
 			}
-			
+
 			statisticsGridDataModel['gridColumns'].push(tmpObject);
 		}
 		else
@@ -81,14 +81,14 @@ function getDataModelForPJFTJGrid(jsonObject)
               				};
 			statisticsGridDataModel['gridFields'].push({name:colName});
 			statisticsGridDataModel['gridColumns'].push(tmpObject);
-			
+
 		}
 	}
-	
+
 	tmpArray = jsonObject['ps_data_cy']['ps_tjzb_mxsj'];
 
     statisticsGridDataModel['gridData'] = tmpArray;
-	
+
 	return statisticsGridDataModel;
 }
 
@@ -100,7 +100,7 @@ function createPJFTJGrid(batchId,jsonObject)
 			fields: myDataModel['gridFields'],
 			data: myDataModel['gridData']
 		});
-  
+
   PJFTJGrid_batchID = 'EvaluatePJFTJGrid' + batchId;
 
   var grid = Ext.create('Ext.grid.Panel', {
@@ -119,45 +119,45 @@ function createPJFTJGrid(batchId,jsonObject)
           enableTextSelection: true
       }
   });
-  
+
   return grid;
 }
 
 function getDataForFenbuGrid(jsonObject)
 {
 	var ebList = [];
-	
+
 	for(var i=0;i<jsonObject['ps_data_fb'].length;i++)
 	{
 		for(var j=0;j<jsonObject['ps_data_fb'][i]['ps_fszb_fbsj'].length;j++)
 		{
-			
+
 			var tmpObj = Ext.clone(jsonObject['ps_data_fb'][i]['ps_fszb_fbsj'][j]);
 			tmpObj["ps_fszb_mc"] = jsonObject['ps_data_fb'][i]['ps_fszb_mc']
 			ebList.push(tmpObj);
 		}
 	}
-	
+
 	return ebList;
 }
 
 function createFenbuGrid(jsonObject)
 {
 	var myData = getDataForFenbuGrid(jsonObject);
-	
+
 	var store = Ext.create('Ext.data.Store', {
       fields: ['ps_fszb_mc','ps_fszb_mc','ps_bzfb_bilv','ps_bzfb_rshu','ps_bzfb_wcrs','ps_sjfb_bilv','ps_sjfb_rshu','ps_sjfb_wcrs','ps_sjfb_fhyq'],
       groupField: 'ps_fszb_mc',
       //sorters: ['zb_fb_mc','ps_bzfb_bilv','ps_bzfb_rshu','ps_sj_fblv','ps_sj_fbrs'],
       data: myData
   });
-  
+
   var groupingFeature = Ext.create('Ext.grid.feature.Grouping',{
         groupHeaderTpl: '{name}',
         hideGroupedHeader: true,
         enableNoGroups:false
     });
-  
+
   var columns = [{
 	     text     : '指标名称',
 	     flex     : 1,
@@ -213,7 +213,7 @@ function createFenbuGrid(jsonObject)
 	     resizable: false,
 	     dataIndex: 'ps_sjfb_fhyq'
 	  }];
-  
+
   //是否显示评分标准？不显示则移除分布标准列。
   if(jsonObject["ps_show_standard"]!=undefined&&jsonObject["ps_show_standard"]==false){
 	  columns.splice(8,1);
@@ -222,7 +222,7 @@ function createFenbuGrid(jsonObject)
 	  columns.splice(3,1);
 	  columns.splice(2,1);
   }
-  
+
   var grid = Ext.create('Ext.grid.Panel', {
       store: store,
       stateful: true,
@@ -242,9 +242,9 @@ function createFenbuGrid(jsonObject)
           enableTextSelection: true
       }
   });
-  
+
   grid.on({resize:function(){myPageSlider[0].adjustHeight();}});
-  
+
   return grid;
 }
 
@@ -253,12 +253,12 @@ function getDataModelForStatisticsChart(jsonObject)
 	var statisticsChartDataModel = {chartFields:[],chartData:[],dataFields:[],seriesTitle:[],seriesTips:{},maxValue:0,minValue:0};
 	var tmpArray = jsonObject['ps_data_cy']['ps_tjzb_btmc'];
 	var drawChartFields = {};
-	
+
 	for(var i=0;i<tmpArray.length;i++)
 	{
 		var colName = '00' + (i + 1);
 		var dfRow = [];
-		
+
 		colName = 'col' + colName.substr(colName.length - 2);
 		if(tmpArray[i]['ps_grp_flg'] == 'Y')
 		{
@@ -266,10 +266,10 @@ function getDataModelForStatisticsChart(jsonObject)
 			{
 				var subColName = '00' + (j + 1);
 				var tmpSubColName = '';
-				
+
 				subColName = 'sub_col' + subColName.substr(subColName.length - 2);
 				tmpSubColName = colName + '_' + subColName;
-				
+
 				if(tmpArray[i]['ps_sub_col'][j]['ps_cht_flg'] == 'Y')
 				{
 					drawChartFields[tmpSubColName] = 'Y';
@@ -294,10 +294,10 @@ function getDataModelForStatisticsChart(jsonObject)
 			}
 		}
 	}
-	
+
 	tmpArray = jsonObject['ps_data_cy']['ps_tjzb_mxsj'];
     var dataRow = tmpArray;
-	
+
     if(statisticsChartDataModel['minValue'] == statisticsChartDataModel['maxValue'] && statisticsChartDataModel['minValue'] == 0)
     {
         statisticsChartDataModel['minValue'] = 0;
@@ -306,22 +306,22 @@ function getDataModelForStatisticsChart(jsonObject)
 
 
     statisticsChartDataModel['chartData'] = tmpArray;
-	
+
 	return statisticsChartDataModel;
 }
 
 function createStatisticsChart(jsonObject,chartStore,totalWidth)
 {
 	var retChartObject = null;
-	
-	
+
+
 	var chartDataModel = getDataModelForStatisticsChart(jsonObject);
-	
-	
+
+
 	if(chartDataModel['chartFields'].length >= 1 && chartDataModel['chartData'].length >= 1 && chartDataModel['dataFields'].length >= 1 && chartDataModel['seriesTitle'].length >= 1)
 	{
 		var store1 = null;
-		
+
 		if(chartStore == null)
 		{
 			store1 = Ext.create('Ext.data.Store',{
@@ -333,8 +333,8 @@ function createStatisticsChart(jsonObject,chartStore,totalWidth)
 		{
 			store1 = chartStore;
 		}
-		
-		
+
+
 		var fsChart2 = Ext.create('Ext.chart.Chart',{
 	 		xtype: 'chart',
 	 		style: 'background:#fff',
@@ -387,7 +387,7 @@ function createStatisticsChart(jsonObject,chartStore,totalWidth)
 					}
 				]
 	 });
-		
+
 		var chartPanel = Ext.create('Ext.panel.Panel',
 			{
 				title: '指标统计柱状图',
@@ -400,16 +400,16 @@ function createStatisticsChart(jsonObject,chartStore,totalWidth)
 				width: totalWidth,
 				items: fsChart2
 			});
-		
+
 		if(chartStore == null)
 		{
 			chartPanel.on({expand:function(){myPageSlider[0].adjustHeight();},collapse:function(){myPageSlider[0].adjustHeight();}});
 		}
-		
+
 		retChartObject = chartPanel;
 	}
-	
-	
+
+
 	return retChartObject;
 }
 
@@ -429,7 +429,7 @@ function getSubDataForFenbuChart(chartDataArray)
 		{
 			tmpNumber2 = 1.0 * chartDataArray[i]['ps_sjfb_bilv'];
 		}
-		
+
 		data.push({name:chartDataArray[i]['ps_fb_mc'],data1:chartDataArray[i].ps_bzfb_bilv,data2:chartDataArray[i].ps_sjfb_bilv });
 
 	}
@@ -440,7 +440,7 @@ function getSubDataForFenbuChart(chartDataArray)
 function createSubStatisticsCharts(chartDataArray,chartStore)
 {
 	var store1 = null;
-	
+
 	if(chartStore == null)
 	{
 		store1 = Ext.create('Ext.data.JsonStore',
@@ -463,8 +463,8 @@ function createSubStatisticsCharts(chartDataArray,chartStore)
 	{
 		store1 = chartStore;
 	}
-	
-	
+
+
 	var series1 = {
 		type: 'line',
 		highlight: {size: 7,radius: 7},
@@ -501,8 +501,8 @@ function createSubStatisticsCharts(chartDataArray,chartStore)
 				}
 		}
 	};
-	
-	
+
+
 	var seriesArray = [];
 	if(Object.prototype.toString.call(chartDataArray['ps_cht_flds']) == '[object Array]')
 	{
@@ -553,8 +553,8 @@ function createSubStatisticsCharts(chartDataArray,chartStore)
 				series: seriesArray
 			});
 	}
-	
-	
+
+
 	var retObject = null;
 	if(fsChart1 != null)
 	{
@@ -565,18 +565,18 @@ function createSubStatisticsCharts(chartDataArray,chartStore)
 				items:fsChart1
 		};
 	}
-	
+
 	return retObject;
 }
 
 function createStatisticsCharts(jsonObject,chartStoreArray,totalWidth)
 {
 	var chartArray = [];
-	
+
 	for(var i=0;i<jsonObject['ps_data_fb'].length;i++)
 	{
 		var tmpChart = null;
-		
+
 		if(chartStoreArray != null)
 		{
 			tmpChart = createSubStatisticsCharts(jsonObject['ps_data_fb'][i],chartStoreArray[i]);
@@ -585,13 +585,13 @@ function createStatisticsCharts(jsonObject,chartStoreArray,totalWidth)
 		{
 			tmpChart = createSubStatisticsCharts(jsonObject['ps_data_fb'][i],null);
 		}
-		
+
 		if(tmpChart != null)
 		{
 			chartArray.push(tmpChart);
 		}
 	}
-	
+
 	var chartPanel = null;
 	if(chartArray.length > 0)
 	{
@@ -608,13 +608,13 @@ function createStatisticsCharts(jsonObject,chartStoreArray,totalWidth)
 				width: "100%",
 				items: chartArray
 			});
-		
+
 		if(chartStoreArray == null)
 		{
 			chartPanel.on({expand:function(){myPageSlider[0].adjustHeight();},collapse:function(){myPageSlider[0].adjustHeight();}});
 		}
 	}
-	
+
 	return chartPanel;
 }
 
@@ -635,7 +635,7 @@ function getApplicantListColumnHeaders(jsonObject)
 	{
 		clHeader.push({name:itm,type:"number"});
 	}
-	
+
 	return clHeader;
 }
 
@@ -664,7 +664,7 @@ function getApplicantListColumns(jsonObject,ps_show_deviation)
 			  }
 		  }},
 	];
-	
+
 	//动态列：先进行排序
 	var dynamicColumns = [];
 	for(itm in jsonObject){
@@ -679,7 +679,7 @@ function getApplicantListColumns(jsonObject,ps_show_deviation)
             return resultHTML;
         }});
 	}
-	
+
 	columnList.push({text:"本科院校",width:150,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_school"});
 	columnList.push({text:"工作单位",width:150,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_company"});
 	columnList.push({text:"评议状态",width:80,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_zt"});
@@ -690,7 +690,7 @@ function getApplicantListColumns(jsonObject,ps_show_deviation)
 		columnList.push({text:"评委间偏差",width:95,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_pc"});
 	}
 	columnList.push({text:"其他评委已复评",width:120,align:'left',sortable:true,resizable:false,dataIndex:"ps_re_evaluation"});
-	
+
 	columnList.push({
 		text:'评审',
 		width:100,
@@ -702,11 +702,11 @@ function getApplicantListColumns(jsonObject,ps_show_deviation)
 				 {
 				 		var tmpBtn = Ext.create('Ext.Button',{text:"进行评审",height:20,margin:0,padding:0,width:60,tooltip:'单击此按钮进入该考生评审主页面'});
 				 		var divTmp = $('<div/>');
-				 		
+
 				 		tmpBtn.setTooltip('单击此按钮进入该考生材料评审主页面。');
 				 		divTmp[0].id = Ext.id();
 				 		tmpBtn.render(divTmp[0]);
-				 		
+
 				 		return divTmp[0].outerHTML;
 				 }
 	});
@@ -717,12 +717,12 @@ function getApplicantListColumnValues(jsonObject)
 {
 	return jsonObject||[];
 	/*var cValues = [];
-	
+
 	for(var i=0;i<jsonObject.length;i++)
 	{
 		var tmpRow = [];
 		var tmpBMBID;
-		
+
 		for(var j=0;j<jsonObject[i]['ps_row_cnt'].length;j++)
 		{
 			for(itm in jsonObject[i]['ps_row_cnt'][j])
@@ -745,17 +745,17 @@ function getApplicantListColumnValues(jsonObject)
 				}
 			}
 		}
-		
+
 		if(tmpRow.length >= 1)
 		{
 			tmpRow.push('进行评审');
 			tmpRow.push(jsonObject[i]['ps_row_id']);
 			tmpRow.push(tmpBMBID);
 		}
-		
+
 		cValues.push(tmpRow);
 	}
-	
+
 	return cValues;
 	*/
 }
@@ -771,7 +771,7 @@ function submitEvaluateBatch(classid,pc_id)
 
 	//mask window
 	maskWindow();
-	
+
 	Ext.Ajax.request(
 			{
 				url:window.submitApplicantDataUrl,
@@ -790,9 +790,9 @@ function submitEvaluateBatch(classid,pc_id)
 
 					//返回值内容
                     var jsonText = response.responseText;
-                    
+
 					var jsonObject = null;
-					
+
 					try
 					{
 						var jsonObject = Ext.util.JSON.decode(jsonText);
@@ -801,7 +801,7 @@ function submitEvaluateBatch(classid,pc_id)
 		                	Ext.Msg.alert("提示",jsonObject.state.timeout==true?"您当前登录已超时或者已经退出，请重新登录！":jsonObject.state.errdesc);
 		                }else{
 		                	jsonObject = jsonObject.comContent;
-							
+
 							if(jsonObject.error_code != '0')
 							{
 								Ext.Msg.alert("提示",'提交当前评审批次时发生错误：' + jsonObject.error_decription);
@@ -812,12 +812,12 @@ function submitEvaluateBatch(classid,pc_id)
 								//getPartBatchDataByBatchId(batchId,null,{applicantBaomingbiaoID:''},'SUBMTALL','当前评审班级批次[' + getBatchNameById(batchId) + ']提交成功。');
 	                            //更新总体提交状态
 								Ext.Msg.alert("提示","当前评审班级批次提交成功。");
-	                            
+
 	                            var ps_kslb_submtall_status = "已提交";
 	                            $("#ps_kslb_submtall_"+(jsonObject['ps_class_id']+"_"+jsonObject['ps_bkpc_id'])).html("【"+ps_kslb_submtall_status+"】");
 							}
 		                }
-						
+
 					}
 					catch(e1)
 					{
@@ -829,14 +829,14 @@ function submitEvaluateBatch(classid,pc_id)
 						{
 							Ext.Msg.alert("提示",'提交当前评审批次时发生错误，请与系统管理员联系：错误的JSON数据[' + e1.description + ']。');
 						}
-						
+
 					}
 				},
 				failure:function(response)
 				{
 					//unmask window
 					unmaskWindow();
-					
+
 					if(window.evaluateSystemDebugFlag == 'Y')
 					{
 						Ext.Msg.alert("提示",'提交当前评审批次时发生错误，请与系统管理员联系：' + response.responseText);
@@ -960,7 +960,7 @@ function getNextApplicant(jsonObject)
 }
 
 function createApplicantList(jsonObject)
-{	
+{
 	var store1 = Ext.create('Ext.data.Store', {
       fields: getApplicantListColumnHeaders(jsonObject['ps_data_kslb']['ps_ksh_list_headers']),
       data: getApplicantListColumnValues(jsonObject['ps_data_kslb']['ps_ksh_list_contents']),
@@ -969,9 +969,9 @@ function createApplicantList(jsonObject)
           direction: 'ASC'
       }]
 	});
-	
+
   var ps_kslb_submtall_status = (jsonObject['ps_kslb_submtall']=="Y")?"已提交":"未提交";
-  
+
   var grid = Ext.create('Ext.grid.Panel', {
       store: store1,
       stateful: true,
@@ -1020,14 +1020,14 @@ function createApplicantList(jsonObject)
       										{
       											Ext.Msg.confirm('提示', '是否提交本次评议的全部考生信息？<br />提交后将无法对考生评议成绩进行修改，是否继续？', function(button) {
 													if (button === 'yes') {
-														
+
 														submitEvaluateBatch(jsonObject['ps_bkfx_id']);
-														
+
 													} else {
 
 													}
 												});
-												
+
       										}
       				},
       				{
@@ -1076,7 +1076,7 @@ function createApplicantList(jsonObject)
                                                         }
                                                     });
                                                 }
-												
+
       										}
       				},
       				{
@@ -1089,18 +1089,18 @@ function createApplicantList(jsonObject)
       				}
       			]
   });
-  
+
   grid.on('cellClick', function(gridViewObject,cellHtml,colIndex,dataModel,rowHtml,rowIndex){
 					var rec = store1.getAt(rowIndex);
 					//var clickColName = rec.self.getFields()[colIndex]['name'];
 					var clickColName = gridViewObject.grid.columns[colIndex]["dataIndex"];
-					
+
 					gridViewObject.getSelectionModel().getSelection()[0].index = rowIndex;
-					
+
 					if(clickColName == 'pw_evaluate_col' || rec.get(clickColName) == rec.get('ps_msh_id'))
 					{
 						var tmpKshID = jQuery.trim(rec.get('ps_ksh_bmbid'));
-						
+
 						if(tmpKshID == null || tmpKshID == '' || tmpKshID == 'undefined')
 						{
 							Ext.Msg.alert("提示",'系统错误：无法获取指定考生对应的编号。');
@@ -1109,7 +1109,7 @@ function createApplicantList(jsonObject)
 						{
 							//mask window
 							maskWindow();
-							
+
 							//加载指定考生评审信息页面并显示
 							var tzEObject = new tzEvaluateObject();
                             tzEObject.baokaoClassID = jsonObject['ps_class_id'];
@@ -1117,7 +1117,7 @@ function createApplicantList(jsonObject)
                             tzEObject.baokaoPcID = jsonObject['ps_bkpc_id'];
                             tzEObject.baokaoPcName = jsonObject['ps_baok_pc'];
 							tzEObject.applicantName = rec.get('ps_ksh_xm');
-							tzEObject.applicantInterviewID = rec.get('ps_ksh_bmbid');
+							tzEObject.applicantInterviewID = rec.get('ps_msh_id');
 							tzEObject.applicantBaomingbiaoID = rec.get('ps_ksh_bmbid');
 
 							loadApplicantData(tzEObject);
@@ -1126,18 +1126,18 @@ function createApplicantList(jsonObject)
 				}
   			 );
   grid.on({expand:function(){myPageSlider[0].adjustHeight();},collapse:function(){myPageSlider[0].adjustHeight();}});
-  
+
   //window.library_main_evalute_page_ks_grid[jsonObject['ps_bkfx_id']] = grid;
     window.library_main_evalute_page_ks_grid[jsonObject['ps_class_id']+"_"+jsonObject['ps_bkpc_id']] = grid;
-  
+
   return grid;
 }
 
 function createStatisticsArea(batchId,jsonObject)
 {
 	var itemArray = new Array();
-	
-	
+
+
 	/*创建概要信息显示区*/
 	var gaiyaoArea = {
 			xtype: 'component',
@@ -1160,15 +1160,15 @@ function createStatisticsArea(batchId,jsonObject)
 	{
 		itemArray.push(tjCharts1);
 	}
-	
+
 	/*创建评委评分分布统计图表*/
 	var tjCharts2 = createStatisticsCharts(jsonObject,null,"100%");
 	if(tjCharts2 != null)
 	{
 		itemArray.push(tjCharts2);
 	}
-	
-	
+
+
 	var tjArea = Ext.create('Ext.Panel',
 		 {
 			title:'评审统计信息区',
@@ -1184,17 +1184,17 @@ function createStatisticsArea(batchId,jsonObject)
 			defaultType:'textfield',
 			items:itemArray
 		 });
-	
+
 	return tjArea;
 }
 
 function initializeMainEvaluatePage(batchId,jsonObject)
 {
 	var mainPageFrame = null
-	
+
 	/*本地调试代码*/
 	//jsonObject = jsonEvaluateBatchDataObjectArray1['pc_f_01'];
-	
+
 	if(jsonObject != null)
 	{
         //显示总分
@@ -1215,7 +1215,7 @@ function initializeMainEvaluatePage(batchId,jsonObject)
 		/*创建考生信息列表信息区*/
 		var ksListArea = createApplicantList(jsonObject);
 		itemArray.push(ksListArea);
-		
+
 		//创建评委打分主页面框架
 		mainPageFrame = Ext.create('Ext.Panel',
 			{
@@ -1241,11 +1241,11 @@ function initializeMainEvaluatePage(batchId,jsonObject)
 			t.setWidth(Ext.getBody().getWidth());
 		}
 		t.resumeEvent("resize");
-		
+
 		t.updateLayout();
-		
+
 	})
-	
+
 	return mainPageFrame;
 }
 
@@ -1292,12 +1292,12 @@ function getPartBatchDataByBatchId(batchId,callBackFunction,applicantObject,oper
 			{
 				//unmask window
 				unmaskWindow();
-				
+
 				//返回值内容
                 var jsonText = response.responseText;
-                
+
 				var jsonObject = null;
-				
+
 				try
 				{
 					var jsonObject = Ext.util.JSON.decode(jsonText);
@@ -1306,9 +1306,9 @@ function getPartBatchDataByBatchId(batchId,callBackFunction,applicantObject,oper
 	                	Ext.Msg.alert("提示",jsonObject.state.timeout==true?"您当前登录已超时或者已经退出，请重新登录！":jsonObject.state.errdesc);
 	                }else{
 	                	jsonObject = jsonObject.comContent;
-						
+
 						if(jsonObject.error_code != '0')
-						{					
+						{
 							loadSuccess = false;
 							Ext.Msg.alert("提示",'刷新当前评审批次[' + getBatchNameById(batchId) + ']数据时发生错误：' + jsonObject.error_decription);
 						}
@@ -1320,11 +1320,11 @@ function getPartBatchDataByBatchId(batchId,callBackFunction,applicantObject,oper
 							window.batchJSONArray[batchId]['ps_data_fb'] = jsonObject['ps_data_fb'];
 							window.batchJSONArray[batchId]['ps_data_kslb'] = jsonObject['ps_data_kslb'];
 							window.batchJSONArray[batchId]['ps_kslb_submtall'] = jsonObject['ps_kslb_submtall'];
-							
-							
+
+
 							/*获取新的局部数据，并使用局部数据刷新当前批次评审主页面数据*/
 							refreshBatchDataByBatchId(jsonObject,'ps_ksh_bmbid',applicantObject.applicantBaomingbiaoID);
-							
+
 							//回调指定函数
 							if(operationType == 'NXT')
 							{//因为获取下一个考生而产生的回调，该回调将导致当前页面切换到指定考生资料评审主页面
@@ -1340,15 +1340,15 @@ function getPartBatchDataByBatchId(batchId,callBackFunction,applicantObject,oper
 									//其他暂无操作
 								}
 							}
-							
+
 							if(tipMessage != null && tipMessage != '' && tipMessage != 'undefined')
 							{
 								Ext.Msg.alert("提示",tipMessage);
 							}
 						}
-						
+
 	                }
-					
+
 				}
 				catch(e1)
 				{
@@ -1367,7 +1367,7 @@ function getPartBatchDataByBatchId(batchId,callBackFunction,applicantObject,oper
 			{
 				//unmask window
 				unmaskWindow();
-				
+
 				loadSuccess = false;
 				if(window.evaluateSystemDebugFlag == 'Y')
 				{
@@ -1387,7 +1387,7 @@ function autoHighlightRow(myGrid,dataIndexName,dataIndexValue)
 {
 	var myStore = myGrid.getStore();
 	var totalCount = myStore.getCount();
-	
+
 	for(var i=0;i<totalCount;i++)
 	{
 		if(myStore.getAt(i).get(dataIndexName) == dataIndexValue)
@@ -1559,9 +1559,9 @@ function partRefreshTestFunction(batchId)
 			{
 				//返回值内容
                 var jsonText = response.responseText;
-                
+
 				var jsonObject = null;
-				
+
 				try
 				{
 					var jsonObject = Ext.util.JSON.decode(jsonText);
@@ -1570,10 +1570,10 @@ function partRefreshTestFunction(batchId)
 	                	Ext.Msg.alert("提示",jsonObject.state.timeout==true?"您当前登录已超时或者已经退出，请重新登录！":jsonObject.state.errdesc);
 	                }else{
 	                	jsonObject = jsonObject.comContent;
-						
+
 						refreshBatchDataByBatchId(jsonObject,null,null);
 	                }
-					
+
 				}
 				catch(e1)
 				{
@@ -1593,16 +1593,16 @@ function partRefreshTestFunction(batchId)
 function getColumnChartObject()
 {
 	var retCCObject = null;
-	
+
 	/*获取当前评审批次ID*/
 	var batchId = window.mainPageObjectArray['PreviousBatchId'];
 	if(batchId == null) return null;
-	
-	
+
+
 	/*获取评审打分统计信息区对象*/
 	var rfObject1 = window.batchEvaluateMainPageObject[batchId];
 	if(rfObject1 == null) return null;
-	
+
 	/*获取对比柱状图表对象的Store*/
 	try
 	{
@@ -1613,7 +1613,7 @@ function getColumnChartObject()
 	{
 		;
 	}
-	
+
 	return retCCObject;
 }
 
@@ -1622,16 +1622,16 @@ function getColumnChartObject()
 function getLineChartObject()
 {
 	var retLCObject = null;
-	
+
 	/*获取当前评审批次ID*/
 	var batchId = window.mainPageObjectArray['PreviousBatchId'];
 	if(batchId == null) return null;
-	
-	
+
+
 	/*获取评审打分统计信息区对象*/
 	var rfObject1 = window.batchEvaluateMainPageObject[batchId];
 	if(rfObject1 == null) return null;
-	
+
 	try
 	{
 		var chartStoreArray = [];
@@ -1640,13 +1640,13 @@ function getLineChartObject()
 		{
 			chartStoreArray[i] = pwFenbuCharts[i]['items']['items'][0].getStore();
 		}
-		
+
 		retLCObject = createStatisticsCharts(window.batchJSONArray[batchId],chartStoreArray,"100%");
 	}
 	catch(e5)
 	{
 		;
 	}
-	
+
 	return retLCObject;
 }
