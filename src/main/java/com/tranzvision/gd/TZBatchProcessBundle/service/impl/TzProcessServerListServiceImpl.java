@@ -56,7 +56,13 @@ public class TzProcessServerListServiceImpl extends FrameworkImpl {
                 if (map != null) {
                 	
                 	SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                	dateTime= simpleDate.format((Date) map.get("TZ_ZJXTSJ"));
+                	//开始   suzl 时间取值修改
+                	if(map.get("TZ_ZJXTSJ")==null||"".equals(map.get("TZ_ZJXTSJ"))){
+                		dateTime = "";
+                	}else{
+                		dateTime= simpleDate.format((Date) map.get("TZ_ZJXTSJ"));
+                	}
+                	//结束
                     processDesc = (String) map.get("TZ_JCFWQ_MS");
                     platFormType = (String) map.get("TZ_CZXT_LX");
                     serverIP = (String) map.get("TZ_FWQ_IP");
@@ -68,6 +74,17 @@ public class TzProcessServerListServiceImpl extends FrameworkImpl {
                     hMap.put("orgId", orgId);
                     hMap.put("processName", processName);
                     hMap.put("processDesc", processDesc);
+                    //开始   suzl 平台类型取值判断修改
+                	if("WINDOWS".equals(platFormType)){
+                		platFormType = "1";
+                	}
+                	if("UNIX".equals(platFormType)){
+                		platFormType = "2";
+                	}
+                	if("其他".equals(platFormType)){
+                		platFormType = "3";
+                	}
+                	//结束
                     hMap.put("runPlatType", platFormType);
                     hMap.put("serverIP", serverIP);
                     hMap.put("intervalTime", intervalTime);
@@ -158,6 +175,17 @@ public class TzProcessServerListServiceImpl extends FrameworkImpl {
                 String palpitationTime = jacksonUtil.getString("palpitationTime") == null?"":jacksonUtil.getString("palpitationTime");
                 String orgId = jacksonUtil.getString("orgId");
                 String platType = jacksonUtil.getString("runPlatType");
+                //开始 suzl 平台类型取值判断修改
+                if("1".equals(platType)){
+                	platType = "WINDOWS";
+                }
+                if("2".equals(platType)){
+                	platType = "UNIX";
+                }
+                if("3".equals(platType)){
+                	platType = "其他";
+                }
+                //结束
                 String serverIP = jacksonUtil.getString("serverIP");
                 String processName = jacksonUtil.getString("processName");
                 String processDec = jacksonUtil.getString("processDesc");
@@ -218,11 +246,30 @@ public class TzProcessServerListServiceImpl extends FrameworkImpl {
                 
                 SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss");
                 
-                String palpitationDate = jacksonUtil.getString("palpitationDate") == null?"":jacksonUtil.getString("palpitationDate");
-                String palpitationTime = jacksonUtil.getString("palpitationTime") == null?"":jacksonUtil.getString("palpitationTime");
+                //开始   suzl 时间取值修改
+                Date dateTime = null;
+                String palpitationDate = jacksonUtil.getString("palpitationDate");
+                //String palpitationTime = jacksonUtil.getString("palpitationTime");
+            	if(palpitationDate==null||"".equals(palpitationDate)){
+            		dateTime = null;
+            	}else{
+            		dateTime= simpleDate.parse(palpitationDate);
+            	}
+            	//结束
                 String orgId = jacksonUtil.getString("orgId");
                 String processName = jacksonUtil.getString("processName");
                 String platType = jacksonUtil.getString("runPlatType");
+                //开始 suzl 平台类型取值判断修改
+                if("1".equals(platType)){
+                	platType = "WINDOWS";
+                }
+                if("2".equals(platType)){
+                	platType = "UNIX";
+                }
+                if("3".equals(platType)){
+                	platType = "其他";
+                }
+                //结束
                 String serverIP = jacksonUtil.getString("serverIP");
                 String processDec = jacksonUtil.getString("processDesc");
                 Integer intervalTime = Integer.parseInt(jacksonUtil.getString("intervalTime"));
@@ -236,7 +283,7 @@ public class TzProcessServerListServiceImpl extends FrameworkImpl {
                 tzProcessServer.setTzFwqIp(serverIP);
                 tzProcessServer.setTzZdbxRws(parallelNum);
                 tzProcessServer.setTzRwxhJg(intervalTime);
-                tzProcessServer.setTzZjxtsj(simpleDate.parse(palpitationDate + palpitationTime));
+                tzProcessServer.setTzZjxtsj(dateTime);
                 tzProcessServer.setTzBeizhu(remark);
                 tzProcessServerMapper.updateByPrimaryKeySelective(tzProcessServer);
             }

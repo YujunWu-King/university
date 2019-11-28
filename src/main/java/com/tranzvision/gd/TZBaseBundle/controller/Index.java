@@ -516,6 +516,7 @@ public class Index {
 				}
 
 				// 根据搜索条件获取搜索表中的数据，供下拉框使用;
+				
 				strComContent = gdKjComService.getPromptSearchList(precname, pcondition, presult, maxRow, numLimit,
 						numStart, errMsgArr);
 				break;
