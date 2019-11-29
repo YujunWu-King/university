@@ -317,7 +317,7 @@
 		var classId = panel.classId;
 		var batchId = panel.batchId;
 		
-		var className = 'KitchenSink.view.automaticScreen.setWeedOutWindow';
+		var className = 'KitchenSink.view.automaticScreen.autoScreen.setWeedOutWindow';
         if(!Ext.ClassManager.isCreated(className)){
              Ext.syncRequire(className);
         }
@@ -634,7 +634,7 @@
 		
 		//构造搜索sql
 		if((typeof panel.getedSQL) == "undefined"){
-			searchSql = "SELECT TZ_APP_INS_ID FROM PS_TZ_CS_STU_VW WHERE TZ_CLASS_ID='"+ classId +"' AND TZ_BATCH_ID='"+ batchId +"'";
+			searchSql = "SELECT TZ_APP_INS_ID FROM PS_TZ_CS_STU_BS_V WHERE TZ_CLASS_ID='"+ classId +"' AND TZ_BATCH_ID='"+ batchId +"'";
 		}else{
 			searchSql = panel.getedSQL;
 		}
