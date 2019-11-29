@@ -53,7 +53,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
                 }).setExtraParams({tzParams: '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_RULE_STD","OperateType":"GETGLY","comParams":""}'})
         });
         var storeMsz = new Ext.data.Store({
-            fields: ['mszid', 'mszmj','mszsd', 'mszkssj', 'mszjssj'],
+            fields: ['mszid', 'mszsd', 'mszkssj', 'mszjssj'],
             pageSize: 200,
             autoLoad: true,
             comParams: '',
