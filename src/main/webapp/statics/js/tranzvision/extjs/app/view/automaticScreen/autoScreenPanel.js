@@ -306,7 +306,7 @@
 			align: 'center',
 			items:[
 				{iconCls: 'preview',tooltip: '查看报名表', handler: 'showApplicationForm'},
-				{iconCls: 'edit',tooltip: '编辑', handler: 'editStuScreenDetails',
+				//{iconCls: 'edit',tooltip: '编辑', handler: 'editStuScreenDetails',
 					/*isDisabled:function(view ,rowIndex ,colIndex ,item,record ){
 						var scoreInsId = record.get('scoreInsId');
 						if(scoreInsId == "0"){
@@ -315,7 +315,7 @@
 							return false;
 						}
 					}*/
-				}
+				//}
 			]
 		});
     	

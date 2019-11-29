@@ -86,14 +86,12 @@ public class TzAutoScreenEngineServiceImpl {
 		String socreModelId = psTzClassInfT.getTzCsScorMdId();
 		String orgId = psTzClassInfT.getTzJgId();
 		// 考生标签组
-		// String ksbqGroup = psTzClassInfT.getTzCsKsbqzId();
-
+		String ksbqGroup = psTzClassInfT.getTzCsKsbqzId();
 		// 负面清单标签组
-		// String fmqdGroup = psTzClassInfT.getTzCsFmbqzId();
+		String fmqdGroup = psTzClassInfT.getTzCsFmbqzId();
 
 		// 存放考生总成绩，用于计算排名
-		// List<Map<String, Object>> totalScoreList = new ArrayList<Map<String,
-		// Object>>();
+		List<Map<String, Object>> totalScoreList = new ArrayList<Map<String, Object>>();
 
 		// 成绩项类型为“数字成绩录入项”的节点，查询节点对应的成绩项打分规则ID
 		String itemsSql = tzSQLObject.getSQLText("SQL.TZAutomaticScreenBundle.TzModelTreeAutoScreenItems");
@@ -102,52 +100,39 @@ public class TzAutoScreenEngineServiceImpl {
 		// 成绩模型树根节点
 		String rootSql = tzSQLObject.getSQLText("SQL.TZAutomaticScreenBundle.TzModelTreeRootNode");
 		Map<String, Object> rootMap = sqlQuery.queryForMap(rootSql, new Object[] { socreModelId, orgId });
-
-		/****************************
-		 * 自动初筛前---先删除之前的初筛数据，以免产生垃圾数据----开始
-		 *****************************/
+		
+		
+		/****************************自动初筛前---先删除之前的初筛数据，以免产生垃圾数据----开始*****************************/
 		/**
-		 * 1.删除历史打分 2、删除未参与本次初筛的历史初筛考生
+		 * 1.删除历史打分
+		 * 2、删除未参与本次初筛的历史初筛考生
 		 */
 		String delScoreItemSql = tzSQLObject.getSQLText("SQL.TZAutomaticScreenBundle.TzDelAutoScoreItems");
-		sqlQuery.update(delScoreItemSql, new Object[] { classId, batchId });
-
+		sqlQuery.update(delScoreItemSql, new Object[]{ classId, batchId });
+		
 		String delStuScoreInsSql = tzSQLObject.getSQLText("SQL.TZAutomaticScreenBundle.TzDelAutoScreenStudents");
-		sqlQuery.update(delStuScoreInsSql, new Object[] { classId, batchId });
-		/****************************
-		 * 自动初筛前---先删除之前的初筛数据，以免产生垃圾数据----结束
-		 *******************************/
-
-		// 班级批次下参与自动初筛的考生 为该班级下 报名表提交并且审核通过的考生
-		String sql = "SELECT A.TZ_APP_INS_ID FROM PS_TZ_MSPS_KSH_TBL A where A.TZ_CLASS_ID = ? AND A.TZ_APPLY_PC_ID = ?";
+		sqlQuery.update(delStuScoreInsSql, new Object[]{ classId, batchId });
+		/****************************自动初筛前---先删除之前的初筛数据，以免产生垃圾数据----结束*******************************/
+		
+		
+		// 材料评审批次下参与自动初筛的考生 by zb
+		String sql = "select TZ_APP_INS_ID from PS_TZ_CS_STU_BS_V where TZ_CLASS_ID=? and TZ_BATCH_ID=?";
 		List<Map<String, Object>> appInsList = sqlQuery.queryForList(sql, new Object[] { classId, batchId });
-		long appInsId = 0;
-		long scoreInsId = 0;
-		PsTzCsKsTblKey psTzCsKsTblKey = null;
-		PsTzCsKsTbl psTzCsKsTbl = null;
-		TzClmsZddfInterface zzdfObj = null;
-		String itemId = "";
-		String csDfgzId = "";
-		String csDfgzCls = "";
-		float rootScoreAmount = 0;
-		String treeName = "";
-		String rootNode = "";
-		PsTzCjxTblKey psTzCjxTblKey = null;
-		PsTzCjxTblWithBLOBs psTzCjxTbl = null;
 		for (Map<String, Object> appInsMap : appInsList) {
-			appInsId = Long.valueOf(appInsMap.get("TZ_APP_INS_ID").toString());
+			long appInsId = Long.valueOf(appInsMap.get("TZ_APP_INS_ID").toString());
 
-			psTzCsKsTblKey = new PsTzCsKsTblKey();
+			PsTzCsKsTblKey psTzCsKsTblKey = new PsTzCsKsTblKey();
 			psTzCsKsTblKey.setTzClassId(classId);
 			psTzCsKsTblKey.setTzApplyPcId(batchId);
 			psTzCsKsTblKey.setTzAppInsId(appInsId);
-			psTzCsKsTbl = psTzCsKsTblMapper.selectByPrimaryKey(psTzCsKsTblKey);
+			PsTzCsKsTbl psTzCsKsTbl = psTzCsKsTblMapper.selectByPrimaryKey(psTzCsKsTblKey);
 			// System.out.println("---------->"+classId+"---"+batchId+"---"+appInsId);
-			scoreInsId = 0;
+			long scoreInsId = 0;
 			boolean exists;
 			if (psTzCsKsTbl == null) {
 				exists = false;
 				scoreInsId = this.creatNewScoreInstanceId(socreModelId, oprId);
+
 				psTzCsKsTbl = new PsTzCsKsTbl();
 				psTzCsKsTbl.setTzClassId(classId);
 				psTzCsKsTbl.setTzApplyPcId(batchId);
@@ -177,14 +162,14 @@ public class TzAutoScreenEngineServiceImpl {
 
 			// 循环自动初筛成绩模型，获取所有成绩项类型为“数字成绩录入项”的节点，查询节点对应的成绩项打分规则ID
 			for (Map<String, Object> itemMap : itemsList) {
-				itemId = itemMap.get("TZ_SCORE_ITEM_ID").toString();
-				csDfgzId = itemMap.get("TZ_ZDCSGZ_ID") == null ? "" : itemMap.get("TZ_ZDCSGZ_ID").toString();
-				csDfgzCls = itemMap.get("TZ_ZDCSGZ") == null ? "" : itemMap.get("TZ_ZDCSGZ").toString();
+				String itemId = itemMap.get("TZ_SCORE_ITEM_ID").toString();
+				String csDfgzId = itemMap.get("TZ_ZDCSGZ_ID") == null ? "" : itemMap.get("TZ_ZDCSGZ_ID").toString();
+				String csDfgzCls = itemMap.get("TZ_ZDCSGZ") == null ? "" : itemMap.get("TZ_ZDCSGZ").toString();
 
 				if (!"".equals(csDfgzCls)) {
 					// 执行自动打分规则
 					try {
-						zzdfObj = (TzClmsZddfInterface) ctx.getBean(csDfgzCls);
+						TzClmsZddfInterface zzdfObj = (TzClmsZddfInterface) ctx.getBean(csDfgzCls);
 						zzdfObj.AutoCalculate(String.valueOf(appInsId), String.valueOf(scoreInsId), itemId);
 					} catch (Exception e1) {
 						e1.printStackTrace();
@@ -196,20 +181,19 @@ public class TzAutoScreenEngineServiceImpl {
 			}
 
 			// 计算总分,即根节点得分
-
-			rootScoreAmount = 0;
+			float rootScoreAmount = 0;
 			if (rootMap != null) {
-				treeName = rootMap.get("TREE_NAME").toString();
+				String treeName = rootMap.get("TREE_NAME").toString();
 				int rootNodeNum = Integer.valueOf(rootMap.get("TREE_NODE_NUM").toString());
-				rootNode = rootMap.get("TREE_NODE").toString();
+				String rootNode = rootMap.get("TREE_NODE").toString();
 
 				rootScoreAmount = calculateTreeNodeScore(scoreInsId, treeName, orgId, rootNodeNum, rootNode);
 				BigDecimal rootScore = BigDecimal.valueOf(Double.valueOf(Float.toString(rootScoreAmount)));
 
-				psTzCjxTblKey = new PsTzCjxTblKey();
+				PsTzCjxTblKey psTzCjxTblKey = new PsTzCjxTblKey();
 				psTzCjxTblKey.setTzScoreInsId(scoreInsId);
 				psTzCjxTblKey.setTzScoreItemId(rootNode);
-				psTzCjxTbl = psTzCjxTblMapper.selectByPrimaryKey(psTzCjxTblKey);
+				PsTzCjxTblWithBLOBs psTzCjxTbl = psTzCjxTblMapper.selectByPrimaryKey(psTzCjxTblKey);
 				if (psTzCjxTbl != null) {
 					psTzCjxTbl.setTzScoreNum(rootScore);
 					psTzCjxTblMapper.updateByPrimaryKey(psTzCjxTbl);
@@ -221,96 +205,114 @@ public class TzAutoScreenEngineServiceImpl {
 					psTzCjxTblMapper.insert(psTzCjxTbl);
 				}
 
-				// Map<String, Object> ksScoreMap = new HashMap<String,
-				// Object>();
-				// ksScoreMap.put("appInsId", appInsId);
-				// ksScoreMap.put("scoreNum", rootScoreAmount);
-				// totalScoreList.add(ksScoreMap);
+				Map<String, Object> ksScoreMap = new HashMap<String, Object>();
+				ksScoreMap.put("appInsId", appInsId);
+				ksScoreMap.put("scoreNum", rootScoreAmount);
+				totalScoreList.add(ksScoreMap);
 			}
-
 		}
 
 		/*********************************** 计算排名开始 *************************************/
 		// 计算排名,根据总分倒序排序
-		/*
-		 * Collections.sort(totalScoreList, new Comparator<Object>() {
-		 * 
-		 * @Override public int compare(Object o1, Object o2) { Map<String,
-		 * Object> map1 = (Map<String, Object>) o1; Map<String, Object> map2 =
-		 * (Map<String, Object>) o2;
-		 * 
-		 * float score1 = (float) map1.get("scoreNum"); float score2 = (float)
-		 * map2.get("scoreNum");
-		 * 
-		 * return -(new Float(score1).compareTo(new Float(score2))); } });
-		 * 
-		 * int count = 0; short sortNum = 0; float tmp_score = 0; for
-		 * (Map<String, Object> scoreMap : totalScoreList) { long appInsId =
-		 * Long.valueOf(scoreMap.get("appInsId").toString()); float scoreNum =
-		 * Float.valueOf(scoreMap.get("scoreNum").toString());
-		 * 
-		 * if (count == 0) { sortNum = 1; tmp_score = scoreNum; } else { if
-		 * (scoreNum != tmp_score) { tmp_score = scoreNum; sortNum = (short)
-		 * (count + 1); } } count++;
-		 * 
-		 * PsTzCsKsTblKey psTzCsKsTblKey = new PsTzCsKsTblKey();
-		 * psTzCsKsTblKey.setTzClassId(classId);
-		 * psTzCsKsTblKey.setTzApplyPcId(batchId);
-		 * psTzCsKsTblKey.setTzAppInsId(appInsId); PsTzCsKsTbl psTzCsKsTbl =
-		 * psTzCsKsTblMapper.selectByPrimaryKey(psTzCsKsTblKey); if (psTzCsKsTbl
-		 * != null) { psTzCsKsTbl.setTzKshPspm(sortNum);
-		 * psTzCsKsTblMapper.updateByPrimaryKey(psTzCsKsTbl); } }
-		 */
+		Collections.sort(totalScoreList, new Comparator<Object>() {
+			@Override
+			public int compare(Object o1, Object o2) {
+				Map<String, Object> map1 = (Map<String, Object>) o1;
+				Map<String, Object> map2 = (Map<String, Object>) o2;
+
+				float score1 = (float) map1.get("scoreNum");
+				float score2 = (float) map2.get("scoreNum");
+				
+				return -(new Float(score1).compareTo(new Float(score2)));
+			}
+		});
+
+		int count = 0;
+		short sortNum = 0;
+		float tmp_score = 0;
+		for (Map<String, Object> scoreMap : totalScoreList) {
+			long appInsId = Long.valueOf(scoreMap.get("appInsId").toString());
+			float scoreNum = Float.valueOf(scoreMap.get("scoreNum").toString());
+
+			if (count == 0) {
+				sortNum = 1;
+				tmp_score = scoreNum;
+			} else {
+				if (scoreNum != tmp_score) {
+					tmp_score = scoreNum;
+					sortNum = (short) (count + 1);
+				}
+			}
+			count++;
+
+			PsTzCsKsTblKey psTzCsKsTblKey = new PsTzCsKsTblKey();
+			psTzCsKsTblKey.setTzClassId(classId);
+			psTzCsKsTblKey.setTzApplyPcId(batchId);
+			psTzCsKsTblKey.setTzAppInsId(appInsId);
+			PsTzCsKsTbl psTzCsKsTbl = psTzCsKsTblMapper.selectByPrimaryKey(psTzCsKsTblKey);
+			if (psTzCsKsTbl != null) {
+				psTzCsKsTbl.setTzKshPspm(sortNum);
+				psTzCsKsTblMapper.updateByPrimaryKey(psTzCsKsTbl);
+			}
+		}
 		/*********************************** 计算排名结束 *******************************************/
 
+		String autoLabelSql = tzSQLObject.getSQLText("SQL.TZAutomaticScreenBundle.TzKshAutoLabel");
 		/***************** 循环执行班级下考生标签组标签定义java类---开始 *****************/
-		/*
-		 * String autoLabelSql =
-		 * tzSQLObject.getSQLText("SQL.TZAutomaticScreenBundle.TzKshAutoLabel");
-		 * if (!"".equals(ksbqGroup) && ksbqGroup != null) { List<Map<String,
-		 * Object>> labelList = sqlQuery.queryForList(autoLabelSql, new Object[]
-		 * { orgId, ksbqGroup }); for (Map<String, Object> labelMap : labelList)
-		 * { String labelId = labelMap.get("TZ_BIAOQ_ID").toString(); String
-		 * javaClass = labelMap.get("TZ_BIAOQZ_JAVA") == null ? "" :
-		 * labelMap.get("TZ_BIAOQZ_JAVA").toString();
-		 * 
-		 * if (!"".equals(javaClass) && javaClass != null) { try {
-		 * System.out.println("javaClass:" + javaClass);
-		 * TZAutomaticTagServiceImpl autoTagObj = (TZAutomaticTagServiceImpl)
-		 * ctx.getBean(javaClass); autoTagObj.automaticTagList(classId, batchId,
-		 * labelId); } catch (Exception e2) { e2.printStackTrace(); // throw new
-		 * // TzException("考生自动标签组："+ksbqGroup+",标签ID："+labelId+"定义有误。"+e2.
-		 * getMessage()); logger.logError("考生自动标签组：" + ksbqGroup + ",标签ID：" +
-		 * labelId + "定义有误。" + e2.getMessage()); } } } }
-		 */
+		if (!"".equals(ksbqGroup) && ksbqGroup != null) {
+			List<Map<String, Object>> labelList = sqlQuery.queryForList(autoLabelSql,
+					new Object[] { orgId, ksbqGroup });
+			for (Map<String, Object> labelMap : labelList) {
+				String labelId = labelMap.get("TZ_BIAOQ_ID").toString();
+				String javaClass = labelMap.get("TZ_BIAOQZ_JAVA") == null ? ""
+						: labelMap.get("TZ_BIAOQZ_JAVA").toString();
+
+				if (!"".equals(javaClass) && javaClass != null) {
+					try {
+						System.out.println("javaClass:" + javaClass);
+						TZAutomaticTagServiceImpl autoTagObj = (TZAutomaticTagServiceImpl) ctx.getBean(javaClass);
+						autoTagObj.automaticTagList(classId, batchId, labelId);
+					} catch (Exception e2) {
+						e2.printStackTrace();
+						// throw new
+						// TzException("考生自动标签组："+ksbqGroup+",标签ID："+labelId+"定义有误。"+e2.getMessage());
+						logger.logError("考生自动标签组：" + ksbqGroup + ",标签ID：" + labelId + "定义有误。" + e2.getMessage());
+					}
+				}
+			}
+		}
 		/***************** 循环执行班级下考生标签组标签定义java类---结束 *****************/
 
 		/***************** 循环执行班级下负面清单标签组标签定义java类---开始 *****************/
-		/*
-		 * if (!"".equals(fmqdGroup) && fmqdGroup != null) { // 运行负面清单前根据班级id
-		 * 和批次id 删除负面标签表; String delNegaListsql =
-		 * "DELETE FROM PS_TZ_CS_KSFM_T WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?"
-		 * ; sqlQuery.update(delNegaListsql, new Object[] { classId, batchId });
-		 * List<Map<String, Object>> fmqdList =
-		 * sqlQuery.queryForList(autoLabelSql, new Object[] { orgId, fmqdGroup
-		 * }); for (Map<String, Object> fmqdMap : fmqdList) { String labelId =
-		 * fmqdMap.get("TZ_BIAOQ_ID").toString(); String javaClass =
-		 * fmqdMap.get("TZ_BIAOQZ_JAVA") == null ? "" :
-		 * fmqdMap.get("TZ_BIAOQZ_JAVA").toString();
-		 * 
-		 * if (!"".equals(javaClass) && javaClass != null) { try {
-		 * System.out.println("javaClass:" + javaClass);
-		 * 
-		 * TzNegativeListBundleServiceImpl neGListObj =
-		 * (TzNegativeListBundleServiceImpl) ctx .getBean(javaClass);
-		 * 
-		 * neGListObj.makeNegativeList(classId, batchId, labelId); } catch
-		 * (Exception e3) { System.out.print("e3.toString:" + e3.getMessage());
-		 * e3.printStackTrace(); // throw new //
-		 * TzException("考生负面清单标签组："+ksbqGroup+",标签ID："+labelId+"定义有误。"+e3.
-		 * getMessage()); logger.logError("考生负面清单标签组：" + fmqdGroup + ",标签ID：" +
-		 * labelId + "定义有误。" + e3.getMessage()); } } } }
-		 */
+		if (!"".equals(fmqdGroup) && fmqdGroup != null) {
+			// 运行负面清单前根据班级id 和批次id 删除负面标签表;
+			String delNegaListsql = "DELETE FROM PS_TZ_CS_KSFM_T WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
+			sqlQuery.update(delNegaListsql, new Object[] { classId, batchId });
+			List<Map<String, Object>> fmqdList = sqlQuery.queryForList(autoLabelSql, new Object[] { orgId, fmqdGroup });
+			for (Map<String, Object> fmqdMap : fmqdList) {
+				String labelId = fmqdMap.get("TZ_BIAOQ_ID").toString();
+				String javaClass = fmqdMap.get("TZ_BIAOQZ_JAVA") == null ? ""
+						: fmqdMap.get("TZ_BIAOQZ_JAVA").toString();
+
+				if (!"".equals(javaClass) && javaClass != null) {
+					try {
+						System.out.println("javaClass:" + javaClass);
+
+						TzNegativeListBundleServiceImpl neGListObj = (TzNegativeListBundleServiceImpl) ctx
+								.getBean(javaClass);
+
+						/* TzNegativeListBundleServiceImpl neGListObj = new */
+						neGListObj.makeNegativeList(classId, batchId, labelId);
+					} catch (Exception e3) {
+						System.out.print("e3.toString:" + e3.getMessage());
+						e3.printStackTrace();
+						// throw new
+						// TzException("考生负面清单标签组："+ksbqGroup+",标签ID："+labelId+"定义有误。"+e3.getMessage());
+						logger.logError("考生负面清单标签组：" + fmqdGroup + ",标签ID：" + labelId + "定义有误。" + e3.getMessage());
+					}
+				}
+			}
+		}
 		/***************** 循环执行班级下负面清单标签组标签定义java类---结束 *****************/
 	}
 
