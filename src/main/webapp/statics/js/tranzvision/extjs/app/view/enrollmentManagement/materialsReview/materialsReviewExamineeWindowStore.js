@@ -5,7 +5,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
     autoLoad:false,
     comID: 'TZ_REVIEW_CL_COM',
     pageID: 'TZ_CLPS_ADDKS_STD',
-    tzStoreParams:'',
+    tzStoreParams:'{"cfgSrhId":"TZ_REVIEW_CL_COM.TZ_CLPS_ADDKS_STD.PS_TZ_CLPS_ADDKS_VW","condition":{"TZ_JG_ID-operator": "01","TZ_JG_ID-value": "'+ Ext.tzOrgID+'"}}',
     pageSize:5000,
     proxy: Ext.tzListProxy()
 });
