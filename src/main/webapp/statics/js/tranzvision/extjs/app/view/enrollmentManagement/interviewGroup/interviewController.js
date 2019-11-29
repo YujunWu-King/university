@@ -71,13 +71,16 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.interviewContro
 	   	var classId = form.findField("classID").getValue();
 	   	var batchId = form.findField("batchID").getValue();
 	   	var jugGroupId = form.findField("jugGroupId").getValue();
+//	   	var grids = win.child("tabpanel").child("grid");
+//	   	var groupName = grids.getSelectionModel().getSelection()[0].data.groupName;
+	   	//console.log(groupName);
 
 	   	
 	   	console.log(appInsId);
 	   	console.log(classId);
 	   	console.log(batchId);
 	   	console.log(jugGroupId);
-        
+	   	//console.log(groupName);
         //表单数据
         var formParams = form.getValues();
 

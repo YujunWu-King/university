@@ -496,9 +496,12 @@ ensurepwinfromSave:function(btn){
             //面试组
             var store2 = grid2.getStore();
             var editRecs2 = store2.getModifiedRecords();
+            console.log(grid2);
+            console.log(store2);
+            console.log(editRecs2);
             var tzParamsmsz = '';
             editRecs2.forEach(item => {
-                if (!item.data.mszmj || !item.data.mszsd) {
+                if (!item.data.mszmj) {
                     Ext.MessageBox.alert("提示", "面试组信息不能为空");
                     return false;
                 }

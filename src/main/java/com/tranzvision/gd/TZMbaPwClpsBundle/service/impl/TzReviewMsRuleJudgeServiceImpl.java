@@ -224,6 +224,7 @@ public class TzReviewMsRuleJudgeServiceImpl extends FrameworkImpl {
 			String PCID1 = params.getString("batchId");
 			String MSZID = params.getString("mszId");
 			sqlQuery.update("delete from TZ_INTERVIEW_GROUP WHERE TZ_CLASS_ID = ? AND TZ_APPLY_PC_ID = ? and TZ_GROUP_ID = ?", new Object[]{CLASSID1,PCID1,MSZID});
+			sqlQuery.update("delete from PS_TZ_INTEGROUP_T WHERE TZ_GROUP_ID=?", new Object[] {MSZID});
 			break;
 		default:
 			break;

@@ -22,7 +22,7 @@ Ext.define('KitchenSink.view.automaticScreen.autoScreen.autoScreenStore', {
 		
 		var itemsParams = 'items:'+Ext.JSON.encode(items);
 		
-		this.tzStoreParams = '{'+itemsParams+',"cfgSrhId":"TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.TZ_CS_STU_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "'+ classId+'","TZ_BATCH_ID-operator": "01","TZ_BATCH_ID-value": "'+ batchId+'"}}';
+		this.tzStoreParams = '{'+itemsParams+',"cfgSrhId":"TZ_AUTO_BASE_COM.TZ_AUTO_SCREEN_BS.TZ_CS_STU_BS_V","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "'+ classId+'","TZ_BATCH_ID-operator": "01","TZ_BATCH_ID-value": "'+ batchId+'"}}';
 		
 		this.callParent();	
 	}

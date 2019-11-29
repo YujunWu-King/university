@@ -146,6 +146,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.interviewGroupW
                     },{
                         text: '面试时段',
                         dataIndex: 'space',
+                        hidden: true,
                         minWidth: 250,
                         sortable: false,
                         flex: 1,

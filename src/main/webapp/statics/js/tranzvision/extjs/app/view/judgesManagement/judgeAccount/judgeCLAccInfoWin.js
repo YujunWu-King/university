@@ -151,7 +151,7 @@
 	        			// maxLength: 170,
 	        			name: 'roleName',
 	        			editable: false,
-	        			value:'TZ_CLPS',
+	        			value:'TZ_CLPW',
 	                    triggers: {
 	                        search: {
 	                            cls: 'x-form-search-trigger',

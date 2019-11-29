@@ -588,7 +588,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
                                 width: 200,
                                 hidden: true
                             }, {
-                                text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.msmj", "面试组"),
+                                text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.mszmj", "面试组"),
                                 dataIndex: 'mszmj',
                                 width: 200,
                                 flex: 1,
@@ -599,6 +599,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
                             }, {
                                 text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.mssd", "面试时段"),
                                 dataIndex: 'mszsd',
+                                hidden: true,
                                 width: 200,
                                 flex: 1,
                                 editor: {
