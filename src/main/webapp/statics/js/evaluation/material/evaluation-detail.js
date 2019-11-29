@@ -242,8 +242,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 												if(colIndex==0) {
 													// mask window
 													maskWindow();
-
-													changeExaminee(evaluateObject.baokaoClassID, evaluateObject.baokaoPcID , rec.get('ps_ksh_bmbid'),evaluateObject.applicantInterviewID);
+													changeExaminee(evaluateObject.baokaoClassID, evaluateObject.baokaoPcID , rec.get('ps_ksh_bmbid'),rec.get('ps_msh_id'));
 												}
 											}
 				});
@@ -1244,8 +1243,9 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 
 																		if(jsonObject.comContent.messageCode == 0) {
 
+
 																			//更新本地缓存的考生数据
-																			updateKSJSONData(form.findField("ClassID").getValue(),form.findField("BatchID").getValue(), form.findField("KSH_BMBID").getValue(), '', true);
+																			updateKSJSONData(form.findField("ClassID").getValue(),form.findField("BatchID").getValue(), form.findField("KSH_BMBID").getValue(),form.findField("KSH_MSSQH").getValue(), '', true);
 
 																			//刷新打分区为“下一个”考生
 																			refreshDfAreaFormPanel(jsonObject.comContent);
