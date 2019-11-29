@@ -50,7 +50,7 @@ public class TzMsGroupMangerServiceImpl extends FrameworkImpl {
 		Map<String, Object> data = null;
 
 		//String strReturn = "";
-		//String name = "";
+		String name = "";
 		String check = "";
 		String gropid = "";
 		int sum = 0;
@@ -64,9 +64,11 @@ public class TzMsGroupMangerServiceImpl extends FrameworkImpl {
 		String totole = "select max(TZ_ORDER) from PS_TZ_MSPS_KSH_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=?  and TZ_PS_GR_ID=? and TZ_GROUP_ID = ?";
 		//String is = "select count(1) from PS_TZ_MSPS_KSH_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_APP_INS_ID=? and TZ_GROUP_ID=?";
 		String is = "select count(1) from PS_TZ_MSPS_KSH_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_APP_INS_ID=? and TZ_PS_GR_ID=? and TZ_GROUP_ID = ?";
-		//String updatesql = "update PS_TZ_INTEGROUP_T set TZ_GROUP_NAME=? where TZ_GROUP_ID=?";
+		String updatesql = "update PS_TZ_INTEGROUP_T set TZ_CLPS_GR_ID=? where TZ_GROUP_ID=?";
+		//String sql2 = "INSERT INTO PS_TZ_INTEGROUP_T(TZ_GROUP_ID,TZ_GROUP_NAME,TZ_CLPS_GR_ID,TZ_CLASS_ID,TZ_APPLY_PC_ID) VALUES(?,?,?,?,?)";
 		try {
 			String[] appinsIds = null;
+			boolean count = true;
 			for (int i = 0; i < actData.length; i++) {
 				// 表单内容
 				String strForm = actData[i];
@@ -81,9 +83,14 @@ public class TzMsGroupMangerServiceImpl extends FrameworkImpl {
 
 				data = jacksonUtil.getMap("data");
 				check = data.get("check") == null ? "" : data.get("check").toString();
-				//name = data.get("groupName") == null ? "" : data.get("groupName").toString();
+				name = data.get("groupName") == null ? "" : data.get("groupName").toString();
 				gropid = data.get("groupID").toString();
-				//System.out.println(check);
+			
+				// 关联评委组与面试组关系
+				if(count) {
+					count = false;
+					sqlQuery.update(updatesql, new Object[] { jugGroupId, gropid });
+				}
 				
 				//查询是否有评委
 				queryForList = sqlQuery.queryForList("SELECT A.TZ_PWEI_OPRID, A.TZ_PWEI_GRPID FROM PS_TZ_AQ_YHXX_TBL D INNER JOIN PS_TZ_MSPS_PW_TBL A ON A.TZ_PWEI_OPRID = D.OPRID WHERE A.TZ_PWEI_ZHZT = 'A' AND A.TZ_CLASS_ID = ? AND A.TZ_APPLY_PC_ID = ?", new Object[]{classId,batchId});
@@ -104,7 +111,7 @@ public class TzMsGroupMangerServiceImpl extends FrameworkImpl {
 							})
 							.collect(Collectors.toList());
 				}
-				//sqlQuery.update(updatesql, new Object[] { name, gropid });
+				
 				appinsIds = appinsId.split(",");
 				if (check.equals("true") || check.equals("Y")) {
 				String Oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);

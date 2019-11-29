@@ -447,7 +447,7 @@ public class TzAutomaticScreenForAutoServiceImpl extends FrameworkImpl{
 				String sql = "select count(1) from PS_TZ_FORM_WRK_T A where TZ_CLASS_ID=? and TZ_BATCH_ID=? and exists(select 'x' from PS_TZ_APP_INS_T where TZ_APP_INS_ID=A.TZ_APP_INS_ID and TZ_APP_FORM_STA='U')";
 				int totalNum = sqlQuery.queryForObject(sql, new Object[]{ classId,batchId }, "Integer");
 				//参与初筛人数
-				sql = "select count(1) from PS_TZ_CS_STU_VW where TZ_CLASS_ID=? and TZ_BATCH_ID=?";
+				sql = "select count(1) from PS_TZ_CS_STU_BS_V where TZ_CLASS_ID=? and TZ_BATCH_ID=?";
 				int screenNum = sqlQuery.queryForObject(sql, new Object[]{ classId,batchId }, "Integer");
 				
 				//淘汰比率

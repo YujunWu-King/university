@@ -158,9 +158,10 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.interviewGroupXhWindow', {
                             sortable: false,
                             flex: 1
                         }, {
+                        	text: '报名表编号',
                             dataIndex: 'ins',
                             width: 150,
-                            hidden: true
+                            //hidden: true
                         }, {
                             text: '报名号',
                             dataIndex: 'msh',

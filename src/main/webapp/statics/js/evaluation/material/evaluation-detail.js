@@ -3,7 +3,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	var tmpEvaluateObject = evaluateObject;
 	var tmpClassId = evaluateObject.baokaoClassID;
 	var tmpBatchId = evaluateObject.baokaoPcID;
-	
+	var tmpMshId=evaluateObject.applicantInterviewID;
+
 	/*********************************************************************************
 	生成中间图表区域的Panel ----- BEGIN
 	*********************************************************************************/
@@ -15,17 +16,17 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	{
 		window.fschartPanel = {};
 	}
-	
+
 	function createDfAreaCharts()
 	{
 		var chartArray = [];
-		
+
 		var chart1 = getColumnChartObject();
 		chartArray.push(chart1);
-		
+
 		var chart2 = getLineChartObject();
 		chartArray.push(chart2);
-		
+
 		fschartPanel[tmpBatchId] = Ext.create('Ext.Panel',
 										{
 											title:'评审打分统计信息区',
@@ -45,8 +46,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	生成中间图表区域的Panel ----- END
 	*********************************************************************************/
 
-	
-	
+
+
 	/*********************************************************************************
 	生成左侧考生列表-----BEGIN
 	*********************************************************************************/
@@ -63,7 +64,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		return val;
 	}
 
-	
+
 	/**
 	 * 定义数值型GridCell内容的字体颜色，并改为百分数 %
 	 * @param {Object} val
@@ -77,7 +78,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		return val;
 	}
 
-	
+
 	/**
 	* 功能：在Grid初始化时，设置 姓名 一列的显示样式
 	* 参数：
@@ -85,8 +86,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	function setRealNameClick(value, p, record){
 		return Ext.String.format('<span style=" cursor:pointer; color:blue;" title="单击姓名评审该考生">{0}</span>', value);
 	}
-	
-	
+
+
 	/**
 	* 功能：创建左侧考生列表的Grid Columns Config
 	* 参数：ksjson_data  从服务器获取的考生的相关JSON数据
@@ -94,9 +95,9 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	function genExamineeGridColumnsConfig(ksjson_data){
 
 		var examGridHeader = new Array();
-		
+
 		var GridHeaderJsonData = ksjson_data.ksGridHeader;
-		
+
 		for(var ExamineeGridFldName in GridHeaderJsonData){
 			var columnConfig;
 			if(ExamineeGridFldName=="ps_ksh_xm"){
@@ -108,7 +109,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 						sortable : false,
 						dataIndex: ExamineeGridFldName,
 						renderer : setRealNameClick
-					};	
+					};
 			}else if(ExamineeGridFldName=="ps_ksh_id"){
 					columnConfig =
 					{
@@ -126,15 +127,15 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 						dataIndex: ExamineeGridFldName
 					};
 			}
-			
+
 			examGridHeader.push(columnConfig);
 		}
 
 		return examGridHeader;
-		
+
 	}
-	
-	
+
+
 	/**
 	* 功能：创建左侧考生列表的的GridPanel实例
 	* 参数：ksjson_data  从服务器获取的考生的相关JSON数据
@@ -156,17 +157,17 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		/*获取当前评审批次ID*/
 		var batchId = tmpBatchId;
 		if(classId == null || batchId == null) return;
-		
-		
+
+
 		/*获取评审打分统计信息区对象*/
 		var rfObject1 = window.batchEvaluateMainPageObject[classId+"_"+batchId];
 		if(rfObject1 == null) return;
-		
+
 		dfPageWest_grid_store[tmpBatchId] = rfObject1['items']['items'][2].getStore();
 
-		
+
 		/****此为静态例子 BEGIN ***/
-		/*	
+		/*
 		// 左侧考生列表示例数据
 		var myData = [
 		  //[姓名, 排名, 总分, 面试申请编号, 考生ID, 报名表ID, 报考方向ID]
@@ -193,9 +194,9 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 								],
 								data: myData
 							});
-		 */	
+		 */
 		/****此为静态例子 END ***/
-		
+
 		// create the Grid
 		dfPageWest_grid[tmpBatchId] = Ext.create('Ext.grid.Panel', {
 			hideCollapseTool: true,
@@ -207,25 +208,25 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				stripeRows: true
 			}
 		});
-		
+
 		dfPageWest_grid[tmpBatchId].on({'cellclick':function(gridViewObject,cellHtml,colIndex,dataModel,rowHtml,rowIndex)
 											{
 												/*var rec = dfPageWest_grid_store[tmpBatchId].getAt(rowIndex);
 												var clickColName = rec.self.getFields()[colIndex]['name'];
-												
-												
+
+
 												window.myPageSlider[0].autoScrollHtmlTagId = 'ks_id_' + rec.get('ps_ksh_id');
-												
-												
+
+
 												gridViewObject.getSelectionModel().getSelection()[0].index = rowIndex;
 												autoHighlightRow(window.library_main_evalute_page_ks_grid[tmpClassId+"_"+tmpBatchId],'ps_ksh_bmbid',rec.get('ps_ksh_bmbid'));
 
-												
+
 												if(rec.get(clickColName) == rec.get('ps_ksh_xh'))
 												{
 													// mask window
 													maskWindow();
-													
+
 													changeExaminee(evaluateObject.baokaoPcID , rec.get('ps_ksh_bmbid'));
 												}*/
 
@@ -242,26 +243,26 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 													// mask window
 													maskWindow();
 
-													changeExaminee(evaluateObject.baokaoClassID, evaluateObject.baokaoPcID , rec.get('ps_ksh_bmbid'));
+													changeExaminee(evaluateObject.baokaoClassID, evaluateObject.baokaoPcID , rec.get('ps_ksh_bmbid'),evaluateObject.applicantInterviewID);
 												}
 											}
 				});
-		
+
 	}
 
-	
+
 	/**
 	* 点击考生操作按钮后，在CenterPanel和EastPanel中加载该考生的信息
 	*/
-	function changeExaminee(ClassID, BatchID, KSH_BMBID){
-		getKSJSONData(ClassID, BatchID, KSH_BMBID, 'update');
+	function changeExaminee(ClassID, BatchID, KSH_BMBID,MSH_ID){
+		getKSJSONData(ClassID, BatchID, KSH_BMBID,MSH_ID,'update');
 	}
 	/*********************************************************************************
 	生成左侧考生列表-----END
 	*********************************************************************************/
-	
-	
-	
+
+
+
 	/*********************************************************************************************
 	生成与该考生相关的 信息通知Panel、打分总体说明区Panel、基本信息Panel 三个HTML内容区域 ----- BEGIN
 	*********************************************************************************************/
@@ -320,7 +321,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	{
 		window.evaluatePanel = {};
 	}
-	
+
 	function autoAdjustHeight()
 	{
 		var myTotalHeight = 0;
@@ -329,27 +330,27 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		{
 			dfAreaPanel[tmpBatchId].setHeight(dfArea_Height[tmpBatchId]);
 			myTotalHeight = dfArea_Height[tmpBatchId] ;
-			
+
 			if(myTotalHeight + 80 <= 480)
 			{
 				myTotalHeight = 480;
 			}
-			
+
 			window.evaluatePanel[tmpBatchId].setHeight(myTotalHeight + 80);
 			window.evaluatePanel[tmpBatchId].doLayout();
-			
+
 			window.myPageSlider[0].adjustHeight();
 		}
 	}
-	
-	
+
+
 	/**
 	* 功能：创建考生HTML相关信息的Panel
 	* 参数：从服务器获取的考生的相关JSON数据
 	*/
 	function createKSInfoPanel(ksinfoJSON){
 		var show_ksinfohtml=genKSInfoHTML(ksinfoJSON);
-		
+
 		ksInfoPanel[tmpBatchId] = Ext.create('Ext.panel.Panel', {
 			title: '基本信息',
 			collapsible: true,
@@ -366,17 +367,17 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		//ksInfoPanel[tmpBatchId].on({expand:function(){autoAdjustHeight();},collapse:function(){autoAdjustHeight();}});
 	}
 
-	
+
 	/**
 	* 功能：创建基本信息区域的HTML代码
 	* 参数：从服务器获取的考生的相关JSON数据
 	*/
 	function genKSInfoHTML(ksinfoJSON){
 		var rtn_ksinfohtml = '<table border="0" width="100%" height="100%" style="font-size:12px;">';
-		
+
 		if(ksinfoJSON.interviewApplyId=="undefined") ksinfoJSON.interviewApplyId = "";
 		if(ksinfoJSON.name=="undefined") ksinfoJSON.name = "";
-		
+
 		var tzParamsBmbUrl='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+ksinfoJSON.bmbId+'","TZ_APP_TPL_ID":"'+ksinfoJSON.clpsBmbTplId+'","isReview":"Y"}}';
 		var bmb_url = ContextPath + "/dispatcher" + "?tzParams=" + encodeURIComponent(tzParamsBmbUrl);
 		var three_btn_html = '<a href="'+bmb_url+'" target="_blank" title="打开在线报名表">新开窗口查看考生材料</a>';
@@ -387,15 +388,15 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		}
 		//【初筛淘汰】&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;【校友推荐】&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;【自主创业】
 		rtn_ksinfohtml += '</table>';
-		
+
 		return rtn_ksinfohtml;
 	}
 	/*********************************************************************************************
 	生成与该考生相关的 信息通知Panel、打分总体说明区Panel、基本信息Panel 三个HTML内容区域 ----- END
 	*********************************************************************************************/
-	
-	
-	
+
+
+
 	/*********************************************************************************
 	调用JSON数据，动态生成打分区 ----- BEGIN
 	*********************************************************************************/
@@ -494,8 +495,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	{
 		window.allLeavesNodeDataCkzl[tmpBatchId] = new Array();
 	}
-	
-	
+
+
 	/**
 	* 功能：创建非叶子节点的实例对象
 	* 参数：
@@ -513,7 +514,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		if(field_level==1 && field_value != "--"){
 			field_value = '<span style="color:red;font-weight:bold;">' + field_value + '</span>'; //若是第一项“总分”，则加粗
 		}
-		
+
 		var parentFieldContainer = new Ext.form.FieldContainer({
 				fieldLabel		: '<span style="padding-left: '+ pdl_value +'px;font-weight:bold;">'+ field_label +'</span>',
 				combineErrors	: false,
@@ -533,13 +534,13 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 										}
 								  }]
 		});
-		
-									
+
+
 		allDfAreaFormPanelFieldContainer_config[tmpBatchId].push(parentFieldContainer);
 		dfArea_Height[tmpBatchId] = dfArea_Height[tmpBatchId] + thisFieldContainerHeight;
 	}
-	
-	
+
+
 	/**
 	* 功能：创建（打分）叶子节点的实例对象，生成 标准说明、参考问题、参考资料 的TIP数组
 	* 参数：
@@ -562,9 +563,9 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		var pointckwt_id = "pointckwt_"+ field_name + tmpBatchId;  //参考问题的ID
 		var pointckzl_id = "pointckzl_"+ field_name + tmpBatchId;  //参考资料的ID
 		var thisFieldContainerHeight = 30;
-		
+
 		if(field_value==""){
-			if(point_begin<0) 
+			if(point_begin<0)
 				field_value = 0;
 			else
 				field_value = point_begin;
@@ -623,7 +624,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				width		: 100
 			}
 		}
-		
+
 		var leafPointFieldContainer = new Ext.form.FieldContainer({
 				fieldLabel		: '<span style="padding-left: '+ pdl_value +'px">'+ field_label +'</span>',
 				combineErrors	: false,
@@ -663,13 +664,13 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 								  ]
 
 		});
-		
+
 		allDfAreaFormPanelFieldContainer_config[tmpBatchId].push(leafPointFieldContainer);
 		createLeafTipsConfig(pointbzsm_id,pointckwt_id,pointckzl_id,bzsm_content,ckwt_content,ckzl_content,score_model,bmb_id,field_name);
 		dfArea_Height[tmpBatchId] = dfArea_Height[tmpBatchId] + thisFieldContainerHeight;
 	}
 
-	
+
 	/**
 	* 功能：创建（文本类）叶子节点的实例对象，生成 标准说明、参考问题 的TIP数组
 	* 参数：
@@ -692,7 +693,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		var pointckzl_id = "pointckzl_"+ field_name + tmpBatchId;  //参考资料的ID
 		var thisFieldContainerHeight = 84;
 		field_value = field_value.replace('\\n',"\n");
-		
+
 		//根据评语字数下限，判断该字段是否必填
 		var leafC_allowBlank = true;
 		var leafC_maxLength = field_pyzs_sx;
@@ -754,7 +755,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				width		: 100
 			}
 		}
-		
+
 		var leafCommentFieldContainer = new Ext.form.FieldContainer({
 				fieldLabel		: '<span style="padding-left: '+ pdl_value +'px">'+ field_label +'</span>',
 				combineErrors	: false,
@@ -782,13 +783,13 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 								  ]
 
 		});
-		
+
 		allDfAreaFormPanelFieldContainer_config[tmpBatchId].push(leafCommentFieldContainer);
 		createLeafTipsConfig(pointbzsm_id,pointckwt_id,pointckzl_id,bzsm_content,ckwt_content,ckzl_content,score_model,bmb_id,field_name);
 		dfArea_Height[tmpBatchId] = dfArea_Height[tmpBatchId] + thisFieldContainerHeight;
 	}
-	
-	
+
+
 	/**
 	* 功能：创建（下拉框类）叶子节点的实例对象，生成 标准说明、参考问题 的TIP数组
 	* 参数：
@@ -809,7 +810,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		var pointckwt_id = "pointckwt_"+ field_name + tmpBatchId;  //参考问题的ID
 		var pointckzl_id = "pointckzl_"+ field_name + tmpBatchId;  //参考资料的ID
 		var thisFieldContainerHeight = 40;
-		
+
 		var store = Ext.create("Ext.data.Store",{
 			fields:['itemOptionId','itemOptionName'],
 			data:field_options
@@ -868,7 +869,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				width		: 100
 			}
 		}
-		
+
 		var leafDropdownFieldContainer = new Ext.form.FieldContainer({
 			fieldLabel		: '<span style="padding-left: '+ pdl_value +'px">'+ field_label +'</span>',
 			combineErrors	: false,
@@ -892,13 +893,13 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				width		: 250
 			}, bzsmItem, ckwtItem, ckzlItem]
 		});
-		
+
 		allDfAreaFormPanelFieldContainer_config[tmpBatchId].push(leafDropdownFieldContainer);
 		createLeafTipsConfig(pointbzsm_id,pointckwt_id,pointckzl_id,bzsm_content,ckwt_content,ckzl_content,score_model,bmb_id,field_name);
 		dfArea_Height[tmpBatchId] = dfArea_Height[tmpBatchId] + thisFieldContainerHeight;
 	}
-	
-	
+
+
 	/**
 	* 功能：生成 标准说明、参考问题 的TIP数组
 	* 参数：
@@ -926,16 +927,17 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			allLeavesNodeDataCkzl[tmpBatchId].push(ary3);
 		}
 	}
-	
-	
+
+
 	/**
 	* 功能：生成打分区域表单"隐藏域"
 	* 参数：
 	*		ClassIDval		班级编号
 	*		BatchIDval		批次编号
-	*		KSH_BMBIDval	考生报名表编号
+	*		KSH_BMBIDval	考生报名表编号*
+	 *	    KSH_MSSQHval	考生面试号
 	*/
-	function createDfAreaHiddenField(ClassIDval, BatchIDval, KSH_BMBIDval){
+	function createDfAreaHiddenField(ClassIDval, BatchIDval, KSH_BMBIDval,KSH_MSSQHval){
 		var thisFieldContainerHeight = 10;
 		var dfArea_HiddenField = new Ext.form.FieldContainer({
 											fieldLabel		: '',
@@ -967,15 +969,20 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 																	xtype	: 'hiddenfield',
 																	name	: 'KSH_BMBID',
 																	value	: KSH_BMBIDval
+																},
+																{
+																	xtype	: 'hiddenfield',
+																	name	: 'KSH_MSSQH',
+																	value	: KSH_MSSQHval
 																}
 															]
 											});
-		
+
 		allDfAreaFormPanelFieldContainer_config[tmpBatchId].push(dfArea_HiddenField);
 		dfArea_Height[tmpBatchId] = dfArea_Height[tmpBatchId] + thisFieldContainerHeight;
 	}
-	
-	
+
+
 	/**
 	* 生成“计算总分”按钮
 	*/
@@ -997,24 +1004,24 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 														clientValidation: false,
 														url: dfArea_Submit_URL,
 														success: function(form, action) {
-															
+
 															try{
-															
+
 																if(action.result.error_code=="0"){
 																	//Ext.Msg.alert('Success', "计算完成！");
 																	//刷新打分区
 																	refreshDfAreaFormPanel(action.result);
-																	
+
 																	//刷新当前考生在本地的缓存数据
 																	updateKSJSONData(form.findField("BaokaoFXID").getValue(), form.findField("KSH_BMBID").getValue(), action.result, false);
 																	//更新全局缓存，进行局部刷新
 																	getPartBatchDataByBatchId(evaluateObject.baokaoDirectionID,null,{applicantBaomingbiaoID:form.findField("KSH_BMBID").getValue()},'RFH');
-																	
+
 																}else{
 																	Ext.Msg.alert('失败', action.result.error_decription);
-																	
+
 																}
-															
+
 															}
 															catch(e1){
 																alert('计算考生 [' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')]总分时发生错误，请与系统管理员联系：错误的JSON数据[' + e1 + ']');
@@ -1036,15 +1043,15 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 												}
 
 											}
-										
+
 									});
-									
+
 		allDfAreaFormPanelFieldContainer_config[tmpBatchId].push(calbtn);
 		dfArea_Height[tmpBatchId] = dfArea_Height[tmpBatchId] + thisFieldContainerHeight;
 	}
 	*/
-	
-	
+
+
 	/**
 	* 生成底部其他按钮
 	*/
@@ -1064,19 +1071,19 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 												if(dfAreaPanel[tmpBatchId].getForm().isValid()){
 													// mask window
 													maskWindow();
-													
+
 													var form = dfAreaPanel[tmpBatchId].getForm();
-													
+
 													form.findField("OperationType").setValue("SBM");
 
 													try{
-														
+
 														var formParams = form.getValues();
 														var formJson = Ext.JSON.encode(formParams);
-														
+
 														var comParams = "";
 														comParams = '"update":['+formJson+']';
-														
+
 														var tzParams = '{"ComID":"TZ_EVA_MATERIAL_COM","PageID":"TZ_CLPS_DF_STD","OperateType":"U","comParams":{'+comParams+'}}';
 
 														Ext.Ajax.request({
@@ -1095,7 +1102,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 																		refreshDfAreaFormPanel(jsonObject.comContent);
 
 																		//刷新当前考生在本地的缓存数据
-																		updateKSJSONData(form.findField("ClassID").getValue(), form.findField("BatchID").getValue(), form.findField("KSH_BMBID").getValue(), jsonObject.comContent, false);
+																		updateKSJSONData(form.findField("ClassID").getValue(), form.findField("BatchID").getValue(), form.findField("KSH_BMBID").getValue(),form.findField("KSH_MSSQH").getValue() ,jsonObject.comContent, false);
 																		//更新全局缓存，进行局部刷新
 																		getPartBatchDataByBatchId(evaluateObject.baokaoClassID+"_"+evaluateObject.baokaoPcID, null, {applicantBaomingbiaoID: form.findField("KSH_BMBID").getValue()}, 'SAV');
 
@@ -1119,56 +1126,56 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 																}
 															}
 														});
-														
+
 													/* Normally we would submit the form to the server here and handle the response... */
 													/*
 													form.submit({
 														clientValidation: false,
 														url: dfArea_Submit_URL,
 														success: function(form, action) {
-															
+
 															try{
-															
+
 																if(action.result.error_code=="0"){
-																	
+
 																	//刷新打分区
 																	refreshDfAreaFormPanel(action.result);
-																   
+
 																	//刷新当前考生在本地的缓存数据
 																	updateKSJSONData(form.findField("BaokaoFXID").getValue(), form.findField("KSH_BMBID").getValue(), action.result, false);
 																	//更新全局缓存，进行局部刷新
 																	getPartBatchDataByBatchId(evaluateObject.baokaoDirectionID,null,{applicantBaomingbiaoID:form.findField("KSH_BMBID").getValue()},'RFH');
-																	
+
 																	//若返回报文中有提示信息，则显示该提示信息，否则显示“提交成功！”
 																	if($.trim(action.result.error_decription)!=""){
 																		Ext.Msg.alert('提示', action.result.error_decription);
 																	}else{
 																		// unmask window
 																		unmaskWindow();
-															
+
 																		Ext.Msg.alert('提示', "保存成功！");
 																	}
-																	
+
 																}else{
 																	// unmask window
 																	unmaskWindow();
-																	
+
 																	Ext.Msg.alert('失败', action.result.error_decription);
 																}
-															
+
 															}
 															catch(e1){
 																// unmask window
 																unmaskWindow();
-																
+
 																alert('保存考生 [' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')] 数据时发生错误，请与系统管理员联系：错误的JSON数据[' + e1 + ']');
 															}
-														   
+
 														},
 														failure: function(form, action) {
 															// unmask window
 															unmaskWindow();
-																	
+
 															switch (action.failureType) {
 																case Ext.form.action.Action.CLIENT_INVALID:
 																	Ext.Msg.alert('Failure', 'Form fields may not be submitted with invalid values');
@@ -1190,10 +1197,10 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 														var msg = '保存考生 [' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')] 数据时发生错误，请与系统管理员联系。';
 														Ext.Msg.alert('提示', msg);
 													}
-													
+
 												}
 											}
-									
+
 								}),
 								new Ext.button.Button({
 									formBind: true,
@@ -1203,24 +1210,24 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 									margin	: 10,
 									handler : function() {
 												if(dfAreaPanel[tmpBatchId].getForm().isValid()){
-													
+
 													// mask window
 													maskWindow();
-													
+
 													var form = dfAreaPanel[tmpBatchId].getForm();
-													
+
 													form.findField("OperationType").setValue("SGN");
 
 													try{
-														
+
 														var formParams = form.getValues();
 														var formJson = Ext.JSON.encode(formParams);
-														
+
 														var comParams = "";
 														comParams = '"update":['+formJson+']';
-														
+
 														var tzParams = '{"ComID":"TZ_EVA_MATERIAL_COM","PageID":"TZ_CLPS_DF_STD","OperateType":"U","comParams":{'+comParams+'}}';
-														
+
 														Ext.Ajax.request({
 															url : dfArea_Submit_URL,
 									                        params : {tzParams:tzParams},
@@ -1247,14 +1254,14 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 																			refreshDfHTMLPanel(jsonObject.comContent);
 
 																			//将该“下一个”考生的数据到本地
-																			updateKSJSONData(form.findField("ClassID").getValue(),form.findField("BatchID").getValue(), form.findField("KSH_BMBID").getValue(), jsonObject.comContent, false);
+																			updateKSJSONData(form.findField("ClassID").getValue(),form.findField("BatchID").getValue(), form.findField("KSH_BMBID").getValue(),form.findField("KSH_MSSQH").getValue(), jsonObject.comContent, false);
 
 																			//更新全局缓存，进行局部刷新
 																			getPartBatchDataByBatchId(evaluateObject.baokaoClassID+"_"+evaluateObject.baokaoPcID,null,{applicantBaomingbiaoID:form.findField("KSH_BMBID").getValue()},'RFH');
 
 																			//调整浮动窗口位置---zhanglang
 																			TZShowTipsWin.autoFixPosition();
-																			
+
 																			// unmask window
 																			unmaskWindow();
 
@@ -1265,13 +1272,13 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 																			refreshDfAreaFormPanel(jsonObject.comContent);
 
 																			//刷新当前考生在本地的缓存数据
-																			updateKSJSONData(form.findField("ClassID").getValue(), form.findField("BatchID").getValue(), form.findField("KSH_BMBID").getValue(), jsonObject.comContent, false);
+																			updateKSJSONData(form.findField("ClassID").getValue(), form.findField("BatchID").getValue(), form.findField("KSH_BMBID").getValue(), form.findField("KSH_MSSQH").getValue(),jsonObject.comContent, false);
 																			//更新全局缓存，进行局部刷新
 																			getPartBatchDataByBatchId(evaluateObject.baokaoClassID+"_"+evaluateObject.baokaoPcID,null,{applicantBaomingbiaoID:form.findField("KSH_BMBID").getValue()},'FAL');
-																			
+
 																			//调整浮动窗口位置---zhanglang
 																			TZShowTipsWin.autoFixPosition();
-																			
+
 																			unmaskWindow();
 
 																			Ext.Msg.alert('失败',jsonObject.comContent.message);
@@ -1282,7 +1289,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 																		/*
 																		//刷新打分区
 																		refreshDfAreaFormPanel(jsonObject.comContent);
-																	   
+
 																		//刷新当前考生在本地的缓存数据
 																		updateKSJSONData(form.findField("ClassID").getValue(), form.findField("BatchID").getValue(), form.findField("KSH_BMBID").getValue(), jsonObject.comContent, false);
 																		//更新全局缓存，进行局部刷新
@@ -1298,56 +1305,56 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 									                            catch(e1){
 																	// unmask window
 																	unmaskWindow();
-																	
+
 																	var msg = '保存考生 [' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')] 数据，并获取下一个考生时发生错误，请与系统管理员联系：错误的JSON数据[' + e1 + ']';
 																	Ext.Msg.alert('提示', msg);
 																}
 									                        }
 														});
-														
+
 													/* Normally we would submit the form to the server here and handle the response... */
 														/*
 													form.submit({
 														clientValidation: false,
 														url: dfArea_Submit_URL,
 														success: function(form, action) {
-													    	
+
 															try{
-															
+
 																if(action.result.error_code=="0"){
-																	
+
 																	//更新本地缓存的考生数据
 																   updateKSJSONData(form.findField("BaokaoFXID").getValue(), form.findField("KSH_BMBID").getValue(), '', true);
-																   
+
 																   //刷新打分区为“下一个”考生
 																   refreshDfAreaFormPanel(action.result);
-																   
+
 																   //刷新其他的HTML文本区域
 																   refreshDfHTMLPanel(action.result);
-																   
+
 																   //将该“下一个”考生的数据到本地
 																   updateKSJSONData(form.findField("BaokaoFXID").getValue(), form.findField("KSH_BMBID").getValue(), action.result, false);
-																   
+
 																   //更新全局缓存，进行局部刷新
 																	getPartBatchDataByBatchId(evaluateObject.baokaoDirectionID,null,{applicantBaomingbiaoID:form.findField("KSH_BMBID").getValue()},'RFH');
-															   
+
 															   		//若返回报文中有提示信息，则显示该提示信息，否则显示"提交成功！"
 																	if($.trim(action.result.error_decription)!=""){
 																		Ext.Msg.alert('提示', action.result.error_decription + "<br />请给下一个考生打分！");
 																	}else{
 																		// unmask window
 																		unmaskWindow();
-																	    
+
 																		Ext.Msg.alert('提示', "保存成功！请给下一个考生打分！");
 																	}
-																	
+
 																}else{
-																	
+
 																	// unmask window
-																	
+
 																	//刷新打分区
 																	refreshDfAreaFormPanel(action.result);
-																   
+
 																	//刷新当前考生在本地的缓存数据
 																	updateKSJSONData(form.findField("BaokaoFXID").getValue(), form.findField("KSH_BMBID").getValue(), action.result, false);
 																	//更新全局缓存，进行局部刷新
@@ -1355,19 +1362,19 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 																	unmaskWindow();
 																	Ext.Msg.alert('失败', action.result.error_decription);
 																}
-														   
+
 															}
 															catch(e1){
 																// unmask window
 																unmaskWindow();
-																
+
 																alert('保存考生 [' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')] 数据，并获取下一个考生时发生错误，请与系统管理员联系：错误的JSON数据[' + e1 + ']');
 															}
 														},
 														failure: function(form, action) {
 															// unmask window
 															unmaskWindow();
-													
+
 															switch (action.failureType) {
 																case Ext.form.action.Action.CLIENT_INVALID:
 																	Ext.Msg.alert('Failure', 'Form fields may not be submitted with invalid values');
@@ -1385,7 +1392,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 													catch(eformsubmit){
 														// unmask window
 														unmaskWindow();
-															
+
 														var msg = '保存考生 [' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')] 数据，并获取下一个考生时发生错误，请与系统管理员联系：' + eformsubmit ;
 														Ext.Msg.alert('提示', msg);
 													}
@@ -1404,15 +1411,15 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 													}
 												});
 											}
-									
+
 								})
-					]};				
+					]};
 
 		allDfAreaFormPanelFieldContainer_config[tmpBatchId] = allDfAreaFormPanelFieldContainer_config[tmpBatchId].concat(allBtn);
 		dfArea_Height[tmpBatchId] = dfArea_Height[tmpBatchId] + thisFieldContainerHeight;
 	}
-	
-	
+
+
 	/**
 	* 功能：创建考生个人信息、报名表下载、报名表新开窗口浏览、考生动态信息TIPS 的FieldContainer
 	* 参数：
@@ -1420,12 +1427,12 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	*/
 	function createKSinfoFieldContainer(ksinfoJSON){
 		var thisFieldContainerHeight = 0;
-		
+
 		var field_name = "ksinfo_" + tmpBatchId;
-		
+
 		//生成考生基本信息的HTML内容
 		var show_ksinfohtml = genKSInfoHTML(userpoints);
-		
+
 		/*var parentFieldContainer = new Ext.form.FieldContainer({
 											//fieldLabel		: '',
 											//hideLabel		: true,
@@ -1448,9 +1455,9 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 
 		allDfAreaFormPanelFieldContainer_config[tmpBatchId].push(parentFieldContainer);
 		dfArea_Height[tmpBatchId] = dfArea_Height[tmpBatchId] + thisFieldContainerHeight + 50;
-	} 
+	}
 
-	
+
 	/**
 	* 生成打分区域的Panel
 	*/
@@ -1461,7 +1468,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	function createDfAreaFormPanel(doAddFieldContainer){
 		var FieldContainerData = new Array();
 		if(doAddFieldContainer) FieldContainerData = allDfAreaFormPanelFieldContainer_config[tmpBatchId];
-		
+
 		dfArea_Height[tmpBatchId] = dfArea_Height[tmpBatchId] + 103;
 		dfAreaPanel[tmpBatchId] = Ext.create("Ext.FormPanel",{
 						//title		: '打分区',
@@ -1471,12 +1478,12 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 						overflowY	: 'auto',
 						margins		: '5 0 5 5',
 						bodyPadding	: 10,
-						width		: 992, 
+						width		: 992,
 						//minHeight	: 300,
 						height		: dfArea_Height[tmpBatchId],
 						layout		: 'form',
 						items		: FieldContainerData
-					});	
+					});
 		dfAreaPanel[tmpBatchId].on({
 			expand:function(){
 				autoAdjustHeight();
@@ -1486,7 +1493,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				autoAdjustHeight();
 			}
 		});
-					
+
 	}
 
 
@@ -1496,9 +1503,9 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	* 返回： 新生成的树节点的FieldContainer对象
 	*/
 	function createTreeNodeContainer(node_data,bmb_id){
-		
+
 		var newFormField;
-		
+
 		if(node_data.itemType=="C"){ //是否评语类型的数据
 			newFormField = createLeafCommentFieldContainer(node_data.itemName, node_data.itemLevel, node_data.itemComment, node_data.itemId, node_data.itemDfsm, node_data.itemCkwt,node_data.itemCkzl, node_data.itemCommentUpperLimit, node_data.itemCommentLowerLimit,node_data.scoreModelId,bmb_id);
 		}else{
@@ -1507,35 +1514,35 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			} else {
 				//生成非叶子节点
 				if(node_data.itemIsLeaf=="N"){
-					newFormField = createParentFieldContainer(node_data.itemName, node_data.itemLevel, node_data.itemValue, node_data.itemId, node_data.itemParentId);	
+					newFormField = createParentFieldContainer(node_data.itemName, node_data.itemLevel, node_data.itemValue, node_data.itemId, node_data.itemParentId);
 				} else {
 					//生成叶子节点
 					newFormField = createLeafPointFieldContainer(node_data.itemName, node_data.itemLevel, node_data.itemValue, node_data.itemId, node_data.itemLowerLimit, node_data.itemUpperLimit, node_data.itemDfsm,node_data.itemCkwt,node_data.itemCkzl, node_data.itemParentId,node_data.scoreModelId,bmb_id);
 				}
 			}
 		}
-				
+
 		return newFormField;
 	}
 
-	
+
 	/**
 	* 功能： 刷新打分区域的值
 	* 参数： 新的JSON数据
 	*/
-	function refreshDfAreaFormPanel(DfArea_NewJSON){	
+	function refreshDfAreaFormPanel(DfArea_NewJSON){
 
-		if (Ext.isIE) { 
+		if (Ext.isIE) {
 			//IE浏览器的刷新方法
 			refreshDfAreaInIE(DfArea_NewJSON);
-		}else{	
+		}else{
 			//其他非IE浏览器
 			//refreshDfAreaInOthers(DfArea_NewJSON);
 			refreshDfAreaInIE(DfArea_NewJSON); // 使用IE的刷新方式也可
 		}
 	}
 
-	
+
 	/**
 	* 功能： 刷新打分区域的值，非IE类浏览器
 	* 参数： 新的JSON数据
@@ -1552,14 +1559,14 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		//销毁TIPs
 		Ext.destroy(dfArea_gzsm_ckwt_extObj[tmpBatchId]);
 		dfArea_gzsm_ckwt_extObj[tmpBatchId] = new Array();
-		
+
 		dfAreaPanel[tmpBatchId].doLayout();
 
 		//重新生成打分区域的各个元素
 		var item_data = DfArea_NewJSON.ps_dfq_content;
 		//生成计算总分按钮
 		//createCalbuttonConfig();
-		
+
 		for(var item_i=0;item_i<item_data.length;item_i++){
 			var node_data = item_data[item_i];
 			var newFormField = createTreeNodeContainer(node_data);
@@ -1577,14 +1584,14 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		dfArea_Height[tmpBatchId] = dfArea_Height[tmpBatchId] + 108;
 		dfAreaPanel[tmpBatchId].setHeight(dfArea_Height[tmpBatchId]);
 		//使修改立即生效
-		dfAreaPanel[tmpBatchId].doLayout();	
-		
+		dfAreaPanel[tmpBatchId].doLayout();
+
 		//重新生成TIPs
 		Ext.each(dfArea_gzsm_ckwt_config[tmpBatchId], function(config) {
 			dfArea_gzsm_ckwt_extObj[tmpBatchId].push(Ext.create('Ext.tip.ToolTip', config));
 		});
-		
-		//------ highlight the selected row 
+
+		//------ highlight the selected row
 		var library_main_evalute_page_ks_grid_idx = window.library_main_evalute_page_ks_grid[tmpBatchId].getSelectionModel().getSelection();
 		if(library_main_evalute_page_ks_grid_idx != null && library_main_evalute_page_ks_grid_idx != 'undefined')
 		{
@@ -1593,11 +1600,11 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				autoHighlightRow(dfPageWest_grid[tmpBatchId],'ps_ksh_bmbid',library_main_evalute_page_ks_grid_idx[0].get('ps_ksh_bmbid'));
 			}
 		}
-		
+
 	}
 	*/
 
-	
+
 	/**
 	* 功能： 刷新打分区域的值，IE类浏览器
 	* 参数： 新的JSON数据
@@ -1625,7 +1632,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		//重新生成打分区域的各个元素
 		var item_data = DfArea_NewJSON.scoreContent;
 		var nowForm = dfAreaPanel[tmpBatchId].getForm();
-		
+
 		for(var item_i=0;item_i<item_data.length;item_i++){
 
 			var node_data = item_data[item_i];
@@ -1633,7 +1640,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			if(nowFormField!=null){ //判断是否存在该字段，若存在则更新数值
 				var setTreeNodeValue = $.trim(node_data.itemValue);
 				if(node_data.itemIsLeaf=="N"){
-					
+
 					if(setTreeNodeValue==""){
 						setTreeNodeValue="--";
 					}else{
@@ -1641,7 +1648,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 							setTreeNodeValue = '<span style="color:red;font-weight:bold;">' + setTreeNodeValue + '</span>';
 						}
 					}
-					
+
 				}
 				else if(node_data.itemType=="B"){
 					//数字成绩录入项
@@ -1651,7 +1658,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 						else
 							setTreeNodeValue=node_data.itemLowerLimit;
 					}
-					
+
 				}else if(node_data.itemType=="C"){
 					//评语类型
 					setTreeNodeValue = $.trim(node_data.itemComment);
@@ -1677,8 +1684,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 					var ary3 = new Array(pointckzl_id, ckzl_content, "参考资料");
 					allLeavesNodeDataCkzl[tmpBatchId].push(ary3);
 				}
-				
-			}else{ //若不存在，则创建一个新的字段	
+
+			}else{ //若不存在，则创建一个新的字段
 				var newFormField = createTreeNodeContainer(node_data,DfArea_NewJSON.bmbId);
 			}
 		}
@@ -1690,15 +1697,15 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			//createQTips(dfarea_leaftips_data_ckzl);
 			tzCreateTips(dfarea_leaftips_data_ckzl);
 		}
-		
+
 		//更新隐藏域中的值
 		nowForm.findField("LanguageCd").setValue("ZHS");
 		nowForm.findField("OperationType").setValue("");
 		nowForm.findField("ClassID").setValue(DfArea_NewJSON.classId);
 		nowForm.findField("BatchID").setValue(DfArea_NewJSON.applyBatchId);
 		nowForm.findField("KSH_BMBID").setValue(DfArea_NewJSON.bmbId);
-		
-		
+
+
 		//重新生成TIPs
 		Ext.each(dfArea_gzsm_ckwt_config[tmpBatchId], function(config) {
 			dfArea_gzsm_ckwt_extObj[tmpBatchId].push(Ext.create('Ext.tip.ToolTip', config));
@@ -1706,7 +1713,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 
 		//将更新父节点值得标识位改为Y
 		doChangeFieldValue[tmpBatchId]="Y";
-		
+
 		var library_main_evalute_page_ks_grid_idx = window.library_main_evalute_page_ks_grid[tmpClassId+"_"+tmpBatchId].getSelectionModel().getSelection();
 
 		if(library_main_evalute_page_ks_grid_idx != null && library_main_evalute_page_ks_grid_idx != 'undefined')
@@ -1716,10 +1723,10 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				autoHighlightRow(dfPageWest_grid[tmpBatchId],'ps_ksh_bmbid',library_main_evalute_page_ks_grid_idx[0].get('ps_ksh_bmbid'));
 			}
 		}
-		
+
 	}
-	
-	
+
+
 	/**
 	* 功能： 刷新打分区与考生相关的HTMl内容区域，包括刷新右侧报名表
 	* 参数： userpoints  从服务器端获取的JSON数据
@@ -1729,13 +1736,13 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		//更新基本信息
 		var show_ksinfohtml=genKSInfoHTML(userpoints);
 		$("#show_ksinfo_div_"+tmpBatchId).html(show_ksinfohtml);
-		
+
 		//更新报名表
 		//每个考生一个IFRAME
 		var tmpBatchIdBMBID = tmpBatchId + '_' + userpoints.bmbId;
 		var tzParamsBmbUrl='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+userpoints.bmbId+'","TZ_APP_TPL_ID":"'+userpoints.clpsBmbTplId+'","isReview":"Y"}}';
 		var bmb_url = ContextPath + "/dispatcher" + "?tzParams=" + encodeURIComponent(tzParamsBmbUrl);
-		
+
 		if($('#bmb_iframe_'+tmpBatchIdBMBID)[0]!=null && $('#bmb_iframe_'+tmpBatchIdBMBID)[0]!="undefined"){
 			$("#bmb_iframe_div_"+tmpBatchId+" iframe").hide();
 			$('#bmb_iframe_'+tmpBatchIdBMBID).show();
@@ -1745,7 +1752,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		}
 	}
 
-	
+
 	/**
 	* 功能： 生成打分区域的panel实例
 	* 参数： userpoints  从服务器端获取的JSON数据
@@ -1753,38 +1760,38 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	function createDfAreaPanel(userpoints){
 
 			var item_data = userpoints.scoreContent;
-			
+
 			//创建考生的基本信息
 			createKSinfoFieldContainer(userpoints);
 
 			//生成计算总分按钮
 			//createCalbuttonConfig();
-			
+
 			for(var item_i=0;item_i<item_data.length;item_i++){
 				var node_data = item_data[item_i];
 				//生成成绩项树形结构打分区
 				var newFormField = createTreeNodeContainer(node_data,userpoints.bmbId);
 			}
-			
+
 			//生成打分区域的底部按钮
 			if(item_data!=null && item_data!="") {
 				createSavebuttonConfig();
 			}
 
-			
+
 			//生成打分区的隐藏域
-			createDfAreaHiddenField(userpoints.classId, userpoints.applyBatchId, userpoints.bmbId);
-			
+			createDfAreaHiddenField(userpoints.classId, userpoints.applyBatchId, userpoints.bmbId,userpoints.interviewApplyId);
+
 			//生成打分区域的FormPanel
 			createDfAreaFormPanel(true);
-		
+
 	}
 	/*********************************************************************************
 	调用JSON数据，动态生成打分区 ----- END
 	*********************************************************************************/
-	
-	
-	
+
+
+
 	/***************************************************************************
 	创建右侧报名表Panel ----- BEGIN
 	****************************************************************************/
@@ -1816,8 +1823,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	/***************************************************************************
 	创建右侧报名表Panel ----- END
 	****************************************************************************/
-	
-	
+
+
 	/***************************************************************************
 	页面参数初始化完成后，展示整个页面-----BEGIN
 	****************************************************************************/
@@ -1873,9 +1880,9 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				//html		: '<iframe id="bmb_iframe_' + tmpBatchId + '" name="bmb_iframe_' + tmpBatchId + '" src="'+ show_BMB_html +'" frameborder="0" width="100%" height="100%"></iframe>'
 			}]
 		});
-		
-		
-		
+
+
+
 		var toolbar3 = Ext.create('Ext.toolbar.Toolbar');
 		toolbar3.add(
 					{
@@ -1889,7 +1896,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 					'<b>' + ksinfoJSON['className'] + " " + ksinfoJSON['applyBatchName'] + '</b>'
 				);
 
-		
+
 		var tmpEvaluatePanel = Ext.create('Ext.panel.Panel',
 										{
 											title: '考生材料评审页面',
@@ -1902,21 +1909,21 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 											height:600,
 											items: evaluatePage
 										});
-		
-		
+
+
 		try
 		{
 			var batchId = tmpEvaluateObject.baokaoPcID;
 			var tmpDivObject = $('<div/>');
-			
-			
+
+
 			window.myPageSlider[0].divPage.show();
-			
-			
+
+
 			tmpDivObject.appendTo($('#tz_applicant_evaluate_page'));
 			mainPageObjectArray['ApplicantEvaluatePageList'][batchId] = tmpDivObject;
-			
-			
+
+
 			toolbar3.render(tmpDivObject[0]);
 			tmpEvaluatePanel.render(tmpDivObject[0]);
 		}
@@ -1925,15 +1932,15 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			var msg = '加载考生评审主页面时发生错误：' + e1;
 			Ext.Msg.alert('提示', msg);
 		}
-		
+
 		window.evaluatePanel[tmpBatchId] = tmpEvaluatePanel;
 		window.setTimeout(autoAdjustHeight,100);
-		
+
 		//绑定打分区域的Tips
 		Ext.each(dfArea_gzsm_ckwt_config[tmpBatchId], function(config) {
 			dfArea_gzsm_ckwt_extObj[tmpBatchId].push(Ext.create('Ext.tip.ToolTip', config));
 		});
-		
+
 		//每个考生一个IFRAME
 		var tmpBatchIdBMBID = tmpBatchId + '_' + ksinfoJSON.bmbId;
 		if($('#bmb_iframe_'+tmpBatchIdBMBID)[0]!=null && $('#bmb_iframe_'+tmpBatchIdBMBID)[0]!="undefined"){
@@ -1947,9 +1954,9 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	/***************************************************************************
 	页面参数初始化完成后，展示整个页面-----END
 	****************************************************************************/
-	
-	
-	
+
+
+
 	/**
 	* 打分区域初始化读取数据的URL
 	*/
@@ -1967,7 +1974,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	}
 	*/
 
-	
+
 	/**
 	* 打分区域提交数据的URL
 	*/
@@ -1986,11 +1993,11 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		window.KSINFO_JSON_DATA[tmpBatchId] = {};
 	}
 
-	
+
 	/*将考生评审主页面考生列表中的选中考生与批次评审主页面的考生列表中的选中状态进行同步并高亮显示*/
 	function highlightSelectedRowInApplicantList()
 	{
-		//------ highlight the selected row 
+		//------ highlight the selected row
 		var library_main_evalute_page_ks_grid_idx = window.library_main_evalute_page_ks_grid[tmpClassId+"_"+tmpBatchId].getSelectionModel().getSelection();
 		if(library_main_evalute_page_ks_grid_idx != null && library_main_evalute_page_ks_grid_idx != 'undefined')
 		{
@@ -2000,16 +2007,15 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			}
 		}
 	}
-	
-	
-	function getKSJSONData(df_classid, df_batchid, df_bmbid, actType)
-	{
 
+
+	function getKSJSONData(df_classid, df_batchid, df_bmbid,mshid, actType)
+	{
 		if(KSINFO_JSON_DATA[tmpBatchId][df_bmbid]!="undefined" && KSINFO_JSON_DATA[tmpBatchId][df_bmbid]!=null && KSINFO_JSON_DATA[tmpBatchId][df_bmbid]!="")
 		{
 			var batchId = df_batchid;
-			
-			
+
+
 			if(mainPageObjectArray['PreviousBatchId2'] != batchId)
 			{
 				if(mainPageObjectArray['PreviousBatchId2'] == '' || mainPageObjectArray['PreviousBatchId2'] == null || mainPageObjectArray['PreviousBatchId2'] == 'undefined')
@@ -2019,13 +2025,13 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				else
 				{
 					var pBatchId = mainPageObjectArray['PreviousBatchId2'];
-					
+
 					mainPageObjectArray['PreviousBatchId2'] = batchId;
 					mainPageObjectArray['ApplicantEvaluatePageList'][pBatchId].hide();
 				}
 			}
-			
-			
+
+
 			if(mainPageObjectArray['ApplicantEvaluatePageList'][batchId] == null)
 			{
 				createDfAreaALLPanel(KSINFO_JSON_DATA[tmpBatchId][df_bmbid], df_bmbid);
@@ -2033,25 +2039,25 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			else
 			{
 				mainPageObjectArray['ApplicantEvaluatePageList'][batchId].show();
-				
+
 				refreshDfAreaFormPanel(KSINFO_JSON_DATA[tmpBatchId][df_bmbid]);
 				refreshDfHTMLPanel(KSINFO_JSON_DATA[tmpBatchId][df_bmbid]);
 			}
-			
-			
-			//------ highlight the selected row 
+
+
+			//------ highlight the selected row
 			highlightSelectedRowInApplicantList();
-			
+
 			//--切换考生后，刷新浮动框的位置---zhanglang
 			TZShowTipsWin.autoFixPosition();
-			
+
 			//回调指定的函数来显示考生评审页面
 			callBackFunction(tipCount,scrollBackTagId);
 
 		}
 		else
 		{
-			var tzParams = '{"ComID":"TZ_EVA_MATERIAL_COM","PageID":"TZ_CLPS_DF_STD","OperateType":"QF","comParams":{"classId":"'+df_classid+'","applyBatchId":"'+df_batchid+'","bmbId":"'+df_bmbid+'"}}';
+			var tzParams = '{"ComID":"TZ_EVA_MATERIAL_COM","PageID":"TZ_CLPS_DF_STD","OperateType":"QF","comParams":{"classId":"'+df_classid+'","applyBatchId":"'+df_batchid+'","bmbId":"'+df_bmbid+'","mssqh":"'+mshid+'"}}';
 
 			Ext.Ajax.request({
 				url		: dfArea_initLoad_URL,
@@ -2062,9 +2068,9 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 					try
 					{
 						var jsonObject = Ext.decode(response.responseText);
-						
+
 						userpoints = jsonObject.comContent;
-						
+
 						if(userpoints.messageCode != '0')
 						{
 							var msg ='读取考生[' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')]数据时发生错误：' + userpoints.message ;							Ext.Msg.alert('提示', msg);
@@ -2080,8 +2086,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 							}
 
 							var batchId = df_batchid;
-							
-							
+
+
 							if(mainPageObjectArray['PreviousBatchId2'] != batchId)
 							{
 								if(mainPageObjectArray['PreviousBatchId2'] == '' || mainPageObjectArray['PreviousBatchId2'] == null || mainPageObjectArray['PreviousBatchId2'] == 'undefined')
@@ -2091,7 +2097,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 								else
 								{
 									var pBatchId = mainPageObjectArray['PreviousBatchId2'];
-									
+
 									mainPageObjectArray['PreviousBatchId2'] = batchId;
 									mainPageObjectArray['ApplicantEvaluatePageList'][pBatchId].hide();
 								}
@@ -2104,20 +2110,20 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 							else
 							{
 								mainPageObjectArray['ApplicantEvaluatePageList'][batchId].show();
-								
+
 								refreshDfAreaFormPanel(userpoints);
 								refreshDfHTMLPanel(userpoints);
 							}
-							
+
 							//将数据JSON缓存到本地
 							KSINFO_JSON_DATA[tmpBatchId][df_bmbid] = userpoints;
-							
-							//------ highlight the selected row 
+
+							//------ highlight the selected row
 							highlightSelectedRowInApplicantList();
-							
+
 							//--切换考生后，刷新浮动框的位置---zhanglang
 							TZShowTipsWin.autoFixPosition();
-							
+
 							//回调指定的函数来显示考生评审页面
 							callBackFunction(tipCount,scrollBackTagId);
 
@@ -2132,50 +2138,50 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 						Ext.Msg.alert('提示', msg);
 						//unmask window
 						unmaskWindow();
-						
+
 					}
 				},
 				failure: function(response, opts) {
 					var msg = '读取考生 [' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')] 数据失败，请与系统管理员联系：' + response.responseText;
-					Ext.Msg.alert('提示', msg);	
+					Ext.Msg.alert('提示', msg);
 					//unmask window
 					unmaskWindow();
 				}
-				
+
 			});
 		}
 	}
-	
-	
+
+
 	/**
 	* 提交、保存等操作后，更新本地缓存的JSON数据
 	*/
-	function updateKSJSONData(df_classid, df_batchid, df_bmbid, userpoints, getAgain){
+	function updateKSJSONData(df_classid, df_batchid, df_bmbid,df_mssqh,userpoints, getAgain){
 		if(getAgain){
 
-			var tzParams = '{"ComID":"TZ_EVA_MATERIAL_COM","PageID":"TZ_CLPS_DF_STD","OperateType":"QF","comParams":{"classId":"'+df_classid+'","applyBatchId":"'+df_batchid+'","bmbId":"'+df_bmbid+'"}}';
+			var tzParams = '{"ComID":"TZ_EVA_MATERIAL_COM","PageID":"TZ_CLPS_DF_STD","OperateType":"QF","comParams":{"classId":"'+df_classid+'","applyBatchId":"'+df_batchid+'","bmbId":"'+df_bmbid+'","mssqh":"'+df_mssqh+'"}}';
 
 			Ext.Ajax.request({
-				
+
 				url		: dfArea_initLoad_URL,
 				params	: {tzParams:tzParams},
 				success	: function(response){
 					try
 					{
 						var jsonObject = Ext.decode(response.responseText);
-						
+
 						userpoints = jsonObject.comContent;
-						
+
 						if(userpoints.messageCode!="0"){
 							Ext.Msg.alert(userpoints.message);
 							return ;
 						}
-						
+
 						//将数据JSON缓存到本地
 						KSINFO_JSON_DATA[tmpBatchId][df_bmbid] = userpoints;
 
 						console.log(KSINFO_JSON_DATA[tmpBatchId][df_bmbid]);
-						
+
 						//unmask window
 						unmaskWindow();
 					}
@@ -2184,23 +2190,23 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 						Ext.Msg.alert('提示', msg);
 						unmaskWindow();
 					}
-					
+
 				},
 				failure: function(response, opts) {
 					var msg = '读取考生 [' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')] 数据失败，请与系统管理员联系：' + response.responseText;
 					Ext.Msg.alert('提示', msg);
 					unmaskWindow();
 				}
-				
+
 			});
-			
+
 		}else{
-		
+
 			KSINFO_JSON_DATA[tmpBatchId][df_bmbid] = userpoints;
 
 		}
 	}
-	
+
 
 	/**
 	* 生成所有的Panel，画出页面
@@ -2218,17 +2224,17 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		createBMBPanel("", df_bmbid,ksjson_data.clpsBmbTplId);
 		//生成页面
 		createDfAreaExtPage(ksjson_data);
-		
+
 		//------- 调整一些特殊的样式
 		//调整右侧文字大小
 		//$("tspan:contains('打分区')").css("font-size","13px");
 		//$("tspan:contains('考生列表')").css("font-size","13px");
-		
-		
+
+
 		//给所有叶子节点增加TIPS
 		for(var li=0;li<allLeavesNodeData[tmpBatchId].length;li++){
 			var dfarea_leaftips_data = allLeavesNodeData[tmpBatchId][li];
-			
+
 			//createQTips(dfarea_leaftips_data);
 			tzCreateTips(dfarea_leaftips_data);
 		}
@@ -2241,7 +2247,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			tzCreateTips(dfarea_leaftips_data_ckzl);
 		}
 	}
-	
+
 
 	function createQTips(dfarea_leaftips_data){
 		$("#"+ dfarea_leaftips_data[0]).qtip(
@@ -2272,7 +2278,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			}
 		});
 	}
-	
+
 	/**
 	 * 显示标准、说明、参考资料(新)
 	 * 张浪
@@ -2303,11 +2309,11 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		}catch(ex){
 		}
 	}
-	
-	//初始化
-	getKSJSONData(evaluateObject.baokaoClassID, evaluateObject.baokaoPcID,evaluateObject.applicantBaomingbiaoID,"create");
 
-	
+	//初始化
+	getKSJSONData(evaluateObject.baokaoClassID, evaluateObject.baokaoPcID,evaluateObject.applicantBaomingbiaoID,evaluateObject.applicantInterviewID,"create");
+
+
 }
 
 

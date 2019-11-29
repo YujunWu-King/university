@@ -170,7 +170,8 @@
                     //{iconCls: 'import',tooltip: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.autoScreen","自动初筛"),handler:'automaticScreen'},"-",
                     {iconCls: 'set',tooltip: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.clmspsSet","设置评审规则"),handler:'setMaterialReviewRule'},"-",
                     {iconCls: 'people',tooltip: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.clmspsPeople","查看考生名单"),handler:'viewMaterialStuApplicants'},"-",
-                    {iconCls: 'schedule',tooltip: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.clmspsSchedule","评审进度管理"),handler:'clReviewScheduleMg'}
+                    {iconCls: 'schedule',tooltip: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.clmspsSchedule","评审进度管理"),handler:'clReviewScheduleMg'},"-",
+                    {iconCls: 'import',tooltip: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.autoScreenM","自动筛选"),handler:'automaticScreenBase'}
                 ]
             },{
                 menuDisabled: true,
@@ -183,9 +184,11 @@
                     {iconCls: 'set',tooltip: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.clmspsSet","设置评审规则"),handler:'setInterviewReviewRule'},"-",
                     {iconCls: 'people',tooltip: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.clmspsPeople","查看考生名单"),handler:'viewInterviewStuApplicants'},"-",
                     {iconCls: 'schedule',tooltip: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.clmspsSchedule","评审进度管理"),handler:'msReviewScheduleMg'},"-",
-                    {iconCls: 'view',tooltip: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.interviewCheck","查看面试情况"),handler:'interviewCheck'}
+                    {iconCls: 'view',tooltip: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.interviewCheck","查看面试情况"),handler:'interviewCheck'},"-",
+                    {iconCls: 'import',tooltip: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.autoScreenMS","面试打分"),handler:'automaticScreen'}
+                    
                 ]
-            },{
+            },/*{
                 menuDisabled: true,
                 sortable: false,
                 width:150,
@@ -194,9 +197,9 @@
                 align:'center',
                 items:[
                 	{iconCls: 'import',tooltip: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.autoScreenMS","面试打分"),handler:'automaticScreen'},"-",
-                	{iconCls: 'import',tooltip: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.autoScreenM","自动筛选"),handler:'automaticScreenBase'}
+                	{iconCls: 'set',tooltip: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.autoScreenM","自动筛选"),handler:'automaticScreenBase'}
                 ]
-            }],
+            }*/],
             store: store,
             bbar: {
                 xtype: 'pagingtoolbar',
