@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -734,8 +736,15 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 			/* 文件报文数据、问卷实例报文数据 */
 			String surveyData = psTzDcWjDyTWithBLOBs.getTzApptplJsonStr();
 			// logger.info("surveyData:" + surveyData);
-			surveyData = surveyData.replace("\\", "\\\\");
-			surveyData = surveyData.replaceAll("\\$", "~");
+			//surveyData = surveyData.replace("\\", "\\\\");
+			//surveyData = surveyData.replaceAll("\\$", "~");
+			Pattern CRLF = Pattern.compile("(\r\n|\r|\n|\n\r)");
+			Matcher mc = CRLF.matcher(surveyData);
+			if (mc.find()) {
+				surveyData = mc.replaceAll("\\\\n");
+			}
+			surveyData = surveyData.replace(" ", "");
+			
 			String surveyInsData = null;
 			try {
 				if (StringUtils.isNotBlank(surveyInsId) && Integer.parseInt(surveyInsId) > 0) {
@@ -752,8 +761,13 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 				e.printStackTrace();
 			}
 			// logger.info("surveyInsData:" + surveyInsData);
-			surveyInsData = surveyInsData.replace("\\", "\\\\");
-			surveyInsData = surveyInsData.replaceAll("\\$", "~");
+			//surveyInsData = surveyInsData.replace("\\", "\\\\");
+			//surveyInsData = surveyInsData.replaceAll("\\$", "~");
+			mc = CRLF.matcher(surveyInsData);
+			if (mc.find()) {
+				surveyInsData = mc.replaceAll("\\\\n");
+			}
+			surveyInsData = surveyInsData.replace(" ", "");
 
 			int numMaxPage = sqlQuery.queryForObject(
 					"SELECT MAX(TZ_PAGE_NO) + 1 FROM PS_TZ_DCWJ_XXXPZ_T WHERE TZ_DC_WJ_ID = ?",

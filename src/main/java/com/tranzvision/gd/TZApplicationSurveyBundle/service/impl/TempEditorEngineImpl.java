@@ -8,6 +8,8 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -156,8 +158,14 @@ public class TempEditorEngineImpl {
 		}
 		System.out.println("temp==msgSet:=="+msgSet);
 		String tplHtml = "";
-		componentData = componentData.replace("\\", "\\\\");
-		componentData = componentData.replace("$", "\\$");
+		Pattern CRLF = Pattern.compile("(\r\n|\r|\n|\n\r)");
+		Matcher mc = CRLF.matcher(componentData);
+		if (mc.find()) {
+			componentData = mc.replaceAll("\\\\n");
+		}
+		componentData = componentData.replace(" ", "");
+		//componentData = componentData.replace("\\", "\\\\");
+		//componentData = componentData.replace("$", "\\$");
 		// logger.info("componentData=" + componentData);
 		// componentData = componentData.replaceAll("\\$", "~");
 		try {
