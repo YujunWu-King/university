@@ -953,17 +953,21 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 					String mszmj = infoData.get("mszmj") == null ? "" : String.valueOf(infoData.get("mszmj"));
 					Date dt = new Date();
 					Date dt2 = new Date();
+//					if("00:00:00".equals(mszkssj)) {
+//						
+//					}else {
+//						if(mszkssj!="") {
+//							
+//							dt = sdf.parse(mszkssj);
+//							mszkssj = sdf2.format(dt);
+//						}
+//						
+//						if(mszjssj!="") {
+//							dt2 = sdf.parse(mszjssj);
+//							mszjssj = sdf2.format(dt2);
+//						}
+//					}
 					
-					if(mszkssj!="") {
-						
-						dt = sdf.parse(mszkssj);
-						mszkssj = sdf2.format(dt);
-					}
-					
-					if(mszjssj!="") {
-						dt2 = sdf.parse(mszjssj);
-						mszjssj = sdf2.format(dt2);
-					}
 					
 					if (!"null".equals(id)) { 
 						sqlQuery.update("UPDATE "
@@ -976,13 +980,13 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 								+ "TZ_GROUP_DESC=?,"
 								+ "TZ_GROUP_SPACE=? "
 								+ "WHERE TZ_APPLY_PC_ID=? AND TZ_CLASS_ID=? AND TZ_GROUP_ID=?",
-								new Object[] { mszkssj,mszjssj,oprId,mszmj,mszsd, batchId, classId, id});
+								new Object[] { null,null,oprId,mszmj,mszsd, batchId, classId, id});
 						sqlQuery.update("update PS_TZ_INTEGROUP_T set TZ_GROUP_NAME=? where TZ_GROUP_ID=?",new Object[] {mszkssj,id});
 					} else {
 						String TZ_GROUP_ID  = String.valueOf(getSeqNum.getSeqNum("PS_TZ_INTEGROUP_T", "TZ_GROUP_ID"));
 						sqlQuery.update("insert into PS_TZ_INTEGROUP_T(TZ_GROUP_ID,TZ_GROUP_NAME,TZ_CLASS_ID,TZ_APPLY_PC_ID) values(?,?,?,?)",new Object[] {TZ_GROUP_ID,mszmj,classId,batchId});
 						sqlQuery.update("insert into TZ_INTERVIEW_GROUP values (?,?,?,?,?,?,?,NOW(),?)",
-								new Object[] { classId,batchId, TZ_GROUP_ID, mszmj, mszsd,mszkssj,mszjssj,oprId});
+								new Object[] { classId,batchId, TZ_GROUP_ID, mszmj, mszsd,null,null,oprId});
 					}
 				}
 			}

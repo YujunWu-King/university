@@ -225,6 +225,9 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 
 							if(!"".equals(bmbIdNext)) {
 								bmbId=bmbIdNext;
+								String getMshSql="select TZ_MSSQH from PS_TZ_REG_USER_T a,PS_TZ_FORM_WRK_T b where a.OPRID=b.OPRID and b.TZ_APP_INS_ID=?";
+								mshId=sqlQuery.queryForObject(getMshSql,new Object[]{bmbId},"String");
+                                System.out.println("下一位考生的MSSQH为=====>"+mshId);
 							}
 
 							strRtn = this.getExamineeScoreInfo(classId, applyBatchId, bmbId,mshId, messageCode,message,errMsg);
@@ -296,10 +299,15 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 				String scoreModelId = mapExaminee.get("TZ_ZLPS_SCOR_MD_ID") == null ? "" : String.valueOf(mapExaminee.get("TZ_ZLPS_SCOR_MD_ID"));
 
 				//查询总分，第一个成绩项的分数
-				String totalScoreSql = "SELECT B.TZ_SCORE_NUM FROM PS_TZ_CJ_BPH_TBL A,PS_TZ_CJX_TBL B";
-				totalScoreSql = totalScoreSql + " WHERE A.TZ_SCORE_ITEM_ID=B.TZ_SCORE_ITEM_ID AND B.TZ_SCORE_INS_ID=? AND A.TZ_JG_ID=? AND A.TZ_SCORE_MODAL_ID=?";
-				totalScoreSql = totalScoreSql + " ORDER BY A.TZ_PX";
-				examineeTotalScore = sqlQuery.queryForObject(totalScoreSql, new Object[]{scoreInsId,jgId,scoreModelId},"String");
+                //如果没有scoreInsId，则将总分置为0
+                if("".equals(scoreInsId)){
+                    examineeTotalScore="0";
+                }else{
+                    String totalScoreSql = "SELECT B.TZ_SCORE_NUM FROM PS_TZ_CJ_BPH_TBL A,PS_TZ_CJX_TBL B";
+                    totalScoreSql = totalScoreSql + " WHERE A.TZ_SCORE_ITEM_ID=B.TZ_SCORE_ITEM_ID AND B.TZ_SCORE_INS_ID=? AND A.TZ_JG_ID=? AND A.TZ_SCORE_MODAL_ID=?";
+                    totalScoreSql = totalScoreSql + " ORDER BY A.TZ_PX";
+                    examineeTotalScore = sqlQuery.queryForObject(totalScoreSql, new Object[]{scoreInsId,jgId,scoreModelId},"String");
+                }
 
 				examineeListJson.put("classId", classId);
 				examineeListJson.put("applyBatchId", applyBatchId);
@@ -802,7 +810,7 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 					bmbId = Long.valueOf(strBmbId);
 				}
 
-				String strRank = mapData.get("RANK") == null ? "" : mapData.get("RANK").toString();
+				String strRank = mapData.get("RANKING") == null ? "" : mapData.get("RANKING").toString();
 				if(strRank.indexOf(".")>0) {
 					strRank = strRank.substring(0, strRank.indexOf("."));
 				}
