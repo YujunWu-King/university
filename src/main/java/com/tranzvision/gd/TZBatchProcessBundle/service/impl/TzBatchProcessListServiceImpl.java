@@ -75,6 +75,17 @@ public class TzBatchProcessListServiceImpl extends FrameworkImpl {
                     hMap.put("orgId", orgId);
                     hMap.put("processName", processName);
                     hMap.put("processDesc", processDesc);
+                    //开始   suzl 平台类型取值判断修改
+                	if("WINDOWS".equals(platFormType)){
+                		platFormType = "1";
+                	}
+                	if("UNIX".equals(platFormType)){
+                		platFormType = "2";
+                	}
+                	if("其他".equals(platFormType)){
+                		platFormType = "3";
+                	}
+                	//结束
                     hMap.put("runPlatType", platFormType);
                     hMap.put("ComID", comId);
                     hMap.put("className", className);
@@ -158,6 +169,17 @@ public class TzBatchProcessListServiceImpl extends FrameworkImpl {
                 // 信息内容;
                 String orgId = jacksonUtil.getString("orgId");
                 String platType = jacksonUtil.getString("runPlatType");
+                //开始 suzl 平台类型取值判断修改
+                if("1".equals(platType)){
+                	platType = "WINDOWS";
+                }
+                if("2".equals(platType)){
+                	platType = "UNIX";
+                }
+                if("3".equals(platType)){
+                	platType = "其他";
+                }
+                //结束
                 String comID = jacksonUtil.getString("ComID");
                 String processName = jacksonUtil.getString("processName");
                 String processDec = jacksonUtil.getString("processDesc");
@@ -212,6 +234,17 @@ public class TzBatchProcessListServiceImpl extends FrameworkImpl {
                 String currentAccountId = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
                 String orgId = jacksonUtil.getString("orgId");
                 String platType = jacksonUtil.getString("runPlatType");
+                //开始 suzl 平台类型取值判断修改
+                if("1".equals(platType)){
+                	platType = "WINDOWS";
+                }
+                if("2".equals(platType)){
+                	platType = "UNIX";
+                }
+                if("3".equals(platType)){
+                	platType = "其他";
+                }
+                //结束
                 String comID = jacksonUtil.getString("ComID");
                 String processName = jacksonUtil.getString("processName");
                 String processDec = jacksonUtil.getString("processDesc");
