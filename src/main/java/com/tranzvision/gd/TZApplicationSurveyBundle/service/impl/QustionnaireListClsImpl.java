@@ -130,11 +130,12 @@ public class QustionnaireListClsImpl extends FrameworkImpl{
 				String[][] orderByArr = new String[][] {};
 	
 				// json数据要的结果字段;
-				String[] resultFldArray = {"TZ_DC_WJ_ID","TZ_DC_WJBT","TZ_JG_ID","TZ_DC_WJ_ZT","TZ_DC_WJ_FB"};
-	
+				String[] resultFldArray = {"TZ_DC_WJ_ID","TZ_DC_WJBT","TZ_JG_ID","TZ_DC_WJ_ZT","TZ_DC_WJ_FB","ROW_ADDED_DTTM"};
+
 				// 可配置搜索通用函数;
 				Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, comParams, numLimit, numStart, errorMsg);
-	
+				SimpleDateFormat sFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				SimpleDateFormat sFormatnew=new SimpleDateFormat("yyyy/MM/dd HH:mm");
 				if (obj != null && obj.length > 0) {
 					ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
 	
@@ -147,6 +148,7 @@ public class QustionnaireListClsImpl extends FrameworkImpl{
 						mapList.put("TZ_JG_ID", rowList[2]);
 						mapList.put("TZ_DC_WJ_ZT", rowList[3]);
 						mapList.put("TZ_DC_WJ_FB", rowList[4]);
+						mapList.put("ROW_ADDED_DTTM", sFormatnew.format(sFormat.parse(rowList[5])));
 						listData.add(mapList);
 					}
 	
