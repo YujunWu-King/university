@@ -37,62 +37,86 @@ SurveyBuild.extend("ImgUpload", "baseComponent", {
 				t += ')</span>';
 			}
 			if(SurveyBuild.accessType == "P"){
-				//PC版
+//				//PC版
+//				c += '<div class="listcon">';
+//				c += '	<div class="question">';
+//				c += '		<span class="fontblue-blod">'+ data.qCode +'.</span>' + data.title + t;
+//				c += '      <div id="' + data.itemId + 'Tip" class="onShow">';
+//                c += '          <div class="onShow"></div>';
+//                c += '      </div>';
+//				c += '	</div>';
+//				c += '	<div class="answer">';
+//				c += '		<div class="fileinput-button blue_btn">';
+//				c += '			<label for="'+ data.itemId +'">'+MsgSet["UPLOAD_BTN_MSG"]+'</label>';
+//				c += '			<input id="'+ data.itemId +'" type="file" name="'+ data.itemId +'" onchange="SurveyBuild.uploadAttachment(this,\''+ data.instanceId +'\')">';
+//				c += '		</div>';
+//				
+//				c += '		<div class="file_list '+ (children[0].sysFileName == "" ? "nobackground":"") +'" id="'+ data.itemId +'_attList">';
+//				c += '			<ul>';
+//				//显示已上传图片
+//				for(var i=0; i<children.length; i++){
+//					if(children[i].sysFileName != ""){
+//						c += '<li><a onclick="SurveyBuild.viewImageSet(this,\''+data.instanceId+'\')" file-index="'+ children[i].orderby +'">'+ children[i].viewFileName +'</a>';
+//						c += '	<div class="img_del" onclick="SurveyBuild.deleteFile(this,\''+data.instanceId+'\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" width="15" height="15"  title="'+MsgSet["DEL"]+'">&nbsp;'+MsgSet["DEL"]+'<div>';
+//						c += '</li>';
+//					}
+//				}
+//				c += '			</ul>';
+//                                c += '         <div class="answer">'+(data.suffixUrl != "" ? "<a href='" + data.suffixUrl + "'>" : "") + (data.suffix != "" ? data.suffix : "") + (data.suffixUrl != "" ? "</a></div>" : "</div>");
+//				c += '		</div>';
+//				c += '	</div>';
+//				c += '</div>';
 				c += '<div class="listcon">';
-				c += '	<div class="question">';
-				c += '		<span class="fontblue-blod">'+ data.qCode +'.</span>' + data.title + t;
-				c += '      <div id="' + data.itemId + 'Tip" class="onShow">';
-                c += '          <div class="onShow"></div>';
-                c += '      </div>';
-				c += '	</div>';
-				c += '	<div class="answer">';
-				c += '		<div class="fileinput-button blue_btn">';
-				c += '			<label for="'+ data.itemId +'">'+MsgSet["UPLOAD_BTN_MSG"]+'</label>';
-				c += '			<input id="'+ data.itemId +'" type="file" name="'+ data.itemId +'" onchange="SurveyBuild.uploadAttachment(this,\''+ data.instanceId +'\')">';
-				c += '		</div>';
-				
-				c += '		<div class="file_list '+ (children[0].sysFileName == "" ? "nobackground":"") +'" id="'+ data.itemId +'_attList">';
-				c += '			<ul>';
-				//显示已上传图片
+				c += '<div class="list_q">';
+				c += '	<b>'+ data.qCode +'.</b>' + data.title+'<span> '+ t+(data.isRequire == "Y" ? "*": "")+'</span></div>';
+				c += '	<div id="' + data.itemId + 'Tip" class="tips">';
+                c += '		<img src="' + TzUniversityContextPath + '/statics/js/onlineSurvey/formvalidator/m/images/onError.gif">';
+                c += '		<span></span>';
+                c += '	</div>';
+				c += '<div class="handle">';
+				c += '	<div class="ncsc-upload-btn">';
+				c += '	   <a href="#" class="ncsc-upload-btn-a">';
+				c += '		  <span class="ncsc-upload-btn-span">';
+				c += '		 	 <input type="file" hidefocus="true" size="1" class="input-file" id="'+ data.itemId +'" name="'+ data.itemId +'" onchange="SurveyBuild.uploadAttachment(this,\''+ data.instanceId +'\')">';
+				c += '		 </span>';
+				c += '		  <div class="ncsc-upload-btn-p">'+MsgSet["CHOOSE_PICTURE"]+'<img src="' + TzUniversityContextPath + '/statics/js/onlineSurvey/images/m/upload.png"></div>';
+				c += '	  </a>';
+				c += '   </div>';
+				c += '</div>';
+				c += ' <div class="img_list" style="display:'+(children.length>0 && children[0].sysFileName != "" ? "":"none") +'" id="'+ data.itemId +'_attList">';
 				for(var i=0; i<children.length; i++){
 					if(children[i].sysFileName != ""){
-						c += '<li><a onclick="SurveyBuild.viewImageSet(this,\''+data.instanceId+'\')" file-index="'+ children[i].orderby +'">'+ children[i].viewFileName +'</a>';
-						c += '	<div class="img_del" onclick="SurveyBuild.deleteFile(this,\''+data.instanceId+'\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" width="15" height="15"  title="'+MsgSet["DEL"]+'">&nbsp;'+MsgSet["DEL"]+'<div>';
-						c += '</li>';
+						c += '<li><a onclick="SurveyBuild.viewImageSet(this,\''+data.instanceId+'\')" file-index="'+ children[i].orderby +'"><p>'+ children[i].viewFileName +'</p></a><img src="' + TzUniversityContextPath + '/statics/js/onlineSurvey/images/m/det.png" onclick="SurveyBuild.deleteFile(this,\''+data.instanceId+'\')" title="'+MsgSet["DEL"]+'"></li>';
 					}
 				}
-				c += '			</ul>';
-                                c += '         <div class="answer">'+(data.suffixUrl != "" ? "<a href='" + data.suffixUrl + "'>" : "") + (data.suffix != "" ? data.suffix : "") + (data.suffixUrl != "" ? "</a></div>" : "</div>");
-				c += '		</div>';
-				c += '	</div>';
+				c += ' </div>';
 				c += '</div>';
 			} else {
 				//手机版
 				c += '<div class="listcon">';
-				c += '  <div id="' + data.itemId + 'Tip" class="onShow">';
-				c += '      <div class="onShow"></div>';
-				c += '  </div>';
-				c += '	<div class="question">';
-				c += '		<span class="fontblue-blod">'+ data.qCode +'.</span>' + data.title + t;
-				c += '	</div>';
-				c += '	<div class="file-upload" style="margin-top:10px;">';
-				c += '		<span class="upload-icon"><img src="' + TzUniversityContextPath + '/statics/js/onlineSurvey/images/m/addImg.png"></span><span class="upload-text">'+MsgSet["CHOOSE_PICTURE"]+'</span>';
-				c += '		<label for="'+ data.itemId +'"></label>';
-				c += '		<input type="file" accept="image/*" id="'+ data.itemId +'" name="'+ data.itemId +'" onchange="SurveyBuild.uploadAttachment(this,\''+ data.instanceId +'\')"/>';
-				c += '	</div>';
-                                c += '     <span >'+(data.suffixUrl != "" ? "<a href='" + data.suffixUrl + "'>" : "") + (data.suffix != "" ? data.suffix : "") + (data.suffixUrl != "" ? "</a>" : "</span>");
-
-                //图片集
-				c += '	<div id="'+ data.itemId +'_attList" class="answer file-upload-list '+ (children.length>0 && children[0].sysFileName != "" ? "":"noUpload") +'">';
-				c += '		<ul>';
-				//显示已上传的图片
+				c += '<div class="list_q">';
+				c += '	<b>'+ data.qCode +'.</b>' + data.title+'<span> '+ t+(data.isRequire == "Y" ? "*": "")+'</span></div>';
+				c += '	<div id="' + data.itemId + 'Tip" class="tips">';
+                c += '		<img src="' + TzUniversityContextPath + '/statics/js/onlineSurvey/formvalidator/m/images/onError.gif">';
+                c += '		<span></span>';
+                c += '	</div>';
+				c += '<div class="handle">';
+				c += '	<div class="ncsc-upload-btn">';
+				c += '	   <a href="#" class="ncsc-upload-btn-a">';
+				c += '		  <span class="ncsc-upload-btn-span">';
+				c += '		 	 <input type="file" hidefocus="true" size="1" class="input-file" id="'+ data.itemId +'" name="'+ data.itemId +'" onchange="SurveyBuild.uploadAttachment(this,\''+ data.instanceId +'\')">';
+				c += '		 </span>';
+				c += '		  <div class="ncsc-upload-btn-p">'+MsgSet["CHOOSE_PICTURE"]+'<img src="' + TzUniversityContextPath + '/statics/js/onlineSurvey/images/m/upload.png"></div>';
+				c += '	  </a>';
+				c += '   </div>';
+				c += '</div>';
+				c += ' <div class="img_list" style="display:'+(children.length>0 && children[0].sysFileName != "" ? "":"none") +'" id="'+ data.itemId +'_attList">';
 				for(var i=0; i<children.length; i++){
 					if(children[i].sysFileName != ""){
-						c += '<li><a onclick="SurveyBuild.viewImageSet(this,\''+data.instanceId+'\')" file-index="'+ children[i].orderby +'">'+ children[i].viewFileName +'</a><img src="' + TzUniversityContextPath + '/statics/js/onlineSurvey/images/m/del.png" onclick="SurveyBuild.deleteFile(this,\''+data.instanceId+'\')" title="'+MsgSet["DEL"]+'">'+MsgSet["DEL"]+'</li>';
+						c += '<li><a onclick="SurveyBuild.viewImageSet(this,\''+data.instanceId+'\')" file-index="'+ children[i].orderby +'"><p>'+ children[i].viewFileName +'</p></a><img src="' + TzUniversityContextPath + '/statics/js/onlineSurvey/images/m/det.png" onclick="SurveyBuild.deleteFile(this,\''+data.instanceId+'\')" title="'+MsgSet["DEL"]+'"></li>';
 					}
 				}
-				c += '		</ul>';
-				c += '	</div>';
+				c += ' </div>';
 				c += '</div>';
 			}
         } else {
@@ -176,7 +200,7 @@ SurveyBuild.extend("ImgUpload", "baseComponent", {
 	
 	_eventbind: function(data) {
 		var $fileInput = $("#" + data.itemId);
-		$fileInput.formValidator({tipID:(data["itemId"]+'Tip'), onShow:"&nbsp;", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
+		$fileInput.formValidator({tipID:(data["itemId"]+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
 		$fileInput.functionValidator({
 			fun:function(val,el){
 				if (data.isRequire == "Y"){

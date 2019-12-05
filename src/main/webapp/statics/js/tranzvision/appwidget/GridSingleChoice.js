@@ -49,62 +49,66 @@ SurveyBuild.extend("GridSingleChoice", "baseComponent", {
             if(SurveyBuild.accessType == "P"){
 				//PC版
                 c += '<div class="listcon">';
-				c += '	<div class="question">';
-				c += '		<span class="fontblue-blod">'+ data.qCode +'.</span>' + data.title;
-				c += '      <div id="' + data.itemId + 'Tip" class="onShow">';
-                c += '          <div class="onShow"></div>';
-                c += '      </div>';
-				c += '	</div>';
-				c += '	<div class="answer">';
-				c += '		<table width="100%" border="0" cellspacing="0" cellpadding="0" class="onechoose" id="' + data.itemId + '">';
-				c += '			<tr class="gray-bg">';
-				c += '				<td>&nbsp;</td>';
-				for (var opt in data.option){
-					c += '			<td>'+ data.option[opt].txt +'</td>';	
-				}
-				c += '			</tr>';
-				
-				var row = 0;
+                c += '	<div class="list_q">';
+                c += '		<b>'+ data.qCode + '.</b>'+ data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
+                c += '	</div>';
+                c += '	<div id="' + data.itemId + 'Tip" class="tips">';
+                c += '		<img src="' + TzUniversityContextPath + '/statics/js/onlineSurvey/formvalidator/m/images/onError.gif">';
+                c += '		<span></span>';
+                c += '	</div>';
+				c += '	<div class="text_box1" id="' + data.itemId + '">';
 				for (var ch in data.child) {
-					row ++;
-					c += '		<tr '+ (row%2 == 0 ? 'class="gray-bg"':'') +'>';
-					//c += '			<td width="12%">'+ data.child[ch].question +'</td>';
-					c += '			<td style="text-align: left;">'+ data.child[ch].question +'</td>';
+					
+					c += '	<ul class="table">';
+					c += '<p>'+ data.child[ch].question +'</p>';
 					for (var opt in data.option) {
 						var optCode = data.option[opt].code;
-
-						//c += '		<td width="8.8%">';
-						c += '		<td>';
-						c += '			<div class="input-radio-btn '+ (data.child[ch].value.indexOf(optCode) != -1 ? "checked": "") +'" style="width:20px;">';
-						c += '				<input type="radio" onchange="SurveyBuild.handleInput(this);" id="R'+ data.itemId + '_' + data.child[ch].sqCode + '_' + data.option[opt].code +'" name="'+ data.itemId + '_' + data.child[ch].sqCode +'" value="'+ data.option[opt].code +'" child-instance="'+ ch +'" opt-instance="'+ opt +'" '+ (data.child[ch].value.indexOf(optCode) != -1 ? "checked='checked'": "") +'>';
-						c += '			</div>';
-						c += '		</td>';	
+						c += '		<li><input type="radio" class="mgr mgr-primary" onchange="SurveyBuild.handleInput(this);" id="R'+ data.itemId + '_' + data.child[ch].sqCode + '_' + data.option[opt].code +'"  name="'+ data.itemId + '_' + data.child[ch].sqCode +'" value="'+ data.option[opt].code +'" child-instance="'+ ch +'" opt-instance="'+ opt +'" '+ (data.child[ch].value.indexOf(optCode) != -1 ? "checked='checked'": "") +'>&nbsp;&nbsp;<label for="R'+ data.itemId + '_' + data.child[ch].sqCode + '_' + data.option[opt].code +'">'+ data.option[opt].txt +'</label></li>';
 					}
-					c += '		</tr>';	
+					c += '	</ul>';
 				}
-				c += '		</table>';
 				c += '	</div>';
 				c += '</div>';
+            
+				
+//				var row = 0;
+//				for (var ch in data.child) {
+//					row ++;
+//					c += '		<tr '+ (row%2 == 0 ? 'class="gray-bg"':'') +'>';
+//					//c += '			<td width="12%">'+ data.child[ch].question +'</td>';
+//					c += '			<td style="text-align: left;">'+ data.child[ch].question +'</td>';
+//					for (var opt in data.option) {
+//						var optCode = data.option[opt].code;
+//
+//						//c += '		<td width="8.8%">';
+//						c += '		<td>';
+//						c += '			<div class="input-radio-btn '+ (data.child[ch].value.indexOf(optCode) != -1 ? "checked": "") +'" style="width:20px;">';
+//						c += '				<input type="radio" onchange="SurveyBuild.handleInput(this);" id="R'+ data.itemId + '_' + data.child[ch].sqCode + '_' + data.option[opt].code +'" name="'+ data.itemId + '_' + data.child[ch].sqCode +'" value="'+ data.option[opt].code +'" child-instance="'+ ch +'" opt-instance="'+ opt +'" '+ (data.child[ch].value.indexOf(optCode) != -1 ? "checked='checked'": "") +'>';
+//						c += '			</div>';
+//						c += '		</td>';	
+//					}
+//					c += '		</tr>';	
+//				}
             }else{
 				//手机版
                 c += '<div class="listcon">';
-				c += '  <div id="' + data.itemId + 'Tip" class="onShow">';
-				c += '      <div class="onShow"></div>';
-				c += '  </div>';
-				c += '	<div class="question">';
-				c += '		<span class="fontblue-blod">'+ data.qCode +'.</span>' + data.title;
-				c += '	</div>';
-				c += '	<div class="answer-onechoose" id="' + data.itemId + '">';
+                c += '	<div class="list_q">';
+                c += '		<b>'+ data.qCode + '.</b>'+ data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
+                c += '	</div>';
+                c += '	<div id="' + data.itemId + 'Tip" class="tips">';
+                c += '		<img src="' + TzUniversityContextPath + '/statics/js/onlineSurvey/formvalidator/m/images/onError.gif">';
+                c += '		<span></span>';
+                c += '	</div>';
+				c += '	<div class="text_box1" id="' + data.itemId + '">';
 				for (var ch in data.child) {
-					c += '	<div class="answer-manychoose">';
-					c += '		<h1><span class="orange-circle"></span>'+ data.child[ch].question +'</h1>';
-					c += '		<ul>';
+					
+					c += '	<ul class="table">';
+					c += '<p>'+ data.child[ch].question +'</p>';
 					for (var opt in data.option) {
 						var optCode = data.option[opt].code;
-						c += '		<li><div class="input-radio-btn '+ (data.child[ch].value.indexOf(optCode) != -1 ? "checked": "") +'"><input type="radio" onchange="SurveyBuild.handleInput(this);" id="R'+ data.itemId + '_' + data.child[ch].sqCode + '_' + data.option[opt].code +'"  name="'+ data.itemId + '_' + data.child[ch].sqCode +'" value="'+ data.option[opt].code +'" child-instance="'+ ch +'" opt-instance="'+ opt +'" '+ (data.child[ch].value.indexOf(optCode) != -1 ? "checked='checked'": "") +'>&nbsp;&nbsp;<label for="R'+ data.itemId + '_' + data.child[ch].sqCode + '_' + data.option[opt].code +'">'+ data.option[opt].txt +'</label></div></li>';
+						c += '		<li><input type="radio" class="mgr mgr-primary" onchange="SurveyBuild.handleInput(this);" id="R'+ data.itemId + '_' + data.child[ch].sqCode + '_' + data.option[opt].code +'"  name="'+ data.itemId + '_' + data.child[ch].sqCode +'" value="'+ data.option[opt].code +'" child-instance="'+ ch +'" opt-instance="'+ opt +'" '+ (data.child[ch].value.indexOf(optCode) != -1 ? "checked='checked'": "") +'>&nbsp;&nbsp;<label for="R'+ data.itemId + '_' + data.child[ch].sqCode + '_' + data.option[opt].code +'">'+ data.option[opt].txt +'</label></li>';
 					}
-					c += '		</ul>';
-					c += '	</div>';
+					c += '	</ul>';
 				}
 				c += '	</div>';
 				c += '</div>';
@@ -305,7 +309,7 @@ SurveyBuild.extend("GridSingleChoice", "baseComponent", {
 				});
 			}
 	
-			$inputBox.formValidator({tipID:(data["itemId"]+'Tip'), onShow:"&nbsp;", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
+			$inputBox.formValidator({tipID:(data["itemId"]+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
 			if(!allowEmpty){
 				$inputBox.inputValidator({min:1, onError:errorMsg});
 			}

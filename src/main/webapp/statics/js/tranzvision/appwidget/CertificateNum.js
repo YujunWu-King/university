@@ -35,19 +35,8 @@ SurveyBuild.extend("CertificateNum", "baseComponent", {
             return;
         }
 
-//		var degree = [MsgSet["IDNUM_SFZ"],MsgSet["IDNUM_HKB"],MsgSet["IDNUM_HZ"],MsgSet["IDNUM_JUNGZ"],MsgSet["IDNUM_SBZ"],MsgSet["IDNUM_GATXZ"],MsgSet["IDNUM_TWTXZ"],MsgSet["IDNUM_LSSFZ"],MsgSet["IDNUM_WGRJLZ"],MsgSet["IDNUM_JINGGZ"],MsgSet["IDNUM_QT"]];
-//        for (var i = 1; i <= 11; ++i) {
-//        	this.children[0]["option"][d + i] = {
-//                code: i,
-//                txt: degree[i-1],
-//                orderby: i,
-//                defaultval: 'N',
-//                other: 'N',
-//                weight: 0
-//            }
-//        }
-        var degree = [MsgSet["IDNUM_SFZ"],MsgSet["IDNUM_TXZ"],MsgSet["IDNUM_HZW"]];
-        for (var i = 1; i <= 3; ++i) {
+		var degree = [MsgSet["IDNUM_SFZ"],MsgSet["IDNUM_HKB"],MsgSet["IDNUM_HZ"],MsgSet["IDNUM_JUNGZ"],MsgSet["IDNUM_SBZ"],MsgSet["IDNUM_GATXZ"],MsgSet["IDNUM_TWTXZ"],MsgSet["IDNUM_LSSFZ"],MsgSet["IDNUM_WGRJLZ"],MsgSet["IDNUM_JINGGZ"],MsgSet["IDNUM_QT"]];
+        for (var i = 1; i <= 11; ++i) {
         	this.children[0]["option"][d + i] = {
                 code: i,
                 txt: degree[i-1],
@@ -61,91 +50,41 @@ SurveyBuild.extend("CertificateNum", "baseComponent", {
     _getHtml: function(data, previewmode) {
         var c = "",children = data.children;
         if (previewmode) {
-        	if(SurveyBuild.accessType == "M"){
-        		if(SurveyBuild._readonly){
-                    //只读模式
-    				var valDesc = "";
-    				for (var i in children[0].option) {
-    					if(children[0]["value"] == children[0]["option"][i]["code"]){
-    						valDesc = children[0]["option"][i]["txt"];
-    					}
-    				}
-    				c += '<div class="item">';
-					c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
-					c += '	<div class="overhidden">';
-					c += '		<div class="text-box fl" >';
-					c += '      	<input type="text" class="text1"  value="' + valDesc + '">';
-					c += '      </div><br><br>';
-					c += '       <div class="text-box fl"  >';
-					c += '           <input type="text" class="text1" value=" ' + children[1]["value"] + '">';
-					c += '       </div>';
-					c += '   </div>';
-					c += '  <p style="color:#666;font-size:0.56rem;"></p>';
-					c += '</div>';
-                }else{
-                    //填写模式
-                	 SurveyBuild.appInsId == "0" && this._getDefaultVal(data,"P2");
+           if(SurveyBuild._readonly){
+                //只读模式
+				var valDesc = "";
+				for (var i in children[0].option) {
+					if(children[0]["value"] == children[0]["option"][i]["code"]){
+						valDesc = children[0]["option"][i]["txt"];
+					}
+				}
+                c += '<div class="input-list">';
+                c += '	<div class="input-list-info left"><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+                c += '	<div class="input-list-text left"><span style="line-height:24px">' + valDesc + '<br>' + children[1]["value"] + '</span></div>';
+                c += '	<div class="input-list-suffix left"></div>';
+                c += '	<div class="clear"></div>';
+                c += '</div>';
+            }else{
+                //填写模式
+                SurveyBuild.appInsId == "0" && this._getDefaultVal(data,"P2");
 
-                	 e = '<option value="">' + MsgSet["PLEASE_SELECT"] + '</option>';
-                	 for (var i in children[0]["option"]) {
-                         e += '<option ' + (children[0].value == children[0]["option"][i]["code"] ? "selected='selected'": "") + 'value="' + children[0]["option"][i]["code"] + '">' + children[0]["option"][i]["txt"] + '</option>';
-                     }
-                	 c += '<div class="item">';
- 		            c += '	<p>'+data.title+'<span>'+ (data.isRequire == "Y" ? "*": "") +'</span></p>';
- 		            c += '  <div id="' + data.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
- 		            c += '	<div class="text-box">' ;
- 		            c +='		<select name="' + data.itemId + '" class="select1" id="' + data.itemId + '"  title="' + data.itemName + '">';
- 		            c +=			e;
- 		            c +='		</select>';
- 		            c += '	</div><br>';
- 		            c+='<div class="text-box">';
- 		            c+='<input  type="text" class="text1" placeholder="'+MsgSet["PleaseInput"]+'" id="' + data["itemId"] + children[1]["itemId"] + '" name="' + data["itemId"] + children[1]["itemId"] + '" value="' + children[1]["value"] + '">';
- 		            c+='</div>';
- 		            if ($.trim(data.onShowMessage) != "") {
- 					c += '	<p style="color:#666;font-size:0.56rem;">' + data.onShowMessage + '</p>';
- 					}
- 		            c += '</div>';
- 		            
-                   
+                c += '<div class="input-list">';
+                c += '	<div class="input-list-info left"><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+                c += '    <div class="input-list-textdate left input-date-select" style="width:12.5%">';
+                c += '			<select style="width:100%;" title="' + children[0]["itemName"] + '" id="' + data["itemId"] + children[0]["itemId"] + '" class="chosen-select" value="' + children[0]["value"] + '" name="' + data["itemId"] + children[0]["itemId"] + '">';
+                c += '			<option value="">' + MsgSet["PLEASE_SELECT"] + '</option>';
+                for (var i in children[0]["option"]) {
+                    c += '<option ' + (children[0].value == children[0]["option"][i]["code"] ? "selected='selected'": "") + 'value="' + children[0]["option"][i]["code"] + '">' + children[0]["option"][i]["txt"] + '</option>';
                 }
-        	}else{
-        		if(SurveyBuild._readonly){
-                    //只读模式
-    				var valDesc = "";
-    				for (var i in children[0].option) {
-    					if(children[0]["value"] == children[0]["option"][i]["code"]){
-    						valDesc = children[0]["option"][i]["txt"];
-    					}
-    				}
-                    c += '<div class="input-list">';
-                    c += '	<div class="input-list-info left"><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-                    c += '	<div class="input-list-text left"><span style="line-height:24px">' + valDesc + '<br>' + children[1]["value"] + '</span></div>';
-                    c += '	<div class="input-list-suffix left"></div>';
-                    c += '	<div class="clear"></div>';
-                    c += '</div>';
-                }else{
-                    //填写模式
-                    SurveyBuild.appInsId == "0" && this._getDefaultVal(data,"P2");
-
-                    c += '<div class="input-list">';
-                    c += '	<div class="input-list-info left"><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-                    c += '    <div class="input-list-textdate left input-date-select">';
-                    c += '			<select style="width:100%;" title="' + children[0]["itemName"] + '" id="' + data["itemId"] + children[0]["itemId"] + '" class="chosen-select" value="' + children[0]["value"] + '" name="' + data["itemId"] + children[0]["itemId"] + '">';
-                    c += '			<option value="">' + MsgSet["PLEASE_SELECT"] + '</option>';
-                    for (var i in children[0]["option"]) {
-                        c += '<option ' + (children[0].value == children[0]["option"][i]["code"] ? "selected='selected'": "") + 'value="' + children[0]["option"][i]["code"] + '">' + children[0]["option"][i]["txt"] + '</option>';
-                    }
-                    c += '			</select>';
-                    c += '	</div>';
-                    c += '	<div class="input-list-textdate left input-date-select" >';
-                    c += '    	<input type="text" class="inpu-list-text-enter"  placeholder="'+MsgSet["PleaseInput"]+'" name="' + data["itemId"] + children[1]["itemId"] + '" id="' + data["itemId"] + children[1]["itemId"] + '" title="' + children[1]["itemName"] + '" value="' + children[1]["value"] + '">';
-                    c += '    </div>';
-                    c += '    <div class="input-list-suffix left"><div id="' + data["itemId"] + 'Tip" class="onShow"><div class="onShow">&nbsp;</div></div></div>';
-                    c += '    <div class="clear"></div>';
-                    c += '</div>';
-                }
-        	}
-           
+                c += '			</select>';
+                c += '	</div>';
+                c += '	<div class="input-list-textdate left input-date-select" style="width: 21%; margin: 0px 15px 0 0;">';
+                c += '    	<input type="text" class="inpu-list-text-enter" name="' + data["itemId"] + children[1]["itemId"] + '" id="' + data["itemId"] + children[1]["itemId"] + '" title="' + children[1]["itemName"] + '" value="' + children[1]["value"] + '">';
+                c += '    </div>';
+                c += '    <div class="input-list-suffix left"><div id="' + data["itemId"] + 'Tip" class="onShow"><div class="onShow">&nbsp;</div></div></div>';
+                c += '    <div class="clear"></div>';
+                c += '</div>';
+            }
         } else {
             c += '<div class="question-answer">';
             c += '  <b style="min-width: 80px" class="read-select">证件类型</b>';
@@ -190,29 +129,18 @@ SurveyBuild.extend("CertificateNum", "baseComponent", {
         /*身份证*/
         if($cerType.val() == "1"){
             //return "身份证输入不合法！";
-           // $cerCode.attr("data-regular","/(^\\d{15}$)|(^\\d{18}$)|(^\\d{17}(\\d|X|x)$)/");
-        	$cerCode.attr("data-regular","/(^[1-9]\\d{5}(18|19|([23]\\d))\\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\\d{3}[0-9Xx]$)|(^[1-9]\\d{5}\\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\\d{2}$)/");
+            $cerCode.attr("data-regular","/(^\\d{15}$)|(^\\d{18}$)|(^\\d{17}(\\d|X|x)$)/");
         }else{
         	$cerCode.attr("data-regular","");
         }
 
-        $cerCode.blur(function(){
-			if($cerType.val() == "1"){
-				var sfz =$cerCode.val();
-				var lastx=sfz.charAt(sfz.length-1);
-				if(lastx=='x'){
-					$cerCode.val(sfz.substring(0,sfz.lastIndexOf('x'))+'X');
-				}
-				
-			}
-		});
+
         $cerType.change(function() {
             var cerCodeType = $(this).children('option:selected').val();
             /*身份证*/
             if(cerCodeType == "1"){
                 //return "身份证输入不合法！";
-            	$cerCode.attr("data-regular","/(^[1-9]\\d{5}(18|19|([23]\\d))\\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\\d{3}[0-9Xx]$)|(^[1-9]\\d{5}\\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\\d{2}$)/");
-            	
+                $cerCode.attr("data-regular","/(^\\d{15}$)|(^\\d{18}$)|(^\\d{17}(\\d|X|x)$)/");
             }else{
             	$cerCode.attr("data-regular","");
             }
@@ -240,7 +168,7 @@ SurveyBuild.extend("CertificateNum", "baseComponent", {
 				});
 			}
 		}
-		
+
         $cerCode.formValidator({tipID:(data["itemId"] + 'Tip'),onShow:"",onFocus:"&nbsp;",onCorrect:"&nbsp;"});
         $cerCode.functionValidator({
             fun:function(val,elem){

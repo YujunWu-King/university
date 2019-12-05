@@ -12,73 +12,40 @@ SurveyBuild.extend("MailingAddress", "baseComponent", {
 
     _getHtml: function(data, previewmode) {
         var c = "", children = data.children;
-        
-        var province="";
-        var address="";
-        
         if (previewmode) {
-            if(SurveyBuild.accessType == "M"){
-                if (SurveyBuild._readonly) {
-                    //只读模式
-                    c += '<div class="item">';
-                    c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
-                    c += '	  <div class="text-box">';
-                    c += '	 	<a><input ' + (data.isReadOnly == "Y" ? 'readonly="true"': '') + ' type="text" class="text1" value="' + children[0]["value"]  + '"></a>';
-                    c += '    </div>';
-                    c += '	  <div class="text-box">';
-                    c += '	 	<a><input ' + (data.isReadOnly == "Y" ? 'readonly="true"': '') + ' type="text" class="text1" value="' + children[1]["value"]  + '"></a>';
-                    c += '    </div>';
-                    c += '</div>';
-                } else {
-                    //填写模式
-                    SurveyBuild.appInsId == "0" && this._getDefaultVal(data,"P2");
-                    c += '<div class="item">';
-                    c += '	  <p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
-                    c += '		<div id="' + data.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
-                    c += '		 <div class="text-box">';
-                    c += '			<input type="text" id="' + data["itemId"] + children[0]["itemId"] + '" name="' + data["itemId"] + children[0]["itemId"] + '" value="' + children[0]["value"] + '">';
-                    c += '		 </div>';
-                    c += '      <div class="text-box" style="margin-top: 3px;">';
-                    c += '			<input type="text" id="' + data["itemId"] + children[1]["itemId"] + '" name="' + data["itemId"] + children[1]["itemId"] + '" value="' + children[1]["value"] + '">';
-                    c += '		 </div>	';
-                    c += '</div>';
+            if(SurveyBuild._readonly){
+                //只读模式
+                
+                c += '<div class="input-list">';
+                c += '	<div class="input-list-info left"><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+                c += '  <div class="input-list-text left"><span style="line-height:24px">' + children[0]["value"] + '<br>' + children[1]["value"] + '</span></div>';
+                c += '	<div class="input-list-suffix left"></div>';
+                c += '	<div class="clear"></div>';
+                c += '</div>';
+            }else{
+                //填写模式
+                SurveyBuild.appInsId == "0" && this._getDefaultVal(data,"P2");
 
-                }
-            } else{
-                if(SurveyBuild._readonly){
-                    //只读模式
-
-                    c += '<div class="input-list">';
-                    c += '	<div class="input-list-info left"><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-                    c += '  <div class="input-list-text left"><span style="line-height:24px">' + children[0]["value"] + '<br>' + children[1]["value"] + '</span></div>';
-                    c += '	<div class="input-list-suffix left"></div>';
-                    c += '	<div class="clear"></div>';
-                    c += '</div>';
-                }else{
-                    //填写模式
-                    SurveyBuild.appInsId == "0" && this._getDefaultVal(data,"P2");
-
-                    c += '<div class="input-list">';
-                    c += '	<div class="input-list-info left"><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-                    c += '	<div class="input-list-textdate left input-date-select" style="width:12.5%">';
-                    c += '    	<input type="text" class="inpu-list-text-enter" title="' + MsgSet["CITY"] + '" value="' +children[0]["value"] + '" id="' + data["itemId"] + children[0]["itemId"] + '" name="' + data["itemId"] + children[0]["itemId"] + '"><img id="' + data["itemId"] + data.children[0]["itemId"] + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/location.png" class="input-icon"/>';
-                    c += '	</div>';
-                    c += '	<div class="input-list-textdate left input-date-select" style="width: 21%; margin: 0 15px 0 0;">';
-                    c += '    	<input type="text" class="inpu-list-text-enter" title="' + MsgSet["ADDRESS"] + '" value="' + children[1]["value"] + '" id="' + data["itemId"] + children[1]["itemId"] + '" name="' + data["itemId"] + children[1]["itemId"] + '">';
-                    c += '	</div>';
-                    c += '	<div class="input-list-suffix left"><div id="' + data["itemId"] + 'Tip" class="onShow"><div class="onShow">&nbsp;</div></div></div>';
-                    c += '	<div class="clear"></div>';
-                    c += '</div>';
-                    //提示信息
-                    if ($.trim(data.onShowMessage) != "") {
-                        c += '<div class="input-list-blank" id="' + data.itemId + 'msg">';
-                        c += '	<div class="input-list-info-blank left"><span class="red-star"></div>';
-                        c += '	<div class="input-list-wz left"><span class="blue">' + data.onShowMessage + '</span></div>';
-                        c += '	<div class="input-list-suffix-blank left"></div>';
-                        c += '	<div class="clear"></div>';
-                        c += '</div>';
-                    }
-                }
+                c += '<div class="input-list">';
+                c += '	<div class="input-list-info left"><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+                c += '	<div class="input-list-textdate left input-date-select" style="width:12.5%">';
+                c += '    	<input type="text" class="inpu-list-text-enter" title="' + MsgSet["CITY"] + '" value="' + children[0]["value"] + '" id="' + data["itemId"] + children[0]["itemId"] + '" name="' + data["itemId"] + children[0]["itemId"] + '"><img id="' + data["itemId"] + data.children[0]["itemId"] + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/location.png" class="input-icon" />';
+                c += '	</div>';
+                c += '	<div class="input-list-textdate left input-date-select" style="width: 21%; margin: 0 15px 0 0;">';
+                c += '    	<input type="text" class="inpu-list-text-enter" title="' + MsgSet["ADDRESS"] + '" value="' + children[1]["value"] + '" id="' + data["itemId"] + children[1]["itemId"] + '" name="' + data["itemId"] + children[1]["itemId"] + '">';
+                c += '	</div>';
+                c += '	<div class="input-list-suffix left"><div id="' + data["itemId"] + 'Tip" class="onShow"><div class="onShow">&nbsp;</div></div></div>';
+                c += '	<div class="clear"></div>';
+                c += '</div>';
+				//提示信息
+				if ($.trim(data.onShowMessage) != "") {
+					c += '<div class="input-list-blank" id="' + data.itemId + 'msg">';
+					c += '	<div class="input-list-info-blank left"><span class="red-star"></div>';
+					c += '	<div class="input-list-wz left"><span class="blue">' + data.onShowMessage + '</span></div>';
+					c += '	<div class="input-list-suffix-blank left"></div>';
+					c += '	<div class="clear"></div>';
+					c += '</div>';
+				}
             }
         } else {
             c += '<div class="question-answer">';

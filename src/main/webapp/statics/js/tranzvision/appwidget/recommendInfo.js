@@ -1,6 +1,5 @@
 /**
  * Created by LZ on 2015/6/18.
- * 推荐信  modity by caoy 2017/1/18 copy by 清华MBA版本
  * 推荐信
  */
 SurveyBuild.extend("recommendInfo", "baseComponent", {
@@ -1130,15 +1129,17 @@ SurveyBuild.extend("recommendInfo", "baseComponent", {
 					return elem.title+MsgSet["REQUIRE"];
 				}  else {
 					if (Regular == 'phone_area') {
+						/*
 						var _result = /^[\d-+]+$/.test(val);
 						if(!_result){
 							return elem.title+MsgSet["FORMAT_ERROR_MSG"];
-						}
+						}*/
 					} else if (Regular == 'phone_no') {
+						/*
 						var _result = /^1\d{10}$/.test(val);
 						if(!_result){
 							return elem.title+MsgSet["FORMAT_ERROR_MSG"];
-						}
+						}*/
 					} else if (Regular == 'email') {
 						var std=/^([\w\-\.]+)@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.)|(([\w\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(]?)$/;
 						if (!std.test(val)){
@@ -1187,8 +1188,7 @@ SurveyBuild.extend("recommendInfo", "baseComponent", {
 			$tjr_phone_no.formValidator({tipID:data["itemId"] + children[i - 1].recommend_4["itemId"] + 'Tip',onShow:"",onFocus:"&nbsp;",onCorrect:"&nbsp;"});
 			$tjr_phone_no.functionValidator({
 				fun:function(val,elem){
-					//手机号码只做必填校验，不做格式校验
-					return _checkHtml(val,elem,"none");
+					return _checkHtml(val,elem,"phone_no");
 				}
 			});
 			//邮箱

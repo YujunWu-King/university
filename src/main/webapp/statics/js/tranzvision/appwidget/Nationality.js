@@ -12,13 +12,22 @@ SurveyBuild.extend("Nationality", "baseComponent", {
 		var c = "";
 
 		if (previewmode) {
-
 			if(SurveyBuild.accessType == "M"){
 				if (SurveyBuild._readonly) {
+					//只读模式
+					/*
+					c += '<div class="input-list">';
+					c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+					c += '    <div class="input-list-text left">' + data.value + '</div>';
+					c += '    <div class="input-list-suffix left"></div>';
+					c += '    <div class="clear"></div>';
+					c += '</div>';
+					*/
 					
 					c += '<div class="item">';
     				c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
     				c += '	  <div class="text-box">';
+
     				c += '	 	<a><input ' + (data.isReadOnly == "Y" ? 'readonly="true"': '') + ' type="text" class="text1" value="' + data.value + '"></a>';
     				c += '    </div>';
     				c += '</div>';
@@ -26,19 +35,30 @@ SurveyBuild.extend("Nationality", "baseComponent", {
 				} else {
 					//填写模式
 					SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
-					
+					/*
+					c += '<div class="input-list">';
+					c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+					c += '    <div class="input-list-text left"><input type="text" class="inpu-list-text-enter" id="' + data.itemId + '" name="' + data.itemId + '" title="' + data.itemName + '" value="' + data.value + '"/><img id="' + data.itemId + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/location.png" class="input-icon" /></div>';
+					c += '    <div class="input-list-suffix left"><div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
+					c += '    <div class="clear"></div>';
+					c += '</div>';
+					*/
+
 				  	c += '<div class="item">';
     				c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
     				c += '	<div id="' + data.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';			
     				c += '	  <div class="text-box">';
-    				c += '		<a><input readonly="readonly" type="text" id="' + data.itemId + '" name="' + data.itemId + '"  value="' + data.value + '" placeholder="请选择国家" ccode=""></a>';
+//    				c += '	 	<a href="pop_city.html"><input type="text" class="text1"  id="' + data.itemId + '" name="' + data.itemId + '" title="' + data.itemName + '" value="' + data.value + '"></a>';
+//    				c += '	 	<a href="pop_county.html"><input type="text" class="text1"  name="' + data.itemId + '" title="' + data.itemName + '" value="' + data.value + '"></a>';
+    				c += '		<a>						  <input type="text" id="' + data.itemId + '" name="' + data.itemId + '"  value="' + data.value + '" placeholder="请选择国家" ccode=""></a>';
+//    				c += '		<a>						  <input type="text" id="m' + data.itemId + '" name="' + data.itemId + '"  value="' + data.value + '" placeholder="请选择国家" ccode=""></a>';
+    				
     				c += '    </div>';
     				c += '</div>';
+//    				c += '<div class="viewport-adaptive" id="searchCountry" style="display:none;width: 100%;min-width: 320px;max-width:750px;margin: 0 auto;height: auto;" ></div>';
+//    				c += '<div><a><input type="button" id="TEST" value="按钮"></a></div>';
 				}
-				
-				
-				
-			}else {
+			}else{
 				if (SurveyBuild._readonly) {
 					//只读模式
 					c += '<div class="input-list">';
@@ -52,13 +72,13 @@ SurveyBuild.extend("Nationality", "baseComponent", {
 					SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
 					c += '<div class="input-list">';
 					c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-					c += '    <div class="input-list-text left"><input readonly="readonly" type="text" class="inpu-list-text-enter" id="' + data.itemId + '" name="' + data.itemId + '" title="' + data.itemName + '" value="' + data.value + '"/><img id="' + data.itemId + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/location.png" class="input-icon" /></div>';
+					c += '    <div class="input-list-text left"><input type="text" class="inpu-list-text-enter" id="' + data.itemId + '" name="' + data.itemId + '" title="' + data.itemName + '" value="' + data.value + '"/><img id="' + data.itemId + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/location.png" class="input-icon" /></div>';
 					c += '    <div class="input-list-suffix left"><div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
 					c += '    <div class="clear"></div>';
 					c += '</div>';
 				}
 			}
-			
+
 			
 		} else {
 			c += '<div class="question-answer">';
@@ -105,11 +125,12 @@ SurveyBuild.extend("Nationality", "baseComponent", {
 		
 		if(SurveyBuild.accessType == "M"){
 			//顾贤达    2017年6月12日 11:15:18 手机版TEST
-
+					
 			var $inputBox = $("#" + data.itemId);
 			var $selectBtn = $("#" + data.itemId + "_Btn");
 			var siteId=$("#siteId").val();
 			
+
 			$.each([$inputBox, $selectBtn],function(i, el) {
 				el.focus(function(){
 		        document.activeElement.blur();
@@ -120,8 +141,7 @@ SurveyBuild.extend("Nationality", "baseComponent", {
 				el.click(function(e) { 
 				
 					$("#ParamCon").val(el.attr("id"));
-//					var tzParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_M_COUNTRY_STD","OperateType":"HTML","comParams":{"orgid":"'+strJgid+'","siteId":"'+strSiteId+'","lang":"'+$("#lang").val()+'","sen":"2"}}';
-					var tzParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_M_COUNTRY_STD2","OperateType":"HTML","comParams":{"orgid":"MBA","siteId":"'+siteId+'","lang":"'+$("#lang").val()+'","sen":"2"}}';
+					var tzParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_M_COUNTRY_STD2","OperateType":"HTML","comParams":{"orgid":"SEM","siteId":"72","lang":"'+$("#lang").val()+'","sen":"2"}}';
 					
 					$.ajax({
 						type: "post",
@@ -136,7 +156,7 @@ SurveyBuild.extend("Nationality", "baseComponent", {
 							$("#searchCountry").html(result);
 							$("#MainDiv").hide();
 						    $("#searchCountry").fadeIn("slow"); 
-		          
+		                     loaded ();
 						}
 					});
 					console.log($("#" + data.itemId).val());

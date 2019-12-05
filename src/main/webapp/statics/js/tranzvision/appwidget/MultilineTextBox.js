@@ -36,54 +36,33 @@ SurveyBuild.extend("MultilineTextBox", "baseComponent", {
 				c += '	<p>'+ data.title +'<span>' + (data.isRequire == "Y" ? "*": "") +' </span></p>';
 				c += '	 <div id="' + data.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
 				c += '	<div class="text-box" style="height: auto;">';
-				//c += ' 		<textarea data-regular="' + regular + '" title="' + data.itemName + '" id="' + data.itemId + '" name="' + data.itemId + '"class="textarea1" ' + (data.isReadOnly == "Y" ? 'disabled="true"': '') + '>'+data.value+'</textarea>';
-				c += ' 		<textarea data-regular="' + regular + '" title="' + data.itemName + '" id="' + data.itemId + '" name="' + data.itemId + '"class="boxSize' + data.boxSize + '" ' + (data.isReadOnly == "Y" ? 'disabled="true"': '') + '>'+data.value+'</textarea>';
+				c += ' 		<textarea data-regular="' + regular + '" title="' + data.itemName + '" id="' + data.itemId + '" name="' + data.itemId + '"class="inpu-list-text-otherenter boxSize' + data.boxSize + '" ' + (data.isReadOnly == "Y" ? 'disabled="true"': '') + '>'+data.value+'</textarea>';
 				c += '	</div>';
 				c += '	<p style="color:#666;font-size:0.56rem;" id="p'+data.itemId+'" ></p>';
-				c += '</div>';
+				c += '</div>';	
 			}else{
-
 				if(data.format == "L"){
-					 if(SurveyBuild._readonly){
-						 c += '<div class="input-list-wrap">';
-						 c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '<br><div style="line-height:46px;color:#0070c6" id="' + data.itemId + 'Size"></div></div>';
-						 c += '    	<div class="input-list-textinput left">' + data.value + '</div>';
-						 c += '    <div class="clear"></div>';
-						 c += '</div>';
-					 } else {
-					
-						 c += '<div class="input-list-wrap">';
-						 c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '<br><div style="line-height:46px;color:#0070c6" id="' + data.itemId + 'Size"></div><div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
-						 c += '    	<div class="input-list-textinput left"><textarea data-regular="' + regular + '" title="' + data.itemName + '" id="' + data.itemId + '" name="' + data.itemId + '" class="inpu-list-text-otherenter boxSize' + data.boxSize + '">' + data.value + '</textarea></div>';
-						 c += '    <div class="clear"></div>';
-						 c += '</div>';
-					 }
+					c += '<div class="input-list-wrap">';
+					c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '<br><div style="line-height:46px;color:#0070c6" id="' + data.itemId + 'Size"></div><div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
+					c += '    	<div class="input-list-textinput left"><textarea data-regular="' + regular + '" title="' + data.itemName + '" id="' + data.itemId + '" name="' + data.itemId + '" class="inpu-list-text-otherenter boxSize' + data.boxSize + '">' + data.value + '</textarea></div>';
+					c += '    <div class="clear"></div>';
+					c += '</div>';
 				}else{
-					 if(SurveyBuild._readonly){
-						 c += '<div class="input-list-wrap">';
-							c += '	<div class="input-list-otherinfo">';
-							c += '		<p><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '&nbsp;&nbsp;<div style="padding-top:5px;color:#0070c6" id="' + data.itemId + 'Size"></div></p>';
-							c += '	</div>';
-							c += '	<div class="input-list-othertext">';
-							c += '		' + data.value ;
-							c += '	</div>';
-							c += '  <div class="clear"></div>';
-							c += '</div>';
-					 } else {
 					c += '<div class="input-list-wrap">';
 					c += '	<div class="input-list-otherinfo">';
 					c += '		<p><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '&nbsp;&nbsp;<div style="padding-top:5px;color:#0070c6" id="' + data.itemId + 'Size"></div></p>';
+					//c += '		<p class="input-list-otherinfoEN">' + data.wzsm + '</p>';
 					c += '	</div>';
-					c += '  <div class="input-list-suffix left" style="width: 100%;"><div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
 					c += '	<div class="input-list-othertext">';
 					c += '		<textarea data-regular="' + regular + '" title="' + data.itemName + '" id="' + data.itemId + '" name="' + data.itemId + '" class="inpu-list-text-otherenter boxSize' + data.boxSize + '">' + data.value + '</textarea>';
+					c += '  <div class="input-list-suffix left" style="width: 100%;"><div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
 					c += '	</div>';
 					c += '  <div class="clear"></div>';
 					c += '</div>';
-					 }
 				}
-			}
 
+			}
+			
 		} else {
 			c =  '<div class="question-answer">';
 			c += '	<div class="format ' + (data["rows"] ? "rows" + data.rows: "4") + '">';
@@ -278,21 +257,14 @@ SurveyBuild.extend("MultilineTextBox", "baseComponent", {
 			errorMsg = MsgSet["REQUIRE"];
 		}
 		$inputBox.keyup(function(){
-			//if (data.wzsm =="" || data.wzsm== undefined) {
-			//	data.wzsm="";
-			//}
 			var len = $inputBox.val().length;
 			if (len != 0){
-				$("#" + data.itemId + "Size").text("已输入"+len+"字");
-				//$("#" + data.itemId + "Size").text(MsgSet["INPUTED"]+" "+len+" "+MsgSet["WORD"]);
-				//$("#p" + data.itemId).text(MsgSet["INPUTED"]+" "+len+" "+MsgSet["WORD"]);
-			}else{
-				$("#" + data.itemId + "Size").text('');
+				$("#" + data.itemId + "Size").text(MsgSet["INPUTED"]+" "+len+" "+MsgSet["WORD"]);
+				$("#p" + data.itemId).text(MsgSet["INPUTED"]+" "+len+" "+MsgSet["WORD"]);
 			}
 		});
 		
 		//$inputBox.formValidator({tipID:(data["itemId"]+'Tip'), onShow:"&nbsp;", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
-		//console.log(data.itemId);
 		$inputBox.formValidator({tipID: (data["itemId"] + 'Tip'),onShow: "",onFocus: "&nbsp;",onCorrect: "&nbsp;"});
 		$inputBox.functionValidator({
 			fun:function(val,elem){
@@ -309,7 +281,7 @@ SurveyBuild.extend("MultilineTextBox", "baseComponent", {
 							//console.log(_ruleClass);
 							if (_ruleClass && _ruleClass._Validator) {
 								_result = _ruleClass._Validator(data["itemId"], classObj["messages"], data);
-								//console.log(_result);
+								console.log(_result);
 								if(_result !== true){
 									return false;
 								}

@@ -102,6 +102,9 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 				for(var i=1;i<=showLines;i++){
 					var tempHtmlP = this._getHtmlTwo(data,i);
 					htmlContent += tempHtmlP;
+                    if(i>1){
+                        data["linesNo"].shift();
+                    }
 				}
 				if(!SurveyBuild._readonly){
 					
@@ -240,7 +243,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 		
 		//DATE_DIV += '     <div class="input-list-text left"> <input id="' + date_id+ '" name="' + date_name+ '" type="text" value="'  +date_val + '"class="inpu-list-text-enter" style="height:36px" readonly="readonly" onchange="SurveyBuild.reFocus(\'' + date_id + '\'); title="' +date_name + '">';
 		
-		DATE_DIV += '     <div class="input-list-text left"> <input id="' + date_id+ '" type="text" value="'  +date_val + '"class="inpu-list-text-enter" style="height:36px" readonly="readonly" onchange="this.blur()"; title="' +date_name + '" />';
+		DATE_DIV += '     <div class="input-list-text left"> <input id="' + date_id+ '" name="' + date_name+ '" type="text" value="'  +date_val + '"class="inpu-list-text-enter" style="height:36px" readonly="readonly" onchange="this.blur()"; title="' +date_name + '" />';
 		DATE_DIV += '      <img id="' + date_id+ '_Clear" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/close.png" style="position:relative;top:5px;left:-61px;cursor:pointer;' + (date_val == "" ? ";visibility:hidden;": "") + '" />';
 		DATE_DIV += '      <img id="' + date_id+ '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/calendar.png" style="position:relative;top:5px;left:-58px;cursor:pointer;" />';
 		//DATE_DIV += ' <div class="clear"> </div>';
@@ -692,7 +695,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 							//'<input type="file" id="'+data["itemId"] + child.EngLevelUp.itemId+'File"  name="' + data["itemId"] + child.EngLevelUp.itemId + 'File" onchange=SurveyBuild.eduImgUpload(this,"EngLevelUp") accept="image/*"/>'
 								htmlContent+= '<div class="filebtn left">';
 								htmlContent+= '	<div class="filebtn-org"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/upload.png" />&nbsp;&nbsp;' + MsgSet["UPLOAD_BTN_MSG"] + '</div>';
-								htmlContent+= '	<input data-instancid="' + data.instanceId + '" name="'+child.EngLevelUp.itemId+ '" id="'+child.EngLevelUp.itemId+ '" title="' + data.itemName + '" onchange="SurveyBuild.engUploadAttachment(this,\''+ data.instanceId +'\',\''+ child.EngLevelUp.instanceId +'\')" type="file" class="filebtn-orgtext"/>';
+								htmlContent+= '	<input data-instancid="' + data.instanceId + '" id="'+child.EngLevelUp.itemId+ '" name="'+ data.itemId + '" title="' + data.itemName + '" onchange="SurveyBuild.engUploadAttachment(this,\''+ data.instanceId +'\',\''+ child.EngLevelUp.instanceId +'\')" type="file" class="filebtn-orgtext"/>';
 								htmlContent+= '</div>';
 								//GRE和GMAT特有:"请提供正式成绩单"ENG_UP_TIPS
 								//if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T1||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T2){
@@ -854,55 +857,10 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 				htmlContent += '<div class="text-box" id="'+data.itemId+'_GRADE_DIV"><input type="text" value="'  + child.EngLevelGrade.value + '" class="text1" id="' + data.itemId+child.EngLevelGrade.itemId + '"/></div>';
 				htmlContent += '</div>';
 			}
-			htmlContent += '</div>';
-			
+
 			//附件
-			if(EXAM_TYPE_DEF == "无" || EXAM_TYPE_DEF == ""){
 
-			}else{
-
-				var childrenAttr=child.EngLevelUp.children;
-				if(child.EngLevelUp.allowMultiAtta == "Y"){
-
-					for(var index=0; index<childrenAttr.length; index++){
-
-						if (childrenAttr[index].viewFileName != "" && childrenAttr[index].sysFileName != ""){
-
-							htmlContent += ' <div class="upload_list" id="' + child.EngLevelUp.itemId + '_AttList" style="display:' + (childrenAttr.length < 1 ? 'none':'block') + '">';
-							htmlContent += '<p>'+ MsgSet["UP_FILE_LIST"] +'</p>';
-							htmlContent += '<li class="fileLi">';
-							htmlContent += '<span><a id="img_'+ child.EngLevelUp.itemId +'_'+index+'" onclick="SurveyBuild.engViewImageSet(this,\'' + data.instanceId + '\',\''+ child.EngLevelUp.instanceId +'\')" index="'+ index +'" file-index="' + childrenAttr[index].orderby + '">';
-							htmlContent += childrenAttr[index].viewFileName +'</a></span>';
-							htmlContent += '</li>';
-							htmlContent += '</div>';
-						}else{
-
-							htmlContent += ' <div class="upload_list" id="' + child.EngLevelUp.itemId + '_AttList" style="display:none">';
-							htmlContent += '<p>'+ MsgSet["UP_FILE_LIST"] +'</p>';
-							htmlContent += '</div>';
-						}
-					}
-
-				}else{
-
-					htmlContent += ' <div class="upload_list" id="' + child.EngLevelUp.itemId + '_AttList" style="display:' + (childrenAttr.length < 1 ? 'none':'block') + '">';
-					htmlContent += '<p>'+ MsgSet["UP_FILE_LIST"] +'</p>';
-					htmlContent += '<li class="fileLi">';
-					htmlContent += '<span><a id="img_'+ child.EngLevelUp.itemId +'_'+index+'" onclick="SurveyBuild.engViewImageSet(this,\'' + data.instanceId + '\',\''+ child.EngLevelUp.instanceId +'\')" index="'+ index +'" file-index="' + childrenAttr[index].orderby + '">';
-					htmlContent += childrenAttr[index].viewFileName +'</a></span>';
-					htmlContent += '</li>';
-					htmlContent += '</div>';
-
-				}
-
-				htmlContent += '<div class="img_shade" id ="shade_'+ child.EngLevelUp.itemId +'"></div>';
-				htmlContent += '<img class="img_pop_close" id ="close_'+ child.EngLevelUp.itemId +'" src="'+ TzUniversityContextPath + '/statics/images/appeditor/m/rl_btn.png'+'">';
-				htmlContent += '<div class="img_pop_body" id ="body_'+ child.EngLevelUp.itemId +'">'  ;
-				htmlContent += ' <img src="" id ="img_'+ child.EngLevelUp.itemId +'">';
-				htmlContent += '</div>';
-
-			}
-			
+			htmlContent += '</div>';
 			
 		}else{
 
@@ -1142,9 +1100,9 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 
 				}
 
-				htmlContent += '<div class="img_shade" id ="shade_'+ child.EngLevelUp.itemId +'"></div>';
-				htmlContent += '<img class="img_pop_close" id ="close_'+ child.EngLevelUp.itemId +'" src="'+ TzUniversityContextPath + '/statics/images/appeditor/m/rl_btn.png'+'">';
-				htmlContent += '<div class="img_pop_body" id ="body_'+ child.EngLevelUp.itemId +'">'  ;
+				htmlContent += '<div class="img_shade" style="display: none" id ="shade_'+ child.EngLevelUp.itemId +'"></div>';
+				htmlContent += '<img class="img_pop_close" style="display: none" id ="close_'+ child.EngLevelUp.itemId +'" src="'+ TzUniversityContextPath + '/statics/images/appeditor/m/rl_btn.png'+'">';
+				htmlContent += '<div class="img_pop_body" style="display: none" id ="body_'+ child.EngLevelUp.itemId +'">'  ;
 				htmlContent += ' <img src="" id ="img_'+ child.EngLevelUp.itemId +'">';
 				htmlContent += '</div>';
 
@@ -1170,26 +1128,22 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 				var childrenAttr=child.EngLevelUp.children;
 				if(child.EngLevelUp.allowMultiAtta == "Y"){
 
+					htmlContent += ' <div class="upload_list" id="' + child.EngLevelUp.itemId + '_AttList" style="display:' + (childrenAttr.length < 1 ? 'none':'block') + '">';
+					htmlContent += '<p>'+ MsgSet["UP_FILE_LIST"] +'</p>';
 					for(var index=0; index<childrenAttr.length; index++){
 
 						if (childrenAttr[index].viewFileName != "" && childrenAttr[index].sysFileName != ""){
 
-							htmlContent += ' <div class="upload_list" id="' + child.EngLevelUp.itemId + '_AttList" style="display:' + (childrenAttr.length < 1 ? 'none':'block') + '">';
-							htmlContent += '<p>'+ MsgSet["UP_FILE_LIST"] +'</p>';
 							htmlContent += '<li class="fileLi">';
 							htmlContent += '<span><a id="img_'+ child.EngLevelUp.itemId +'_'+index+'" onclick="SurveyBuild.engViewImageSet(this,\'' + data.instanceId + '\',\''+ child.EngLevelUp.instanceId +'\')" index="'+ index +'" file-index="' + childrenAttr[index].orderby + '">';
 							htmlContent += childrenAttr[index].viewFileName +'</a></span>';
 							htmlContent += '<i onclick="SurveyBuild.oldDeleteFile(this,\'' + data.instanceId + '\',\''+ child.EngLevelUp.instanceId+'\',\''+ j +'\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center">';
 							htmlContent += '</i></li>';
-							htmlContent += '</div>';
-						}else{
-
-							htmlContent += ' <div class="upload_list" id="' + child.EngLevelUp.itemId + '_AttList" style="display:none">';
-							htmlContent += '<p>'+ MsgSet["UP_FILE_LIST"] +'</p>';
-							htmlContent += '</div>';
+							
 						}
 					}
-
+					htmlContent += '</div>';
+					
 				}else{
 
 					htmlContent += ' <div class="upload_list" id="' + child.EngLevelUp.itemId + '_AttList" style="display:' + (childrenAttr.length < 1 ? 'none':'block') + '">';
@@ -1203,9 +1157,9 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 
 				}
 
-				htmlContent += '<div class="img_shade" id ="shade_'+ child.EngLevelUp.itemId +'"></div>';
-				htmlContent += '<img class="img_pop_close" id ="close_'+ child.EngLevelUp.itemId +'" src="'+ TzUniversityContextPath + '/statics/images/appeditor/m/rl_btn.png'+'">';
-				htmlContent += '<div class="img_pop_body" id ="body_'+ child.EngLevelUp.itemId +'">'  ;
+				htmlContent += '<div class="img_shade" style="display: none" id ="shade_'+ child.EngLevelUp.itemId +'"></div>';
+				htmlContent += '<img class="img_pop_close" style="display: none" id ="close_'+ child.EngLevelUp.itemId +'" src="'+ TzUniversityContextPath + '/statics/images/appeditor/m/rl_btn.png'+'">';
+				htmlContent += '<div class="img_pop_body" style="display: none" id ="body_'+ child.EngLevelUp.itemId +'">'  ;
 				htmlContent += ' <img src="" id ="img_'+ child.EngLevelUp.itemId +'">';
 				htmlContent += '</div>';
 
@@ -1265,9 +1219,9 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 
                 var child=children[j];
 				//隐藏图片显示
-				$("#shade_"+ child.EngLevelUp.itemId).hide();
-				$("#body_"+ child.EngLevelUp.itemId).hide();
-				$("#close_"+ child.EngLevelUp.itemId).hide();
+				// $("#shade_"+ child.EngLevelUp.itemId).hide();
+				// $("#body_"+ child.EngLevelUp.itemId).hide();
+				// $("#close_"+ child.EngLevelUp.itemId).hide();
 
 				type_select=$("#"+ data["itemId"] + child.EngLevelType.itemId);
 				type_select.each(function(index){

@@ -12,23 +12,49 @@ SurveyBuild.extend("City", "baseComponent", {
 		var c = "";
 		
 		if (previewmode) {
-			if(SurveyBuild._readonly){
-				//只读模式
-				c += '<div class="input-list">';
-				c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-				c += '    <div class="input-list-text left">' + data.value + '</div>';
-				c += '    <div class="input-list-suffix left"></div>';
-				c += '    <div class="clear"></div>';
-				c += '</div>';
+			if(SurveyBuild.accessType == "M"){
+				if(SurveyBuild._readonly){
+					//只读模式			
+					c += '<div class="item">';
+					c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
+					c += '	  <div class="text-box">';
+
+					c += '	 	<a><input ' + (data.isReadOnly == "Y" ? 'readonly="true"': '') + ' type="text" class="text1" value="' + data.value + '"></a>';
+					c += '    </div>';
+					c += '</div>';
+				
+				}else{
+					//填写模式
+					SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
+				
+					c += '<div class="item">';
+					c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
+					c += '	<div id="' + data.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';			
+					c += '	  <div class="text-box">';
+					c += '		<a><input type="text" id="' + data.itemId + '" name="' + data.itemId + '" placeholder="请选择城市" value="' + data.value + '"></a>';
+    				
+					c += '    </div>';
+					c += '</div>';
+				}
 			}else{
-				//填写模式
-				SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
-				c += '<div class="input-list">';
-				c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-				c += '    <div class="input-list-text left"><input type="text" class="inpu-list-text-enter" id="' + data.itemId + '" name="' + data.itemId + '" title="' + data.itemName + '" value="' + data.value + '"/><img id="' + data.itemId + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/location.png" class="input-icon" /></div>';
-				c += '    <div class="input-list-suffix left"><div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
-				c += '    <div class="clear"></div>';
-				c += '</div>';
+				if(SurveyBuild._readonly){
+					//只读模式
+					c += '<div class="input-list">';
+					c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+					c += '    <div class="input-list-text left">' + data.value + '</div>';
+					c += '    <div class="input-list-suffix left"></div>';
+					c += '    <div class="clear"></div>';
+					c += '</div>';
+				}else{
+					//填写模式
+					SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
+					c += '<div class="input-list">';
+					c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+					c += '    <div class="input-list-text left"><input type="text" class="inpu-list-text-enter" id="' + data.itemId + '" name="' + data.itemId + '" title="' + data.itemName + '" value="' + data.value + '"/><img id="' + data.itemId + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/location.png" class="input-icon" /></div>';
+					c += '    <div class="input-list-suffix left"><div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
+					c += '    <div class="clear"></div>';
+					c += '</div>';
+				}
 			}
 		} else {
 			c += '<div class="question-answer">';
@@ -69,34 +95,108 @@ SurveyBuild.extend("City", "baseComponent", {
 	},
 	
 	_eventbind:function(data){
-		var $inputBox = $("#" + data.itemId);
-		var $selectBtn = $("#" + data.itemId + "_Btn");
-		var siteId=$("#siteId").val();
-		/*文本框和图标选择*/
-		$.each([$inputBox,$selectBtn],function(i,el){
-			el.click(function(e) {
-				var provinceUrl = SurveyBuild.tzGeneralURL + '?tzParams=';
-				var params = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_CITY_STD","OperateType":"HTML","comParams":{"OType":"CITY","TPLID":"' + templId + '","TZ_CITY_ID":"' + data.itemId+ '","siteId":"' + siteId + '"}}';
-				provinceUrl = provinceUrl + window.escape(params);
-	
-				i2 = $.layer({
-					type: 2,
-					title: false,
-					fix: false,
-					closeBtn: false,
-					shadeClose: false,
-					shade : [0.3 , '#000' , true],
-					border : [3 , 0.3 , '#000', true],
-					offset: ['100px',''],
-					area: ['588px','400px'],
-					iframe: {src: provinceUrl}
-				});
-	
-			}); 
-		 });
+		
+		
+		if(SurveyBuild.accessType == "M"){
+			var $inputBox = $("#" + data.itemId);
+			var $selectBtn = $("#" + data.itemId + "_Btn");
+			var siteId=$("#siteId").val();
+			/*文本框和图标选择*/
+			$.each([$inputBox,$selectBtn],function(i,el){
+				var prov;
+				el.click(function(e) { 
+					$.each([$inputBox, $selectBtn],function(i, el) {
+		              document.activeElement.blur();
+		           });
+		          
 
-		$inputBox.formValidator({tipID:data["itemId"]+'Tip',onShow:"",onFocus:"&nbsp;",onCorrect:"&nbsp;"});
-		$inputBox.functionValidator({
+					$("#ParamCon").val(el.attr("id"));
+					
+					console.log($("#ParamCon").val());
+					//var tzParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_M_PROVINCE_STD2","OperateType":"HTML","comParams":{"TZ_PROV_ID":"'+data.itemId+'","siteId":"'+siteId+'"}}';
+					var tzParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_M_CITY_STD","OperateType":"HTML","comParams":{"OType":"CITY"}}';
+					
+					$.ajax({
+						type: "post",
+						async :false,
+						data:{
+							tzParams:tzParams
+						},
+						url: TzUniversityContextPath + "/dispatcher",
+						dataType: "html",
+						success: function(result){
+							$("#searchCountry").html("");
+							$("#searchCountry").html(result);
+							//$("#searchCountry").focus(function(){
+		                    // document.activeElement.blur();
+							//	});
+						
+						//$("#body").css("position","fixed");
+						$("#MainDiv").hide();
+						$("#searchCountry").fadeIn("slow"); 
+						 loaded ();
+						}
+					});
+				});
+				
+			});
+			$inputBox.formValidator({tipID:data["itemId"]+'Tip',onShow:"",onFocus:"&nbsp;",onCorrect:"&nbsp;"});
+			$inputBox.functionValidator({
+				fun: function(val,elem) {
+					//执行高级设置中的自定义规则
+					/*********************************************\
+					 ** 注意：自定义规则中不要使用formValidator **
+					 \*********************************************/
+					var _result = true;
+					if (ValidationRules) {
+						$.each(data["rules"],function(classname, classObj) {
+							if ($.inArray(classname, SurveyBuild._baseRules) == -1 && data["rules"][classname]["isEnable"] == "Y") {
+								var _ruleClass = ValidationRules[classname];
+								if (_ruleClass && _ruleClass._Validator) {
+									_result = _ruleClass._Validator(data["itemId"], classObj["messages"]);
+									if(_result !== true){
+										return false;
+									}
+								}
+							}
+						});
+						if(_result !== true){
+							return _result;
+						}
+					}
+				}
+			})
+			
+			
+		}else{
+			var $inputBox = $("#" + data.itemId);
+			var $selectBtn = $("#" + data.itemId + "_Btn");
+			var siteId=$("#siteId").val();
+			/*文本框和图标选择*/
+			$.each([$inputBox,$selectBtn],function(i,el){
+				el.click(function(e) {
+					var provinceUrl = SurveyBuild.tzGeneralURL + '?tzParams=';
+					var params = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_CITY_STD","OperateType":"HTML","comParams":{"OType":"CITY","TPLID":"' + templId + '","TZ_CITY_ID":"' + data.itemId+ '","siteId":"' + siteId + '"}}';
+					provinceUrl = provinceUrl + window.escape(params);
+					
+					i2 = $.layer({
+						type: 2,
+						title: false,
+						fix: false,
+						closeBtn: false,
+						shadeClose: false,
+						shade : [0.3 , '#000' , true],
+						border : [3 , 0.3 , '#000', true],
+						offset: ['100px',''],
+						area: ['588px','400px'],
+						iframe: {src: provinceUrl}
+					});
+	
+				}); 
+			});
+
+			$inputBox.formValidator({tipID:data["itemId"]+'Tip',onShow:"",onFocus:"&nbsp;",onCorrect:"&nbsp;"});
+			$inputBox.functionValidator({
 				fun: function(val,elem) {
 					//执行高级设置中的自定义规则
 					/*********************************************\
@@ -121,5 +221,6 @@ SurveyBuild.extend("City", "baseComponent", {
 					}
 				}
 			})
+		}
 	}
 })

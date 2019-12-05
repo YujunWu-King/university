@@ -34,61 +34,26 @@ SurveyBuild.extend("BirthdayAndAge", "baseComponent", {
 		var c = "";
 
 		if (previewmode) {
-			if(SurveyBuild.accessType == "M"){
-				if(SurveyBuild._readonly){
-					c += '<div class="item">';
-					c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
-					c += '	<div class="overhidden">';
-					c += '		<div class="text-box fl" style="width:30%;">';
-					c += '      	<input type="text" class="text1"  value="' + data.children[0]["value"] + '">';
-					c += '      </div>';
-					c += '		 <div class="fl text-age">  '+MsgSet["AGE"] +'  &nbsp;    </div>';
-					c += '       <div class="text-box fl" style="width:30%;">';
-					c += '           <input type="text" class="text1" value=" ' + data.children[1]["value"] + '">';
-					c += '       </div>';
-					c += '   </div>';
-					c += '  <p style="color:#666;font-size:0.56rem;"></p>';
-					c += '</div>';
-				}else{
-					SurveyBuild.appInsId == "0" && this._getDefaultVal(data,"P1");
-					c += '<div class="item">';
-					c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
-					c += '	<div class="overhidden">';
-					c += '  <div id="' + data.itemId+  'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
-					c += '		<div class="text-box fl" style="width:30%;">';
-					c += '      	<input type="text" class="text1"  readonly="readonly" id="' + data["itemId"] + data.children[0]["itemId"] + '"value="' + data.children[0]["value"] + '"onclick="this.focus()" >';
-					c += '      </div>';
-					c += '		 <div class="fl text-age">  '+MsgSet["AGE"] +'  &nbsp;    </div>';
-					c += '       <div class="text-box fl" style="width:30%; margin-left:2%">';
-					c += '           <input type="text" class="text1" readonly="readonly" id="' + data["itemId"] + data.children[1]["itemId"] + '" value=" ' + data.children[1]["value"] + '" >';
-					c += '       </div>';
-					c += '   </div>';
-					c += '  <p style="color:#666;font-size:0.56rem;"></p>';
-					c += '</div>';
-				}
+			if(SurveyBuild._readonly){
+				//只读模式
+				c += '<div class="input-list">';
+				c += '	<div class="input-list-info left"><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+				c += '    <div class="input-list-text left">' + data.children[0]["value"] + "&nbsp;&nbsp;&nbsp;&nbsp;" + data.children[1]["value"] + '</div>';
+				c += '    <div class="input-list-suffix left"></div>';
+				c += '    <div class="clear"></div>';
+				c += '</div>';
 			}else{
-				if(SurveyBuild._readonly){
-					//只读模式
-					c += '<div class="input-list">';
-					c += '	<div class="input-list-info left"><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-					c += '    <div class="input-list-text left">' + data.children[0]["value"] + "&nbsp;&nbsp;&nbsp;&nbsp;"+ MsgSet["AGE"]+"&nbsp;&nbsp;&nbsp;&nbsp;" + data.children[1]["value"] + '</div>';
-					c += '    <div class="input-list-suffix left"></div>';
-					c += '    <div class="clear"></div>';
-					c += '</div>';
-				}else{
-					//填写模式
-					SurveyBuild.appInsId == "0" && this._getDefaultVal(data,"P1");
-					c += '<div class="input-list">';
-					c += '	<div class="input-list-info left"><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-					c += '    <div class="input-list-text left">';
-					c += '    	<input type="text" class="inpu-list-text-enter" readonly="readonly" id="' + data["itemId"] + data.children[0]["itemId"] + '" name="' + data["itemId"] + data.children[0]["itemId"] + '" value="' + data.children[0]["value"] + '" onclick="this.focus()" title="' + data.children[0]["itemName"] + '" style="width:46%"><img id="' + data["itemId"] + data.children[0]["itemId"] + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/calendar.png" class="input-icon">';
-					c +=    MsgSet["AGE"] ;
-					c += '    	<input type="text" class="inpu-list-text-enter" readonly="readonly" id="' + data["itemId"] + data.children[1]["itemId"] + '" value="' + data.children[1]["value"] + '" title="' + data.children[1]["itemName"] + '" style="width:33%">';
-					c += '    </div>';
-					c += '    <div class="input-list-suffix left"><div id="' + data.itemId + 'Tip" class="onShow" ><div class="onShow"></div></div></div>';
-					c += '    <div class="clear"></div>';
-					c += '</div>';
-				}
+				//填写模式
+				SurveyBuild.appInsId == "0" && this._getDefaultVal(data,"P1");
+				c += '<div class="input-list">';
+				c += '	<div class="input-list-info left"><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+				c += '    <div class="input-list-text left">';
+				c += '    	<input type="text" class="inpu-list-text-enter" readonly="readonly" id="' + data["itemId"] + data.children[0]["itemId"] + '" name="' + data["itemId"] + data.children[0]["itemId"] + '" value="' + data.children[0]["value"] + '" onclick="this.focus()" title="' + data.children[0]["itemName"] + '" style="width:46%"><img id="' + data["itemId"] + data.children[0]["itemId"] + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/calendar.png" class="input-icon">';
+				c += '    	<input type="text" class="inpu-list-text-enter" readonly="readonly" id="' + data["itemId"] + data.children[1]["itemId"] + '" value="' + data.children[1]["value"] + '" title="' + data.children[1]["itemName"] + '" style="width:46%">';
+				c += '    </div>';
+				c += '    <div class="input-list-suffix left"><div id="' + data.itemId + 'Tip" class="onShow" ><div class="onShow"></div></div></div>';
+				c += '    <div class="clear"></div>';
+				c += '</div>';
 			}
 		} else {
 			var format = "";
@@ -169,98 +134,59 @@ SurveyBuild.extend("BirthdayAndAge", "baseComponent", {
 	_eventbind: function(data) {
 		/*出生日期字段*/
 		var $birthday = $("#" + data["itemId"] + data.children[0]["itemId"]);
+		var $searchBtn = $("#" + data["itemId"] + data.children[0]["itemId"] + "_Btn");
+
 		/*年龄字段*/
 		var $age = $("#" + data["itemId"] + data.children[1]["itemId"]);
-		if(SurveyBuild.accessType == "M") {
-			 var calendar = new LCalendar();
-			    calendar.init({
-			        'trigger': '#' + data.itemId+ data.children[0]["itemId"] , //标签id
-			        'type': "date", //date 调出日期选择 datetime 调出日期时间选择 time 调出时间选择 ym 调出年月选择,
-			        'minDate': data.minYear + "-01-01", //最小日期
-			        'maxDate':data.maxYear + "-12-31",//当前日期
-			    });
-			    $birthday.bind('input propertychange', function() {  
 
-					
-					var thisYear, nowDate, bYear;
-					nowDate = new Date();
-					thisYear = nowDate.getFullYear();
-
-					var birthday = $(this).val();
-					if (data.dateformate == "mm-dd-yy") {
-						bYear = parseInt(birthday.split("-")[2]);
-					} else if (data.dateformate == "mm/dd/yy") {
-						bYear = parseInt(birthday.split("/")[2]);
-					} else if (data.dateformate == "yy-mm-dd") {
-						bYear = parseInt(birthday.split("-")[0]);
-					} else if (data.dateformate == "yy/mm/dd") {
-						bYear = parseInt(birthday.split("/")[0]);
-					} else if (data.dateformate == "dd-mm-yy") {
-						bYear = parseInt(birthday.split("-")[2]);
-					} else if (data.dateformate == "dd/mm/yy") {
-						bYear = parseInt(birthday.split("/")[2]);
-					}
-					var age = thisYear - bYear;
-					if (age > 0) {
-						$age.val(age);
-					} else {
-						$age.val(0);
-					}
-				
-			    });  
-		}else{
-			
-			var $searchBtn = $("#" + data["itemId"] + data.children[0]["itemId"] + "_Btn");
-
-			/*出生日期字段绑定日历选择框插件*/
-			$birthday.datetimepicker({
-				changeMonth: true,
-				changeYear: true,
-				showTimepicker: false,
-				autoClose: true,
-				yearRange: data.minYear + ":" + data.maxYear,
-	            maxDate: new Date(data.maxYear + "-12-31"),
-				dateFormat:data.dateformate,
-	            onSelect: function(dateText, inst) {
-	                $birthday.datetimepicker( "hide" );
-	                $birthday.trigger("blur");
-	            }
-			});
-			
-			$searchBtn.click(function(e){
-	            $birthday.click();
-	        });
-
-			/*出生日期字段绑定onchange事件*/
-			$birthday.change(function(e) {
-				
-				var thisYear, nowDate, bYear;
-				nowDate = new Date();
-				thisYear = nowDate.getFullYear();
-
-				var birthday = $(this).val();
-				if (data.dateformate == "mm-dd-yy") {
-					bYear = parseInt(birthday.split("-")[2]);
-				} else if (data.dateformate == "mm/dd/yy") {
-					bYear = parseInt(birthday.split("/")[2]);
-				} else if (data.dateformate == "yy-mm-dd") {
-					bYear = parseInt(birthday.split("-")[0]);
-				} else if (data.dateformate == "yy/mm/dd") {
-					bYear = parseInt(birthday.split("/")[0]);
-				} else if (data.dateformate == "dd-mm-yy") {
-					bYear = parseInt(birthday.split("-")[2]);
-				} else if (data.dateformate == "dd/mm/yy") {
-					bYear = parseInt(birthday.split("/")[2]);
-				}
-				var age = thisYear - bYear;
-				if (age > 0) {
-					$age.val(age);
-				} else {
-					$age.val(0);
-				}
-			});
-		}
+		/*出生日期字段绑定日历选择框插件*/
+		$birthday.datetimepicker({
+			changeMonth: true,
+			changeYear: true,
+			showTimepicker: false,
+			autoClose: true,
+			yearRange: data.minYear + ":" + data.maxYear,
+            maxDate: new Date(data.maxYear + "-12-31"),
+			dateFormat:data.dateformate,
+            onSelect: function(dateText, inst) {
+                $birthday.datetimepicker( "hide" );
+                $birthday.trigger("blur");
+            }
+		});
 		
+		$searchBtn.click(function(e){
+            $birthday.click();
+        });
+		
+		/*出生日期字段绑定onchange事件*/
+		$birthday.change(function(e) {
+			var thisYear, nowDate, bYear;
+			nowDate = new Date();
+			thisYear = nowDate.getFullYear();
+
+			var birthday = $(this).val();
+
+			if (data.dateformate == "mm-dd-yy") {
+				bYear = parseInt(birthday.split("-")[2]);
+			} else if (data.dateformate == "mm/dd/yy") {
+				bYear = parseInt(birthday.split("/")[2]);
+			} else if (data.dateformate == "yy-mm-dd") {
+				bYear = parseInt(birthday.split("-")[0]);
+			} else if (data.dateformate == "yy/mm/dd") {
+				bYear = parseInt(birthday.split("/")[0]);
+			} else if (data.dateformate == "dd-mm-yy") {
+				bYear = parseInt(birthday.split("-")[2]);
+			} else if (data.dateformate == "dd/mm/yy") {
+				bYear = parseInt(birthday.split("/")[2]);
+			}
+			var age = thisYear - bYear;
+
+			if (age > 0) {
+				$age.val(age);
+			} else {
+				$age.val(0);
+			}
+		});
 		$birthday.trigger("change");
 		//表单控件验证
 

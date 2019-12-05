@@ -13,7 +13,15 @@ SurveyBuild.extend("bmrMobileNum", "baseComponent", {
 			SurveyBuild.appInsId == "0" && (data.defaultval = "{%BIND:TZ_MOBILE}");
 			SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
 			SurveyBuild.appInsId == "0" && (data.wzsm = data.value);
-			
+		if(SurveyBuild.accessType == "M"){
+	          	    c += '<div class="item">';
+	                c += '    <p>'+data.title+'<span>*</span></p>';
+	                c += '    <div class="text-box"><input type="text" class="text1" id="' + data.itemId + '"  name="' + data.itemId + '" value = "' + data.value + '" /></div>';
+	                c +='<p style="color:#666;font-size:0.56rem;">e.g +86-10-62769369</p>';
+	                c += '</div>';
+	               
+	        	}
+		else{
 			c += '<div class="input-list">';
 			c += '	<div class="input-list-info left"><span class="red">*</span>' + data.title + '</div>';
 			c += '	<div class="input-list-text left">' + data.value + '</div>';
@@ -21,7 +29,9 @@ SurveyBuild.extend("bmrMobileNum", "baseComponent", {
 			c += '	<div class="clear"></div>';
 			c += '</div>';
 			c += '<input id="' + data.itemId + '" type="hidden" name="' + data.itemId + '" value = "' + data.value + '">';
-		} else {
+		    } 
+		}
+		else {
 			c += '<div class="question-answer">';
 			c += '	<div class="format">';
 			c += '		<b class="read-input"></b>';

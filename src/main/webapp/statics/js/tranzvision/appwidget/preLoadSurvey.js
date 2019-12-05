@@ -35,6 +35,7 @@ for (var selector in config) {
   $(selector).chosen(config[selector]);
 }
 /*默认点击选中的Tab页签*/
+ 
 $(".menu-active").click();
 //console.log(appReadOnly);
 

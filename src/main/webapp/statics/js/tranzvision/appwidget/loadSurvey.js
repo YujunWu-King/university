@@ -26,7 +26,7 @@ function pageReadOnly()
 	$('#app_submit').unbind("click"); 
 	$(".chosen-container").unbind();
 	$('#app_save').hide();
-	$('#app_submit').hide();
+	//$('#app_submit').hide();
 }
 
 /*加载formvalidator信息*/
@@ -63,7 +63,7 @@ if(dataApp){
 	})
 	$.each(data.items,function(instanceId,obj){
 		var recApp;
-		//console.log("classname:"+obj.classname);	
+		////console.log("classname:"+obj.classname);	
 		if(obj.classname=="recommendletter" && refInstanceId!="")
 		{
 			recApp = dataApp[refInstanceId];
@@ -71,24 +71,25 @@ if(dataApp){
 		{
 			recApp = dataApp[instanceId];
 		}
-
+		////console.log("classname:"+recApp);	
+		//console.dir(recApp);
 		
 		if(recApp){
 			//console.log(recApp.isDoubleLine);
 			if(recApp.isDoubleLine  == "Y"){
 				//模板中的children为对象，报名表中的多行为数组，对象转换成数组并value赋值
 				obj["children"] = [	obj["children"]] ;
-				//console.log("length:"+recApp["children"] .length);	
+				////console.log("length:"+recApp["children"] .length);	
 				for(var j = 1; j< recApp["children"] .length;j++){
 					obj["children"].push(cloneObj(obj["children"][0]));
 				}
 				/*是通用容器还是固定多行容器*/
 				$.each(obj["children"],function(i,perChildren){
 					//console.log("perChildren:"+perChildren);
-					//console.dir(perChildren);
+					////console.dir(perChildren);
 					$.each(perChildren,function(j,perXxx){
 						//console.log("perXxx:"+perXxx);
-						//console.dir(perXxx);
+						////console.dir(perXxx);
 						var itemId0 = perXxx["itemId"];		
 						
 						if(i> 0)
@@ -106,8 +107,15 @@ if(dataApp){
 								}
 								
 						}
+						//console.dir(recApp["children"]);
+						//console.dir(recApp["children"][i][j]);
+						//console.dir(perXxx);
 						
-						if(recApp["children"][i][j]){							
+						////console.log(recApp["children"][i][j]["children"]["bmrBatch"]["value"]);
+						
+						if(recApp["children"][i][j]){	
+							
+							
 							if(perXxx.isSingleLine  == "Y"){
 								$.each(perXxx["children"],function(z,signlePerXxx){	
 									var itemId1 = signlePerXxx["itemId"];	
@@ -115,75 +123,19 @@ if(dataApp){
 									{
 										signlePerXxx["itemId"] = itemId1 + "_" + i;
 									}
+									//console.log("wrong1:->"+z)
+									//console.dir(recApp["children"][i][j]["children"])//StartBusinessExp
 									if(perXxx.classname=="FirmType"||perXxx.classname=="StartBusinessExp"){
 										try{
 											signlePerXxx["value"] =  SurveyBuild.htmlCharReplace(recApp["children"][i][j]["children"][0][z]["value"]);
 										}catch(error){
 											signlePerXxx["value"] =  SurveyBuild.htmlCharReplace(recApp["children"][i][j]["children"][z]["value"]);
 										}
-									}else if(perXxx.classname=="DegreeAndDiploma"){
-										
-										
-										//console.dir(recApp["children"][i][j]["children"]);
-										//console.dir(recApp["children"][i][j]["children"][z]);
-										
-										if (recApp["children"][i][j]["children"][z]) {
-										
-										signlePerXxx["value"] =  SurveyBuild.htmlCharReplace(recApp["children"][i][j]["children"][z]["value"]);
-										
-										
-										if(recApp["children"][i][j]["children"][z].hasOwnProperty("children"))
-										{
-											for(var k = 1; k< recApp["children"][i][j]["children"][z]["children"].length;k++){
-												perXxx["children"][z]["children"].push(cloneObj(perXxx["children"][z]["children"][0]));
-											}
-
-											if( perXxx["children"][z]["children"] && $.isArray( perXxx["children"][z]["children"])){
-
-												
-												/* 如果有多个附件，是需要克隆的 */
-												$.each(perXxx["children"][z]["children"],function(x,filePerXxx){
-													//if ()
-													filePerXxx["fileName"] = recApp["children"][i][j]["children"][z]["children"][x]["fileName"];
-													filePerXxx["sysFileName"] = recApp["children"][i][j]["children"][z]["children"][x]["sysFileName"];
-													filePerXxx["orderby"] = recApp["children"][i][j]["children"][z]["children"][x]["orderby"];
-													filePerXxx["accessPath"] = recApp["children"][i][j]["children"][z]["children"][x]["accessPath"];
-													filePerXxx["viewFileName"] = recApp["children"][i][j]["children"][z]["children"][x]["viewFileName"];
-												})
-											}
-										}
-										}
-										
 									}else{
-										if(signlePerXxx.hasOwnProperty("value")) {
-											//报名表copy的时候 有时候JSON里面次序会颠倒 所以根据itemId来判断
-											$.each(recApp["children"][i][j]["children"],function(zz,recAppXxxxx){
-												if (recAppXxxxx) {
-													//console.log(recAppXxxxx["itemId"]+"_"+recAppXxxxx["value"]);
-													//console.log(signlePerXxx["itemId"]);
-													if (signlePerXxx["itemId"] == recAppXxxxx["itemId"]) {
-														signlePerXxx["value"] =  SurveyBuild.htmlCharReplace(recAppXxxxx["value"]);
-													}
-												}
-											
-											})
-											//if (recApp["children"][i][j]["children"][z]) {
-												
-											//	if(perXxx.classname  == "MailingAddress") {
-											//		console.log(z);
-											//		console.log(recApp["children"][i][j]["children"][z]["itemId"]+"_"+recApp["children"][i][j]["children"][z]["value"]);
-											//		console.log(signlePerXxx["itemId"]);
-											//	}
-											//	signlePerXxx["value"] =  SurveyBuild.htmlCharReplace(recApp["children"][i][j]["children"][z]["value"]);
-											//}
-										}
-									}
-									if(signlePerXxx.hasOwnProperty("wzsm"))
+										signlePerXxx["value"] =  SurveyBuild.htmlCharReplace(recApp["children"][i][j]["children"][z]["value"]);
+									}if(signlePerXxx.hasOwnProperty("wzsm"))
 									{
-										//console.dir()
-										if (recApp["children"][i][j]["children"][z]) {
 										signlePerXxx["wzsm"] =  recApp["children"][i][j]["children"][z]["wzsm"];
-										}
 									}
 								})
 							}
@@ -225,25 +177,25 @@ if(dataApp){
 								}
 							}else if(perXxx.classname  == "Radio" || perXxx.classname  == "Check"){
 								/*单选框和复选框处理方式*/
+								////console.log("Radio");
+								////console.log(perXxx["option"]);
 								if( perXxx["option"] ){
 									$.each(perXxx["option"],function(ii,optionInfo){
+										
 										if(recApp["children"][i][j]["option"][ii]){
-											optionInfo["checked"] = recApp["children"][i][j]["option"][ii]["checked"];											
+											optionInfo["checked"] = recApp["children"][i][j]["option"][ii]["checked"];
 											if(recApp["children"][i][j]["option"][ii]["othervalue"]!=undefined){
 												optionInfo["othervalue"] = recApp["children"][i][j]["option"][ii]["othervalue"];
-											}
-											else{
+											}else{
 												optionInfo["othervalue"] = "";
 											}
 										}
-										
 									})
-								} 
+								}
 								if(perXxx.hasOwnProperty("value")&&recApp["children"][i][j].hasOwnProperty("value"))
 								{
 									perXxx["value"] = recApp["children"][i][j]["value"];
 								}
-								
 								if(recApp["children"][i][j]["othervalue"]){
 									perXxx["othervalue"] = SurveyBuild.htmlCharReplace(recApp["children"][i][j]["othervalue"]);
 								}

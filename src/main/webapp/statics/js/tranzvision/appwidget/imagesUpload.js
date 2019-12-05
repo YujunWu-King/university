@@ -54,8 +54,10 @@ SurveyBuild.extend("imagesUpload", "baseComponent", {
 			    c +='         	</div>';
 			    c +='       </div>';
 			    c +='   </div>';
+			    c +='<p class="mSuffix" style="color:#666;font-size:0.56rem;display:' + (SurveyBuild._readonly?'none':'block') +' ">'+ (data.suffixUrl != "" ? "<a href='" + data.suffixUrl + "'>" : "") + (data.suffix != "" ? data.suffix : "") + (data.suffixUrl != "" ? "</a>" : "") +'</p>';
 			    c +='<p style="color:#666;font-size:0.56rem;margin-top:5px;display:' + (SurveyBuild._readonly?'none':'block') +' ">'+msg+'</p>';
-			    c +='<p style="color:#666;font-size:0.56rem;">'+data.onShowMessage+'</p>';
+			   
+			    c +='<p style="color:#666;font-size:0.56rem;display:' + (SurveyBuild._readonly?'none':'block') +' ">'+data.onShowMessage+'</p>';
 			    c +='</div>';
 			    
 			    
@@ -81,11 +83,11 @@ SurveyBuild.extend("imagesUpload", "baseComponent", {
 			        	}
 				 c += '</div>';
 			    }
-//			    c += '<div class="img_shade" id ="shade_'+data.itemId+'"></div>';
-//			    c += '<img class="img_pop_close" id ="close_'+data.itemId+'" src="'+ TzUniversityContextPath + '/statics/images/appeditor/m/rl_btn.png'+'">';
-//			    c += '<div class="img_pop_body" id ="body_'+data.itemId+'">'  ;
-//			    c += ' <img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/upload.png" id ="img_'+data.itemId+'">';
-//			    c += '</div>';
+			    c += '<div class="img_shade" id ="shade_'+data.itemId+'"></div>';
+			    c += '<img class="img_pop_close" id ="close_'+data.itemId+'" src="'+ TzUniversityContextPath + '/statics/images/appeditor/m/rl_btn.png'+'">';
+			    c += '<div class="img_pop_body" id ="body_'+data.itemId+'">'  ;
+			    c += ' <img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/upload.png" id ="img_'+data.itemId+'">';
+			    c += '</div>';
 			}else{
 				c += '<div class="input-list-blank margart15">';
 	        	c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';           
@@ -234,23 +236,23 @@ SurveyBuild.extend("imagesUpload", "baseComponent", {
 	
 	_eventbind: function(data) {
 		if(SurveyBuild.accessType == "M"){
-//			$("#shade_"+data.itemId).hide();
-//			$("#body_"+data.itemId).hide();
-//			$("#close_"+data.itemId).hide();
-//			$(window).load(function(){
-//				  initStyles();
-//				});
-//				$(window).resize(function(){
-//				  initStyles();
-//				});
-//
-//				function initStyles() {
-////				 var allHeight=$(window).height();
-////				     var popheight=$("#body_"+data.itemId).height();
-////				     $("#body_"+data.itemId).css("top",allHeight/2-popheight/2-10+"px");	
-////				     $("#close_"+data.itemId).css("top",allHeight/2-popheight/2-20+"px");
-////				     console.log(popheight);	console.log(allHeight);
-//				}	
+			$("#shade_"+data.itemId).hide();
+			$("#body_"+data.itemId).hide();
+			$("#close_"+data.itemId).hide();
+			$(window).load(function(){
+				  initStyles();
+				});
+				$(window).resize(function(){
+				  initStyles();
+				});
+
+				function initStyles() {
+//				 var allHeight=$(window).height();
+//				     var popheight=$("#body_"+data.itemId).height();
+//				     $("#body_"+data.itemId).css("top",allHeight/2-popheight/2-10+"px");	
+//				     $("#close_"+data.itemId).css("top",allHeight/2-popheight/2-20+"px");
+//				     console.log(popheight);	console.log(allHeight);
+				}	
 				
 }
 		var $fileInput = $("#" + data.itemId);

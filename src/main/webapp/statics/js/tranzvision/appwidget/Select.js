@@ -45,9 +45,6 @@ SurveyBuild.extend("Select", "baseComponent", {
 		            c +=			e;
 		            c +='		</select>';
 		            c += '	</div>';
-		            if ($.trim(data.onShowMessage) != "") {
-					c += '	<p style="color:#666;font-size:0.56rem;">' + data.onShowMessage + '</p>';
-					}
 		            c += '</div>';
 				}else{
 					SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
@@ -64,6 +61,7 @@ SurveyBuild.extend("Select", "baseComponent", {
 		            c +=			e;
 		            c +='		</select>';
 		            c += '	</div>';
+		            c += '	<p  class="mSuffix" style="color:#666;font-size:0.56rem;">' +(data["suffix"] ? data.suffix:" ") + '</p>';
 		            if ($.trim(data.onShowMessage) != "") {
 					c += '	<p style="color:#666;font-size:0.56rem;">' + data.onShowMessage + '</p>';
 					}
@@ -73,7 +71,6 @@ SurveyBuild.extend("Select", "baseComponent", {
 				if (SurveyBuild._readonly) {
 					//只读模式
 					 var valDesc = "";
-					 var valCode ="";
 	                e = '<option value="">' + MsgSet["PLEASE_SELECT"] + '</option>';
 	                for (var i in data.option) {
 	                    e += '<option ' + (data.value == data["option"][i]["code"] ? "selected='selected'": "") + 'value="' + data["option"][i]["code"] + '">' + data["option"][i]["txt"] + '</option>';
@@ -81,7 +78,6 @@ SurveyBuild.extend("Select", "baseComponent", {
 					for (var i in data.option) {
 						if (data.value == data["option"][i]["code"]) {
 							valDesc = data["option"][i]["txt"];
-							valCode = data["option"][i]["code"]
 						}
 					}
 	                /*c += '<select name="' + data.itemId + '" id="' + data.itemId + '" style="width:100%;display:none;" title="' + data.itemName + '">';
@@ -89,13 +85,7 @@ SurveyBuild.extend("Select", "baseComponent", {
 	                c += '</select>';  */
 					c += '<div class="input-list">';
 					c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-					if (valDesc.length >= 20 ) {
-						c += '  <div class="input-list-textinput left">' + valDesc ;
-					} else {
-						c += '  <div class="input-list-text left">' + valDesc ;
-					}
-					c += '  <input id="' + data.itemId + '" type="hidden" name="" value="'+valCode+'" readonly="" disabled="">';
-					c += '  </div>';
+					c += '  <div class="input-list-text left">' + valDesc + '</div>';
 					c += '  <div class="input-list-suffix left"></div>';
 					c += '  <div class="clear"></div>';
 					c += '</div>';

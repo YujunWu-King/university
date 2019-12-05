@@ -86,71 +86,71 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
 				 e += '</div>';
 				 e += '<input id="' +data["itemId"]+child.bmrClass.itemId + '" type="hidden" name="' + child.bmrClass.itemId + '" value="' + child.bmrClass.value + '">';
 
-//				 if(SurveyBuild._readonly){
-//
-//					 // 只读模式(批次显示)
-//					 e += '<div class="item">';
-//					 e += '<p>'+ child.bmrBatch.title +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
-//					 e += '</p><div class="text-box"><input ' + ' type="text" class="text1" readonly="true" value="' + child.bmrBatch.wzsm + '"/></div>';
-//					 e += '</div>';
-//					
-//				 }else{
-//
-//					 // 编辑模式(选择批次)
-//					 var paramsP = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_OTHER_STD","OperateType":"EJSON","comParams":{"OType":"BATCH","CLASSID":"' + classid + '"}}';
-//					 $.ajax({
-//						 type: "get",
-//						 dataType: "JSON",
-//						 data: {
-//							 tzParams: paramsP
-//						 },
-//						 async: false,
-//						 url: SurveyBuild.tzGeneralURL,
-//						 success: function (f) {
-//							 if (f.state.errcode == "0") {
-//								 child.bmrBatch.option = f.comContent;
-//							 }
-//						 }
-//					 });
-//
-//					 var opP='';
-//					 var array=new Array();
-//					 opP += '<option value="">' + MsgSet["PLEASE_SELECT"] + '</option>';
-//
-//					 //排序
-//					 for (var i in child.bmrBatch.option) {
-//						 opP+= '<option ' + (child.bmrBatch.value == child.bmrBatch["option"][i]["code"] ? "selected='selected'": "") + 'value="' + child.bmrBatch["option"][i]["code"] + '">' + child.bmrBatch["option"][i]["txt"] + '</option>';
-//						 array.push(child.bmrBatch["option"][i]["code"]);
-//					 }
-//					 
-//					 // if(array.length != 0){
-//						 
-//						 e += '<div class="item" id="div1">';
-//						 e += '<p>'+ child.bmrBatch.title +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
-//						 e += '<div id="' + data["itemId"]+child.bmrBatch.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
-//						 e += '<div class="text-box">';
-//						 e += '<select name="' + child.bmrBatch.itemId + '" class="select1" id="' + data["itemId"]+child.bmrBatch.itemId + '" title="' + child.bmrBatch.itemName + '">';
-//						 e += opP;
-//						 e += '</select>';
-//						 e += '</div>';
-//						 e += '</div>';
-//						 
-//					 // }else{
-//						 
-//						//  e += '<div class="item" id="div1" style="display:none">';
-//						//  e += '<p>'+ child.bmrBatch.title +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
-//						//  e += '<div id="' + data["itemId"]+child.bmrBatch.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
-//						//  e += '<div class="text-box">';
-//						//  e += '<select name="' + child.bmrBatch.itemId + '" class="select1" id="' + data["itemId"]+child.bmrBatch.itemId + '" title="' + child.bmrBatch.itemName + '">';
-//						//  e += opP;
-//						//  e += '</select>';
-//						//  e += '</div>';
-//						//  e += '</div>';
-//						 
-//					 // }
-//					
-//				 }
-//				 
+				 if(SurveyBuild._readonly){
+
+					 // 只读模式(批次显示)
+					 e += '<div class="item">';
+					 e += '<p>'+ child.bmrBatch.title +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
+					 e += '</p><div class="text-box"><input ' + ' type="text" class="text1" readonly="true" value="' + child.bmrBatch.wzsm + '"/></div>';
+					 e += '</div>';
+					
+				 }else{
+
+					 // 编辑模式(选择批次)
+					 var paramsP = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_OTHER_STD","OperateType":"EJSON","comParams":{"OType":"BATCH","CLASSID":"' + classid + '"}}';
+					 $.ajax({
+						 type: "get",
+						 dataType: "JSON",
+						 data: {
+							 tzParams: paramsP
+						 },
+						 async: false,
+						 url: SurveyBuild.tzGeneralURL,
+						 success: function (f) {
+							 if (f.state.errcode == "0") {
+								 child.bmrBatch.option = f.comContent;
+							 }
+						 }
+					 });
+
+					 var opP='';
+					 var array=new Array();
+					 opP += '<option value="">' + MsgSet["PLEASE_SELECT"] + '</option>';
+
+					 //排序
+					 for (var i in child.bmrBatch.option) {
+						 opP+= '<option ' + (child.bmrBatch.value == child.bmrBatch["option"][i]["code"] ? "selected='selected'": "") + 'value="' + child.bmrBatch["option"][i]["code"] + '">' + child.bmrBatch["option"][i]["txt"] + '</option>';
+						 array.push(child.bmrBatch["option"][i]["code"]);
+					 }
+					 
+					 // if(array.length != 0){
+						 
+						 e += '<div class="item" id="div1">';
+						 e += '<p>'+ child.bmrBatch.title +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
+						 e += '<div id="' + data["itemId"]+child.bmrBatch.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
+						 e += '<div class="text-box">';
+						 e += '<select name="' + child.bmrBatch.itemId + '" class="select1" id="' + data["itemId"]+child.bmrBatch.itemId + '" title="' + child.bmrBatch.itemName + '">';
+						 e += opP;
+						 e += '</select>';
+						 e += '</div>';
+						 e += '</div>';
+						 
+					 // }else{
+						 
+						//  e += '<div class="item" id="div1" style="display:none">';
+						//  e += '<p>'+ child.bmrBatch.title +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
+						//  e += '<div id="' + data["itemId"]+child.bmrBatch.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
+						//  e += '<div class="text-box">';
+						//  e += '<select name="' + child.bmrBatch.itemId + '" class="select1" id="' + data["itemId"]+child.bmrBatch.itemId + '" title="' + child.bmrBatch.itemName + '">';
+						//  e += opP;
+						//  e += '</select>';
+						//  e += '</div>';
+						//  e += '</div>';
+						 
+					 // }
+					
+				 }
+				 
 				 c += e;
 
 			 }else{
@@ -171,83 +171,83 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
 
 				 e += '<input id="' +data["itemId"]+child.bmrClass.itemId + '" type="hidden" name="' + child.bmrClass.itemId + '" value="' + child.bmrClass.value + '">';
 
-//				 if(SurveyBuild._readonly){
-//					 //if(batchId !=''){
-//						 // 只读模式
-//						 e += '<div class="input-list">';
-//						 e += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire  == "Y" ? "*": "") + '</span>' + MsgSet["INTERVIEW_BATCH"] + '</div>';
-//						 e += '  <div class="input-list-text left">' + child.bmrBatch.wzsm + '</div>';
-//						 e += '  <div class="input-list-suffix left"></div>';
-//						 e += '  <div class="clear"></div>';
-//						 e += '</div>';
-////						 if(child.bmrClass.zssm !=''){
-////							 e += '<div class="mainright-box pos-rela">' + child.bmrClass.zssm + '</div>';
-////						 }
-////					 }else{
-////						 if(child.bmrClass.zssm !=''){
-////							 e += '<div class="mainright-box pos-rela">' + child.bmrClass.zssm + '</div>';
-////						 }
-////					 }
-//
-//				 }else {
-//					 // 编辑模式
-//					 var params = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_OTHER_STD","OperateType":"EJSON","comParams":{"OType":"BATCH","CLASSID":"' + classid + '"}}';
-//					 $.ajax({
-//						 type: "get",
-//						 dataType: "JSON",
-//						 data: {
-//							 tzParams: params
-//						 },
-//						 async: false,
-//						 url: SurveyBuild.tzGeneralURL,
-//						 success: function (f) {
-//							 if (f.state.errcode == "0") {
-//								 child.bmrBatch.option = f.comContent;
-//							 }
+				 if(SurveyBuild._readonly){
+					 //if(batchId !=''){
+						 // 只读模式
+						 e += '<div class="input-list">';
+						 e += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire  == "Y" ? "*": "") + '</span>' + MsgSet["INTERVIEW_BATCH"] + '</div>';
+						 e += '  <div class="input-list-text left">' + child.bmrBatch.wzsm + '</div>';
+						 e += '  <div class="input-list-suffix left"></div>';
+						 e += '  <div class="clear"></div>';
+						 e += '</div>';
+//						 if(child.bmrClass.zssm !=''){
+//							 e += '<div class="mainright-box pos-rela">' + child.bmrClass.zssm + '</div>';
 //						 }
-//					 });
-//
-//					 var op='';
-//					 var array=new Array();
-//
-//					 op += '<option value="">' + MsgSet["PLEASE_SELECT"] + '</option>';
-//					 for (var i in child.bmrBatch.option) {
-//
-//						 op+= '<option ' + (child.bmrBatch.value == child.bmrBatch["option"][i]["code"] ? "selected='selected'": "") + 'value="' + child.bmrBatch["option"][i]["code"] + '">' + child.bmrBatch["option"][i]["txt"] + '</option>';
-//						 array.push(child.bmrBatch["option"][i]["code"]);
+//					 }else{
+//						 if(child.bmrClass.zssm !=''){
+//							 e += '<div class="mainright-box pos-rela">' + child.bmrClass.zssm + '</div>';
+//						 }
 //					 }
-//					 // if(array.length != 0){
-//						 e += '<div class="input-list" id="div1" style="display:">';
-//						 e += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + MsgSet["INTERVIEW_BATCH"] + '</div>';
-//						 e += '    <div class="input-list-text left input-edu-select">';
-//						 e += '          <select name="' + child.bmrBatch.itemId + '" class="chosen-select" id="' + data["itemId"]+child.bmrBatch.itemId + '" style="width:100%;" title="' + child.bmrBatch.itemName + '">';
-//						 e +=                    op;
-//						 e += '          </select>';
-//						 e += '    </div>';
-//						 e += '    <div class="input-list-suffix left"><div id="' +data["itemId"]+child.bmrBatch.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
-//						 e += '    <div class="clear"></div>';
-//						 e += '</div>';
-//					 // }else{
-//						//  child.bmrBatch.wzsm = "";
-//						//  e += '<div class="input-list" id="div1" style="display:none">';
-//						//  e += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + MsgSet["INTERVIEW_BATCH"] + '</div>';
-//						//  e += '    <div class="input-list-text left input-edu-select">';
-//						//  e += '          <select name="' + child.bmrBatch.itemId + '" id="' + data["itemId"]+child.bmrBatch.itemId + '" style="width:100%;" title="' + child.bmrBatch.itemName + '">';
-//						//  e +=                    op;
-//						//  e += '          </select>';
-//						//  e += '    </div>';
-//						//  e += '    <div class="input-list-suffix left"><div id="' +data["itemId"]+child.bmrBatch.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
-//						//  e += '    <div class="clear"></div>';
-//						//  e += '</div>';
-//					 // }
-//
-//				 }
+
+				 }else {
+					 // 编辑模式
+					 var params = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_OTHER_STD","OperateType":"EJSON","comParams":{"OType":"BATCH","CLASSID":"' + classid + '"}}';
+					 $.ajax({
+						 type: "get",
+						 dataType: "JSON",
+						 data: {
+							 tzParams: params
+						 },
+						 async: false,
+						 url: SurveyBuild.tzGeneralURL,
+						 success: function (f) {
+							 if (f.state.errcode == "0") {
+								 child.bmrBatch.option = f.comContent;
+							 }
+						 }
+					 });
+
+					 var op='';
+					 var array=new Array();
+
+					 op += '<option value="">' + MsgSet["PLEASE_SELECT"] + '</option>';
+					 for (var i in child.bmrBatch.option) {
+
+						 op+= '<option ' + (child.bmrBatch.value == child.bmrBatch["option"][i]["code"] ? "selected='selected'": "") + 'value="' + child.bmrBatch["option"][i]["code"] + '">' + child.bmrBatch["option"][i]["txt"] + '</option>';
+						 array.push(child.bmrBatch["option"][i]["code"]);
+					 }
+					 // if(array.length != 0){
+						 e += '<div class="input-list" id="div1" style="display:">';
+						 e += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + MsgSet["INTERVIEW_BATCH"] + '</div>';
+						 e += '    <div class="input-list-text left input-edu-select">';
+						 e += '          <select name="' + child.bmrBatch.itemId + '" class="chosen-select" id="' + data["itemId"]+child.bmrBatch.itemId + '" style="width:100%;" title="' + child.bmrBatch.itemName + '">';
+						 e +=                    op;
+						 e += '          </select>';
+						 e += '    </div>';
+						 e += '    <div class="input-list-suffix left"><div id="' +data["itemId"]+child.bmrBatch.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
+						 e += '    <div class="clear"></div>';
+						 e += '</div>';
+					 // }else{
+						//  child.bmrBatch.wzsm = "";
+						//  e += '<div class="input-list" id="div1" style="display:none">';
+						//  e += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + MsgSet["INTERVIEW_BATCH"] + '</div>';
+						//  e += '    <div class="input-list-text left input-edu-select">';
+						//  e += '          <select name="' + child.bmrBatch.itemId + '" id="' + data["itemId"]+child.bmrBatch.itemId + '" style="width:100%;" title="' + child.bmrBatch.itemName + '">';
+						//  e +=                    op;
+						//  e += '          </select>';
+						//  e += '    </div>';
+						//  e += '    <div class="input-list-suffix left"><div id="' +data["itemId"]+child.bmrBatch.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
+						//  e += '    <div class="clear"></div>';
+						//  e += '</div>';
+					 // }
+
+				 }
 
 				 c += '<div class=""></div>';
-				// c += '<div class="main_inner_content">';
+				 c += '<div class="main_inner_content">';
 				 c += e;
-				// c += '</div>';
-				 //c += '<div class="main_inner_content_foot"></div>';
+				 c += '</div>';
+				 c += '<div class="main_inner_content_foot"></div>';
 			 }
 
 	        }else{ 
@@ -304,7 +304,7 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
             + data["itemId"]
             + child.bmrClass.itemId + '","linkId":"'
             + data["itemId"]
-            + '","siteId":"'
+            + child.bmrBatch.itemId + '","siteId":"'
             + siteId + '","classId":"'
             + classId+ '"}}';
 		$.ajax({
@@ -333,7 +333,7 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
 					+ data["itemId"]
 					+ child.bmrClass.itemId + '","linkId":"'
 					+ data["itemId"]
-					+ '","siteId":"'
+					+ child.bmrBatch.itemId + '","siteId":"'
 					+ siteId + '","classId":"'
 					+ classId+ '"}}';
 
@@ -362,7 +362,7 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
 					+ data["itemId"]
 					+ child.bmrClass.itemId + '","linkId":"'
 					+ data["itemId"]
-					+'","siteId":"'
+					+ child.bmrBatch.itemId + '","siteId":"'
 					+ siteId + '","classId":"'
 					+ classId+ '"}}';
 				provinceUrl = provinceUrl + window.escape(params);

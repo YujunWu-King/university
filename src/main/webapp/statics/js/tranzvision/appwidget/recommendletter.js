@@ -318,7 +318,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 					"defaultval": "N",
 					"orderby": 1,
 					"other": "N",
-					"txt": MsgSet["REC_SEX_M"],
+					"txt": MsgSet["SEX_M"],
 					"weight": 0
 				},"WOMAN":{
 					"checked": "N",
@@ -326,7 +326,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 					"defaultval": "N",
 					"orderby": 2,
 					"other": "N",
-					"txt": MsgSet["REC_SEX_F"],
+					"txt": MsgSet["SEX_F"],
 					"weight": 0
 				}
 			}
@@ -368,9 +368,9 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			}else{
 				showLines = data.defaultLines;
 			}
-			//console.log("MshowLines----"+showLines);
+			console.log("MshowLines----"+showLines);
 			if(SurveyBuild.accessType == "M"){
-				//console.log("showLines-----"+showLines);
+				console.log("showLines-----"+showLines);
 				for(var i=1;i<=showLines;i++){
 					
 					var tempHtmlP = this._getHtmlTwo(data,i,'QUERY');
@@ -410,11 +410,11 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
                     c += '<div class="input-list-blank addNext">';
                     if(len<data.maxLines){
                         c += '<div class="input-list-suffix-blank right input-btn">'
-                        c += '<div style="display: inherit;float:right;padding-right:30px;" class="input-addbtn" id="save_and_add0" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\');">' + MsgSet["ADD_RE"] + '</div>';
+                        c += '<div style="display: inherit;float:right;padding-right:30px;" class="input-addbtn" id="save_and_add0" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\');">' + MsgSet["ADD_RE"] + '&nbsp;&nbsp;<span class="input-btn-icon"></span></div>';
                         c += '</div>';
                     }else{
                         c += '<div class="input-list-suffix-blank right input-btn" style="padding-right:15px;">'
-                        c += '<div style="display: none;float:right;" class="input-addbtn" id="save_and_add0" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\');">' + MsgSet["ADD_RE"] + '</div>';
+                        c += '<div style="display: none;float:right;" class="input-addbtn" id="save_and_add0" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\');">' + MsgSet["ADD_RE"] + '&nbsp;&nbsp;<span class="input-btn-icon"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/add-jia.png" /></span></div>';
                         c += '</div>';
                     }
                     c +='<div class="clear"></div>';
@@ -645,6 +645,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'title\',\'recommend_4\')" value="'+child.recommend_4["title"]+'" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
         list += '<td><input type="text" value="rec_phone_no" class="option-txt" disabled="disabled"></td>';
 		list += '<td><input type="checkbox" disabled="disabled" checked="checked" value="1"></td>';
+		
         list += '</tr>';
 		//手机-结束
 		//邮箱-开始
@@ -944,7 +945,6 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			url:SurveyBuild.tzGeneralURL,
 			success: function(f) {
 				if(f.state.errcode == "0"){
-					console.log(f.comContent.TJX_ZT+"   "+f.comContent.recommend_16);
 					_tjx_zt = f.comContent.TJX_ZT;
 					_qy_zhs = f.comContent.zhs_qy;
 					_qy_eng = f.comContent.eng_qy;
@@ -978,16 +978,16 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		});
 		 
 		var refLetterUrl = "";
-		if(SurveyBuild.appManager == "Y"||SurveyBuild.isPw=="Y")
+		if(SurveyBuild.appManager == "Y")
 		{
 			if(_refAppInsId!="0"&&_refAppInsId!=""&&_refLetterId!="0"&&_refLetterId!=""){
 				refLetterUrl = SurveyBuild.tzGeneralURL + "?classid=appId&TZ_APP_INS_ID="+_refAppInsId+"&TZ_REF_LETTER_ID="+_refLetterId+"&TZ_APP_TPL_ID="+_refAppTplId+"&TZ_MANAGER=Y";
 			}
 		}
-//		if (child[i].recommend_8["value"]=="U")
-//		{
-//			_tjx_zt="未发送";
-//		}
+		if (child[i].recommend_8["value"]=="U")
+		{
+			_tjx_zt="未发送";
+		}
 		if(_refFileUrl!="")
 		{
 			//_tjx_zt="已完成";
@@ -1085,21 +1085,21 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		works += '<div id="main_inner_content_para'+i+'" class="main_inner_content_para">';
 		
 		works += '<div class="mainright-title">';
-		//works += '<span class="title-line"></span>' + MsgSet["REFFER"] + ' ' +rownum+ ' :' + data.title + '</div>';
-		works += '<span class="title-line"></span>' + data.title+rownum+  '</div>';
+		works += '<span class="title-line"></span>' + MsgSet["REFFER"] + ' ' +rownum+ ' :' + data.title + '</div>';
+		
 		works += '<div class="mainright-box pos-rela">';
 		if(SurveyBuild._readonly!=true){
 			if(rownum > data.defaultLines){
 				if(deleteFlag == true){
 					works += '<div class="btn-addcon">';
 					works += '	<a href="javascript:void(0);" onclick="SurveyBuild.deleteTjx(this);" id="tjx_delete_' + i + '">';
-					works += '		<div class="input-delbtn">' + MsgSet["DEL"] + '&nbsp;x</div>';
+					works += '		<div class="input-delbtn">' + MsgSet["DEL"] + '&nbsp;&nbsp;<span class="input-btn-icon"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/add-delete.png"></span></div>';
 					works += '	</a>';
 					works += '</div>';
 				}else{
 					works += '<div class="btn-addcon">';
 					works += '	<a href="javascript:void(0);" style="display:none" onclick="SurveyBuild.deleteTjx(this);" id="tjx_delete_' + i + '">';
-					works += '		<div class="input-delbtn">' + MsgSet["DEL"] + '&nbsp;x</div>';
+					works += '		<div class="input-delbtn">' + MsgSet["DEL"] + '&nbsp;&nbsp;<span class="input-btn-icon"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/add-delete.png"></span></div>';
 					works += '	</a>';
 					works += '</div>';
 				}
@@ -1112,8 +1112,8 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		}
 	
 		/*任何情况下都可以修改推荐信*/	
-		//var tjxEditMode = false;
-		var tjxEditMode = SurveyBuild._readonly;
+		var tjxEditMode = false;
+		
 		//称呼-开始
         if(tjxEditMode){
             //只读模式
@@ -1135,8 +1135,9 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
                 }
             }
             works += '<div class="input-list" ' + (child[i].recommend_18["useby"] == "Y" ? "style='display:block'" : "style='display:none'") + '>';
-            works += '  <div class="input-list-info left">' + '<span class="red">*</span>' + child[i].recommend_18["itemName"] + '：</div>';
-            works += '	<div class="input-list-text left">' + desc + '</div>';
+            works += '  <div class="input-list-info-readonly left">' + '<span class="red">*</span>' + child[i].recommend_18["itemName"] + '：</div>';
+            works += '	<div class="input-list-wz-readonly left">' + desc + '</div>';
+			works += '	<div class="input-list-suffix left"></div>';
 			works += '	<div class="clear"></div>';
             works += '</div>'
         }else {
@@ -1189,8 +1190,9 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
         if(tjxEditMode){
             //只读模式
             works += '<div class="input-list" '+(child[i].recommend_1["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '<div class="input-list-info left">'+ '<span class="red">*</span>'+ child[i].recommend_1["itemName"] +'：</div>';
-            works += '<div class="input-list-text left">' + child[i].recommend_1["value"] + '</div>';
+            works += '<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_1["itemName"] +'：</div>';
+            works += '<div class="input-list-wz-readonly left">' + child[i].recommend_1["value"] + '</div>';
+			works += '	<div class="input-list-suffix left"></div>';
 			works += '	<div class="clear"></div>';
             works += '</div>';
         }else{
@@ -1212,8 +1214,9 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
         if(tjxEditMode){
             //只读模式
             works += '<div class="input-list" '+(child[i].recommend_17["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '<div class="input-list-info left">'+ '<span class="red">*</span>'+ child[i].recommend_17["itemName"] +'：</div>';
-            works += '<div class="input-list-text left">' + child[i].recommend_17["value"] + '</div>';
+            works += '<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_17["itemName"] +'：</div>';
+            works += '<div class="input-list-wz-readonly left">' + child[i].recommend_17["value"] + '</div>';
+			works += '	<div class="input-list-suffix left"></div>';
 			works += '	<div class="clear"></div>';
             works += '</div>';
         }else{
@@ -1234,8 +1237,9 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//单位-开始
         if(tjxEditMode){
             works += '<div class="input-list" '+(child[i].recommend_2["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="input-list-info left">'+ '<span class="red">*</span>'+ child[i].recommend_2["itemName"] +'：</div>';
-            works += '	<div class="input-list-text left">' + child[i].recommend_2["value"] + '</div>';
+            works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_2["itemName"] +'：</div>';
+            works += '	<div class="input-list-wz-readonly left">' + child[i].recommend_2["value"] + '</div>';
+			works += '	<div class="input-list-suffix left"></div>';
 			works += '	<div class="clear"></div>';
             works += '</div>';
         }else{
@@ -1255,8 +1259,9 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//职务-开始
         if(tjxEditMode){
             works += '<div class="input-list" '+(child[i].recommend_3["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="input-list-info left">'+ '<span class="red">*</span>'+ child[i].recommend_3["itemName"] +'：</div>';
-            works += '	<div class="input-list-text left">' + child[i].recommend_3["value"] +  '</div>';
+            works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_3["itemName"] +'：</div>';
+            works += '	<div class="input-list-wz-readonly left">' + child[i].recommend_3["value"] +  '</div>';
+			works += '	<div class="input-list-suffix left"></div>';
 			works += '	<div class="clear"></div>';
             works += '</div>';
         }else{
@@ -1277,10 +1282,11 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
         if(tjxEditMode){
             //只读模式
             works += '<div class="input-list" '+(child[i].recommend_4["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="input-list-info left">'+ '<span class="red">*</span>'+ child[i].recommend_4["itemName"] +'：</div>';
-            works += '	<div class="input-list-text left">';
+            works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_4["itemName"] +'：</div>';
+            works += '	<div class="input-list-wz-readonly left">';
             works += (child[i].recommend_16["value"] ? "(" : "") + child[i].recommend_16["value"] + (child[i].recommend_16["value"] ? ")&nbsp;" : "") + child[i].recommend_4["value"];
             works += '</div>';
+			works += '	<div class="input-list-suffix left"></div>';
 			works += '	<div class="clear"></div>';
             works += '</div>';
         }else{
@@ -1311,8 +1317,9 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
         if(tjxEditMode){
             //只读模式
             works += '<div class="input-list" '+(child[i].recommend_5["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="input-list-info left">'+ '<span class="red">*</span>'+ child[i].recommend_5["itemName"] +'：</div>';
-            works += '	<div class="input-list-text left">' + child[i].recommend_5["value"] + '</div>';
+            works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_5["itemName"] +'：</div>';
+            works += '	<div class="input-list-wz-readonly left">' + child[i].recommend_5["value"] + '</div>';
+			works += '	<div class="input-list-suffix left"></div>';
 			works += '	<div class="clear"></div>';
             works += '</div>';
         }else{
@@ -1341,11 +1348,11 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		works += '<div readonlyflag="'+ ((_readOnlyRadio=="Y") ? "Y" : "N") + '" class="radio-btn '+(child[i].recommend_15["option"]["MAN"]["checked"] == "Y" ? "checkedRadio" : "")+'" onclick="SurveyBuild.clickOnRadio(this);" id="' + data.itemId + child[i].recommend_15["itemId"] + '_M">';
         works += '<i><input type="radio"' + (child[i].recommend_15["option"]["MAN"]["checked"] == "Y" ? "checked='checked'": "")+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' title="'+ child[i].recommend_15["title"] +'" name="' + data.itemId + child[i].recommend_15["itemId"] +'" value="M"></i>';
 
-		works += '</div><span style="margin-left:3px;">' + MsgSet["REC_SEX_M"]+'</span>&nbsp;&nbsp;&nbsp;&nbsp;';
+		works += '</div><span style="margin-left:3px;">' + MsgSet["SEX_M"]+'</span>&nbsp;&nbsp;&nbsp;&nbsp;';
 
 		works += '<div readonlyflag="'+ ((_readOnlyRadio=="Y") ? "Y" : "N") + '" class="radio-btn '+(child[i].recommend_15["option"]["WOMAN"]["checked"] == "Y" ? "checkedRadio" : "")+'" onclick="SurveyBuild.clickOnRadio(this);" id="' + data.itemId + child[i].recommend_15["itemId"] + '_F">';
         works += '<i><input type="radio" ' + (child[i].recommend_15["option"]["WOMAN"]["checked"] == "Y" ? "checked='checked'": "") + ((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' title="'+ child[i].recommend_15["title"] +'" name="' + data.itemId + child[i].recommend_15["itemId"] +'" value="F"></i>';
-		works += '</div><span style="margin-left:3px;">'+MsgSet["REC_SEX_F"]+'</span>';
+		works += '</div><span style="margin-left:3px;">'+MsgSet["SEX_F"]+'</span>';
 		works += '	</li>';
 		works += '<div class="clear"></div></ul>';
         works += '<input type="hidden" style="width:10px;" id="' + data.itemId + child[i].recommend_15["itemId"] + '" value="' + child[i].recommend_15["value"] + '">';
@@ -1363,8 +1370,9 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
         if(tjxEditMode){
             //只读模式
             works += '<div class="input-list" '+(child[i].recommend_6["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="input-list-info left">'+ '<span class="red">*</span>'+ child[i].recommend_6["itemName"] +'：</div>';
-            works += '	<div class="input-list-text left">' + child[i].recommend_6["value"] + '</div>';
+            works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_6["itemName"] +'：</div>';
+            works += '	<div class="input-list-wz-readonly left">' + child[i].recommend_6["value"] + '</div>';
+			works += '	<div class="input-list-suffix left"></div>';
 			works += '	<div class="clear"></div>';
             works += '</div>';
         }else{
@@ -1387,8 +1395,9 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
         if(tjxEditMode){
             //只读模式
             works += '<div class="input-list" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="input-list-info left">'+ '<span class="red">*</span>'+ child[i].recommend_10["itemName"] +'：</div>';
-            works += '	<div class="input-list-text left">' + child[i].recommend_10["value"] + '</div>';
+            works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_10["itemName"] +'：</div>';
+            works += '	<div class="input-list-wz-readonly left">' + child[i].recommend_10["value"] + '</div>';
+			works += '	<div class="input-list-suffix left"></div>';
 			works += '	<div class="clear"></div>';
             works += '</div>';
         }else{
@@ -1411,8 +1420,9 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
         if(tjxEditMode){
             //只读模式
             works += '<div class="input-list" '+(child[i].recommend_11["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="input-list-info left">'+ '<span class="red">*</span>'+ child[i].recommend_11["itemName"] +'：</div>';
-            works += '	<div class="input-list-text left">' + child[i].recommend_11["value"] + '</div>';
+            works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_11["itemName"] +'：</div>';
+            works += '	<div class="input-list-wz-readonly left">' + child[i].recommend_11["value"] + '</div>';
+			works += '	<div class="input-list-suffix left"></div>';
 			works += '	<div class="clear"></div>';
             works += '</div>';
         }else{
@@ -1437,7 +1447,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
             works += '<div class="input-list" '+(child[i].recommend_12["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_12["itemName"] +'：</div>';
             works += '	<div class="input-list-wz-readonly left">' + child[i].recommend_12["value"] + '</div>';
-
+			works += '	<div class="input-list-suffix left"></div>';
 			works += '	<div class="clear"></div>';
             works += '</div>';
         }else{
@@ -1462,7 +1472,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
             works += '<div class="input-list" '+(child[i].recommend_13["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_13["itemName"] +'：</div>';
             works += '	<div class="input-list-wz-readonly left">' + child[i].recommend_13["value"] + '</div>';
-
+			works += '	<div class="input-list-suffix left"></div>';
 			works += '	<div class="clear"></div>';
             works += '</div>';
         }else{
@@ -1487,7 +1497,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
             works += '<div class="input-list" '+(child[i].recommend_14["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_14["itemName"] +'：</div>';
             works += '	<div class="input-list-wz-readonly left">' + child[i].recommend_14["value"] + '</div>';
-
+			works += '	<div class="input-list-suffix left"></div>';
 			works += '	<div class="clear"></div>';
             works += '</div>';
         }else{
@@ -1512,7 +1522,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
             works += '<div class="input-list" '+(child[i].recommend_19["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_19["itemName"] +'：</div>';
             works += '	<div class="input-list-wz-readonly left">' + child[i].recommend_19["value"] + '</div>';
-
+			works += '	<div class="input-list-suffix left"></div>';
 			works += '	<div class="clear"></div>';
             works += '</div>';
         }else{
@@ -1537,7 +1547,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
             works += '<div class="input-list" '+(child[i].recommend_20["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_20["itemName"] +'：</div>';
             works += '	<div class="input-list-wz-readonly left">' + child[i].recommend_20["value"] + '</div>';
-
+			works += '	<div class="input-list-suffix left"></div>';
 			works += '	<div class="clear"></div>';
             works += '</div>';
         }else{
@@ -1562,7 +1572,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
             works += '<div class="input-list" '+(child[i].recommend_21["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_21["itemName"] +'：</div>';
             works += '	<div class="input-list-wz-readonly left">' + child[i].recommend_21["value"] + '</div>';
-
+			works += '	<div class="input-list-suffix left"></div>';
 			works += '	<div class="clear"></div>';
             works += '</div>';
         }else{
@@ -1587,7 +1597,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
             works += '<div class="input-list" '+(child[i].recommend_22["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_22["itemName"] +'：</div>';
             works += '	<div class="input-list-wz-readonly left">' + child[i].recommend_22["value"] + '</div>';
-
+			works += '	<div class="input-list-suffix left"></div>';
 			works += '	<div class="clear"></div>';
             works += '</div>';
         }else{
@@ -1612,7 +1622,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
             works += '<div class="input-list" '+(child[i].recommend_23["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_23["itemName"] +'：</div>';
             works += '	<div class="input-list-wz-readonly left">' + child[i].recommend_23["value"] + '</div>';
-
+			works += '	<div class="input-list-suffix left"></div>';
 			works += '	<div class="clear"></div>';
             works += '</div>';
         }else{
@@ -1726,45 +1736,23 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			}
 			works += '	<ul>'; 
 			works += '	<li>'; 
-			if(tjxEditMode || _zd=="Y" || _zd=="Z"){
-	            //只读模式
-				works += '<div readonlyflag="Y" class="radio-btn '+(child[i].recommend_8["option"]["SEND"]["checked"] == "Y" ? "checkedRadio" : "")+'" onclick="SurveyBuild.clickOnRadio(this);" id="' + data.itemId + child[i].recommend_8["itemId"] + '_S">';
-				works += '<i><input ' + (child[i].recommend_8["option"]["SEND"]["checked"] == "Y" ? "checked='checked'": "") + ' type="radio" align="'+i+'" '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' title="'+ child[i].recommend_8["title"] +'" name="' + data.itemId + child[i].recommend_8["itemId"] +'" value="S"></i>';
-				works += '</div><span style="margin-left:3px;">' + MsgSet["Send_mail"]+'</span>&nbsp;&nbsp;&nbsp;&nbsp;';
-				works += '<div readonlyflag="Y" class="radio-btn '+(child[i].recommend_8["option"]["UPLOAD"]["checked"] == "Y" ? "checkedRadio" : "")+'" onclick="SurveyBuild.clickOnRadio(this);" id="' + data.itemId + child[i].recommend_8["itemId"] + '_U">';
-				works += '<i><input ' + (child[i].recommend_8["option"]["UPLOAD"]["checked"] == "Y" ? "checked='checked'": "") + ' type="radio" align="'+i+'" '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' title="'+ child[i].recommend_8["title"] +'" name="' + data.itemId + child[i].recommend_8["itemId"] +'" value="U" ></i>';
-				works += '</div><span style="margin-left:3px;">' + MsgSet["Upload"] + '</sapn>';
-				works += '	</li>';
-				works += '<div class="clear"></div></ul>';
-				works += '<input type="hidden" id="' + data.itemId + child[i].recommend_8["itemId"] + '" value="' + child[i].recommend_8["value"] + '">';
-				works += '</div>';
-				works += '<div class="input-list-suffix left">';
-				works += '	<div id="' + data.itemId + child[i].recommend_8["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onShow">';
-				works += '		<div class="onShow">&nbsp;</div>';
-				works += '	</div>';
-				works += '</div>';
-				works += '<div class="clear"></div>';
-				works += '</div>';
-			} else {
-				//编辑模式
-				works += '<div readonlyflag="N" class="radio-btn '+(child[i].recommend_8["option"]["SEND"]["checked"] == "Y" ? "checkedRadio" : "")+'" onclick="SurveyBuild.clickOnRadio(this);" id="' + data.itemId + child[i].recommend_8["itemId"] + '_S">';
-				works += '<i><input ' + (child[i].recommend_8["option"]["SEND"]["checked"] == "Y" ? "checked='checked'": "") + ' type="radio" align="'+i+'" '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' title="'+ child[i].recommend_8["title"] +'" name="' + data.itemId + child[i].recommend_8["itemId"] +'" value="S"></i>';
-				works += '</div><span style="margin-left:3px;">' + MsgSet["Send_mail"]+'</span>&nbsp;&nbsp;&nbsp;&nbsp;';
-				works += '<div readonlyflag="N" class="radio-btn '+(child[i].recommend_8["option"]["UPLOAD"]["checked"] == "Y" ? "checkedRadio" : "")+'" onclick="SurveyBuild.clickOnRadio(this);" id="' + data.itemId + child[i].recommend_8["itemId"] + '_U">';
-				works += '<i><input ' + (child[i].recommend_8["option"]["UPLOAD"]["checked"] == "Y" ? "checked='checked'": "") + ' type="radio" align="'+i+'" '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' title="'+ child[i].recommend_8["title"] +'" name="' + data.itemId + child[i].recommend_8["itemId"] +'" value="U" ></i>';
-				works += '</div><span style="margin-left:3px;">' + MsgSet["Upload"] + '</sapn>';
-				works += '	</li>';
-				works += '<div class="clear"></div></ul>';
-				works += '<input type="hidden" id="' + data.itemId + child[i].recommend_8["itemId"] + '" value="' + child[i].recommend_8["value"] + '">';
-				works += '</div>';
-				works += '<div class="input-list-suffix left">';
-				works += '	<div id="' + data.itemId + child[i].recommend_8["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onShow">';
-				works += '		<div class="onShow">&nbsp;</div>';
-				works += '	</div>';
-				works += '</div>';
-				works += '<div class="clear"></div>';
-				works += '</div>';
-			}
+			works += '<div readonlyflag="'+ ((_readOnlyRadio=="Y") ? "Y" : "N") + '" class="radio-btn '+(child[i].recommend_8["option"]["SEND"]["checked"] == "Y" ? "checkedRadio" : "")+'" onclick="SurveyBuild.clickOnRadio(this);" id="' + data.itemId + child[i].recommend_8["itemId"] + '_S">';
+			works += '<i><input ' + (child[i].recommend_8["option"]["SEND"]["checked"] == "Y" ? "checked='checked'": "") + ' type="radio" align="'+i+'" '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' title="'+ child[i].recommend_8["title"] +'" name="' + data.itemId + child[i].recommend_8["itemId"] +'" value="S"></i>';
+			works += '</div><span style="margin-left:3px;">' + MsgSet["Send_mail"]+'</span>&nbsp;&nbsp;&nbsp;&nbsp;';
+			works += '<div readonlyflag="'+ ((_readOnlyRadio=="Y") ? "Y" : "N") + '" class="radio-btn '+(child[i].recommend_8["option"]["UPLOAD"]["checked"] == "Y" ? "checkedRadio" : "")+'" onclick="SurveyBuild.clickOnRadio(this);" id="' + data.itemId + child[i].recommend_8["itemId"] + '_U">';
+			works += '<i><input ' + (child[i].recommend_8["option"]["UPLOAD"]["checked"] == "Y" ? "checked='checked'": "") + ' type="radio" align="'+i+'" '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' title="'+ child[i].recommend_8["title"] +'" name="' + data.itemId + child[i].recommend_8["itemId"] +'" value="U" ></i>';
+			works += '</div><span style="margin-left:3px;">' + MsgSet["Upload"] + '</sapn>';
+			works += '	</li>';
+			works += '<div class="clear"></div></ul>';
+			works += '<input type="hidden" id="' + data.itemId + child[i].recommend_8["itemId"] + '" value="' + child[i].recommend_8["value"] + '">';
+			works += '</div>';
+			works += '<div class="input-list-suffix left">';
+			works += '	<div id="' + data.itemId + child[i].recommend_8["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onShow">';
+			works += '		<div class="onShow">&nbsp;</div>';
+			works += '	</div>';
+			works += '</div>';
+			works += '<div class="clear"></div>';
+			works += '</div>';
 		}
 		// 如果 设置 itemLx=F  发送邮件
 		else if(data.itemLx == "F"){
@@ -1784,7 +1772,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		if ((data.itemLx == "L" && child[i].recommend_8["value"] == "U") || data.itemLx == "S"){
 		
 			works += '<div class="input-list-blank" style="display:block" id="Tjxfj_show_'+i+'">';
-			if(tjxEditMode ==false){
+			if(SurveyBuild._readonly!=true){
 				works += '	<div class="input-list-info left">'+child[i].recommend_9["itemName"]+'：</div>';
 				works += '	<div class="input-list-texttemplate left">';
 				works += '		<div class="filebtn">';
@@ -1796,19 +1784,18 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				works += '	<div class="input-list-text left">';
 			}
 
-			//works += '<div class="input-list-suffix left"></div>';
-			works += '<div class="clear"></div>';
+			works += '<div class="input-list-suffix left">';
+			works += '</div>';
 
 			/*附件显示 开始*/
-			if(tjxEditMode ==false){
+			if(SurveyBuild._readonly!=true){
 				works += '		<div id="'+data.itemId+i+'_AttList" class="input-list-upload-con">';
 			}else{
 				works += '		<div id="'+data.itemId+i+'_AttList">';
 			}
 			if (child[i].recommend_9["viewFileName"]!="")
 			{
-				if(tjxEditMode ==false){
-					//编辑模式
+				if(SurveyBuild._readonly!=true){
 					works += '<div class="input-list-uploadcon-list">';
 					works += '	<div class="input-list-uploadcon-listl left">';
 					works += '			<a class="input-list-uploadcon-list-a" onclick=SurveyBuild.TjxdownLoad(this,"recommend_9",'+i+') file-index="'+i+'">'+child[i].recommend_9["viewFileName"]+'</a>';
@@ -1818,7 +1805,6 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 					
 					works += '</div>';
 				}else{
-					//只读模式
 					works += '<div class="input-list-uploadcon-list">';
 					works += '	<div class="input-list-uploadcon-listl left">';
 					works += '	<a class="input-list-uploadcon-list-a" onclick=SurveyBuild.TjxdownLoad(this,"recommend_9",'+i+') file-index="'+i+'">'+child[i].recommend_9["viewFileName"]+'</a>';
@@ -1837,29 +1823,30 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		}else{
 			//代码不在网页上显示出来
 			works += '<div class="input-list-blank" style="display:none" id="Tjxfj_show_'+i+'">';
-			if(tjxEditMode ==false){
+			if(SurveyBuild._readonly!=true){
 				works += '	<div class="input-list-info left">'+child[i].recommend_9["itemName"]+'：</div>';
 				works += '	<div class="input-list-texttemplate left">';
 				works += '		<div class="filebtn">';
 				works += '			<div class="template-btn"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/upload.png" />&nbsp;&nbsp;' + MsgSet["UPLOAD_BTN_MSG"] + '</div>';
-				works += '			<input id="'+data.itemId+child[i].recommend_9["itemId"]+'File" class="filebtn-orgtext" type="file" name="'+data.itemId+child[i].recommend_9["itemId"]+'File"  style="width:125px;" onchange=SurveyBuild.TjxUpload(this,"recommend_9",'+i+')>';
+				works += '			<input id="'+data.itemId+child[i].recommend_9["itemId"]+'File" class="filebtn-orgtext" type="file" name="'+data.itemId+child[i].recommend_9["itemId"]+'File" style="width:125px;" onchange=SurveyBuild.TjxUpload(this,"recommend_9",'+i+')>';
 				works += '		</div>';
 			}else{
 				works += '	<div class="input-list-info left">'+child[i].recommend_9["itemName"]+'：</div>';
 				works += '	<div class="input-list-text left">';
 			}
-			//works += '<div class="input-list-suffix left"></div>';
-			works += '<div class="clear"></div>';
+			works += '<div class="input-list-suffix left">';
+			works += '</div>';
 
 			/*附件显示 开始*/
-			if(tjxEditMode ==false){
+			if(SurveyBuild._readonly!=true){
 				works += '		<div id="'+data.itemId+i+'_AttList" class="input-list-upload-con">';
 			}else{
 				works += '		<div id="'+data.itemId+i+'_AttList">';
 			}
 			if (child[i].recommend_9["viewFileName"]!="")
 			{
-				if(tjxEditMode ==false){
+				if(SurveyBuild._readonly!=true){
+
 					works += '<div class="input-list-uploadcon-list">';
 					works += '	<div class="input-list-uploadcon-listl left">';
 					works += '		<a class="input-list-uploadcon-list-a" onclick=SurveyBuild.TjxdownLoad(this,"recommend_9",'+i+') file-index="'+i+'">'+child[i].recommend_9["viewFileName"]+'</a>';
@@ -1896,43 +1883,43 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				works += '<div class="input-list-texttemplate" style="width:100%">';
 				//发送邮件  如果已经发送，那么不显示
 				works += '<div id="sendEmailS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd=="Y"||_zd=="Z")?"display:none":"")+'">';
-				works += '<div id="sendEmail_'+i+'" class="template-btn" style="width:100px">'+MsgSet["Send"]+'</div><a href="#" class="alpha"></a>';
+				works += '<div id="sendEmail_'+i+'" class="template-btn" style="width:150px">'+MsgSet["Send"]+'</div><a href="#" class="alpha"></a>';
 				works += '</div>';
 				
 				//灰色的发送邮件
 				works += '<div id="sendEmailH_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;display:none"">';
-				works += '<div  class="template-btn" style="width:100px;background:#969696">'+MsgSet["Send"]+'</div>';
+				works += '<div  class="template-btn" style="width:150px;background:#999">'+MsgSet["Send"]+'</div>';
 				works += '</div>';
 				
-				//重新发送  ，如果发送，那么显示
+				//重新发送  ，如果没有发送，那么显示
 				works += '<div id="reSendEmailS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y")?"display:none":"")+'">';
-				works += '<div id="reSendEmail_'+i+'" class="template-btn" style="width:100px">'+MsgSet["Resend"]+'</div><a href="#" class="alpha"></a>';
+				works += '<div id="reSendEmail_'+i+'" class="template-btn" style="width:150px">'+MsgSet["Resend"]+'</div><a href="#" class="alpha"></a>';
 				works += '</div>';
 				
 				//灰色的重新发送邮件
 				works += '<div id="reSendEmailH_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;display:none"">';
-				works += '<div  class="template-btn" style="width:100px;background:#969696">'+MsgSet["Resend"]+'</div>';
+				works += '<div  class="template-btn" style="width:150px;background:#999">'+MsgSet["Resend"]+'</div>';
 				works += '</div>';
 				
 				//发送给自己
-//				works += '<div id="sendEmailToMeS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd=="Y"||_zd=="Z")?"display:none":"")+'">';
-//				works += '<div id="sendEmailToMe_'+i+'" class="template-btn" style="width:150px">'+MsgSet["SendToMe"]+'</div><a href="#" class="alpha"></a>';
-//				works += '</div>';
+				works += '<div id="sendEmailToMeS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd=="Y"||_zd=="Z")?"display:none":"")+'">';
+				works += '<div id="sendEmailToMe_'+i+'" class="template-btn" style="width:150px">'+MsgSet["SendToMe"]+'</div><a href="#" class="alpha"></a>';
+				works += '</div>';
 				
 				//灰色的发送给自己
-//				works += '<div id="sendEmailToMeH_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;display:none"">';
-//				works += '<div  class="template-btn" style="width:150px;background:#999">'+MsgSet["SendToMe"]+'</div>';
-//				works += '</div>';
+				works += '<div id="sendEmailToMeH_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;display:none"">';
+				works += '<div  class="template-btn" style="width:150px;background:#999">'+MsgSet["SendToMe"]+'</div>';
+				works += '</div>';
 				
 				//重新发送给自己
-//				works += '<div id="reSendEmailToMeS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y")?"display:none":"")+'">';
-//				works += '<div id="reSendEmailToMe_'+i+'" class="template-btn" style="width:150px">'+MsgSet["ResendToMe"]+'</div><a href="#" class="alpha"></a>';
-//				works += '</div>';
+				works += '<div id="reSendEmailToMeS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y")?"display:none":"")+'">';
+				works += '<div id="reSendEmailToMe_'+i+'" class="template-btn" style="width:150px">'+MsgSet["ResendToMe"]+'</div><a href="#" class="alpha"></a>';
+				works += '</div>';
 				
 				//灰色的重新发送给自己
-//				works += '<div id="reSendEmailToMeH_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;display:none"">';
-//				works += '<div  class="template-btn" style="width:150px;background:#999">'+MsgSet["ResendToMe"]+'</div>';
-//				works += '</div>';
+				works += '<div id="reSendEmailToMeH_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;display:none"">';
+				works += '<div  class="template-btn" style="width:150px;background:#999">'+MsgSet["ResendToMe"]+'</div>';
+				works += '</div>';
 				
 				/*更换推荐人一直显示*/
 				if(SurveyBuild._readonly){
@@ -1941,11 +1928,11 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 					works += '<div id="changeRecS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y"&&_zd!="Z")?"display:none":"")+'">';
 				}
 				
-				works += '<div id="changeRec_'+i+'" class="template-btn" style="width:100px">'+MsgSet["RepRecom"]+'</div><a href="#" class="alpha"></a>';
+				works += '<div id="changeRec_'+i+'" class="template-btn" style="width:150px">'+MsgSet["RepRecom"]+'</div><a href="#" class="alpha"></a>';
 				works += '</div>';
 				
 				works += '<div id="changeRecH_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;display:none"">';
-				works += '<div  class="template-btn" style="width:100px;background:#999">'+MsgSet["RepRecom"]+'</div>';
+				works += '<div  class="template-btn" style="width:150px;background:#999">'+MsgSet["RepRecom"]+'</div>';
 				works += '</div>';
 			
 				works += '<div class="input-list-suffix left"></div>';
@@ -1954,26 +1941,13 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				works += '</div>';
 			}
 			//推荐信状态
-			//添加按钮说明
-//			works += '<div class="input-list-blank"  id="tjxzt_sendinfo_'+i+'" style="padding-left:6px;'+(_zd=="Y"||_zd=="Z"||((data.itemLx == "L" && child[i].recommend_8["value"] == "U") || data.itemLx == "S")?"display:none":"")+'">';
-//			works += '<div class="input-list-info left"></div>'
-//			works += '<div class="input-list-wz left">'
-//			works += '<span style="color:#8f5dc0";>"发送给推荐人":由清华经管官方邮箱直接发送推荐信邮件给推荐人。</br>"发送到自己的邮箱":是由清华经管官方邮箱发送到申请人邮箱，之后需申请人自己将推荐信邮件转发给推荐人。</span>';
-//			works += '</div>';
-//			works += '<div class="clear"></div>';
-//			works += '</br>';
-//			works += '</br>';
-//			works += '</br>';
-//			works += '</div>';
-			
-			
-			
+
 			works += '<div class="input-list-blank" style="padding-left:6px;" id="Tjxzt_'+i+'">';
 			works += '<div class="input-list-info left"></div>';
 			works += '<div><input type="hidden" id="tjxzt_info_'+i+'" value="'+_zd+'"></div>';
 			works += '<div class="input-list-wz left" id="tjxzt_desc_'+i+'">'+MsgSet["ReLeSt"]+': <span class="blue">'+_tjx_zt+'</span>';
 			/*推荐信链接*/
-			if(SurveyBuild.appManager == "Y"||SurveyBuild.isPw=="Y"){
+			if(SurveyBuild.appManager == "Y"){
 				if(refLetterUrl!=""){
 					works += '&nbsp;&nbsp;<a href="javascript:void(0);" style="color:#0088cc;text-decoration:underline;cursor:pointer" onclick=viewUrl("'+refLetterUrl+'")>'+MsgSet["VIEWREFLETTER"] + '</a>';
 				}else{
@@ -1997,49 +1971,48 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			works += '</div>';
 			works += '<div class="input-list-suffix left"></div>';
 			works += '<div class="clear"></div>';
-			works += '</div>';	
-			
+			works += '</div>';		
 		}else{
-			if(tjxEditMode ==false){
-				works += '<div class="input-list-blank" style="margin: 0 auto;display:none" id="Tjx_SendEmail_'+i+'">';
+			if(SurveyBuild._readonly!=true){
+				works += '<div class="input-list-blank" style="margin: 0 auto;display:none" id="-'+i+'">';
 				works += '<div class="input-list-info left" style="padding-left:6px;"></div>';
 				works += '<div class="input-list-texttemplate" style="width:100%">';
 			
 				//发送邮件
 				works += '<div id="sendEmailS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd=="Y"||_zd=="Z")?"display:none":"")+'">';
-				works += '<div id="sendEmail_'+i+'" class="template-btn" style="width:100px">'+MsgSet["Send"]+'</div><a href="#" class="alpha"></a>';
+				works += '<div id="sendEmail_'+i+'" class="template-btn" style="width:150px">'+MsgSet["Send"]+'</div><a href="#" class="alpha"></a>';
 				works += '</div>';
 				//灰色的发送邮件
 				works += '<div id="sendEmailH_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;display:none"">';
-				works += '<div  class="template-btn" style="width:100px;background:#969696">'+MsgSet["Send"]+'</div>';
+				works += '<div  class="template-btn" style="width:150px;background:#999">'+MsgSet["Send"]+'</div>';
 				works += '</div>';
 				//重新发送
 				works += '<div id="reSendEmailS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y"&&_zd!="Z")?"display:none":"")+'">';
-				works += '<div id="reSendEmail_'+i+'" class="template-btn" style="width:100px">'+MsgSet["Resend"]+'</div><a href="#" class="alpha"></a>';
+				works += '<div id="reSendEmail_'+i+'" class="template-btn" style="width:150px">'+MsgSet["Resend"]+'</div><a href="#" class="alpha"></a>';
 				works += '</div>';
 				//灰色的重新发送邮件
 				works += '<div id="reSendEmailH_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;display:none"">';
-				works += '<div  class="template-btn" style="width:100px;background:#969696">'+MsgSet["Resend"]+'</div>';
+				works += '<div  class="template-btn" style="width:150px;background:#999">'+MsgSet["Resend"]+'</div>';
 				works += '</div>';
 				
 				//发送给自己
-//				works += '<div id="sendEmailToMeS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd=="Y"||_zd=="Z")?"display:none":"")+'">';
-//				works += '<div id="sendEmailToMe_'+i+'" class="template-btn" style="width:150px">'+MsgSet["SendToMe"]+'</div><a href="#" class="alpha"></a>';
-//				works += '</div>';
-//				//灰色的发送给自己
-//				works += '<div id="sendEmailToMeH_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;display:none"">';
-//				works += '<div  class="template-btn" style="width:150px;background:#999">'+MsgSet["SendToMe"]+'</div>';
-//				works += '</div>';
-//				
-//				//重新发送给自己
-//				works += '<div id="reSendEmailToMeS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y")?"display:none":"")+'">';
-//				works += '<div id="reSendEmailToMe_'+i+'" class="template-btn" style="width:150px">'+MsgSet["ResendToMe"]+'</div><a href="#" class="alpha"></a>';
-//				works += '</div>';
-//				
-//				//灰色的重新发送给自己
-//				works += '<div id="reSendEmailToMeH_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;display:none"">';
-//				works += '<div  class="template-btn" style="width:150px;background:#999">'+MsgSet["ResendToMe"]+'</div>';
-//				works += '</div>';
+				works += '<div id="sendEmailToMeS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd=="Y"||_zd=="Z")?"display:none":"")+'">';
+				works += '<div id="sendEmailToMe_'+i+'" class="template-btn" style="width:150px">'+MsgSet["SendToMe"]+'</div><a href="#" class="alpha"></a>';
+				works += '</div>';
+				//灰色的发送给自己
+				works += '<div id="sendEmailToMeH_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;display:none"">';
+				works += '<div  class="template-btn" style="width:150px;background:#999">'+MsgSet["SendToMe"]+'</div>';
+				works += '</div>';
+				
+				//重新发送给自己
+				works += '<div id="reSendEmailToMeS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y")?"display:none":"")+'">';
+				works += '<div id="reSendEmailToMe_'+i+'" class="template-btn" style="width:150px">'+MsgSet["ResendToMe"]+'</div><a href="#" class="alpha"></a>';
+				works += '</div>';
+				
+				//灰色的重新发送给自己
+				works += '<div id="reSendEmailToMeH_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;display:none"">';
+				works += '<div  class="template-btn" style="width:150px;background:#999">'+MsgSet["ResendToMe"]+'</div>';
+				works += '</div>';
 				
 				//更换推荐人
 				/*
@@ -2051,12 +2024,12 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				/*更换推荐人一直显示*/
 				
 				works += '<div id="changeRecS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y"&&_zd!="Z") ?"display:none":"")+'">';
-				works += '<div id="changeRec_'+i+'" class="template-btn" style="width:100px">'+MsgSet["RepRecom"]+'</div><a href="#" class="alpha"></a>';
+				works += '<div id="changeRec_'+i+'" class="template-btn" style="width:150px">'+MsgSet["RepRecom"]+'</div><a href="#" class="alpha"></a>';
 				works += '</div>';
 				
 				//灰色的更换推荐人
 				works += '<div id="changeRecH_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;display:none"">';
-				works += '<div  class="template-btn" style="width:100px;background:#969696">'+MsgSet["RepRecom"]+'</div>';
+				works += '<div  class="template-btn" style="width:150px;background:#999">'+MsgSet["RepRecom"]+'</div>';
 				works += '</div>';
 			
 				works += '</div>';
@@ -2064,19 +2037,6 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				works += '<div class="clear"></div>';
 				works += '</div>';
 			}
-			
-			//添加按钮说明
-//			works += '<div class="input-list-blank"  id="tjxzt_sendinfo_'+i+'" style="padding-left:6px;'+(_zd=="Y"||_zd=="Z"||((data.itemLx == "L" && child[i].recommend_8["value"] == "U") || data.itemLx == "S")?"display:none":"")+'">';
-//			works += '<div class="input-list-info left"></div>'
-//			works += '<div class="input-list-wz left">'
-//			works += '<span style="color:#8f5dc0";>"发送给推荐人":由清华经管官方邮箱直接发送推荐信邮件给推荐人。</br>"发送到自己的邮箱":是由清华经管官方邮箱发送到申请人邮箱，之后需申请人自己将推荐信邮件转发给推荐人。</span>';
-//			works += '</div>';
-//			works += '</br>';
-//			works += '</br>';
-//			works += '</br>';
-//			works += '<div class="clear"></div>';
-//			works += '</div>';
-			
 			//推荐信状态
 			works += '<div class="input-list-blank" id="Tjxzt_'+i+'" style="padding-left:6px;display:none">';
 			works += '<div class="input-list-info left"></div>';
@@ -2084,7 +2044,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			works += '<div class="input-list-wz left" id="tjxzt_desc_'+i+'">'+MsgSet["ReLeSt"]+': <span class="blue">'+_tjx_zt+'</span>';
 			
 			//推荐信链接
-			if(SurveyBuild.appManager == "Y"||SurveyBuild.isPw=="Y"){
+			if(SurveyBuild.appManager == "Y"){
 				if(refLetterUrl!=""){
 					works += '&nbsp;&nbsp;<a href="javascript:void(0);" style="color:#0088cc;text-decoration:underline;cursor:pointer" onclick=viewUrl("'+refLetterUrl+'")>'+MsgSet["VIEWREFLETTER"] + '</a>';
 				}else{
@@ -2109,7 +2069,6 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			works += '<div class="input-list-suffix left"></div>';
 			works += '<div class="clear"></div>';
 			works += '</div>';
-			
 		}
 		//发送邮件 -结束
 		
@@ -2128,7 +2087,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
         return works; 
     },
     
-    //手机版推荐信 start
+    //手机
     _getHtmlTwo: function(data,rownum,showtype){
     	
 		if (SurveyBuild.appInsId=="0"&&data.children.length<data.defaultLines){
@@ -2252,7 +2211,6 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 					_ref_recommend_4 = f.comContent.recommend_4;
 					_ref_recommend_5 = f.comContent.recommend_5;
 					_ref_recommend_6 = f.comContent.recommend_6;
-					_ref_recommend_7 = f.comContent.recommend_7;
 					_ref_recommend_10 = f.comContent.recommend_10;
 					_ref_recommend_11 = f.comContent.recommend_11;
 					_ref_recommend_12 = f.comContent.recommend_12;
@@ -2268,7 +2226,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		});
 		
 		var refLetterUrl = "";
-		if(SurveyBuild.appManager == "Y"||SurveyBuild.isPw=="Y")
+		if(SurveyBuild.appManager == "Y")
 		{
 			if(_refAppInsId!="0"&&_refAppInsId!=""&&_refLetterId!="0"&&_refLetterId!=""){
 				refLetterUrl = SurveyBuild.tzGeneralURL + "?classid=appId&TZ_APP_INS_ID="+_refAppInsId+"&TZ_REF_LETTER_ID="+_refLetterId+"&TZ_APP_TPL_ID="+_refAppTplId+"&TZ_MANAGER=Y";
@@ -2382,9 +2340,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		if(_ref_recommend_23!=""){
 			child[i].recommend_23.value = _ref_recommend_23;
 		}
-		if(_ref_recommend_7!=""){
-			child[i].recommend_7.value = _ref_recommend_7;
-		}
+		
 		works += '<div id="main_inner_content_para' + i + '" class="next_record">';
 		
 		//非只读模式
@@ -2402,8 +2358,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				}
 			}
 		}
-		//works += '<div class="se_tit1">' + MsgSet["REFFER"] + ' ' +rownum+ ' :' + data.title + '</div>';
-		works += '<div class="se_tit1">' +data.title+rownum+'</div>';
+		works += '<div class="se_tit1">' + MsgSet["REFFER"] + ' ' +rownum+ ' :' + data.title + '</div>';
 		var _readOnlyRadio = "N";
 		if(SurveyBuild._readonly||_zd=="Y"||_zd=="Z"){
 			_readOnlyRadio = "Y";
@@ -2503,14 +2458,14 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 
         works += '<li>';
         works += '<input type="radio" name="' + data.itemId + child[i].recommend_15["itemId"] +'" '+(child[i].recommend_15["option"]["MAN"]["checked"] == "Y" ? "checked='checked'": "")+' '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' class="radio" value="M">';
-        works += '<label for="MAN">' + MsgSet["REC_SEX_M"] + '</label>';
+        works += '<label for="MAN">' + MsgSet["SEX_M"] + '</label>';
         works += '</li>';
         works += '</div>';
         
         works += '<div readonlyflag="'+ ((_readOnlyRadio=="Y") ? "Y" : "N") + '"  id="' + data.itemId + child[i].recommend_15["itemId"] + '_F">';
         works += '<li style="margin-left:0;">';
         works += '<input type="radio" name="' + data.itemId + child[i].recommend_15["itemId"] +'" '+(child[i].recommend_15["option"]["WOMAN"]["checked"] == "Y" ? "checked='checked'": "")+' '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' class="radio" value="F">';
-        works += '<label for="WOMAN">' + MsgSet["REC_SEX_F"] + '</label>';
+        works += '<label for="WOMAN">' + MsgSet["SEX_F"] + '</label>';
         works += '</li>';
         works += '</div>';
         works += '</ul>';
@@ -2595,7 +2550,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
         works += '</div></div>';
         
 		//推荐信语言
-        //console.log("_qy_zhs:"+_qy_zhs+"_qy_eng:"+_qy_eng);
+        console.log("_qy_zhs:"+_qy_zhs+"_qy_eng:"+_qy_eng);
 		if (_qy_zhs=="Y"&&_qy_eng=="Y")
 		{
 			var tjx_language = "";
@@ -2636,7 +2591,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			works += '<div class="input-list" style="display:none">';
 			works += '<div class="input-list-info left">'+ child[i].recommend_7["itemName"] +'：</div>';
 			works += '<div class="input-list-text left">';
-			works += '<input type="hidden"  id="' + data.itemId + child[i].recommend_7["itemId"] + '" value="C">';
+			works += '<input type="hidden" id="' + data.itemId + child[i].recommend_7["itemId"] + '" value="C">';
 			works += '</div>';
 			works += '</div>';
 		}else if (_qy_zhs!="Y"&&_qy_eng=="Y")
@@ -2679,26 +2634,47 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				child[i].recommend_8["value"] = "S";
 			}
 			
-			//已经发送推荐信的不能切换
-			works += '<ul class="tjx">'; 
-			works += '<div readonlyflag="'+ ((_zd=="Y"||_zd=="Z") ? "Y" : "N") + '"  id="' + data.itemId + child[i].recommend_8["itemId"] + '_S" onclick="SurveyBuild.clickOnRadio(this)">';
-			
-			works += '<li>';
-			works +='<input ' + (child[i].recommend_8["option"]["SEND"]["checked"] == "Y" ? "checked='checked'": "") + ' type="radio" align="'+i+'"  title="'+ child[i].recommend_8["title"] +'" name="' + data.itemId + child[i].recommend_8["itemId"] +'" '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' value="S">';
-			/*works += '<input type="radio" name="square-radio" class="radio"   >';*/
-			works += '<label for="FILL">' + MsgSet["Send_mail"] + '</label>';
-			works += '</li>';
+	        works += '<ul class="tjx">'; 
+	        works += '<div readonlyflag="'+ ((_readOnlyRadio=="Y") ? "Y" : "N") + '"  id="' + data.itemId + child[i].recommend_8["itemId"] + '_S">';
+
+	        works += '<li>';
+	        works +='<input ' + (child[i].recommend_8["option"]["SEND"]["checked"] == "Y" ? "checked='checked'": "") + ' type="radio" align="'+i+'" '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' title="'+ child[i].recommend_8["title"] +'" name="' + data.itemId + child[i].recommend_8["itemId"] +'" value="S">';
+	        /*works += '<input type="radio" name="square-radio" class="radio"   >';*/
+	        works += '<label for="FILL">' + MsgSet["Send_mail"] + '</label>';
+	        works += '</li>';
+	        works += '</div>';
+	        works += '<div readonlyflag="'+ ((_readOnlyRadio=="Y") ? "Y" : "N") + '" id="' + data.itemId + child[i].recommend_8["itemId"] + '_U"  >';
+
+	        works += '<li>';
+	        works +='<input  ' + (child[i].recommend_8["option"]["UPLOAD"]["checked"] == "Y" ? "checked='checked'": "") + ' type="radio" align="'+i+'" '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' title="'+ child[i].recommend_8["title"] +'" name="' + data.itemId + child[i].recommend_8["itemId"] +'" value="U" >';
+	        /*works += '<input type="radio" name="square-radio" class="radio" >';*/
+	        works += '<label for="UPLOAD">' + MsgSet["Upload"] + '</label>';
+	        works += '</li>';
+	        works +='</div>';
+	        works += '</ul>';
 			works += '</div>';
-			works += '<div readonlyflag="'+ ((_zd=="Y"||_zd=="Z") ? "Y" : "N") + '" id="' + data.itemId + child[i].recommend_8["itemId"] + '_U"  onclick="SurveyBuild.clickOnRadio(this);">';
 			
-			works += '<li>';
-			works +='<input  ' + (child[i].recommend_8["option"]["UPLOAD"]["checked"] == "Y" ? "checked='checked'": "") + ' type="radio" align="'+i+'"  title="'+ child[i].recommend_8["title"] +'" name="' + data.itemId + child[i].recommend_8["itemId"] +'" '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' value="U" >';
-			/*works += '<input type="radio" name="square-radio" class="radio" >';*/
-			works += '<label for="UPLOAD">' + MsgSet["Upload"] + '</label>';
-			works += '</li>';
-			works +='</div>';
-			works += '</ul>';
+			
+/*			works += '	<ul class="tjx">'; 
+			works += '	<li>'; 
+			works += '<div readonlyflag="'+ ((_readOnlyRadio=="Y") ? "Y" : "N") + '" class="radio-btn '+(child[i].recommend_8["option"]["SEND"]["checked"] == "Y" ? "checkedRadio" : "")+'" onclick="SurveyBuild.clickOnRadio(this);" id="' + data.itemId + child[i].recommend_8["itemId"] + '_S">';
+			works += '<i><input ' + (child[i].recommend_8["option"]["SEND"]["checked"] == "Y" ? "checked='checked'": "") + ' type="radio" align="'+i+'" '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' title="'+ child[i].recommend_8["title"] +'" name="' + data.itemId + child[i].recommend_8["itemId"] +'" value="S"></i>';
+			works += '</div><span style="margin-left:3px;">' + MsgSet["Send_mail"]+'</span>&nbsp;&nbsp;&nbsp;&nbsp;';
+			works += '<div readonlyflag="'+ ((_readOnlyRadio=="Y") ? "Y" : "N") + '" class="radio-btn '+(child[i].recommend_8["option"]["UPLOAD"]["checked"] == "Y" ? "checkedRadio" : "")+'" onclick="SurveyBuild.clickOnRadio(this);" id="' + data.itemId + child[i].recommend_8["itemId"] + '_U">';
+			works += '<i><input ' + (child[i].recommend_8["option"]["UPLOAD"]["checked"] == "Y" ? "checked='checked'": "") + ' type="radio" align="'+i+'" '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' title="'+ child[i].recommend_8["title"] +'" name="' + data.itemId + child[i].recommend_8["itemId"] +'" value="U" ></i>';
+			works += '</div><span style="margin-left:3px;">' + MsgSet["Upload"] + '</sapn>';
+			works += '	</li>';
+			works += '<div class="clear"></div></ul>';
+			works += '<input type="hidden" id="' + data.itemId + child[i].recommend_8["itemId"] + '" value="' + child[i].recommend_8["value"] + '">';
 			works += '</div>';
+			works += '<div class="input-list-suffix left">';
+			works += '	<div id="' + data.itemId + child[i].recommend_8["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onShow">';
+			works += '		<div class="onShow">&nbsp;</div>';
+			works += '	</div>';
+			works += '</div>';
+			works += '<div class="clear"></div>';
+			works += '</div>';*/
+			
 		}
 		// 如果 设置 itemLx=F  发送邮件
 		else if(data.itemLx == "F"){
@@ -2717,99 +2693,82 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		
 		 if ((data.itemLx == "L" && child[i].recommend_8["value"] == "U") || data.itemLx == "S"){
 			 
-			 console.log("111");
+        
 		 	works += '<div class="item" id="Tjxfj_show_'+i+'">';
-		 	//提交以后推荐信任然可以修改
-		 	//if(SurveyBuild._readonly != true){
+		 	if(SurveyBuild._readonly != true){
 		
-		 	works += '<p>'+ child[i].recommend_9["itemName"] + '<span>*</span></p>';
-		 	works += '<div class="text-box" style="border:none;" >';
-		 	works += '<div class="handle">';
-		 	works += '<div class="ncsc-upload-btn">';
-		 	works += '<a href="#" class="ncsc-upload-btn-a">';
-		 	works += '<span class="ncsc-upload-btn-span">';
-		 	works += '<input type="file" hidefocus="true" size="1" class="input-file" name="recommend_File"  onchange=SurveyBuild.TjxUpload(this,"recommend_9",'+i+')></span>';
-		 	works += '<div class="ncsc-upload-btn-p">'+ MsgSet["UPLOAD_BTN_MSG"] +'<img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/upload.png'+'"></div>';
-		 	works += '</a>';
-		 	works += '</div>';
-		 	works += '</div>';
-		 	works += '</div>';
-		 	//}else{
+		 		works += '<p>'+ child[i].recommend_9["itemName"] + '<span>*</span></p>';
+		 		works += '<div class="text-box" style="border:none;display:' + (SurveyBuild._readonly?'none':'block') +' " >';
+		 		works += '<div class="handle">';
+		 		works += '<div class="ncsc-upload-btn">';
+		 		works += '<a href="#" class="ncsc-upload-btn-a">';
+		 		works += '<span class="ncsc-upload-btn-span">';
+		 		works += '<input type="file" hidefocus="true" size="1" class="input-file" name="goods_image" onchange=SurveyBuild.TjxUpload(this,"recommend_9",'+i+')></span>';
+		 		works += '<div class="ncsc-upload-btn-p">'+ MsgSet["UPLOAD_BTN_MSG"] +'<img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/upload.png'+'"></div>';
+		 		works += '</a>';
+		 		works += '</div>';
+		 		works += '</div>';
+		 		works += '</div>';
+		 	}else{
 		 		
-		 	//}
+		 	}
         
 		 	works += '</div>';
         
 		 	/*附件显示 开始*/
-		 	//if(SurveyBuild._readonly != true){
+		 	if(SurveyBuild._readonly != true){
 		
-		 		works += ' <div class="upload_list"  id="'+data.itemId+i+'_AttList">';
-			//}else{
+	 		works += ' <div class="upload_list"  id="'+data.itemId+i+'_AttList">';
+			 	}else{
 	
-		 		//works += '<div id="'+data.itemId+i+'_AttList">';
-		 	//}
+	 		works += '<div id="'+data.itemId+i+'_AttList">';
+		 	}
 		 	if (child[i].recommend_9["viewFileName"]!="")
 		 	{
-		 		//if(SurveyBuild._readonly!=true){
+		 		if(SurveyBuild._readonly!=true){
 		
-		 	//	works += '<div class="upload_list">';
-		 		works += '<li class="fileLi"><span>';
-		 		works += '<a onclick=SurveyBuild.TjxdownLoad(this,"recommend_9",'+i+') file-index="'+i+'">'+child[i].recommend_9["viewFileName"]+'</a></span>';
-		 		works += '<i onclick=SurveyBuild.Tjxdelete(this,"recommend_9",'+i+') style="background:url(/statics/images/appeditor/m/de.png) no-repeat center center"></i></li>';
-		 		//works += '</div>';
-		 		
-		 		
-		 		//}else{
-		 		//	works += '<div class="input-list-uploadcon-list">';
-		 		//	works += '	<div class="input-list-uploadcon-listl left">';
-		 		//	works += '	<a class="input-list-uploadcon-list-a" onclick=SurveyBuild.TjxdownLoad(this,"recommend_9",'+i+') file-index="'+i+'">'+child[i].recommend_9["viewFileName"]+'</a>';
-		 		//	works += '</div>';
-		 		//	works += '</div>';
-		 		//}
+		 			works += '<div class="upload_list">';
+	 			works += '<li class="fileLi"><span>';
+		 			works += '<a onclick=SurveyBuild.TjxdownLoad(this,"recommend_9",'+i+') file-index="'+i+'">'+child[i].recommend_9["viewFileName"]+'</a></span>';
+		 			works += '<i onclick="onclick=SurveyBuild.Tjxdelete(this,"recommend_9",'+i+')" style="background:url(/statics/images/appeditor/m/de.png) no-repeat center center"></i></li>';
+ 	 			works += '</div>';
+		
+		 		}else{
+		 			works += '<div class="input-list-uploadcon-list">';
+		 			works += '	<div class="input-list-uploadcon-listl left">';
+		 			works += '	<a class="input-list-uploadcon-list-a" onclick=SurveyBuild.TjxdownLoad(this,"recommend_9",'+i+') file-index="'+i+'">'+child[i].recommend_9["viewFileName"]+'</a>';
+		 			works += '</div>';
+		 			works += '</div>';
+		 		}
 		 	}
 		 	works += '</div>';
 		
-		 	works += '<div class="img_shade" id ="shade_'+data.itemId + child[i].recommend_9["itemId"]+'" style="display:none"></div>';
-	 		works += '<img class="img_pop_close" style="display:none"id ="close_'+data.itemId + child[i].recommend_9["itemId"]+'" src="'+ TzUniversityContextPath + '/statics/images/appeditor/m/rl_btn.png'+'">';
-	 		works += '<div class="img_pop_body" style="display:none" id ="body_'+data.itemId + child[i].recommend_9["itemId"]+'">'  ;
-	 		works += ' <img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/" id ="img_'+data.itemId + child[i].recommend_9["itemId"]+'">';
-	 		works += '</div>';
-	 		
 		 	/*附件显示 结束*/
-		 	//works += '	</div>';
+		 	works += '	</div>';
 		 	works += '	<input id="'+data.itemId+child[i].recommend_9["itemId"]+'" type="hidden" name="'+data.itemId+child[i].recommend_9["itemId"]+'" value="'+child[i].recommend_9["value"]+'">';
 		 	works += '	<div class="clear"></div>';
-		 	//works += '</div>';
+		 	works += '</div>';
 		 	
 		 }else{
 			 
 			 works += '<div class="item" style="display:none" id="Tjxfj_show_'+i+'">';
-			 	//if(SurveyBuild._readonly != true){
+			 	if(SurveyBuild._readonly != true){
 			
 			 		works += '<p>'+ child[i].recommend_9["itemName"] + '<span>*</span></p>';
-			 		works += '<div class="text-box" style="border:none; " >';
+			 		works += '<div class="text-box" style="border:none;display:' + (SurveyBuild._readonly?'none':'block') +' " >';
 			 		works += '<div class="handle">';
 			 		works += '<div class="ncsc-upload-btn">';
 			 		works += '<a href="#" class="ncsc-upload-btn-a">';
 			 		works += '<span class="ncsc-upload-btn-span">';
-			 		works += '<input type="file" hidefocus="true" size="1" class="input-file" name="recommend_File"  onchange=SurveyBuild.TjxUpload(this,"recommend_9",'+i+')></span>';
+			 		works += '<input type="file" hidefocus="true" size="1" class="input-file" name="goods_image" onchange=SurveyBuild.TjxUpload(this,"recommend_9",'+i+') ></span>';
 			 		works += '<div class="ncsc-upload-btn-p">'+ MsgSet["UPLOAD_BTN_MSG"] +'<img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/upload.png'+'"></div>';
 			 		works += '</a>';
 			 		works += '</div>';
 			 		works += '</div>';
 			 		works += '</div>';
-			 		works += ' <div class="upload_list"  id="'+data.itemId+i+'_AttList">';			 		
+			 	}else{
 			 		
-			 		works += '</div>';
-			 		works += '<div class="img_shade" id ="shade_'+data.itemId + child[i].recommend_9["itemId"]+'" style="display:none"></div>';
-			 		works += '<img class="img_pop_close" style="display:none"id ="close_'+data.itemId + child[i].recommend_9["itemId"]+'" src="'+ TzUniversityContextPath + '/statics/images/appeditor/m/rl_btn.png'+'">';
-			 		works += '<div class="img_pop_body" style="display:none" id ="body_'+data.itemId + child[i].recommend_9["itemId"]+'">'  ;
-			 		works += ' <img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/" id ="img_'+data.itemId + child[i].recommend_9["itemId"]+'">';
-			 		works += '</div>';
-			 		
-			 	//}else{
-			 		
-			 	//}
+			 	}
 	        
 			 	works += '</div>';
         
@@ -2820,32 +2779,32 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			if ((data.itemLx=="L"&&child[i].recommend_8["value"]!="U")||data.itemLx=="F"){
 
 				/*更换推荐人一直显示*/
-				//if(SurveyBuild._readonly){
-				//	works += '<div id="changeRecS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+'">';
-				//	works += '</div>';
-				//}else{
+				if(SurveyBuild._readonly){
+					works += '<div id="changeRecS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+'">';
+					works += '</div>';
+				}else{
 					
 					
 		
 						//发送
-						works += '<div id="sendEmailS_'+i+'"  style="'+((_zd!="Y"&&_zd!="Z")?"":"display:none")+';width: 30%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:left;">';
+						works += '<div id="sendEmailS_'+i+'"  style="'+((_zd!="Y"&&_zd!="Z")?"":"display:none")+';width: 45%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:left;">';
 						works += '<div id="sendEmail_'+i+'">'+MsgSet["Send"]+'</div><a href="#" class="alpha"></a>';
 						works += '</div>';
 						
 						//灰色的发送邮件
-						works += '<div id="sendEmailH_'+i+'" style="display:none;width: 30%;padding: 10px 0;background-color: #999;color: #fff;text-align: center;border-radius: 5px;float:left;">';
+						works += '<div id="sendEmailH_'+i+'" style="display:none;width: 45%;padding: 10px 0;background-color: #999;color: #fff;text-align: center;border-radius: 5px;float:left;">';
 						works += '<div >'+MsgSet["Send"]+'</div><a href="#" class="alpha"></a>';
 						works += '</div>';
 						
 						//发送给自己
-//						works += '<div id="sendEmailToMeS_'+i+'" style="'+((_zd!="Y"&&_zd!="Z")?"":"display:none")+';width: 30%;margin-left:5%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:left;">';
-//						works += '<div id="sendEmailToMe_'+i+'">'+MsgSet["SendToMe"]+'</div><a href="#" class="alpha"></a>';
-//						works += '</div>';
-//						
-//						//发送给自己灰色
-//						works += '<div id="sendEmailToMeH_'+i+'" style="display:none;width: 30%;margin-left:5%;padding: 10px 0;background-color: #999;color: #fff;text-align: center;border-radius: 5px;float:left;">';
-//						works += '<div >'+MsgSet["SendToMe"]+'</div><a href="#" class="alpha"></a>';
-//						works += '</div>';
+						works += '<div id="sendEmailToMeS_'+i+'" style="'+((_zd!="Y"&&_zd!="Z")?"":"display:none")+';width: 45%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:right;">';
+						works += '<div id="sendEmailToMe_'+i+'">'+MsgSet["SendToMe"]+'</div><a href="#" class="alpha"></a>';
+						works += '</div>';
+						
+						//发送给自己灰色
+						works += '<div id="sendEmailToMeH_'+i+'" style="display:none;width: 45%;padding: 10px 0;background-color: #999;color: #fff;text-align: center;border-radius: 5px;float:right;">';
+						works += '<div >'+MsgSet["SendToMe"]+'</div><a href="#" class="alpha"></a>';
+						works += '</div>';
 						
 					
 						
@@ -2859,68 +2818,58 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 						works += '</div>';
 						
 						//重新发送给自己
-//						works += '<div id="reSendEmailToMeS_'+i+'" style="'+((_zd!="Y"&&_zd!="Z")?"display:none":"")+';width:30%;margin-left:5%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:left;">';
-//						works += '<div id="reSendEmailToMe_'+i+'">'+MsgSet["ResendToMe"]+'</div><a href="#" class="alpha"></a>';
-//						works += '</div>';
-//						//重新发送给自己灰色
-//						works += '<div id="reSendEmailToMeH_'+i+'" style="display:none;width:30%;margin-left:5%;padding: 10px 0;background-color: #999;color: #fff;text-align: center;border-radius: 5px;float:left;">';
-//						works += '<div >'+MsgSet["ResendToMe"]+'</div><a href="#" class="alpha"></a>';
-//						works += '</div>';
-//						
+						works += '<div id="reSendEmailToMeS_'+i+'" style="'+((_zd!="Y"&&_zd!="Z")?"display:none":"")+';width:30%;margin-left:5%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:left;">';
+						works += '<div id="reSendEmailToMe_'+i+'">'+MsgSet["ResendToMe"]+'</div><a href="#" class="alpha"></a>';
+						works += '</div>';
+						//重新发送给自己灰色
+						works += '<div id="reSendEmailToMeH_'+i+'" style="display:none;width:30%;margin-left:5%;padding: 10px 0;background-color: #999;color: #fff;text-align: center;border-radius: 5px;float:left;">';
+						works += '<div >'+MsgSet["ResendToMe"]+'</div><a href="#" class="alpha"></a>';
+						works += '</div>';
 						
 						
-						works += '<div id="changeRecS_'+i+'" style="width:30%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:right;">';
+						
+						works += '<div id="changeRecS_'+i+'" style="'+((_zd!="Y"&&_zd!="Z")?"display:none":"")+';width:30%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:right;">';
 						works += '<div id="changeRec_'+i+'">'+MsgSet["RepRecom"]+'</div><a href="#" class="alpha"></a>';
 						works += '</div>';
 						//更换推荐人灰色
-						works += '<div id="changeRecH_'+i+'" style="display:none;width:30%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:right;">';
+					/*	works += '<div id="changeRecH_'+i+'" style="display:none;width:30%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:right;">';
 						works += '<div >'+MsgSet["RepRecom"]+'</div><a href="#" class="alpha"></a>';
-						works += '</div>';
+						works += '</div>';*/
 					
-				//}
+				}
 				
 				works += '<div class="clear"></div>';
-				
-//				works += '<div   id="tjxzt_sendinfo_'+i+'" style="margin-top:15px;'+(_zd=="Y"||_zd=="Z"||((data.itemLx == "L" && child[i].recommend_8["value"] == "U") || data.itemLx == "S")?"display:none":"")+'">';
-//				//works += '<span style="color:#8f5dc0";>"发送给推荐人":由清华经管官方邮箱直接发送推荐信邮件给推荐人。</br>"发送到自己的邮箱":是由清华经管官方邮箱发送到申请人邮箱，之后需申请人自己将推荐信邮件转发给推荐人。</span>';
-//				works += '<div class="clear"></div>';
-//				works += '</br>';
-//				works += '</br>';
-//				works += '</div>';
-				
-				
 			//推荐信状态
-		  works+='<div id="Tjxzt_'+i+'">';
 		  works += '<p class="finish" style="margin-top: 15px" id="tjxzt_desc_'+i+'">' + MsgSet["ReLeSt"] + '：<span>' + _tjx_zt + '</span></p>';
-		  works+='</div>';
+			
 			
 		}else{
 			/*更换推荐人一直显示*/
-			//if(SurveyBuild._readonly){
-			//	works += '<div id="changeRecS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+'">';
-			//	works += '</div>';
-			//}else{
+			if(SurveyBuild._readonly){
+				works += '<div id="changeRecS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+'">';
+				works += '</div>';
+			}else{
 				
 				
 					
 					//发送
-					works += '<div id="sendEmailS_'+i+'" style="display:none;width: 30%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:left;">';
+					works += '<div id="sendEmailS_'+i+'" style="display:none;width: 45%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:left;">';
 					works += '<div id="sendEmail_'+i+'">'+MsgSet["Send"]+'</div><a href="#" class="alpha"></a>';
 					works += '</div>';
 					//发送灰色
-					works += '<div id="sendEmailH_'+i+'" style=" display:none ;width: 30%;padding: 10px 0;background-color: #999;color: #fff;text-align: center;border-radius: 5px;float:left;">';
+					works += '<div id="sendEmailH_'+i+'" style=" display:none ;width: 45%;padding: 10px 0;background-color: #999;color: #fff;text-align: center;border-radius: 5px;float:left;">';
 					works += '<div id="sendEmail_'+i+'">'+MsgSet["Send"]+'</div><a href="#" class="alpha"></a>';
 					works += '</div>';
 					
 					
 					//发送给自己
-//					works += '<div id="sendEmailToMeS_'+i+'" style="display:none; width: 30%;margin-left:5%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:left;">';
-//					works += '<div id="sendEmailToMe_'+i+'">'+MsgSet["SendToMe"]+'</div><a href="#" class="alpha"></a>';
-//					works += '</div>';
-//					//发送给自己灰色
-//					works += '<div id="sendEmailToMeH_'+i+'" style="display:none; width: 30%;margin-left:5%;padding: 10px 0;background-color: #999;color: #fff;text-align: center;border-radius: 5px;float:left;">';
-//					works += '<div id="sendEmailToMe_'+i+'">'+MsgSet["SendToMe"]+'</div><a href="#" class="alpha"></a>';
-//					works += '</div>';
+					works += '<div id="sendEmailToMeS_'+i+'" style="display:none; width: 45%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:right;">';
+					works += '<div id="sendEmailToMe_'+i+'">'+MsgSet["SendToMe"]+'</div><a href="#" class="alpha"></a>';
+					works += '</div>';
+					//发送给自己灰色
+					works += '<div id="sendEmailToMeH_'+i+'" style="display:none; width: 45%;padding: 10px 0;background-color: #999;color: #fff;text-align: center;border-radius: 5px;float:right;">';
+					works += '<div id="sendEmailToMe_'+i+'">'+MsgSet["SendToMe"]+'</div><a href="#" class="alpha"></a>';
+					works += '</div>';
 					
 
 					//重新发送  ，如果没有发送，那么显示
@@ -2932,14 +2881,14 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 					works += '<div id="reSendEmail_'+i+'">'+MsgSet["Resend"]+'</div><a href="#" class="alpha"></a>';
 					works += '</div>';
 					
-//					//重新发送给自己
-//					works += '<div id="reSendEmailToMeS_'+i+'" style="display:none;width:30%;margin-left:5%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:left;">';
-//					works += '<div id="reSendEmailToMe_'+i+'">'+MsgSet["ResendToMe"]+'</div><a href="#" class="alpha"></a>';
-//					works += '</div>';
-//					//重新发送给自己灰色
-//					works += '<div id="reSendEmailToMeS_'+i+'" style="display:none;width:30%;margin-left:5%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:left;">';
-//					works += '<div id="reSendEmailToMe_'+i+'">'+MsgSet["ResendToMe"]+'</div><a href="#" class="alpha"></a>';
-//					works += '</div>';
+					//重新发送给自己
+					works += '<div id="reSendEmailToMeS_'+i+'" style="display:none;width:30%;margin-left:5%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:left;">';
+					works += '<div id="reSendEmailToMe_'+i+'">'+MsgSet["ResendToMe"]+'</div><a href="#" class="alpha"></a>';
+					works += '</div>';
+					//重新发送给自己灰色
+					works += '<div id="reSendEmailToMeS_'+i+'" style="display:none;width:30%;margin-left:5%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:left;">';
+					works += '<div id="reSendEmailToMe_'+i+'">'+MsgSet["ResendToMe"]+'</div><a href="#" class="alpha"></a>';
+					works += '</div>';
 					
 					works += '<div id="changeRecS_'+i+'" style="display:none;width:30%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:right;">';
 					works += '<div id="changeRec_'+i+'">'+MsgSet["RepRecom"]+'</div><a href="#" class="alpha"></a>';
@@ -2948,22 +2897,12 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 					works += '<div id="changeRec_'+i+'">'+MsgSet["RepRecom"]+'</div><a href="#" class="alpha"></a>';
 					works += '</div>';
 				
-			//}
+			}
 			
 			works += '<div class="clear"></div>';
-			
-//			works += '<div   id="tjxzt_sendinfo_'+i+'" style="margin-top:15px;'+(_zd=="Y"||_zd=="Z"||((data.itemLx == "L" && child[i].recommend_8["value"] == "U") || data.itemLx == "S")?"display:none":"")+'">';
-//			//works += '<span style="color:#8f5dc0";>"发送给推荐人":由清华经管官方邮箱直接发送推荐信邮件给推荐人。</br>"发送到自己的邮箱":是由清华经管官方邮箱发送到申请人邮箱，之后需申请人自己将推荐信邮件转发给推荐人。</span>';
-//			works += '<div class="clear"></div>';
-//			works += '</br>';
-//			works += '</br>';
-//			works += '</div>';
-			
 		//推荐信状态
-		works+='<div id="Tjxzt_'+i+'" style="display:none;">';
+
 		works += '<p class="finish" style="margin-top: 15px" id="tjxzt_desc_'+i+'">' + MsgSet["ReLeSt"] + '：<span>' + _tjx_zt + '</span></p>';
-		works+='</div>';
-		
 			
 			
 		}
@@ -2971,17 +2910,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
         works += '</div>';
         works += '</div>';
         
-        /*保存推荐信信息*/
-		works += '<div style="display:none">';
-		works += '<div id="saveRec_'+i+'" class="bt_blue" style="width:125px">保存</div><a href="#" class="alpha"></a>';
-		works += '</div>';
-
-		works += '<div><input type="hidden" id="yincang_tx" value="'+data.toSendE+'"></div>';
-		works += '<div><input type="hidden" id="max_tjx_ts" value="'+data.maxLines+'"></div>';
-		
         works += '</div>';
-        
-      
         return works;
     },
     _eventbind: function(data) {
@@ -2992,7 +2921,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		for (var i=1;i<=len;i++)
 		{
 			var num=i;
- 
+			
 			//发送邮件  包括发送给 推荐人 以及发送给自己
 			$("#sendEmail_"+(Number(num)-1)).unbind("click");  
 			$("#sendEmailToMe_"+(Number(num)-1)).unbind("click"); 
@@ -3110,13 +3039,14 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				
 				//页面语言数据				
 				var rec_language
-//				if(SurveyBuild.accessType=='M'){
-//					rec_language = $('input[name="'+data["itemId"] + children[m-1].recommend_7["itemId"]+'"]:checked').val();
-//				}else{
+				if(SurveyBuild.accessType=='M'){
+					
+					rec_language = $('input[name="'+data["itemId"] + children[m-1].recommend_7["itemId"]+'"]:checked').val();
+				}else{
 					rec_language = $("#" + data["itemId"] + children[m-1].recommend_7["itemId"]).val();
-//				}
+				}
 								
-				console.log("rec_language:"+rec_language);
+				//console.log("rec_language:"+rec_language);
 				if (children[m-1].recommend_7["useby"]=="Y"&&rec_language==""){
 					_yz="1";
 					_desc =   children[m-1].recommend_7["itemName"]+ MsgSet["REQUIRE"];
@@ -3254,18 +3184,145 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 						$("#sendEmailS_"+(Number(mm)-1)).css("display","none");
 						$("#sendEmailToMeH_"+(Number(mm)-1)).css("display","block");
 						$("#sendEmailToMeS_"+(Number(mm)-1)).css("display","none");
-						$("#changeRecH_"+(Number(mm)-1)).css("display","block");
-						$("#changeRecS_"+(Number(mm)-1)).css("display","none");
 						
 						
-
-						var param = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_SEND_REF_STD","OperateType":"SEND","comParams":{"send_falg":"'+sendFlag+'","rec_app_ins_id":"'+_tz_app_ins_id+'","TZ_APP_INS_VERSION":"'+_tz_app_version_id+'","rec_num":"'+rec_num+'","rec_title":"'+rec_title+'","rec_gname":"'+rec_gname+'","rec_name":"'+rec_name+'","rec_company":"'+rec_company+'","rec_post":"'+rec_post+'","rec_phone_area":"'+rec_phone_area+'","rec_phone_no":"'+rec_phone_no+'","rec_email":"'+rec_email+'","rec_sex":"'+rec_sex+'","rec_relation":"'+rec_relation+'","rec_language":"'+rec_language+'","email_tx":"'+_email_tx+'","rec_by1":"'+rec_by1+'","rec_by2":"'+rec_by2+'","rec_by3":"'+rec_by3+'","rec_by4":"'+rec_by4+'","rec_by5":"'+rec_by5+'","rec_by6":"'+rec_by6+'","rec_by7":"'+rec_by7+'","rec_by8":"'+rec_by8+'","rec_by9":"'+rec_by9+'","rec_by10":"'+rec_by10+'","accessPath":"'+_accessPath+'","filename":"'+_file+'","sysfilename":"'+_sysfile+'"}}';
 						if(_tz_app_ins_id == "0"){
 							/*提示先保存报名表*/
 							alert(MsgSet["SAVEBMBFIRST"]); 
 						}else{
+							
+							//modity by caoy 修改逻辑 先保存推荐信 然后在发送邮件 然后掉调用 保存推荐信
+							processing();
+							var appInsId = SurveyBuild.appInsId;
+							var appInsVersionId = SurveyBuild.appInsVersion;
+							var _a = getData();
+							var classId = $("#ClassId").val();
+							var batchId = $("#BatchId").val();
+							var pwd="";
+							var isPwd="N";
+							console.log("appInsId:"+appInsId);
+							console.log("appInsVersionId:"+appInsVersionId);
+							console.log("currentPageId:"+currentPageId);
+							
+							var tzSaveParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"SAVE","isEdit":"","TZ_REF_LETTER_ID":"","PASSWORD":"'+pwd+'","ISPWD":"'+isPwd+'","TZ_APP_INS_ID":' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"ZHS","TZ_CLASS_ID":"'+SurveyBuild.classId+'","TZ_BATCH_ID":"'+batchId+'","TZ_NEW_CLASS_ID":"'+classId+'","data":' + $.toJSON(_a) + '}]}}';
+							$.ajax({
+								type: "POST",
+								url: SurveyBuild.tzGeneralURL,
+								data: {
+									tzParams: tzSaveParams
+								},
+								dataType: "JSON",
+								success: function(f) {
+									console.log(f.state.errcode);
+									if (f.state.errcode == "0") {
+										SurveyBuild.appInsId = f.comContent.insid;
+										SurveyBuild.appInsVersion = f.comContent.appInsVersionId;
+										SurveyBuild.classId = classId;
+										
+										/*设置样式*/
+										/*设置页面完成状态*/
+										if (f.comContent.code == "0") { 
+									 	/*当前页签设置为完成*/
+											$("#" + currentPageId).find(".menu-gou.right img").attr("src",TzUniversityContextPath + "/statics/images/appeditor/new/check-white.png");
+											$("#" + currentPageId).find(".menu-gou.right img").show();
+										}else{
+											/*当前页签设置为未完成*/
+											$("#" + currentPageId).find(".menu-gou.right img").attr("src","");
+											$("#" + currentPageId).find(".menu-gou.right img").hide();
+										}
+										layer.closeAll();
+										noteing(MsgSet.SAVE_SUCCEED);
+										
+										
+										var param = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_SEND_REF_STD","OperateType":"SEND","comParams":{"send_falg":"'+sendFlag+'","rec_app_ins_id":"'+SurveyBuild.appInsId+'","TZ_APP_INS_VERSION":"'+SurveyBuild.appInsVersion+'","rec_num":"'+rec_num+'","rec_title":"'+rec_title+'","rec_gname":"'+rec_gname+'","rec_name":"'+rec_name+'","rec_company":"'+rec_company+'","rec_post":"'+rec_post+'","rec_phone_area":"'+rec_phone_area+'","rec_phone_no":"'+rec_phone_no+'","rec_email":"'+rec_email+'","rec_sex":"'+rec_sex+'","rec_relation":"'+rec_relation+'","rec_language":"'+rec_language+'","email_tx":"'+_email_tx+'","rec_by1":"'+rec_by1+'","rec_by2":"'+rec_by2+'","rec_by3":"'+rec_by3+'","rec_by4":"'+rec_by4+'","rec_by5":"'+rec_by5+'","rec_by6":"'+rec_by6+'","rec_by7":"'+rec_by7+'","rec_by8":"'+rec_by8+'","rec_by9":"'+rec_by9+'","rec_by10":"'+rec_by10+'","accessPath":"'+_accessPath+'","filename":"'+_file+'","sysfilename":"'+_sysfile+'"}}';
+										
+										//报名报保存成功，发送邮件
+										layer.load('推荐信发送中，请不要刷新或者关闭页面！');
+										
+										
+										
+										
+										
+										$.ajax({
+											type: "post",
+											url: _Url + encodeURIComponent(param),
+											dataType: "json",
+											success: function(result){
+												if (result.comContent=="SUCCESS"){
+													layer.closeAll();
+													$("#sendEmailS_"+(Number(mm)-1)).css("display","none");
+													$("#sendEmailToMeS_"+(Number(mm)-1)).css("display","none");
+													$("#reSendEmailS_"+(Number(mm)-1)).css("display","block");
+													$("#reSendEmailToMeS_"+(Number(mm)-1)).css("display","block");
+													
+													$("#sendEmailH_"+(Number(mm)-1)).css("display","none");
+													$("#sendEmailToMeH_"+(Number(mm)-1)).css("display","none");
+													
+													$("#changeRecS_"+(Number(mm)-1)).css("display","block");
+													alert(MsgSet["SEND_SC"]);
+													$("#tjxzt_desc_"+(Number(mm)-1)).html(MsgSet["ReLeSt"]+"：<span class='blue'>"+MsgSet["SendEmail"]+"</span>");
+													$("#tjxzt_info_"+(Number(mm)-1)).val("Y");
+													$("#" + data["itemId"] + children[m-1].recommend_1["itemId"]).prop("readonly", true);
+													$("#" + data["itemId"] + children[m-1].recommend_2["itemId"]).prop("readonly", true);
+													$("#" + data["itemId"] + children[m-1].recommend_3["itemId"]).prop("readonly", true);
+													$("#" + data["itemId"] + children[m-1].recommend_4["itemId"]).prop("readonly", true);
+													$("#" + data["itemId"] + children[m-1].recommend_5["itemId"]).prop("readonly", true);
+													$("#" + data["itemId"] + children[m-1].recommend_6["itemId"]).prop("readonly", true);
+													$("input[name="+data["itemId"]+children[m-1].recommend_15["itemId"]+"]").prop("disabled", true);
+													$("input[name="+data["itemId"]+children[m-1].recommend_7["itemId"]+"]").prop("disabled", true);
+													$("input[name="+data["itemId"]+children[m-1].recommend_8["itemId"]+"]").prop("disabled", true);
+													$("#" + data["itemId"] + children[m-1].recommend_10["itemId"]).prop("readonly", true);
+													$("#" + data["itemId"] + children[m-1].recommend_11["itemId"]).prop("readonly", true);
+													$("#" + data["itemId"] + children[m-1].recommend_12["itemId"]).prop("readonly", true);
+													$("#" + data["itemId"] + children[m-1].recommend_13["itemId"]).prop("readonly", true);
+													$("#" + data["itemId"] + children[m-1].recommend_14["itemId"]).prop("readonly", true);
+													$("#" + data["itemId"] + children[m-1].recommend_19["itemId"]).prop("readonly", true);
+													$("#" + data["itemId"] + children[m-1].recommend_20["itemId"]).prop("readonly", true);
+													$("#" + data["itemId"] + children[m-1].recommend_21["itemId"]).prop("readonly", true);
+													$("#" + data["itemId"] + children[m-1].recommend_22["itemId"]).prop("readonly", true);
+													$("#" + data["itemId"] + children[m-1].recommend_23["itemId"]).prop("readonly", true);
+													
+													$("#" + data["itemId"] + children[m-1].recommend_17["itemId"]).prop("readonly", true);
+													$("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).next(".chosen-container").unbind();
+											
+													$("#"+data.itemId + children[m-1].recommend_7["itemId"]+"_E").attr("readonlyflag","Y");
+													$("#"+data.itemId + children[m-1].recommend_7["itemId"]+"_C").attr("readonlyflag","Y");
+													$("#"+data.itemId + children[m-1].recommend_8["itemId"]+"_U").attr("readonlyflag","Y");
+													$("#"+data.itemId + children[m-1].recommend_8["itemId"]+"_S").attr("readonlyflag","Y");
+													$("#"+data.itemId + children[m-1].recommend_15["itemId"]+"_M").attr("readonlyflag","Y");
+													$("#"+data.itemId + children[m-1].recommend_15["itemId"]+"_F").attr("readonlyflag","Y");
+													$("#tjx_delete_"+(Number(mm)-1)).hide();
+													SurveyBuild.saveTjx_fj();
+												}else {
+													layer.closeAll();
+													$("#sendEmailH_"+(Number(mm)-1)).css("display","none");
+													$("#sendEmailS_"+(Number(mm)-1)).css("display","block");
+													$("#sendEmailToMeH_"+(Number(mm)-1)).css("display","none");
+													$("#sendEmailToMeS_"+(Number(mm)-1)).css("display","block");
+													alert(result.comContent);
+												}
+											}
+										});
+										
+				
+									} else {
+										$("#sendEmailH_"+(Number(mm)-1)).css("display","none");
+										$("#sendEmailS_"+(Number(mm)-1)).css("display","block");
+										$("#sendEmailToMeH_"+(Number(mm)-1)).css("display","none");
+										$("#sendEmailToMeS_"+(Number(mm)-1)).css("display","block");
+										layer.closeAll();
+										noteing(MsgSet.SAVE_FAILD + "," + f.state.errdesc, 2);
+									}
+								}
+							});
+							
 							//发送等待弹窗
-							layer.load('推荐信发送中，请不要刷新或者关闭页面！');
+							/*layer.load('推荐信发送中，请不要刷新或者关闭页面！');
+							
+							
+							
+							
+							
 							$.ajax({
 								type: "post",
 								url: _Url + encodeURIComponent(param),
@@ -3274,18 +3331,14 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 									if (result.comContent=="SUCCESS"){
 										layer.closeAll();
 										$("#sendEmailS_"+(Number(mm)-1)).css("display","none");
-										$("#sendEmailH_"+(Number(mm)-1)).css("display","none");
 										$("#sendEmailToMeS_"+(Number(mm)-1)).css("display","none");
-										$("#sendEmailToMeH_"+(Number(mm)-1)).css("display","none");
 										$("#reSendEmailS_"+(Number(mm)-1)).css("display","block");
 										$("#reSendEmailToMeS_"+(Number(mm)-1)).css("display","block");
 										
-//										$("#tjxzt_sendinfo_"+(Number(mm)-1)).css("display","none");
-										
+										$("#sendEmailH_"+(Number(mm)-1)).css("display","none");
+										$("#sendEmailToMeH_"+(Number(mm)-1)).css("display","none");
 										
 										$("#changeRecS_"+(Number(mm)-1)).css("display","block");
-										$("#changeRecH_"+(Number(mm)-1)).css("display","none");
-										
 										alert(MsgSet["SEND_SC"]);
 										$("#tjxzt_desc_"+(Number(mm)-1)).html(MsgSet["ReLeSt"]+"：<span class='blue'>"+MsgSet["SendEmail"]+"</span>");
 										$("#tjxzt_info_"+(Number(mm)-1)).val("Y");
@@ -3334,7 +3387,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 										alert(result.comContent);
 									}
 								}
-							});
+							}); */
 						}
 					}
 				}else if (_yz="2")
@@ -3384,7 +3437,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				var rec_sex="",rec_language="";
 				if(SurveyBuild.accessType=='M'){
 					rec_sex = $('input[name="'+data["itemId"] + children[m-1].recommend_15["itemId"]+'"]:checked').val();
-					rec_language= $('input[name="'+data["itemId"] + children[m-1].recommend_7["itemId"]+'"]:checked').val();
+					rec_language=rec_sex = $('input[name="'+data["itemId"] + children[m-1].recommend_7["itemId"]+'"]:checked').val();
 				}else{
 					//性别
 				    rec_sex = $("#" + data["itemId"] + children[m-1].recommend_15["itemId"]).val();
@@ -3394,7 +3447,6 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 					
 				}
 				
-				console.log("rec_language:"+rec_language);
 				if (children[m-1].recommend_15["useby"]=="Y"&&rec_sex!=""){
 				}else{
 					rec_sex="";
@@ -3462,8 +3514,94 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				$("#reSendEmailToMeS_"+(Number(mm)-1)).css("display","none");
 				$("#changeRecH_"+(Number(mm)-1)).css("display","block");
 				$("#changeRecS_"+(Number(mm)-1)).css("display","none");
+				
+				//modity by caoy 修改逻辑 先保存推荐信 然后在发送邮件 然后掉调用 保存推荐信
+				processing();
+				var appInsId = SurveyBuild.appInsId;
+				var appInsVersionId = SurveyBuild.appInsVersion;
+				var _a = getData();
+				var classId = $("#ClassId").val();
+				var batchId = $("#BatchId").val();
+				var pwd="";
+				var isPwd="N";
+				console.log("appInsId:"+appInsId);
+				console.log("appInsVersionId:"+appInsVersionId);
+				console.log("currentPageId:"+currentPageId);
+				
+				var tzSaveParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"SAVE","isEdit":"","TZ_REF_LETTER_ID":"","PASSWORD":"'+pwd+'","ISPWD":"'+isPwd+'","TZ_APP_INS_ID":' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"ZHS","TZ_CLASS_ID":"'+SurveyBuild.classId+'","TZ_BATCH_ID":"'+batchId+'","TZ_NEW_CLASS_ID":"'+classId+'","data":' + $.toJSON(_a) + '}]}}';
+				$.ajax({
+					type: "POST",
+					url: SurveyBuild.tzGeneralURL,
+					data: {
+						tzParams: tzSaveParams
+					},
+					dataType: "JSON",
+					success: function(f) {
+						if (f.state.errcode == "0") {
+							SurveyBuild.appInsId = f.comContent.insid;
+							SurveyBuild.appInsVersion = f.comContent.appInsVersionId;
+							SurveyBuild.classId = classId;
+							
+							/*设置样式*/
+							/*设置页面完成状态*/
+							if (f.comContent.code == "0") { 
+						 	/*当前页签设置为完成*/
+								$("#" + currentPageId).find(".menu-gou.right img").attr("src",TzUniversityContextPath + "/statics/images/appeditor/new/check-white.png");
+								$("#" + currentPageId).find(".menu-gou.right img").show();
+							}else{
+								/*当前页签设置为未完成*/
+								$("#" + currentPageId).find(".menu-gou.right img").attr("src","");
+								$("#" + currentPageId).find(".menu-gou.right img").hide();
+							}
+							layer.closeAll();
+							noteing(MsgSet.SAVE_SUCCEED);
+							
+							//报名报保存成功，发送邮件
+							var param = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_SEND_REF_STD","OperateType":"SEND","comParams":{"send_falg":"'+sendFlag+'","rec_app_ins_id":"'+SurveyBuild.appInsId+'","TZ_APP_INS_VERSION":"'+SurveyBuild.appInsVersion+'","rec_num":"'+rec_num+'","rec_title":"'+rec_title+'","rec_gname":"'+rec_gname+'","rec_name":"'+rec_name+'","rec_company":"'+rec_company+'","rec_post":"'+rec_post+'","rec_phone_area":"'+rec_phone_area+'","rec_phone_no":"'+rec_phone_no+'","rec_email":"'+rec_email+'","rec_sex":"'+rec_sex+'","rec_relation":"'+rec_relation+'","rec_language":"'+rec_language+'","email_tx":"'+_email_tx+'","rec_by1":"'+rec_by1+'","rec_by2":"'+rec_by2+'","rec_by3":"'+rec_by3+'","rec_by4":"'+rec_by4+'","rec_by5":"'+rec_by5+'","rec_by6":"'+rec_by6+'","rec_by7":"'+rec_by7+'","rec_by8":"'+rec_by8+'","rec_by9":"'+rec_by9+'","rec_by10":"'+rec_by10+'","accessPath":"'+_accessPath+'","filename":"'+_file+'","sysfilename":"'+_sysfile+'"}}';
+							layer.load('推荐信发送中，请不要刷新或者关闭页面！');
+							$.ajax({
+								type: "post",
+								url: _Url + encodeURIComponent(param),
+								dataType: "json",
+								success: function(result){
+									if (result.comContent=="SUCCESS"){
+										layer.closeAll();
+										$("#reSendEmailH_"+(Number(mm)-1)).css("display","none");
+										$("#reSendEmailS_"+(Number(mm)-1)).css("display","block");
+										$("#reSendEmailToMeH_"+(Number(mm)-1)).css("display","none");
+										$("#reSendEmailToMeS_"+(Number(mm)-1)).css("display","block");
+										$("#changeRecH_"+(Number(mm)-1)).css("display","none");
+										$("#changeRecS_"+(Number(mm)-1)).css("display","block");
+										alert(MsgSet["SEND_SC"]);
+										SurveyBuild.saveTjx_fj();
+									}else {
+										layer.closeAll();
+										$("#reSendEmailH_"+(Number(mm)-1)).css("display","none");
+										$("#reSendEmailS_"+(Number(mm)-1)).css("display","block");
+										$("#reSendEmailToMeH_"+(Number(mm)-1)).css("display","none");
+										$("#reSendEmailToMeS_"+(Number(mm)-1)).css("display","block");
+										$("#changeRecH_"+(Number(mm)-1)).css("display","none");
+										$("#changeRecS_"+(Number(mm)-1)).css("display","block");
+										alert(result.comContent);
+									}
+								}
+							});
+							
+	
+						} else {
+							$("#reSendEmailH_"+(Number(mm)-1)).css("display","none");
+							$("#reSendEmailS_"+(Number(mm)-1)).css("display","block");
+							$("#reSendEmailToMeH_"+(Number(mm)-1)).css("display","none");
+							$("#reSendEmailToMeS_"+(Number(mm)-1)).css("display","block");
+							$("#changeRecH_"+(Number(mm)-1)).css("display","none");
+							$("#changeRecS_"+(Number(mm)-1)).css("display","block");
+							layer.closeAll();
+							noteing(MsgSet.SAVE_FAILD + "," + f.state.errdesc, 2);
+						}
+					}
+				});
 
-				var param = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_SEND_REF_STD","OperateType":"SEND","comParams":{"send_falg":"'+sendFlag+'","rec_app_ins_id":"'+_tz_app_ins_id+'","TZ_APP_INS_VERSION":"'+_tz_app_version_id+'","rec_num":"'+rec_num+'","rec_title":"'+rec_title+'","rec_gname":"'+rec_gname+'","rec_name":"'+rec_name+'","rec_company":"'+rec_company+'","rec_post":"'+rec_post+'","rec_phone_area":"'+rec_phone_area+'","rec_phone_no":"'+rec_phone_no+'","rec_email":"'+rec_email+'","rec_sex":"'+rec_sex+'","rec_relation":"'+rec_relation+'","rec_language":"'+rec_language+'","email_tx":"'+_email_tx+'","rec_by1":"'+rec_by1+'","rec_by2":"'+rec_by2+'","rec_by3":"'+rec_by3+'","rec_by4":"'+rec_by4+'","rec_by5":"'+rec_by5+'","rec_by6":"'+rec_by6+'","rec_by7":"'+rec_by7+'","rec_by8":"'+rec_by8+'","rec_by9":"'+rec_by9+'","rec_by10":"'+rec_by10+'","accessPath":"'+_accessPath+'","filename":"'+_file+'","sysfilename":"'+_sysfile+'"}}';
+				/*var param = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_SEND_REF_STD","OperateType":"SEND","comParams":{"send_falg":"'+sendFlag+'","rec_app_ins_id":"'+_tz_app_ins_id+'","TZ_APP_INS_VERSION":"'+_tz_app_version_id+'","rec_num":"'+rec_num+'","rec_title":"'+rec_title+'","rec_gname":"'+rec_gname+'","rec_name":"'+rec_name+'","rec_company":"'+rec_company+'","rec_post":"'+rec_post+'","rec_phone_area":"'+rec_phone_area+'","rec_phone_no":"'+rec_phone_no+'","rec_email":"'+rec_email+'","rec_sex":"'+rec_sex+'","rec_relation":"'+rec_relation+'","rec_language":"'+rec_language+'","email_tx":"'+_email_tx+'","rec_by1":"'+rec_by1+'","rec_by2":"'+rec_by2+'","rec_by3":"'+rec_by3+'","rec_by4":"'+rec_by4+'","rec_by5":"'+rec_by5+'","rec_by6":"'+rec_by6+'","rec_by7":"'+rec_by7+'","rec_by8":"'+rec_by8+'","rec_by9":"'+rec_by9+'","rec_by10":"'+rec_by10+'","accessPath":"'+_accessPath+'","filename":"'+_file+'","sysfilename":"'+_sysfile+'"}}';
 				layer.load('推荐信发送中，请不要刷新或者关闭页面！');
 				$.ajax({
 					type: "post",
@@ -3491,7 +3629,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 							alert(result.comContent);
 						}
 					}
-				});
+				}); */
 				});
 			});
 				
@@ -3499,21 +3637,8 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			//保存推荐信信息
 			$("#saveRec_"+(Number(num)-1)).unbind("click"); 
 			$("#saveRec_"+(Number(num)-1)).click(function(){
-				var lineno;
-				//修改判断判断是否是手机版
-		    	if(SurveyBuild.accessType=='M'){
-		    		lineno=parseInt($(this).closest(".next_record").index());
-		    		
-		    	}else{
-		    		lineno=parseInt($(this).closest(".main_inner_content_para").index());
-		    		
-		    	}
-				
-				
-				
+				var lineno = parseInt($(this).closest(".main_inner_content_para").index());
 				var m;
-				
-				console.log("推荐信保存lineno:"+lineno);
 				m=Number(lineno)+1;
 
 				var _yz="";
@@ -3579,7 +3704,6 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 					_yz="1";
 				}
 				var rec_language = $("#" + data["itemId"] + children[m-1].recommend_7["itemId"]).val();
-				console.log("rec_language++++++++++"+rec_language);
 				if (children[m-1].recommend_7["useby"]=="Y"&&rec_language==""){
 					_desc =   children[m-1].recommend_7["itemName"]+ MsgSet["REQUIRE"];
 					_yz="1";
@@ -3825,9 +3949,6 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 								$("#changeRecS_"+(Number(mm)-1)).css("display","none");
 								$("#tjxzt_desc_"+(Number(mm)-1)).html(MsgSet["ReLeSt"]+"：<span class='blue'>"+MsgSet["Unsent"]+"</span>");
 								$("#tjxzt_info_"+(Number(mm)-1)).val("");
-								
-//								$("#tjxzt_sendinfo_"+(Number(mm)-1)).css("display","block");
-								
 								$("#" + data["itemId"] + children[m-1].recommend_17["itemId"]).removeAttr("readonly");
 								$("#" + data["itemId"] + children[m-1].recommend_1["itemId"]).removeAttr("readonly");
 								$("#" + data["itemId"] + children[m-1].recommend_2["itemId"]).removeAttr("readonly");
@@ -3960,7 +4081,11 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			    	}else{
 			    		lineno=parseInt($(this).closest(".main_inner_content_para").index());
 			    		
-			    	}					
+			    	}
+					
+					
+					//console.log("lineno"+lineno);
+					
 					children[lineno].recommend_8["option"]["SEND"]["checked"] = "N";
 					children[lineno].recommend_8["option"]["UPLOAD"]["checked"] = "Y";
 					var child_U = $(this).find('input:radio');
@@ -3969,23 +4094,13 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 					$("#"+m).val(value);
 					$("#"+m).val(value);
 					var n = child_U.attr("align");
-					//发送邮件按钮隐藏
+					//手机版推荐信按钮
 					$("#sendEmailS_"+n).css("display","none");
 					$("#sendEmailToMeS_"+n).css("display","none");
-					$("#reSendEmailS_"+n).css("display","none");
-					$("#reSendEmailToMeS_"+n).css("display","none");
-					$("#changeRecS_"+n).css("display","none");
 					
 					$("#Tjx_SendEmail_"+n).css("display","none");
 					$("#Tjxzt_"+n).css("display","none");
 					$("#Tjxfj_show_"+n).css("display","block");
-					$("#"+data.itemId +lineno+ '_AttList').css("display","block");
-					
-//					$("#tjxzt_sendinfo_"+n).css("display","none");
-					
-					
-					
-					
 				}
 			});
 
@@ -4022,25 +4137,14 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 					children[lineno]["recommend_9"].orderby = "";
 					children[lineno]["recommend_9"].viewFileName = "";
 					$("#"+data.itemId+n+"_AttList").html("");
-					//发送按钮显示
+					//手机版推荐信按钮
 					$("#sendEmailS_"+n).css("display","block");
 					$("#sendEmailToMeS_"+n).css("display","block");
-					
-					$("#reSendEmailS_"+n).css("display","none");
-					$("#reSendEmailToMeS_"+n).css("display","none");
-					
-					//$("#none"+n).css("display","none");
-					
-					
+					//SurveyBuild.Tjxdelete(this,\"'+cins+'\",'+index+')
 					console.log("下标"+n);
 					$("#Tjx_SendEmail_"+n).css("display","block");
 					$("#Tjxzt_"+n).css("display","block");
 					$("#Tjxfj_show_"+n).css("display","none");
-					
-					$("#"+data.itemId +lineno+ '_AttList').css("display","none");
-					
-//					$("#tjxzt_sendinfo_"+n).css("display","block");
-					
 				}
 			});
 

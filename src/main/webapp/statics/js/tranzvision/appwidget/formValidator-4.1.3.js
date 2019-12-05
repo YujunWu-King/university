@@ -369,8 +369,7 @@ $.formValidator =
 	//验证所有需要验证的对象，并返回是否验证成功（如果曾经触发过ajaxValidator，提交的时候就不触发校验，直接读取结果）
 	pageIsValid : function (validatorGroup)
 	{
-	   console.log("validatorGroup:"+validatorGroup);
-		if(validatorGroup == undefined){validatorGroup = "1"};
+	    if(validatorGroup == undefined){validatorGroup = "1"};
 		var isValid = true,returnObj,firstErrorMessage="",errorMessage;
 		var error_tip = "^",thefirstid,name,name_list="^"; 	
 		var errorlist = new Array();
@@ -399,7 +398,6 @@ $.formValidator =
 			if($(this).length==0){return true};
 			if(this.settings[0].bind){
 				name = this.name;
-				console.log("name:"+name);
 				//相同name只校验一次
 				if (name_list.indexOf("^"+name+"^") == -1) {
 					onceValided = this.onceValided == undefined ? false : this.onceValided;

@@ -30,8 +30,8 @@ SurveyBuild.extend("Degree", "baseComponent", {
     _getHtml: function(data, previewmode) {
         var c = "",e = "";
         if (previewmode) {
-        	if(SurveyBuild.accessType == "M"){
-        		
+        	//手机模式
+            if(SurveyBuild.accessType == "M"){
         		if(SurveyBuild._readonly){
                     //只读模式
                     var valDesc = "";
@@ -41,9 +41,12 @@ SurveyBuild.extend("Degree", "baseComponent", {
                         }
                     }
     				
-    				c += '<div class="item">';
-                    c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
+    				
+    				 c += '<div class="item">';
+                     c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
+//     				c += '  <div class="input-list-text left">' + valDesc + '</div>';	
      				c += '	<div class="text-box"><input ' + (data.isReadOnly == "Y" ? 'readonly="true"': '') + ' type="text" class="text1" id="' + data.itemId + '" name="' + data.itemId + '" value="' + valDesc + '" title="' + data.itemName + '/>' + valDesc + '</div>'; 
+//     				c += '  <div class="text-box">' + valDesc + '</div>';
      				c += '  <div class="input-list-suffix left"></div>';
      				c += '  <div class="clear"></div>';
      				c += '</div>';
@@ -61,49 +64,55 @@ SurveyBuild.extend("Degree", "baseComponent", {
     				c += '<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
     				c += '<div id="' + data.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';			
     				c += '<div class="text-box">';
+    				
+//                  c += '          <select name="' + data.itemId + '" class="chosen-select" id="' + data.itemId + '" style="width:100%;" title="' + data.itemName + '">';
     				c += '          <select name="' + data.itemId + '" class="select1" id="' + data.itemId + '" style="width:100%;" title="' + data.itemName + '">';
     				c +=                    e;
                     c += '          </select>';
+                    
     				c += '    </div>';
     				c += '    <div class="input-list-suffix left"><div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
     				c += '    <div class="clear"></div>';
     				c += '</div>';
+    				
+    				
                 }
-        		
-        	}else{
-        		if(SurveyBuild._readonly){
-                    //只读模式
-                    var valDesc = "";
-                    for (var i in data.option) {
-                        if(data.value == data["option"][i]["code"]){
-                            valDesc = data["option"][i]["txt"];
-                        }
-                    }
-    				c += '<div class="input-list">';
-    				c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-    				c += '  <div class="input-list-text left">' + valDesc + '</div>';
-    				c += '  <div class="input-list-suffix left"></div>';
-    				c += '  <div class="clear"></div>';
-    				c += '</div>';
-                }else{
-                    //填写模式
-                    SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
-                    e = '<option value="">' + MsgSet["PLEASE_SELECT"] + '</option>';
-                    for (var i in data.option) {
-                        e += '<option ' + (data.value == data["option"][i]["code"] ? "selected='selected'": "") + 'value="' + data["option"][i]["code"] + '">' + data["option"][i]["txt"] + '</option>';
-                    }
-    				c += '<div class="input-list">';
-    				c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-    				c += '    <div class="input-list-text left input-edu-select">';
-                    c += '          <select name="' + data.itemId + '" class="chosen-select" id="' + data.itemId + '" style="width:100%;" title="' + data.itemName + '">';
-                    c +=                    e;
-                    c += '          </select>';
-    				c += '    </div>';
-    				c += '    <div class="input-list-suffix left"><div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
-    				c += '    <div class="clear"></div>';
-    				c += '</div>';
-                }
-        	}
+			}else{
+				if(SurveyBuild._readonly){
+	                //只读模式
+	                var valDesc = "";
+	                for (var i in data.option) {
+	                    if(data.value == data["option"][i]["code"]){
+	                        valDesc = data["option"][i]["txt"];
+	                    }
+	                }
+					c += '<div class="input-list">';
+					c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+					c += '  <div class="input-list-text left">' + valDesc + '</div>';
+					c += '  <div class="input-list-suffix left"></div>';
+					c += '  <div class="clear"></div>';
+					c += '</div>';
+	            }else{
+	                //填写模式
+	                SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
+	                e = '<option value="">' + MsgSet["PLEASE_SELECT"] + '</option>';
+	                for (var i in data.option) {
+	                    e += '<option ' + (data.value == data["option"][i]["code"] ? "selected='selected'": "") + 'value="' + data["option"][i]["code"] + '">' + data["option"][i]["txt"] + '</option>';
+	                }
+					c += '<div class="input-list">';
+					c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+					c += '    <div class="input-list-text left input-edu-select">';
+	                c += '          <select name="' + data.itemId + '" class="chosen-select" id="' + data.itemId + '" style="width:100%;" title="' + data.itemName + '">';
+	                c +=                    e;
+	                c += '          </select>';
+					c += '    </div>';
+					c += '    <div class="input-list-suffix left"><div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
+					c += '    <div class="clear"></div>';
+					c += '</div>';
+	            }
+			}
+        	
+        	
             
         } else {
             for (var i in data.option) {

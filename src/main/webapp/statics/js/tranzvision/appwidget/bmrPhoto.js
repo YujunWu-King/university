@@ -12,9 +12,10 @@ SurveyBuild.extend("bmrPhoto", "baseComponent", {
     isClip: "",    //是否允许剪裁
     _getHtml: function(data, previewmode) {
         var c = "";
+
         if (previewmode) {
             if(SurveyBuild.appInsId == "0"){
-                var params = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_OTHER_STD","OperateType":"EJSON","comParams":{"OType":"KSPHOTO","appInsId":"'+SurveyBuild.appInsId +'"}}';
+                var params = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_OTHER_STD","OperateType":"EJSON","comParams":{"OType":"KSPHOTO","appInsId":"'+SurveyBuild.appInsId+'"}}';
                 $.ajax({
                     type: "get",
                     dataType: "JSON",
@@ -54,7 +55,8 @@ SurveyBuild.extend("bmrPhoto", "baseComponent", {
                   	c += '<div class="item">';
                   	c += ' 	<p>'+data.title+'<span>*</span></p>';
                   	c += '	<input id="' + data.itemId + '" type="hidden" name="' + data.itemId + '" value = "' + TzUniversityContextPath + data.value + '" data-id="' + data.instanceId + '">';
-                  	c += '  <a class="photo" id="photo' + data.itemId + '"><img id="photox" src="' + (data.value.length < 1 ? TzUniversityContextPath + "/statics/images/appeditor/m/bjphoto.jpg": TzUniversityContextPath + data.value) + '" hiegth="100%" width="100%"/></a>';
+                  	c += '  <a class="photo" id="photo' + data.itemId + '"><img id="photox" src="' + (data.value.length < 1 ? TzUniversityContextPath + "/statics/images/appeditor/m/bjphoto.jpg": TzUniversityContextPath + data.value) + '"/></a>';
+                  	c+='<p class="mSuffix" style="color:#666;font-size:0.56rem;">'+(data["suffix"]? data.suffix:" ")+'</p>';
                   	c +='</div>';                                  
                   	}
                 }
@@ -65,7 +67,7 @@ SurveyBuild.extend("bmrPhoto", "baseComponent", {
                 	c += '  <div class="input-list-text left headshot">';
                 	c += '		<div class="headshot-pic">';
                 	c += '			<input id="' + data.itemId + '" type="hidden" name="' + data.itemId + '" value = "' + TzUniversityContextPath + data.value + '" data-id="' + data.instanceId + '">';
-                	c += '			<img src="' + (data.value.length < 1 ? TzUniversityContextPath + "/statics/images/appeditor/bjphoto.jpg": TzUniversityContextPath + data.value) + '" id="photo" />';
+                	c += '			<img src="' + (data.value.length < 1 ? TzUniversityContextPath + "/statics/images/appeditor/bjphoto.jpg": TzUniversityContextPath + data.value) + '" id="photo" height="100%"/>';
                 	c += '		</div>';
                 	c += '	</div>';
                 	c += '	<div class="left headshot-info">' + data.suffix + '<div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
@@ -77,7 +79,7 @@ SurveyBuild.extend("bmrPhoto", "baseComponent", {
                 	c += '  <div class="input-list-text left headshot">';
                 	c += '		<div class="headshot-pic">';
                 	c += '			<input id="' + data.itemId + '" type="hidden" name="' + data.itemId + '" value = "' + TzUniversityContextPath + data.value + '" data-id="' + data.instanceId + '">';
-                	c += '			<a id="photo' + data.itemId + '" style="cursor: pointer;"><img src="' + (data.value.length < 1 ? TzUniversityContextPath + "/statics/images/appeditor/bjphoto.jpg": TzUniversityContextPath + data.value) + '" id="photo" /></a>';
+                	c += '			<a id="photo' + data.itemId + '" style="cursor: pointer;"><img src="' + (data.value.length < 1 ? TzUniversityContextPath + "/statics/images/appeditor/bjphoto.jpg": TzUniversityContextPath + data.value) + '" id="photo" height="100%"/></a>';
                 	c += '		</div>';
                 	c += '	</div>';
                 	c += '	<div class="left headshot-info">' + data.suffix + '<div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
@@ -163,7 +165,7 @@ SurveyBuild.extend("bmrPhoto", "baseComponent", {
     	if(SurveyBuild.accessType == "M"){
     		var $photoBox = $("#photo" + data.itemId);
     		$photoBox.click(function(){
-    			var tzparam = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_MUP_PHOTO_STD","OperateType":"HTML","comParams":{"oprid":"'+oprId+'","TPLID":"' + templId + '","siteId":"' + $("#siteId").val() + '"}}';
+    			var tzparam = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_MUP_PHOTO_STD","OperateType":"HTML","comParams":{"TPLID":"' + templId + '","siteId":"' + $("#siteId").val() + '"}}';
                 $.ajax({
     				type: "post",
     				async :false,
@@ -195,7 +197,7 @@ SurveyBuild.extend("bmrPhoto", "baseComponent", {
     		var up;
         $photoBox.click(function(e) {
             var photoUrl = SurveyBuild.tzGeneralURL + '?tzParams=';
-            var params = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_UP_PHOTO_STD","OperateType":"HTML","comParams":{"appInsId":"'+SurveyBuild.appInsId +'","oprid":"'+oprId+'","TPLID":"' + templId + '","siteId":"' + $("#siteId").val() + '"}}';
+            var params = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_UP_PHOTO_STD","OperateType":"HTML","comParams":{"TPLID":"' + templId + '","siteId":"' + $("#siteId").val() + '","appInsId":"'+SurveyBuild.appInsId+'"}}';
             photoUrl = photoUrl + window.escape(params);
             up = $.layer({
                 type: 2,

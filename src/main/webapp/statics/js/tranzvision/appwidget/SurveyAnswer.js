@@ -8,7 +8,7 @@ var SurveyBuild = {
     _logic:{},//问卷控制逻辑
     _qid: [],
     _oid: [],
-    _preg: {"email": {"name": "邮箱","regExp": "/^[\\w-]+(\\.[\\w-]+)*@[\\w-]+(\\.[\\w-]+)+$/"},"telphone": {"name": "手机","regExp": "/^1\\d{10}$/"},"idcard": {"name": "身份证号","regExp": "/(^\\d{15}$)|(^\\d{18}$)|(^\\d{17}(\\d|X|x)$)/"},"url": {"name": "网址URL","regExp": "/(http|ftp|https):\\/\\/[\\w\\-_]+(\\.[\\w\\-_]+)+([\\w\\-\\.,@?^=%&amp;:/~\\+#]*[\\w\\-\\@?^=%&amp;/~\\+#])?/"}},
+    _preg: {"email": {"name": "邮箱","regExp": "/^[\\w-]+(\\.[\\w-]+)*@[\\w-]+(\\.[\\w-]+)+$/"},"telphone": {"name": "手机","regExp": "/^1\\d{10}$/"},"idcard": {"name": "身份证号","regExp": "/(^\\d{15}$)|(^\\d{18}$)|(^\\d{17}(\\d|X|x)$)/"},"url": {"name": "网址URL","regExp": "/(http|ftp|https):\\/\\/[\\w\\-_]+(\\.[\\w\\-_]+)+([\\w\\-\\.,@?^=%&amp;:/~\\+#]*[\\w\\-\\@?^=%&amp;/~\\+#])?/"},"certNo": {"name": "证书编号","regExp": "^[A-Za-z0-9\-]+$"}},
     is_edit: false,
     is_edit_moda: true,
     comClass: {},//控件实例类
@@ -341,23 +341,6 @@ var SurveyBuild = {
         } else {
 
         }
-        //加载事件后
-		var tzSaveParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_SURVEY_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"LOAD"}]}}';
-        $.ajax({
-            type: "POST",
-			url:SurveyBuild.tzGeneralURL,
-            data: {
-				tzParams:tzSaveParams
-            },
-            dataType: "JSON",
-            success: function(f) {
-				if (f.state.errcode == "0") {
-					
-				}else{
-					 //noteing(MsgSet.SAVE_FAILD + "," + f.state.errdesc);
-				}
-            }
-        });
     },
     _setValidator: function(rec) {
         var _min = 0,
@@ -391,6 +374,13 @@ var SurveyBuild = {
                         if (obj["maxLen"] > 0) _max = obj["maxLen"];
                         if (_max > 1 || obj["minLen"] > 0) {
                             if (obj["isCheckStrLen"] == "Y") _onError = obj["rules"]["CharLenValidator"]["messages"];
+                        }
+                    }
+                    if (obj["isCheckRows"] == "Y") {
+                        _min = Math.max(obj["minRow"], _min);
+                        if (obj["maxRow"] > 0) _max = obj["maxRow"];
+                        if (_max > 1 || obj["minRow"] > 0) {
+                            if (obj["isCheckRows"] == "Y") _onError = obj["rules"]["RowLenValidator"]["messages"];
                         }
                     }
                     if (obj["isNumSize"] == "Y") {
@@ -549,7 +539,7 @@ var SurveyBuild = {
 								//上传成功后将文件存储到数据库
 								$.ajax({
 									type: "post",
-									url: SurveyBuild.tzGeneralURL+'?tzParams='+encodeURIComponent('{"ComID":"TZ_ZXDC_UPD_COM","PageID":"TZ_IMG_UPD_STD","OperateType":"EJSON","comParams":{"tz_app_ins_id":"'+appInsId+'","itemId":"'+itemId+'","itemName":"'+SurveyBuild.specialCharReplace(itemName)+'","filename":"'+obj.msg.filename+'","sysFileName":"'+obj.msg.sysFileName+'","path":"'+obj.msg.path+'","maxOrderBy":"'+maxOrderBy+'"}}'),
+									url: SurveyBuild.tzGeneralURL+'?tzParams={"ComID":"TZ_ZXDC_UPD_COM","PageID":"TZ_IMG_UPD_STD","OperateType":"EJSON","comParams":{"tz_app_ins_id":"'+appInsId+'","itemId":"'+itemId+'","itemName":"'+SurveyBuild.specialCharReplace(itemName)+'","filename":"'+obj.msg.filename+'","sysFileName":"'+obj.msg.sysFileName+'","path":"'+obj.msg.path+'","maxOrderBy":"'+maxOrderBy+'"}}',
 									dataType: "json",
 									async: false,
 									success: function(rst){
@@ -677,10 +667,10 @@ var SurveyBuild = {
                 imgDate = 	imgDate.substring(0,imgDate.length-1);
             }
 
-            tzParams = "?tzParams="+encodeURIComponent("{'ComID':'TZ_ZXDC_UPD_COM','PageID':'TZ_IMG_VIEW_STD','OperateType':'EJSON','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','orderby':'"+orderby+"','imgDate':["+imgDate+"]}}");
+            tzParams = "?tzParams={'ComID':'TZ_ZXDC_UPD_COM','PageID':'TZ_IMG_VIEW_STD','OperateType':'EJSON','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','orderby':'"+orderby+"','imgDate':["+imgDate+"]}}";
         }else{
             type="ATTACHMENT";//附件
-            tzParams = "?tzParams="+encodeURIComponent("{'ComID':'TZ_ZXDC_UPD_COM','PageID':'TZ_IMG_VIEW_STD','OperateType':'EJSON','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','orderby':'"+orderby+"','fileDate':{'sysFileName':'"+sysFileName+"'}}}");
+            tzParams = "?tzParams={'ComID':'TZ_ZXDC_UPD_COM','PageID':'TZ_IMG_VIEW_STD','OperateType':'EJSON','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','orderby':'"+orderby+"','fileDate':{'sysFileName':'"+sysFileName+"'}}}";
         }
         /******* **************判断图片***END****************************/
         $.ajax({
@@ -786,7 +776,7 @@ var SurveyBuild = {
 		try{
         $.ajax({
             type: "post",
-            url: SurveyBuild.tzGeneralURL+'?tzParams='+encodeURIComponent('{"ComID":"TZ_ZXDC_UPD_COM","PageID":"TZ_IMG_VIEW_STD","OperateType":"HTML","comParams":{"tz_app_ins_id":"'+appInsId+'","itemId":"'+itemId+'","accessType":"'+ SurveyBuild.accessType +'","fileDate":['+fileDate+']}}'),
+            url: SurveyBuild.tzGeneralURL+'?tzParams={"ComID":"TZ_ZXDC_UPD_COM","PageID":"TZ_IMG_VIEW_STD","OperateType":"HTML","comParams":{"tz_app_ins_id":"'+appInsId+'","itemId":"'+itemId+'","accessType":"'+ SurveyBuild.accessType +'","fileDate":['+fileDate+']}}',
             dataType: "html",
             success: function(imgLiHtml){
 				if(SurveyBuild.accessType == "P"){

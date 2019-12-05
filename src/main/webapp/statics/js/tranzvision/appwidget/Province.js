@@ -14,20 +14,44 @@ SurveyBuild.extend("Province", "baseComponent", {
 		if (previewmode) {
 			if(SurveyBuild.accessType == "M"){
 				if(SurveyBuild._readonly){
+					//只读模式
+					/*
+					c += '<div class="input-list">';
+					c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+					c += '    <div class="input-list-text left">' + data.value + '</div>';
+					c += '    <div class="input-list-suffix left"></div>';
+					c += '    <div class="clear"></div>';
+					c += '</div>';
+					*/
+					
 					c += '<div class="item">';
     				c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
     				c += '	  <div class="text-box">';
+
     				c += '	 	<a><input ' + (data.isReadOnly == "Y" ? 'readonly="true"': '') + ' type="text" class="text1" value="' + data.value + '"></a>';
     				c += '    </div>';
     				c += '</div>';
+					
 				}else{
+					//填写模式
 					SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
+					/*	
+					c += '<div class="input-list">';
+					c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+					c += '    <div class="input-list-text left"><input type="text" class="inpu-list-text-enter" id="' + data.itemId + '" name="' + data.itemId + '" title="' + data.itemName + '" value="' + data.value + '"/><img id="' + data.itemId + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/location.png" class="input-icon" /></div>';
+					c += '    <div class="input-list-suffix left"><div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
+					c += '    <div class="clear"></div>';
+					c += '</div>';
+					*/
 					
 					  	c += '<div class="item">';
 	    				c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
 	    				c += '	<div id="' + data.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';			
 	    				c += '	  <div class="text-box">';
+//	    				c += '	 	<a href="pop_city.html"><input type="text" class="text1"  id="' + data.itemId + '" name="' + data.itemId + '" title="' + data.itemName + '" value="' + data.value + '"></a>'; 
+//	    				c += '	 	<a href="pop_city.html"><input type="text" class="text1"  name="' + data.itemId + '" title="' + data.itemName + '" value="' + data.value + '"></a>';
 	    				c += '		<a>						<input type="text" id="' + data.itemId + '" name="' + data.itemId + '" placeholder="请选择省份" value="' + data.value + '"></a>';
+	    				
 	    				c += '    </div>';
 	    				c += '</div>';
 	   				}
@@ -51,7 +75,6 @@ SurveyBuild.extend("Province", "baseComponent", {
 					c += '    <div class="clear"></div>';
 					c += '</div>';
 				}
-				
 			}
 			
 		} else {
@@ -95,6 +118,8 @@ SurveyBuild.extend("Province", "baseComponent", {
 	_eventbind:function(data){
 		
 		if(SurveyBuild.accessType == "M"){
+			//顾贤达    2017年6月12日 11:15:18 手机版TEST
+			
 			var $inputBox = $("#" + data.itemId);
 			var $selectBtn = $("#" + data.itemId + "_Btn");
 			var siteId=$("#siteId").val();
@@ -106,6 +131,7 @@ SurveyBuild.extend("Province", "baseComponent", {
 		              document.activeElement.blur();
 		           });
 		          
+//					var _prov_id = "TZ_LEN_PROID";
 					$("#ParamCon").val(el.attr("id"));
 					var tzParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_M_PROVINCE_STD2","OperateType":"HTML","comParams":{"TZ_PROV_ID":"'+data.itemId+'","siteId":"'+siteId+'"}}';
 					$.ajax({
@@ -126,8 +152,14 @@ SurveyBuild.extend("Province", "baseComponent", {
 						
 						$("#body").css("position","fixed");
 						$("#MainDiv").hide();
-						$("#searchCountry").fadeIn("slow");
-
+						$("#searchCountry").fadeIn("slow"); 
+//		                 loaded1 ();
+						 loaded ();
+						/*	$("#searchState").html("");
+							$("#searchState").html(result);
+							$("#body").css("position","fixed");
+							$(".shade").show();
+						    $("#searchState").show();*/
 						}
 					});
 				});
