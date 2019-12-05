@@ -36,41 +36,45 @@ SurveyBuild.extend("MultipleTextBox", "baseComponent", {
             if(SurveyBuild.accessType == "P"){
                 //电脑版
                 for (var i in data.option) { 
-                    e += '<li class="overhidden ">';
-                    e += '<p class="fl labelp">' + data["option"][i]["txt"] + '</p>';
-                    e += '  <input type="text" class="fr" id="o' + data.itemId + data["option"][i]["code"] + '"name="o'+data.itemId + data["option"][i]["code"]+'"value="' + data["option"][i]["othervalue"] + '">';
-                    e += '</li>';	 
+                    e += '<tr>';	 
+                    e += '  <td class="Label">';	 
+                    e += '	    <label for="o' + data.itemId + data["option"][i]["code"] + '">' + data["option"][i]["txt"] + ':</label>';	 
+					e += '	</td>'; 
+					e += '	<td>' 
+                    e+='       <input type="text" maxlength="40" class="input-text-comp" id="o' + data.itemId + data["option"][i]["code"] + '"  name="o'+data.itemId + data["option"][i]["code"]+'" value="' + data["option"][i]["othervalue"] + '"/>';
+                    e += '  </td>';	 
+                    e += '</tr>';	 
                 } 
-				c += '<div class="listcon">';
-				c += '	<div class="list_q">';
-                c += '		<b>'+ data.qCode + '.</b>'+ data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
-                c += '	</div>';
-                c += '	<div id="' + data.itemId + 'Tip" class="tips">';
-                c += '		<img src="' + TzUniversityContextPath + '/statics/js/onlineSurvey/formvalidator/m/images/onError.gif">';
-                c += '		<span></span>';
-                c += '	</div>';
-                c += '	<div class="text_box2"  name="'+ data.itemId +'" id="'+ data.itemId +'">';
-                c +=  e ; 
+				c += '<div class="listcon">';	 
+                c += '	<div class="question">';
+                c += '		<span class="fontblue-blod">' + data.qCode + '.</span>' + data.title; 
+                c += '      <div id="' + data.itemId + 'Tip" class="onShow">';	 
+                c += '          <div class="onShow"></div>'; 
+                c += '      </div>'; 
+                c += '	</div>'; 
+                c += '	<div class="answer"  name="'+ data.itemId +'" id="'+ data.itemId +'">';
+                c += '		<table class="MultiTextBox">' + e +  '</table>'; 
                 c += '	</div>';
                 c += '</div>';
             }else{
                 //手机版
-                for (var i in data.option) { 
-                    e += '<li class="overhidden ">';
-                    e += '<p class="fl labelp">' + data["option"][i]["txt"] + '</p>';
-                    e += '  <input type="text" class="fl w_70" id="o' + data.itemId + data["option"][i]["code"] + '"name="o'+data.itemId + data["option"][i]["code"]+'"value="' + data["option"][i]["othervalue"] + '">';
-                    e += '</li>';	 
-                } 
-				c += '<div class="listcon">';
-				c += '	<div class="list_q">';
-                c += '		<b>'+ data.qCode + '.</b>'+ data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
+                for (var i in data.option) {
+                    e += '<li style="padding-left:4px">';
+                    e += '  <div >'
+                    e += '      <label style="display:inline-block;width:100px;" class="question-code" for="o' + data.itemId + data["option"][i]["code"] + '">' + data["option"][i]["txt"] + '</label>';
+                    e += '      <input type="text" maxlength="100" id="o' + data.itemId + data["option"][i]["code"] + '" name="' + data.itemId + '" value="' + data["option"][i]["othervalue"] + '" class="read_input" style="color:rgb(102, 102, 102);width:200px;">';
+                    e += '  </div>';
+                    e += '</li>';
+                }
+                c += '<div class="listcon">';
+                c += '  <div id="' + data.itemId + 'Tip" class="onShow">';
+                c += '      <div class="onShow"></div>';
+                c += '  </div>';
+                c += '  <div class="question">';
+                c += '		<span class="fontblue-blod">' + data.qCode + '.</span>' + data.title;
                 c += '	</div>';
-                c += '	<div id="' + data.itemId + 'Tip" class="tips">';
-                c += '		<img src="' + TzUniversityContextPath + '/statics/js/onlineSurvey/formvalidator/m/images/onError.gif">';
-                c += '		<span></span>';
-                c += '	</div>';
-                c += '	<div class="text_box2"  name="'+ data.itemId +'" id="'+ data.itemId +'">';
-                c +=  e  ; 
+                c += '  <div class="answer" name="'+ data.itemId +'" id="'+ data.itemId +'">';
+                c += '		<ul>' + e +  '</ul>';
                 c += '	</div>';
                 c += '</div>';
             }
@@ -151,7 +155,7 @@ SurveyBuild.extend("MultipleTextBox", "baseComponent", {
             });
         });
         var $inputBox = $("[name='" + data.itemId + "']");
-        $inputBox.formValidator({tipID: (data["itemId"] + 'Tip'),onShow: "",onFocus: "&nbsp;",onCorrect: "&nbsp;"});
+        $inputBox.formValidator({tipID: (data["itemId"] + 'Tip'),onShow: "&nbsp;",onFocus: "&nbsp;",onCorrect: "&nbsp;"});
 
         if (ValidationRules) {
             $.each(data["rules"],function(classname, classObj) {
@@ -164,7 +168,7 @@ SurveyBuild.extend("MultipleTextBox", "baseComponent", {
                 }
             });
         }
-        $inputBox.formValidator({tipID: (data["itemId"] + 'Tip'),onShow: "",onFocus: "&nbsp;",onCorrect: "&nbsp;"});
+        $inputBox.formValidator({tipID: (data["itemId"] + 'Tip'),onShow: "&nbsp;",onFocus: "&nbsp;",onCorrect: "&nbsp;"});
         $inputBox.functionValidator({
             fun:function(val,el){
                 if (data.isRequire == "Y"){

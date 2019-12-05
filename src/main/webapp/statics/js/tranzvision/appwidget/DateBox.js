@@ -14,32 +14,32 @@ SurveyBuild.extend("DateBox", "Completion", {
             if(SurveyBuild.accessType == "P"){
                 SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
                 c += '<div class="listcon">';
-                c += '	<div class="list_q">';
-                c += '		<b>' + data.qCode + '.</b>' + data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
-                c += '	</div>';
-                c += '	<div id="' + data.itemId + 'Tip" class="tips">';
-                c += '		<img src="' + TzUniversityContextPath + '/statics/js/onlineSurvey/formvalidator/m/images/onError.gif">';
-                c += '		<span></span>';
-                c += '	</div>';
-                c += '  <div class="text_box4">';
-                c += ' <input class="date_input" id="' + data.itemId + '" name="' + data.itemId + '" type="text" value="' + data.value + '" title="' + data.itemName + '" onclick="WdatePicker()">';
-                c += ' <img class="date_img" id="' + data.itemId + '_Btn" src="' + TzUniversityContextPath + '/statics/js/onlineSurvey/formvalidator/m/images/date.png">';
+                c += '  <div class="question">';
+                c += '      <span class="fontblue-blod">' + data.qCode + '.</span>' + data.title;
+                c += '  </div>';
+                c += '  <div class="answer">';
+                c += '      <input id="' + data.itemId + '" name="' + data.itemId + '" type="text" value="' + data.value + '"class="input-date-text " readonly="readonly" onclick="this.focus()" title="' + data.itemName + '">';
+                c += '      <img id="' + data.itemId + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/calendar.png" style="position:relative;top:5px;left:-35px;cursor:pointer;">';
+                c += '       <div style="margin-top:-31px;margin-left:225px">';
+                c += '          <div id="' + data.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
+                c += '              <div class="onShow"></div>';
+                c += '            </div>';
+                c += '      </div>';
                 c += '  </div>';
                 c += '</div>';
             }else{
                 SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
                 c += '<div class="listcon">';
-                c += '	<div class="list_q">';
-                c += '		<b>' + data.qCode + '.</b>' + data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
+                c += '  <div id="' + data.itemId + 'Tip" class="onShow">';
+                c += '      <div class="onShow"></div>';
+                c += '  </div>';
+                c += '	<div class="question">';
+                c += '		<span class="fontblue-blod">' + data.qCode + '.</span>' + data.title;
                 c += '	</div>';
-                c += '	<div id="' + data.itemId + 'Tip" class="tips">';
-                c += '		<img src="' + TzUniversityContextPath + '/statics/js/onlineSurvey/formvalidator/m/images/onError.gif">';
-                c += '		<span></span>';
-                c += '	</div>';
-                c += ' <div class="text_box">';
-                c += '   <input class="date_input" type="text" value="' + data.value + '" readonly="readonly" onclick="this.focus()" placeholder=""id="' + data.itemId + '" name="' + data.itemId + '">';
-                c += '   <img class="date_img" id="' + data.itemId + '_Btn" src="' + TzUniversityContextPath + '/statics/js/onlineSurvey/formvalidator/m/images/date.png">';
-                c += ' </div>';
+                c += '  <div class="answer" style="position: relative;">';
+                c += '      <input id="' + data.itemId + '" name="' + data.itemId + '" type="text" value="' + data.value + '"class="input-date-text " style="line-height: 39px;font-size:1.285em;margin:0 0 0 4px" readonly="readonly" onclick="this.focus()" title="' + data.itemName + '">';
+                c += '      <img id="' + data.itemId + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/calendar.png" style="cursor: pointer; position: absolute; right: 10px; top: 8px;">';
+                c += '  </div>';
                 c += '</div>';
             }
         } else {
@@ -100,42 +100,18 @@ SurveyBuild.extend("DateBox", "Completion", {
     _eventbind: function(data) {
         var $inputBox = $("#" + data.itemId);
         var $selectBtn = $("#" + data.itemId + "_Btn");
-        if(SurveyBuild.accessType == "P"){
-//       $inputBox.datepicker({
-//            showButtonPanel:true,
-//            changeMonth: true,
-//            changeYear: true,
-//            yearRange: data.minYear + ":" + data.maxYear,
-//            dateFormat: data.dateformate,
-//			onClose:function(dateText, inst){
-//				$(this).trigger("blur");
-//			}
-//        });
-       }
-        else{
-        	$inputBox.focus(function(){
-                document.activeElement.blur();
-            });
-        	var $type;
-    		switch(data.dateformate)
-    		{
-    		case 'yy/mm':
-    			  $type= "ym";
-    			  break;
-    		case 'yy-mm':
-    			  $type= "ym";
-    			  break;
-    		default:
-    			 $type= "date";
-    		}
-    		 var calendar = new LCalendar();
-    		    calendar.init({
-    		        'trigger': '#' + data.itemId, //标签id
-    		        'type': $type, //date 调出日期选择 datetime 调出日期时间选择 time 调出时间选择 ym 调出年月选择,
-    		        'minDate': data.minYear + "-01-01", //最小日期
-    		        'maxDate':data.maxYear + "-12-31"
-    		    });
-        }
+
+       $inputBox.datepicker({
+            showButtonPanel:true,
+            changeMonth: true,
+            changeYear: true,
+            yearRange: data.minYear + ":" + data.maxYear,
+            dateFormat: data.dateformate,
+			onClose:function(dateText, inst){
+				$(this).trigger("blur");
+			}
+        });
+
         $selectBtn.click(function(e) {
             $inputBox.click();
         });

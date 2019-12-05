@@ -44,57 +44,110 @@ SurveyBuild.extend("Radio", "baseComponent", {
 							data["option"][i]["checked"] = "Y";
 						}
 					}
-					  e += '<li >';
-					  e += '	<input type="radio" instanceId="' + i + '" name="' + data.itemId + '" class="radio ' + (data["option"][i]["other"] == "Y" ? "sur_other_box": "") + '" id="o' + data.itemId + data["option"][i]["code"] + '"  value="' + data["option"][i]["code"] + '" ' + (data["option"][i]["checked"] == "Y" ? "checked='checked'": "") + '>';
-				      e += '	<label for="o' + data.itemId + data["option"][i]["code"] + '">'+ data["option"][i]["txt"]+'</label>';
-				      if (data["option"][i]["other"] == "Y" &&data.format != "H"){
-					        if(SurveyBuild._readonly){
-					        	e += '<input type="text" class="others" disabled=true value="' + data.othervalue + '" >';
-					        }else{
-					        	e += '<input type="text" class="others" style="display:'+(data["option"][i]["checked"] == "Y" ? "inline": "none")+'" value="' + data.othervalue + '" id="other' + data.itemId + '"  name="other' + data.itemId + '">';
-					        }
-						}
-				      e += '</li>';
+					 if(SurveyBuild._readonly){
+						 if(data["option"][i]["checked"] == "Y"){
+							 e += '<li >';
+							  e += '	<input type="radio" instanceId="' + i + '" name="' + data.itemId + '" class="radio ' + (data["option"][i]["other"] == "Y" ? "sur_other_box": "") + '" id="o' + data.itemId + data["option"][i]["code"] + '"  value="' + data["option"][i]["code"] + '" ' + (data["option"][i]["checked"] == "Y" ? "checked='checked'": "") + '>';
+						      //e += '	<label for="o' + data.itemId + data["option"][i]["code"] + '">'+ data["option"][i]["txt"]+'</label>';
+							  
+							  if(data["option"][i]["other"] == "Y"){
+								  e += '	<label for="o' + data.itemId + data["option"][i]["code"] + '" class="radio-label-left">'+ data["option"][i]["txt"]+'</label>';
+							  }else{
+								  e += '	<label for="o' + data.itemId + data["option"][i]["code"] + '">'+ data["option"][i]["txt"]+'</label>';
+							  }
+						      if (data["option"][i]["other"] == "Y" &&data.format != "H"){
+							       
+							        	e += '<input type="text" class="others" disabled=true value="' + data.othervalue + '" >';
+							       
+								}
+						      e += '</li>'; 
+						 }
+						 
+					 }else{
+						 e += '<li >';
+						  e += '	<input type="radio" instanceId="' + i + '" name="' + data.itemId + '" class="radio ' + (data["option"][i]["other"] == "Y" ? "sur_other_box": "") + '" id="o' + data.itemId + data["option"][i]["code"] + '"  value="' + data["option"][i]["code"] + '" ' + (data["option"][i]["checked"] == "Y" ? "checked='checked'": "") + '>';
+					      //e += '	<label for="o' + data.itemId + data["option"][i]["code"] + '">'+ data["option"][i]["txt"]+'</label>';
+						  
+						  if(data["option"][i]["other"] == "Y"){
+							  e += '	<label for="o' + data.itemId + data["option"][i]["code"] + '" class="radio-label-left">'+ data["option"][i]["txt"]+'</label>';
+						  }else{
+							  e += '	<label for="o' + data.itemId + data["option"][i]["code"] + '">'+ data["option"][i]["txt"]+'</label>';
+						  }
+					      if (data["option"][i]["other"] == "Y" &&data.format != "H"){
+						        
+						        	e += '<input type="text" class="others" style="display:'+(data["option"][i]["checked"] == "Y" ? "inline": "none")+'" value="' + data.othervalue + '" id="other' + data.itemId + '"  name="other' + data.itemId + '">';
+						        
+							}
+					      e += '</li>'; 
+					 }
+					  
 				}
 				data.format = (data.format?data.format:"S");
 				c += '<div class="item" data-instancid="' + data.instanceId + '">';
 				c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
 				c += '  <div id="' + data.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
 				if(data.format == "H"){
-				c += '	<ul class="sex" id="' + data.itemId + '">'+e+'</ul>';
+					c += '	<ul class="sex radio-items" id="' + data.itemId + '">'+e+'</ul>';
 				}else{
-				c += '	<ul class="company" id="' + data.itemId + '">'+e+'</ul>';
+					c += '	<ul class="company radio-items" id="' + data.itemId + '">'+e+'</ul>';
 				}
-				c += '</div>';
-				}else{
+				c += '<div class="clear"></div></div>';
+			}else{
+				
 				for (var i in data.option) {
 					if(SurveyBuild.appInsId == "0"){
 						if(data["option"][i]["code"] == data["value"]){
 							data["option"][i]["checked"] = "Y";
 						}
 					}
-					e += '<li>';
-					e += '	<div class="radio-btn ' + (data["option"][i]["checked"] == "Y" ? "checkedRadio": "") + '"><i><input type="radio" name="' + data.itemId + '" instanceId="' + i + '" id="o' + data.itemId + data["option"][i]["code"] + '" value="' + data["option"][i]["code"] + '" ' + (data["option"][i]["checked"] == "Y" ? "checked='checked'": "") + ' class="' + (data["option"][i]["other"] == "Y" ? "sur_other_box": "") + '"/></i></div>';
-					e += data["option"][i]["txt"];
-					if (data["option"][i]["other"] == "Y" && data["option"][i]["checked"] == "Y"){
-					    if(SurveyBuild._readonly){
-					        //只读模式
-					        e += '<input type="text" disabled=true class="inputother" value="' + data["option"][i]["othervalue"] + '">';
-					    }else{
-					        //编辑模式
-					        e += '<input type="text" id="other' + data.itemId + '" name="other' + data.itemId + '" class="inputother" value="' + data["option"][i]["othervalue"] + '">';
-					    }
+					if(SurveyBuild._readonly){
+						if(data["option"][i]["checked"] == "Y"){
+							e += '<li>';
+							e += '	<div class="radio-btn ' + (data["option"][i]["checked"] == "Y" ? "checkedRadio": "") + '"><i><input type="radio" name="' + data.itemId + '" instanceId="' + i + '" id="o' + data.itemId + data["option"][i]["code"] + '" value="' + data["option"][i]["code"] + '" ' + (data["option"][i]["checked"] == "Y" ? "checked='checked'": "") + ' class="' + (data["option"][i]["other"] == "Y" ? "sur_other_box": "") + '"/></i></div>';
+							//e += data["option"][i]["txt"];
+							if(data["option"][i]["other"] == "Y"){
+								e += '<label for="o' + data.itemId + data["option"][i]["code"] + '" class="radio-label-left">' + data["option"][i]["txt"] + '</label>';
+							}else{
+								e += '<label for="o' + data.itemId + data["option"][i]["code"] + '">' + data["option"][i]["txt"] + '</label>';
+							}
+							
+							if (data["option"][i]["other"] == "Y" && data["option"][i]["checked"] == "Y"){
+							    
+							        //只读模式
+							        e += '<input type="text" disabled=true class="inputother" value="' + data["option"][i]["othervalue"] + '">';
+							    
+							}
+							e += '</li>';
+						}
+						
+					}else{
+						e += '<li>';
+						e += '	<div class="radio-btn ' + (data["option"][i]["checked"] == "Y" ? "checkedRadio": "") + '"><i><input type="radio" name="' + data.itemId + '" instanceId="' + i + '" id="o' + data.itemId + data["option"][i]["code"] + '" value="' + data["option"][i]["code"] + '" ' + (data["option"][i]["checked"] == "Y" ? "checked='checked'": "") + ' class="' + (data["option"][i]["other"] == "Y" ? "sur_other_box": "") + '"/></i></div>';
+						//e += data["option"][i]["txt"];
+						if(data["option"][i]["other"] == "Y"){
+							e += '<label for="o' + data.itemId + data["option"][i]["code"] + '" class="radio-label-left">' + data["option"][i]["txt"] + '</label>';
+						}else{
+							e += '<label for="o' + data.itemId + data["option"][i]["code"] + '">' + data["option"][i]["txt"] + '</label>';
+						}
+						
+						if (data["option"][i]["other"] == "Y" && data["option"][i]["checked"] == "Y"){
+						    
+						        //编辑模式
+						        e += '<input type="text" id="other' + data.itemId + '" name="other' + data.itemId + '" class="inputother" value="' + data["option"][i]["othervalue"] + '">';
+						    
+						}
+						e += '</li>';
 					}
-					e += '</li>';
+					
 				}
 				data.format = (data.format?data.format:"S");
 				if(data.format == "H"){
 					c += '<div class="input-list input-radiobox" data-instancid="' + data.instanceId + '">';
 					c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
 					c += '		<div class="margart8 input-list-text left Custom-radio">';
-					c += '			<ul id="' + data.itemId + '">' + e + '<div class="clear"></div></ul>';
+					c += '			<ul id="' + data.itemId + '" class="radio-option">' + e + '<div class="clear"></div></ul>';
 					c += '		</div>';
-					c += '		<div class="input-list-suffix left">';
+					c += '		<div class="input-list-suffix left Custom-radio-suffix">';
 					if(!SurveyBuild._readonly){
 						c += '<div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div>';
 					}
@@ -104,10 +157,10 @@ SurveyBuild.extend("Radio", "baseComponent", {
 				}else{
 					c += '<div class="input-list input-radiobox" data-instancid="' + data.instanceId + '">';
 					c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-					c += '	<div class="margart8 input-list-textwrap left">';
-					c += '		<ul id="' + data.itemId + '">' + e + '<div class="clear"></div></ul>';
+					c += '	<div class="margart8 input-list-textwrap left custom-radio-width">';
+					c += '		<ul id="' + data.itemId + '" class="radio-option">' + e + '<div class="clear"></div></ul>';
 					c += '	</div>';
-					c += '	<div class="input-list-suffix left">';
+					c += '	<div class="input-list-suffix left custom-radio-suffix">';
 					if(!SurveyBuild._readonly){
 						c += '<div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div>';
 					}

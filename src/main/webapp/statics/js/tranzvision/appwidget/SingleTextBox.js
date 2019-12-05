@@ -16,11 +16,15 @@ SurveyBuild.extend("SingleTextBox", "baseComponent", {
 					c += '<div class="item">';
 					c += '<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
 					c += '<div class="text-box"><input ' + (data.isReadOnly == "Y" ? 'readonly="true"': '') + ' type="text" class="text1" id="' + data.itemId + '" name="' + data.itemId + '" value="' + data.value + '" title="' + data.itemName + '" data-regular="' + regular + '"/></div>';
-					c += '<p style="color:#666;font-size:0.56rem;"></p>';
+					c += '<p  class="mSuffix" style="color:#666;font-size:0.56rem;">' + (data["suffix"] ? data.suffix:" ") + '</p>';
 					c += '</div>';
 				} else {
 					//填写模式
 					SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
+					if (data.isReadOnly == "Y" && data.value=="") {
+						this._getDefaultVal(data);
+					}
+					
 					var regular = "";
 					if (data.preg && SurveyBuild._preg.hasOwnProperty(data.preg)) {
 						regular = SurveyBuild._preg[data.preg]["regExp"];
@@ -40,13 +44,18 @@ SurveyBuild.extend("SingleTextBox", "baseComponent", {
 					//只读模式
 					c += '<div class="input-list">';
 					c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-					c += '  <div class="input-list-text left">' + data.value + '</div>';
+					c += '  <div class="input-list-text left">' + data.value + '<input id="' + data.itemId + '"  type="hidden" name=""  readonly="" disabled=""></div>';
 					c += '  <div class="input-list-suffix left"></div>';
 					c += '  <div class="clear"></div>';
 					c += '</div>';
 				} else {
 					//填写模式
 					SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
+					
+					if (data.isReadOnly == "Y"  && data.value=="") {
+						this._getDefaultVal(data);
+					}
+					
 					var regular = "";
 					if (data.preg && SurveyBuild._preg.hasOwnProperty(data.preg)) {
 						regular = SurveyBuild._preg[data.preg]["regExp"];

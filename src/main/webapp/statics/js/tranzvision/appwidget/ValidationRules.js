@@ -71,7 +71,6 @@ var ValidationRules = {
 				var todayDt = new Date();
 
 				if ($todayCheckbox.prop("checked")){
-					console.log("日期");
 					if (todayDt < new Date(startDt) && startDt != ""){
 						return msg;
 					}

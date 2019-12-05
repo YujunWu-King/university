@@ -9,11 +9,10 @@ function loading(obj)
 		height:obj.innerHeight()
 	});
 }
-function loaded(obj)
-{
-if (typeof(obj) != "undefined"){
-	obj.find(".loading").remove();
-}
+function loaded(obj){
+	if (typeof(obj) != "undefined"){
+		obj.find(".loading").remove();
+	}
 }
 function noteing(str,t)
 {
@@ -71,6 +70,15 @@ function setcookie(name, value, seconds, path, domain)
 	expires.setTime(expires.getTime() + seconds);
 	document.cookie = escape(name) + '=' + escape(value)
 	+ (expires ? '; expires=' + expires.toGMTString() : '')
+	+ (path ? '; path=' + path : '/')
+	+ (domain ? '; domain=' + domain : '');
+}
+/**
+ * 设置COOKIE
+ */
+function setcookie(name, value, path, domain)
+{
+	document.cookie = escape(name) + '=' + escape(value)
 	+ (path ? '; path=' + path : '/')
 	+ (domain ? '; domain=' + domain : '');
 }

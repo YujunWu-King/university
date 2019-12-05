@@ -8,17 +8,10 @@ SurveyBuild.extend("TextExplain", "baseComponent", {
 	title: "文字说明",
 	"StorageType": "L",
 	"isDownLoad": "N", //是否导出
-	
 	_getHtml: function(data, previewmode) {
 		var c = '';
 		if (previewmode) {
-			if(SurveyBuild.accessType == "M"){
-				c += '<div class="item"  id="' + data.itemId + '">';
-				c += '	<p class="emergency">'+ data.title +'</p>';
-				c += '</div>';	
-			}else{
-				c += '<div id="' + data.itemId + '">' + data.title + '</div>';
-			}
+			c += '<div id="' + data.itemId + '">' + data.title + '</div>';
 		} else {
 			c += '<div class="question-answer"></div>';
 		}
@@ -34,5 +27,5 @@ SurveyBuild.extend("TextExplain", "baseComponent", {
 		e += '</div>';
 
 		return e;
-	}
+	},
 })

@@ -24,7 +24,7 @@ SurveyBuild.extend("DigitalTextBox", "baseComponent", {
 					c += '<div class="item">';
 					c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
 					c += '	<div class="text-box"><input type="text" class="text1" ' + (data.isReadOnly == "Y" ? 'readonly="true"': '') + 'id="' + data.itemId + '" name="' + data.itemId + '" value="' + data.value + '" title="' + data.itemName + '" data-regular="' + regular + '" /></div>';
-					c += '  <p style="color:#666;font-size:0.56rem;"></p>';
+					c += '<p  class="mSuffix" style="color:#666;font-size:0.56rem;">' + (data["suffix"] ? data.suffix:" ") + '</p>';
 					c += '</div>';
 				} else {
 					//填写模式
@@ -36,7 +36,7 @@ SurveyBuild.extend("DigitalTextBox", "baseComponent", {
 					c += '	<div class="text-box">';
 					c += '		<input type="text" class="text1" id="' + data.itemId + '" name="' + data.itemId + '" value="' + data.value + '" title="' + data.itemName + '" data-regular="' + regular + '" />';
 					c += '  </div>';
-					c += '<p class="mSuffix" style="color:#666;font-size:0.56rem;">' + (data["suffix"] ? data.suffix:" ") + '</p>';
+					c += '<p  class="mSuffix" style="color:#666;font-size:0.56rem;">' + (data["suffix"] ? data.suffix:" ") + '</p>';
 					if ($.trim(data.onShowMessage) != "") {
 						c += '  <p style="color:#666;font-size:0.56rem;">'+data.onShowMessage+'</p>';
 					}

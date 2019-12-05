@@ -40,11 +40,11 @@ SurveyBuild.extend("YearsAndMonth", "baseComponent", {
 					c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
 					c += '	<div class="overhidden">';
 					c += '		<div class="text-box fl" style="width:30%;">';
-					c += '      	<input type="text" class="text1"  value="' + children[0]["value"] + '" disabled="disabled">';
+					c += '      	<input type="text" class="text1"  value="' + children[0]["value"] + '" >';
 					c += '      </div>';
 					//c += '       <span class="fl" style="line-height:1.5rem;color:#999;"> —— </span>';
 					c += '       <div class="text-box fl" style="width:30%;">';
-					c += '           <input type="text" class="text1" value=" '+children[1]["value"]+'" disabled="disabled">';
+					c += '           <input type="text" class="text1" value=" '+children[1]["value"]+'" >';
 					c += '       </div>';
 					c += '   </div>';
 					c += '  <p style="color:#666;font-size:0.56rem;"></p>';
