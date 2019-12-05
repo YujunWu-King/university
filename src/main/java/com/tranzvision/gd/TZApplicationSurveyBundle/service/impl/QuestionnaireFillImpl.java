@@ -736,8 +736,8 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 			/* 文件报文数据、问卷实例报文数据 */
 			String surveyData = psTzDcWjDyTWithBLOBs.getTzApptplJsonStr();
 			// logger.info("surveyData:" + surveyData);
-			//surveyData = surveyData.replace("\\", "\\\\");
-			//surveyData = surveyData.replaceAll("\\$", "~");
+			surveyData = surveyData.replace("\\", "\\\\");
+			surveyData = surveyData.replaceAll("\\$", "~");
 			Pattern CRLF = Pattern.compile("(\r\n|\r|\n|\n\r)");
 			Matcher mc = CRLF.matcher(surveyData);
 			if (mc.find()) {
@@ -761,8 +761,8 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 				e.printStackTrace();
 			}
 			// logger.info("surveyInsData:" + surveyInsData);
-			//surveyInsData = surveyInsData.replace("\\", "\\\\");
-			//surveyInsData = surveyInsData.replaceAll("\\$", "~");
+			surveyInsData = surveyInsData.replace("\\", "\\\\");
+			surveyInsData = surveyInsData.replaceAll("\\$", "~");
 			mc = CRLF.matcher(surveyInsData);
 			if (mc.find()) {
 				surveyInsData = mc.replaceAll("\\\\n");

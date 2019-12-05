@@ -1999,9 +1999,9 @@ var SurveyBuild = {
                         var e = $("#question-box>li.active").index() - 1;
                         if (isPreview) {
                             if(SurveyBuild._use && SurveyBuild._use == "TPL"){
-                                var tzParams = '?tzParams={"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_VIEW_STD","OperateType":"HTML","comParams":{"TYPE":"TPL","SURVEY_ID":"' + SurveyBuild._tid + '"}}'
+                                var tzParams = '?tzParams='+encodeURIComponent('{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_VIEW_STD","OperateType":"HTML","comParams":{"TYPE":"TPL","SURVEY_ID":"' + SurveyBuild._tid + '"}}')
                             }else{
-                                var tzParams = '?tzParams={"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_VIEW_STD","OperateType":"HTML","comParams":{"TYPE":"SURVEY","SURVEY_ID":"' + SurveyBuild._tid + '"}}'
+                                var tzParams = '?tzParams='+encodeURIComponent('{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_VIEW_STD","OperateType":"HTML","comParams":{"TYPE":"SURVEY","SURVEY_ID":"' + SurveyBuild._tid + '"}}')
                             }
                             var url = SurveyBuild.tzGeneralURL + tzParams;
                             var newWin = window.open('about:blank');

@@ -134,8 +134,8 @@ public class QuestionnaireEditorEngineImpl {
 			msgSet = jsonUtil.Map2json(msgLang);
 		}
 		String tplHtml = "";
-		//componentData = componentData.replace("\\", "\\\\");
-		//componentData = componentData.replace("$", "\\$");
+		componentData = componentData.replace("\\", "\\\\");
+		componentData = componentData.replace("$", "\\$");
 		Pattern CRLF = Pattern.compile("(\r\n|\r|\n|\n\r)");
 		Matcher mc = CRLF.matcher(componentData);
 		if (mc.find()) {

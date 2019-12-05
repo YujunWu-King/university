@@ -164,10 +164,10 @@ public class TempEditorEngineImpl {
 			componentData = mc.replaceAll("\\\\n");
 		}
 		componentData = componentData.replace(" ", "");
-		//componentData = componentData.replace("\\", "\\\\");
-		//componentData = componentData.replace("$", "\\$");
-		// logger.info("componentData=" + componentData);
-		// componentData = componentData.replaceAll("\\$", "~");
+		componentData = componentData.replace("\\", "\\\\");
+		componentData = componentData.replace("$", "\\$");
+		//logger.info("componentData=" + componentData);
+		componentData = componentData.replaceAll("\\$", "~");
 		try {
 			// GetHTMLText(HTML.TZ_SURVEY_TEMPLATE_HTML, &strTname, &tplId,
 			// TZ_ESCAPE_CHAR(&str_componentData), &tzGeneralURL, &strMsgSet,

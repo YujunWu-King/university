@@ -219,10 +219,10 @@ public class QustionnairePreviewImpl extends FrameworkImpl {
 		String URL=request.getContextPath();
 		String header=survyMap.get("TZ_DC_JTNR")==null?"":survyMap.get("TZ_DC_JTNR").toString();
 		String footer=survyMap.get("TZ_DC_JWNR")==null?"":survyMap.get("TZ_DC_JWNR").toString();
-		//surveyData = surveyData.replace("\\", "\\\\");
-		//surveyData = surveyData.replaceAll("\\$", "~");
-		//surveyInsData = surveyInsData.replace("\\", "\\\\");
-		//surveyInsData = surveyInsData.replaceAll("\\$", "~");
+		surveyData = surveyData.replace("\\", "\\\\");
+		surveyData = surveyData.replaceAll("\\$", "~");
+		surveyInsData = surveyInsData.replace("\\", "\\\\");
+		surveyInsData = surveyInsData.replaceAll("\\$", "~");
 		Pattern CRLF = Pattern.compile("(\r\n|\r|\n|\n\r)");
 		Matcher mc = CRLF.matcher(surveyData);
 		if (mc.find()) {
