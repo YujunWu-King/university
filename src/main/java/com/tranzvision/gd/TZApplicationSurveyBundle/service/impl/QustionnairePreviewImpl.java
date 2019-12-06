@@ -3,6 +3,8 @@ package com.tranzvision.gd.TZApplicationSurveyBundle.service.impl;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -221,6 +223,18 @@ public class QustionnairePreviewImpl extends FrameworkImpl {
 		surveyData = surveyData.replaceAll("\\$", "~");
 		surveyInsData = surveyInsData.replace("\\", "\\\\");
 		surveyInsData = surveyInsData.replaceAll("\\$", "~");
+		Pattern CRLF = Pattern.compile("(\r\n|\r|\n|\n\r)");
+		Matcher mc = CRLF.matcher(surveyData);
+		if (mc.find()) {
+			surveyData = mc.replaceAll("\\\\n");
+		}
+		surveyData = surveyData.replace(" ", "");
+		
+		mc = CRLF.matcher(surveyInsData);
+		if (mc.find()) {
+			surveyInsData = mc.replaceAll("\\\\n");
+		}
+		surveyInsData = surveyInsData.replace(" ", "");
 		try {
 			tplHtml = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_VIEW_HTML", header,footer,
 					strComRegInfo,surveyData, surveyInsData,String.valueOf(numMaxPage), language, strTitle, strPre, strNext, strROnly, strROnlyDesc, strView, strViewDesc, String.valueOf(surveyInsId), surveyLogic, tzGeneralURL, strMsgSet,URL);

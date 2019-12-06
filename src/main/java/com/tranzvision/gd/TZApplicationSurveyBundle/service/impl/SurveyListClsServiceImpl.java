@@ -1,16 +1,18 @@
 package com.tranzvision.gd.TZApplicationSurveyBundle.service.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author caoy 
@@ -38,13 +40,18 @@ public class SurveyListClsServiceImpl extends FrameworkImpl {
 		try {
 			// 排序字段如果没有不要赋值
 			String[][] orderByArr = new String[][] {};
-
+			/**
+			 * Description:在原有的基础上，添加创建时间字段ROW_ADDED_DTTM，倒叙排序
+			 * modity Time: 2019年12月4日12:36:32
+			 * @author 张超
+			 */
 			// json数据要的结果字段;
-			String[] resultFldArray = { "TZ_APP_TPL_ID", "TZ_APP_TPL_MC", "TZ_EFFEXP_ZT" };
+			String[] resultFldArray = { "TZ_APP_TPL_ID", "TZ_APP_TPL_MC", "TZ_EFFEXP_ZT","ROW_ADDED_DTTM"};
 
 			// 可配置搜索通用函数;
 			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, comParams, numLimit, numStart, errorMsg);
-
+			SimpleDateFormat sFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			SimpleDateFormat sFormatnew=new SimpleDateFormat("yyyy/MM/dd HH:mm");
 			if (obj != null && obj.length > 0) {
 				ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
 
@@ -55,6 +62,7 @@ public class SurveyListClsServiceImpl extends FrameworkImpl {
 					mapList.put("TZ_APP_TPL_ID", rowList[0]);
 					mapList.put("TZ_APP_TPL_MC", rowList[1]);
 					mapList.put("TZ_EFFEXP_ZT", rowList[2]);
+					mapList.put("ROW_ADDED_DTTM", sFormatnew.format(sFormat.parse(rowList[3])));
 					listData.add(mapList);
 				}
 
