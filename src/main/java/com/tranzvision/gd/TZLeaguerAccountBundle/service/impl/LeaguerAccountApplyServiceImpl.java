@@ -47,7 +47,7 @@ public class LeaguerAccountApplyServiceImpl extends FrameworkImpl {
         mapRet.put("root", "[]");
 
         ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
-
+        JacksonUtil jacksonUtil = new JacksonUtil();
         try {
             // 排序字段如果没有不要赋值
             String[][] orderByArr = new String[][] {new String[]{"TZ_APP_SUB_DTTM","DESC"}};
@@ -92,12 +92,13 @@ public class LeaguerAccountApplyServiceImpl extends FrameworkImpl {
                 }
                 appInsId=appInsId+")";
                 System.out.println("appInsIdStr=====>"+appInsId);
-                String sql="select TZ_APP_INS_ID,count(*) TJX_NUM from PS_TZ_KS_TJX_TBL " +
-                        "where TZ_TJX_APP_INS_ID in (select TZ_APP_INS_ID from PS_TZ_APP_INS_T  where TZ_APP_FORM_STA='U') " +
-                        "and TZ_APP_INS_ID in "+appInsId+" group by TZ_APP_INS_ID";
-                System.out.println("sql=====>"+sql);
-                List<Map<String, Object>> tjxMapList = SqlQuery.queryForList(sql);
-                if(tjxMapList.size()>0){
+                if(!"()".equals(appInsId)){
+                    String sql="select TZ_APP_INS_ID,count(*) TJX_NUM from PS_TZ_KS_TJX_TBL " +
+                            "where TZ_TJX_APP_INS_ID in (select TZ_APP_INS_ID from PS_TZ_APP_INS_T  where TZ_APP_FORM_STA='U') " +
+                            "and TZ_APP_INS_ID in "+appInsId+" group by TZ_APP_INS_ID";
+                    System.out.println("sql=====>"+sql);
+                    List<Map<String, Object>> tjxMapList = SqlQuery.queryForList(sql);
+                    if(tjxMapList.size()>0){
                         for(int i=0;i<tjxMapList.size();i++){
                             String appId=tjxMapList.get(i).get("TZ_APP_INS_ID").toString();
                             String txjNum=tjxMapList.get(i).get("TJX_NUM")==null?"0":tjxMapList.get(i).get("TJX_NUM").toString();
@@ -108,13 +109,13 @@ public class LeaguerAccountApplyServiceImpl extends FrameworkImpl {
                                 }
                             }
                         }
-                }else{
-                    System.out.println("tjxMapList.size()<=0");
-                    for(int j=0;j<listData.size();j++){
-                        listData.get(j).put("TZ_TJX_NUM","0");
+                    }else{
+                        System.out.println("tjxMapList.size()<=0");
+                        for(int j=0;j<listData.size();j++){
+                            listData.get(j).put("TZ_TJX_NUM","0");
+                        }
                     }
                 }
-
                 mapRet.replace("total", obj[0]);
                 mapRet.replace("root", listData);
 
@@ -123,7 +124,7 @@ public class LeaguerAccountApplyServiceImpl extends FrameworkImpl {
             e.printStackTrace();
         }
 
-        JacksonUtil jacksonUtil = new JacksonUtil();
+
         return jacksonUtil.Map2json(mapRet);
 
     }
