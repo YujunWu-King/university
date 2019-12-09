@@ -1,22 +1,6 @@
 
 package com.tranzvision.gd.TZMbaPwClpsBundle.service.impl;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.tranzvision.gd.TZAccountMgBundle.dao.PsoprdefnMapper;
 import com.tranzvision.gd.TZAccountMgBundle.model.Psoprdefn;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
@@ -30,12 +14,22 @@ import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPsPwTbl;
 import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzPwExtTbl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.captcha.PasswordCheck;
+import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.encrypt.DESUtil;
 import com.tranzvision.gd.util.poi.excel.ExcelHandle;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.servlet.http.HttpServletRequest;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * MBA材料面试评审-面试规则-面试规则设置
@@ -69,6 +63,8 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 	private PsoprdefnMapper PsoprdefnMapper;
 	@Autowired
 	private GetSeqNum getSeqNum;
+	@Autowired
+	private GetHardCodePoint getHardCodePoint;
 
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {
@@ -513,7 +509,13 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 			boolean rst = excelHandle.export2Excel(fileName, dataCellKeys, dataList);
 			if (rst) {
 				// System.out.println("---------生成的excel文件路径----------");
-				RetrnStr = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+				/**
+				 * 张超修改，时间：2019年12月9日14:33:14  备注原 request.getServerName()取值为ip地址，无法获得域名导致需要了解vpn才能完成导出功能
+				 * 添加hardcode值将域名存入其中再取出。
+				 */
+//				RetrnStr = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+//						+ request.getContextPath() + excelHandle.getExportExcelPath();
+				RetrnStr = request.getScheme() + "://" +getHardCodePoint.getHardCodePointVal("TZGD_DOMAINNAME")
 						+ request.getContextPath() + excelHandle.getExportExcelPath();
 				// System.out.println(strRet);
 			} else {

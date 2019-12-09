@@ -509,7 +509,7 @@ public class InterviewGrade extends FrameworkImpl {
 					bmbId = Long.valueOf(strBmbId);
 				}
 
-				String strRank = mapData.get("RANK") == null ? "" : mapData.get("RANK").toString();
+				String strRank = mapData.get("XUHAO") == null ? "" : mapData.get("XUHAO").toString();
 				if (strRank.indexOf(".") > 0) {
 					strRank = strRank.substring(0, strRank.indexOf("."));
 				}

@@ -206,11 +206,11 @@ public class InterviewStatistics{
 
 		try {
 
-			String queryForObject = sqlQuery.queryForObject("SELECT TOP 1 TZ_GROUP_SPACE FROM ps_TZ_MP_PW_KS_TBL a INNER JOIN PS_TZ_MSPS_KSH_TBL b ON (A.TZ_CLASS_ID = b.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID = b.TZ_APPLY_PC_ID AND A.TZ_APP_INS_ID = b.TZ_APP_INS_ID) INNER JOIN TZ_INTERVIEW_GROUP c ON (c.TZ_CLASS_ID = b.TZ_CLASS_ID AND c.TZ_APPLY_PC_ID = b.TZ_APPLY_PC_ID AND c.TZ_GROUP_ID = b.TZ_GROUP_ID) WHERE A.TZ_CLASS_ID = ? AND A.TZ_APPLY_PC_ID = ? AND A.TZ_PWEI_OPRID = ? AND A.TZ_DELETE_ZT = 'N' AND TZ_GROUP_SPACE = (CASE WHEN DATEDIFF(HOUR,CONVERT(VARCHAR(100),GETDATE(), 8),'12:00:00')>0 THEN 'A' ELSE 'B' END)", new Object[]{CLASSID,BATCHID,OPRID}, "String");
+			String queryForObject = sqlQuery.queryForObject("SELECT B.TZ_MS_PLAN_SEQ FROM PS_TZ_MP_PW_KS_TBL A INNER JOIN PS_TZ_MSYY_KS_TBL B ON ( A.TZ_CLASS_ID = B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID = B.TZ_BATCH_ID ) LEFT JOIN PS_TZ_MSSJ_ARR_TBL D ON ( A.TZ_CLASS_ID = D.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID = D.TZ_BATCH_ID AND B.TZ_MS_PLAN_SEQ = D.TZ_MS_PLAN_SEQ ) WHERE A.TZ_CLASS_ID =? AND A.TZ_APPLY_PC_ID =? AND A.TZ_PWEI_OPRID =? AND B.OPRID = ( SELECT OPRID FROM PS_TZ_FORM_WRK_T WHERE A.TZ_APP_INS_ID = TZ_APP_INS_ID ) LIMIT 1", new Object[]{CLASSID,BATCHID,OPRID}, "String");
 			MSZSPACE = (null==MSZSPACE||"".equals(MSZSPACE.trim()))?queryForObject==null?"":queryForObject:MSZSPACE;
 			result.put("MSZSPACE", MSZSPACE);
 			
-			List<Map<String,Object>> MSZSPACES = sqlQuery.queryForList("SELECT DISTINCT c.TZ_GROUP_SPACE as MSZSPACE,(CASE c.TZ_GROUP_SPACE WHEN 'A' THEN '上午' WHEN 'B' THEN '下午' END) AS DESCR FROM ps_TZ_MP_PW_KS_TBL a INNER JOIN PS_TZ_MSPS_KSH_TBL b ON (A.TZ_CLASS_ID = b.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID = b.TZ_APPLY_PC_ID AND A.TZ_APP_INS_ID = b.TZ_APP_INS_ID) INNER JOIN TZ_INTERVIEW_GROUP c ON (c.TZ_CLASS_ID = b.TZ_CLASS_ID AND c.TZ_APPLY_PC_ID = b.TZ_APPLY_PC_ID AND c.TZ_GROUP_ID = b.TZ_GROUP_ID) WHERE A.TZ_CLASS_ID = ? AND A.TZ_APPLY_PC_ID = ? AND A.TZ_PWEI_OPRID = ? AND A.TZ_DELETE_ZT = 'N'", new Object[]{CLASSID,BATCHID,OPRID});
+			List<Map<String,Object>> MSZSPACES = sqlQuery.queryForList("SELECT DISTINCT B.TZ_MS_PLAN_SEQ AS MSZSPACE, CONCAT( D.TZ_MS_DATE, '(', DATE_FORMAT(D.TZ_START_TM, '%H:%i'), '~', DATE_FORMAT(D.TZ_END_TM, '%H:%i'), ')' ) AS DESCR FROM PS_TZ_MP_PW_KS_TBL A INNER JOIN PS_TZ_MSYY_KS_TBL B ON ( A.TZ_CLASS_ID = B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID = B.TZ_BATCH_ID ) LEFT JOIN PS_TZ_MSSJ_ARR_TBL D ON ( A.TZ_CLASS_ID = D.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID = D.TZ_BATCH_ID AND B.TZ_MS_PLAN_SEQ = D.TZ_MS_PLAN_SEQ ) WHERE A.TZ_CLASS_ID =? AND A.TZ_APPLY_PC_ID =? AND A.TZ_PWEI_OPRID =? AND B.OPRID = ( SELECT OPRID FROM PS_TZ_FORM_WRK_T WHERE A.TZ_APP_INS_ID = TZ_APP_INS_ID );", new Object[]{CLASSID,BATCHID,OPRID});
 			result.put("MSZSPACES", MSZSPACES);
 			
 			//表头，学生公司、职位处理
@@ -228,9 +228,7 @@ public class InterviewStatistics{
 				//表头，学生公司、职位处理
 				Map<String, Object> baseInfo = null;
 				try {
-					baseInfo = queryData("select " + "e.TZ_REALNAME as name,f.TZ_COMPANY_NAME as COMPANY,f.TZ_COMMENT1 as postion "
-							+ "from PS_TZ_AQ_YHXX_TBL e " + "LEFT JOIN PS_TZ_REG_USER_T f ON f.OPRID = e.OPRID "
-							+ "where e.OPRID = ?",
+					baseInfo = queryData("SELECT A.TZ_REALNAME AS NAME, B.TZ_COMPANY_NAME AS COMPANY, B.TZ_COMMENT1 AS postion FROM PS_TZ_AQ_YHXX_TBL A LEFT JOIN PS_TZ_REG_USER_T B ON B.OPRID = A.OPRID WHERE A.OPRID = ?",
 							new Object[] { oprid }, Map.class);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
@@ -250,41 +248,23 @@ public class InterviewStatistics{
 //			}
 
 			//获得成绩模型
-			String scoreModalId = queryData("select d.TZ_MSCJ_SCOR_MD_ID  from PS_TZ_PRJ_INF_T c INNER JOIN PS_TZ_CLASS_INF_T d ON (c.tz_prj_id = d.tz_prj_id) WHERE c.TZ_IS_OPEN = 'Y' and d.TZ_CLASS_ID = ?", new Object[]{CLASSID},String.class);
+			String scoreModalId = queryData("SELECT B.TZ_MSCJ_SCOR_MD_ID FROM PS_TZ_PRJ_INF_T A INNER JOIN PS_TZ_CLASS_INF_T B ON (A.tz_prj_id = B.tz_prj_id) WHERE A.TZ_IS_OPEN = 'Y' AND B.TZ_CLASS_ID = ?", new Object[]{CLASSID},String.class);
 			if (scoreModalId!=null&&!"null".equals(scoreModalId.trim())) {
 				//获得成绩模型对应的树
 				Map<String, Object> fbAndTree = queryData(
 						"SELECT TREE_NAME as treeId,TZ_M_FBDZ_ID as fbdzId FROM PS_TZ_RS_MODAL_TBL WHERE TZ_JG_ID = ? AND TZ_SCORE_MODAL_ID = ?",
 						new Object[] { JGID, scoreModalId }, Map.class);
 				
-				if(Optional.of(fbAndTree).isPresent()){
-
+				if(fbAndTree != null){
 					//树Id
 					String treeId = fbAndTree.get("treeId")!=null?fbAndTree.get("treeId").toString():"";
 					//分布对照表Id
 					String fbdzId = fbAndTree.get("fbdzId")!=null?fbAndTree.get("fbdzId").toString():"";
 					/*--------------------------------------成绩处理开始--------------------------------------*/
 					//成绩项 
-					String cjxSql0 = "(SELECT " 
-							+ "c.tz_score_item_id," 
-							+ "b.tz_score_item_type," 
-							+ "b.DESCR," 
-							+ "c.TZ_PX,"
-							+ "a.TZ_SCORE_MODAL_ID "
-							+ "FROM PS_TZ_RS_MODAL_TBL a "
-							+ "INNER JOIN PS_TZ_MODAL_DT_TBL b ON (a.tree_name = b.tree_name AND a.TZ_JG_ID = b.TZ_JG_ID) "
-							+ "INNER JOIN PS_TZ_CJ_BPH_TBL c ON (a.TZ_SCORE_MODAL_ID = c.TZ_SCORE_MODAL_ID AND b.tz_score_item_id = c.tz_score_item_id) "
-							+ "WHERE c.TZ_ITEM_S_TYPE = 'A' AND b.tz_score_item_type <> 'A')";
+					String cjxSql0 = "(SELECT c.tz_score_item_id,b.tz_score_item_type,b.DESCR,c.TZ_PX,a.TZ_SCORE_MODAL_ID FROM PS_TZ_RS_MODAL_TBL a INNER JOIN PS_TZ_MODAL_DT_TBL b ON (a.tree_name = b.tree_name AND a.TZ_JG_ID = b.TZ_JG_ID) INNER JOIN PS_TZ_CJ_BPH_TBL c ON (a.TZ_SCORE_MODAL_ID = c.TZ_SCORE_MODAL_ID AND b.tz_score_item_id = c.tz_score_item_id) WHERE c.TZ_ITEM_S_TYPE = 'A' AND b.tz_score_item_type <> 'A')";
 					//成绩汇总
-					String cjxSql1 = "(SELECT " 
-							+ "b.tz_score_item_id," 
-							+ "b.tz_score_item_type," 
-							+ "b.DESCR," 
-							+ "99,"
-							+ "a.TZ_SCORE_MODAL_ID "
-							+ "FROM PS_TZ_RS_MODAL_TBL a "
-							+ "INNER JOIN PS_TZ_MODAL_DT_TBL b ON (a.tree_name = b.tree_name AND a.TZ_JG_ID = b.TZ_JG_ID) "
-							+ "WHERE b.tz_score_item_type = 'A')";
+					String cjxSql1 = "(SELECT b.tz_score_item_id,b.tz_score_item_type,b.DESCR,99,a.TZ_SCORE_MODAL_ID FROM PS_TZ_RS_MODAL_TBL a INNER JOIN PS_TZ_MODAL_DT_TBL b ON (a.tree_name = b.tree_name AND a.TZ_JG_ID = b.TZ_JG_ID) WHERE b.tz_score_item_type = 'A')";
 					//并集
 					String cjxSql = "SELECT z.tz_score_item_id,z.tz_score_item_type,z.DESCR,z.TZ_PX FROM (" + cjxSql0
 							+ " UNION ALL " + cjxSql1 + ") z WHERE z.TZ_SCORE_MODAL_ID = ? ORDER BY z.TZ_PX ASC";
