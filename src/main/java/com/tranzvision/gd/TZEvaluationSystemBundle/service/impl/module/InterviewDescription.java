@@ -122,50 +122,14 @@ public class InterviewDescription{
 		//String sql = tzGDObject.getSQLText("SQL.TZEvaluationSystemBundle.TzInterviewStudentList");
 		//sql参数
 		
-		StringBuilder students = new StringBuilder("SELECT "
-				+ "c.TZ_CLASS_ID AS classid,"
-				+ "c.TZ_APPLY_PC_ID AS pcid,"
-				+ "c.TZ_APP_INS_ID AS insid,"
-				+ "e.TZ_REALNAME AS name,"
-				+ "(b.TZ_ATT_A_URL + b.TZ_ATTACHSYSFILENA) AS photo,"
-				+ "f.TZ_COMPANY_NAME AS COMPANY,"
-				+ "f.TZ_COMMENT1 AS postion,"
-				+ "d.OPRID AS oprid,"
-				+ "c.TZ_SCORE_INS_ID AS scoreid "
-				+ "FROM PS_TZ_MP_PW_KS_TBL c "
-				+ "LEFT JOIN PS_TZ_FORM_WRK_T d ON (c.TZ_APP_INS_ID = d.TZ_APP_INS_ID) "
-				+ "LEFT JOIN PS_TZ_OPR_PHT_GL_T a ON d.OPRID = a.OPRID "
-				+ "LEFT JOIN PS_TZ_OPR_PHOTO_T b ON a.TZ_ATTACHSYSFILENA = b.TZ_ATTACHSYSFILENA "
-				+ "LEFT JOIN PS_TZ_AQ_YHXX_TBL e ON e.OPRID = d.OPRID LEFT JOIN PS_TZ_REG_USER_T f ON f.OPRID = d.OPRID "
-				+ "INNER JOIN PS_TZ_MSPS_KSH_TBL G ON (c.TZ_CLASS_ID = g.TZ_CLASS_ID AND G.TZ_APPLY_PC_ID = c.TZ_APPLY_PC_ID AND c.TZ_APP_INS_ID = G.TZ_APP_INS_ID) "
-				+ "WHERE c.TZ_DELETE_ZT = 'N' AND g.TZ_GROUP_ID = ? ");
-		
-		
-
-		String queryForObject = sqlQuery.queryForObject("SELECT TOP 1 c.TZ_GROUP_ID FROM PS_TZ_MP_PW_KS_TBL a INNER JOIN PS_TZ_MSPS_KSH_TBL b ON (A.TZ_CLASS_ID = b.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID = b.TZ_APPLY_PC_ID AND A.TZ_APP_INS_ID = b.TZ_APP_INS_ID) INNER JOIN TZ_INTERVIEW_GROUP c ON (c.TZ_CLASS_ID = b.TZ_CLASS_ID AND c.TZ_APPLY_PC_ID = b.TZ_APPLY_PC_ID AND c.TZ_GROUP_ID = b.TZ_GROUP_ID) WHERE A.TZ_CLASS_ID = ? AND A.TZ_APPLY_PC_ID = ? AND A.TZ_PWEI_OPRID = ? AND A.TZ_DELETE_ZT = 'N' AND TZ_GROUP_SPACE = (CASE WHEN DATEDIFF(HOUR,CONVERT(VARCHAR(100),GETDATE(), 8),'12:00:00')>0 THEN 'A' ELSE 'B' END)", new Object[]{CLASSID,BATCHID,OPRID}, "String");
+		String queryForObject = sqlQuery.queryForObject("SELECT C.TZ_GROUP_ID FROM PS_TZ_MP_PW_KS_TBL A INNER JOIN PS_TZ_MSPS_KSH_TBL B ON ( A.TZ_CLASS_ID = B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID = B.TZ_APPLY_PC_ID AND A.TZ_APP_INS_ID = B.TZ_APP_INS_ID ) INNER JOIN TZ_INTERVIEW_GROUP C ON ( C.TZ_CLASS_ID = B.TZ_CLASS_ID AND C.TZ_APPLY_PC_ID = B.TZ_APPLY_PC_ID AND C.TZ_GROUP_ID = B.TZ_GROUP_ID ) WHERE A.TZ_CLASS_ID = ? AND A.TZ_APPLY_PC_ID = ? AND A.TZ_PWEI_OPRID = ? AND A.TZ_DELETE_ZT = 'N' LIMIT 1", new Object[]{CLASSID,BATCHID,OPRID}, "String");
 		MSZID = (null==MSZID||"".equals(MSZID.trim()))?queryForObject==null?"":queryForObject:MSZID;
 		hashMap.put("MSZID", MSZID);
-		
-		
-		/*
-		if(null==MSZID||"".equals(MSZID.trim())){
-			//如果没有选面试组号
-			students.append("(SELECT TOP 1 TZ_GROUP_ID FROM TZ_INTERVIEW_GROUP WHERE TZ_CLASS_ID = c.TZ_CLASS_ID AND TZ_APPLY_PC_ID = c.TZ_APPLY_PC_ID AND TZ_GROUP_SPACE = (CASE WHEN DATEDIFF(HOUR,CONVERT(VARCHAR(100),GETDATE(), 8),'12:00:00')>0 THEN 'A' ELSE 'B' END)");
-			sqlParam = new Object[]{OPRID,CLASSID,BATCHID};
-		}else{
-			//选择面试组号
-			students.append("? ");
-			sqlParam = new Object[]{MSZID,OPRID,CLASSID,BATCHID};
-		}*/
-		students.append("AND c.TZ_PWEI_OPRID = ? AND c.TZ_CLASS_ID = ? AND c.TZ_APPLY_PC_ID = ? ORDER BY G.TZ_ORDER ASC");
-		
-		System.out.println(students.toString());
-		
-		
-		List<Map<String,Object>> STUDENTS = sqlQuery.queryForList(students.toString(),new Object[]{MSZID,OPRID,CLASSID,BATCHID});
+		String studentsSql = "SELECT C.TZ_CLASS_ID AS classid, C.TZ_APPLY_PC_ID AS pcid, C.TZ_APP_INS_ID AS insid, E.TZ_REALNAME AS NAME, ( B.TZ_ATT_A_URL + B.TZ_ATTACHSYSFILENA ) AS photo, F.TZ_COMPANY_NAME AS COMPANY, F.TZ_COMMENT1 AS postion, D.OPRID AS oprid, C.TZ_SCORE_INS_ID AS scoreid FROM PS_TZ_MP_PW_KS_TBL C LEFT JOIN PS_TZ_FORM_WRK_T D ON ( C.TZ_APP_INS_ID = D.TZ_APP_INS_ID ) LEFT JOIN PS_TZ_OPR_PHT_GL_T A ON D.OPRID = A.OPRID LEFT JOIN PS_TZ_OPR_PHOTO_T B ON A.TZ_ATTACHSYSFILENA = B.TZ_ATTACHSYSFILENA LEFT JOIN PS_TZ_AQ_YHXX_TBL E ON E.OPRID = D.OPRID LEFT JOIN PS_TZ_REG_USER_T F ON F.OPRID = D.OPRID INNER JOIN PS_TZ_MSPS_KSH_TBL G ON ( C.TZ_CLASS_ID = G.TZ_CLASS_ID AND G.TZ_APPLY_PC_ID = C.TZ_APPLY_PC_ID AND C.TZ_APP_INS_ID = G.TZ_APP_INS_ID ) WHERE C.TZ_DELETE_ZT = 'N' AND G.TZ_GROUP_ID = ? AND C.TZ_PWEI_OPRID = ? AND C.TZ_CLASS_ID = ? AND C.TZ_APPLY_PC_ID = ? ORDER BY G.TZ_ORDER ASC"; 
+		List<Map<String,Object>> STUDENTS = sqlQuery.queryForList(studentsSql,new Object[]{MSZID,OPRID,CLASSID,BATCHID});
 		hashMap.put("STUDENTS", STUDENTS);
 		
-		List<Map<String,Object>> MSZS = sqlQuery.queryForList("SELECT DISTINCT c.TZ_GROUP_ID as ID,c.TZ_GROUP_DESC AS DESCR FROM PS_TZ_MP_PW_KS_TBL a INNER JOIN PS_TZ_MSPS_KSH_TBL b ON (A.TZ_CLASS_ID = b.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID = b.TZ_APPLY_PC_ID AND A.TZ_APP_INS_ID = b.TZ_APP_INS_ID) INNER JOIN TZ_INTERVIEW_GROUP c ON (c.TZ_CLASS_ID = b.TZ_CLASS_ID AND c.TZ_APPLY_PC_ID = b.TZ_APPLY_PC_ID AND c.TZ_GROUP_ID = b.TZ_GROUP_ID) WHERE A.TZ_CLASS_ID = ? AND A.TZ_APPLY_PC_ID = ? AND A.TZ_PWEI_OPRID = ? AND A.TZ_DELETE_ZT = 'N'", new Object[]{CLASSID,BATCHID,OPRID});
+		List<Map<String,Object>> MSZS = sqlQuery.queryForList("SELECT DISTINCT C.TZ_GROUP_ID AS ID, C.TZ_GROUP_DESC AS DESCR FROM PS_TZ_MP_PW_KS_TBL A INNER JOIN PS_TZ_MSPS_KSH_TBL B ON ( A.TZ_CLASS_ID = B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID = B.TZ_APPLY_PC_ID AND A.TZ_APP_INS_ID = B.TZ_APP_INS_ID ) INNER JOIN TZ_INTERVIEW_GROUP C ON ( C.TZ_CLASS_ID = B.TZ_CLASS_ID AND C.TZ_APPLY_PC_ID = B.TZ_APPLY_PC_ID AND C.TZ_GROUP_ID = B.TZ_GROUP_ID ) WHERE A.TZ_CLASS_ID = ? AND A.TZ_APPLY_PC_ID = ? AND A.TZ_PWEI_OPRID =? AND A.TZ_DELETE_ZT = 'N'", new Object[]{CLASSID,BATCHID,OPRID});
 		hashMap.put("MSZS", MSZS);
 		
 		return JSONObject.fromObject(hashMap).toString();
@@ -188,7 +152,7 @@ public class InterviewDescription{
 		try {
 			queryForObject0 = sqlQuery.queryForObject("select 'Y' from PS_TZ_PRJ_INF_T c INNER JOIN PS_TZ_CLASS_INF_T d ON (c.tz_prj_id = d.tz_prj_id) WHERE c.TZ_IS_OPEN <> 'Y' and d.TZ_CLASS_ID = ?", new Object[]{CLASSID}, "String");
 			queryForObject1 = sqlQuery.queryForObject("select 'Y' from PS_TZ_MSPS_GZ_TBL WHERE TZ_DQPY_ZT <> 'A' and TZ_CLASS_ID = ? AND TZ_APPLY_PC_ID = ?", new Object[]{CLASSID,BATCHID}, "String");
-			queryForObject2 = sqlQuery.queryForObject("select 'Y' from ps_TZ_MSPS_PW_TBL WHERE tz_pwei_zhzt NOT IN ('A', 'N') and TZ_pwei_oprid = ? AND TZ_CLASS_ID = ? AND TZ_APPLY_PC_ID = ?", new Object[]{OPRID,CLASSID,BATCHID}, "String");
+			queryForObject2 = sqlQuery.queryForObject("select 'Y' from PS_TZ_MSPS_PW_TBL WHERE tz_pwei_zhzt NOT IN ('A', 'N') and TZ_pwei_oprid = ? AND TZ_CLASS_ID = ? AND TZ_APPLY_PC_ID = ?", new Object[]{OPRID,CLASSID,BATCHID}, "String");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -48,7 +48,7 @@ public class InterviewBatch{
 	private String getBatchList(String strParams, String[] errorMsg){
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		jacksonUtil.json2Map(strParams);
-
+System.out.println(strParams+"+++++++++++++++++++strParams");
 		Map<String, Object> mapRet = new HashMap<String, Object>();
 		mapRet.put("judgeType", "0");
 		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
@@ -75,25 +75,34 @@ public class InterviewBatch{
 					List<?> resultlist = sqlQuery.queryForList(sql, new Object[] {orgid,oprid,oprid});
 			
 			//评委类型
-			String judgeType = sqlQuery.queryForObject("(SELECT b.tz_jugtyp_id AS type FROM PS_TZ_JUSR_REL_TBL a INNER JOIN PS_TZ_JUGTYP_TBL b ON (a.TZ_jg_id = b.TZ_jg_id AND a.TZ_JUGTYP_ID = b.TZ_JUGTYP_ID) WHERE b.tz_jugtyp_stat = 0 AND a.OPRID = ? AND a.TZ_jg_id = ?) UNION ALL (SELECT a.type as type FROM tz_interview_admin_t a INNER JOIN PS_TZ_AQ_YHXX_TBL b ON a.oprid = b.oprid WHERE a.status = 'A' AND a.OPRID = ? AND b.TZ_jg_id = ?)",new Object[]{oprid,orgid,oprid,orgid}, "String");
+					/**
+					 * 改造:1、首先判断是否具有面试管理员角色
+					 * 2、判断是否是面试管理员中的签到管理员
+					 * 
+					 */
+					String judgeType = "";
+					String isFlag = sqlQuery.queryForObject("select 'Y' from PS_TZ_JUSR_REL_TBL where TZ_jg_id=? and OPRID=? AND TZ_JUGTYP_ID='1' LIMIT 1", new Object[] {oprid,orgid}, "String");
+					if("Y".equals(isFlag)) {
+						judgeType = sqlQuery.queryForObject("SELECT A.type AS type FROM tz_interview_admin_t A INNER JOIN PS_TZ_AQ_YHXX_TBL B ON A.oprid = B.oprid WHERE A. STATUS = 'A' AND A.OPRID = ? AND B.TZ_JG_ID = ?", new Object[] {oprid,orgid}, "String");
+					}
 			
-			for (Object obj : resultlist) {
-				@SuppressWarnings("unchecked")
-				Map<String, Object> result = (Map<String, Object>) obj;
-
-				String TZ_CLASS_ID = result.get("TZ_CLASS_ID") == null ? "" : String.valueOf(result.get("TZ_CLASS_ID"));
-				String TZ_APPLY_PC_ID = result.get("TZ_APPLY_PC_ID") == null ? "" : String.valueOf(result.get("TZ_APPLY_PC_ID"));
-				String TZ_CLASS_NAME = result.get("TZ_CLASS_NAME") == null ? "" : String.valueOf(result.get("TZ_CLASS_NAME"));
-				String TZ_BATCH_NAME = result.get("TZ_BATCH_NAME") == null ? "" : String.valueOf(result.get("TZ_BATCH_NAME"));
-
-				Map<String, Object> mapRetJson = new HashMap<String, Object>();
-				mapRetJson.put("classId",TZ_CLASS_ID);
-				mapRetJson.put("pcId",TZ_APPLY_PC_ID);
-				mapRetJson.put("className",TZ_CLASS_NAME);
-				mapRetJson.put("pcName",TZ_BATCH_NAME);
-
-				listData.add(mapRetJson);
-			}
+					for (Object obj : resultlist) {
+						@SuppressWarnings("unchecked")
+						Map<String, Object> result = (Map<String, Object>) obj;
+		
+						String TZ_CLASS_ID = result.get("TZ_CLASS_ID") == null ? "" : String.valueOf(result.get("TZ_CLASS_ID"));
+						String TZ_APPLY_PC_ID = result.get("TZ_APPLY_PC_ID") == null ? "" : String.valueOf(result.get("TZ_APPLY_PC_ID"));
+						String TZ_CLASS_NAME = result.get("TZ_CLASS_NAME") == null ? "" : String.valueOf(result.get("TZ_CLASS_NAME"));
+						String TZ_BATCH_NAME = result.get("TZ_BATCH_NAME") == null ? "" : String.valueOf(result.get("TZ_BATCH_NAME"));
+		
+						Map<String, Object> mapRetJson = new HashMap<String, Object>();
+						mapRetJson.put("classId",TZ_CLASS_ID);
+						mapRetJson.put("pcId",TZ_APPLY_PC_ID);
+						mapRetJson.put("className",TZ_CLASS_NAME);
+						mapRetJson.put("pcName",TZ_BATCH_NAME);
+		
+						listData.add(mapRetJson);
+					}
 
 			mapRet.replace("judgeType", judgeType!=null?judgeType:"QD");
 			mapRet.replace("root", listData);

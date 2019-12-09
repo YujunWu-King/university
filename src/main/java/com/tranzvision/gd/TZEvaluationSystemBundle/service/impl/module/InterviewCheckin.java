@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -64,7 +65,7 @@ public class InterviewCheckin extends FrameworkImpl {
 		if (jsonObject.containsKey("appInsId")) {
 			String appInsId = jsonObject.get("appInsId").toString();
 			String isScore = sqlQuery.queryForObject(
-					"SELECT TOP 1 'Y' FROM PS_TZ_MP_PW_KS_TBL where TZ_CLASS_ID = ? AND TZ_APPLY_PC_ID = ? AND TZ_APP_INS_ID = ? and TZ_SCORE_INS_ID > 0",
+					"SELECT 'Y' FROM PS_TZ_MP_PW_KS_TBL where TZ_CLASS_ID = ? AND TZ_APPLY_PC_ID = ? AND TZ_APP_INS_ID = ? and TZ_SCORE_INS_ID > 0  limit 1",
 					new Object[] { CLASSID, BATCHID, appInsId }, "String");
 
 			// 判断学生是否已经被打分
@@ -153,13 +154,13 @@ public class InterviewCheckin extends FrameworkImpl {
 				Map<String, Object> mapList = new HashMap<String, Object>();
 
 				Long TZ_APP_INS_ID = Long.valueOf(String.valueOf(list.get(i).get("TZ_APP_INS_ID")));
-				String TZ_REALNAME = (String) list.get(i).get("TZ_REALNAME");
-				String NATIONAL_ID = (String) list.get(i).get("NATIONAL_ID");
-				String TZ_COMPANY_NAME = (String) list.get(i).get("TZ_COMPANY_NAME");
-				String TZ_CHECKIN_DTTM = (String) list.get(i).get("TZ_CHECKIN_DTTM");
+				String TZ_REALNAME = String.valueOf(list.get(i).get("TZ_REALNAME"));
+				String NATIONAL_ID = String.valueOf(list.get(i).get("NATIONAL_ID"));
+				String TZ_COMPANY_NAME = String.valueOf(list.get(i).get("TZ_COMPANY_NAME"));
+				String TZ_CHECKIN_DTTM = String.valueOf(list.get(i).get("TZ_CHECKIN_DTTM"));
 				String checkInStatus = "N";
 
-				if (TZ_CHECKIN_DTTM != null) {
+				if (TZ_CHECKIN_DTTM != null && !"null".equals(TZ_CHECKIN_DTTM) && !"".equals(TZ_CHECKIN_DTTM)) {
 					checkInStatus = "Y";
 				}
 
@@ -199,7 +200,6 @@ public class InterviewCheckin extends FrameworkImpl {
 	 */
 	private String checkInButton(JSONObject jsonObject, String[] errorMsg) {
 		Map<String, Object> rtnMap = new HashMap<String, Object>();
-
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			// 获取传过来的参数值
@@ -210,97 +210,34 @@ public class InterviewCheckin extends FrameworkImpl {
 
 			Timestamp timestamp = null;
 			String lastmant_oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
-
 			// 签到操作的sql语句
 			String sql = null;
-
 			// 签到操作
 			if ("checkIn".equals(operation)) {
-
-				// List<Map<String,Object>> queryForList =
-				// sqlQuery.queryForList("SELECT a.TZ_PWEI_OPRID FROM
-				// ps_TZ_MSPS_PW_TBL A INNER JOIN PS_TZ_AQ_YHXX_TBL D ON
-				// A.TZ_PWEI_OPRID = D.OPRID INNER JOIN PS_TZ_INTEGROUP_T B ON
-				// a.TZ_PWEI_GRPID = b.TZ_CLPS_GR_ID INNER JOIN
-				// PS_TZ_MSPS_KSH_TBL C ON (B.TZ_GROUP_ID = C.TZ_GROUP_ID AND
-				// A.TZ_CLASS_ID = C.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID =
-				// C.TZ_APPLY_PC_ID) WHERE a.TZ_PWEI_ZHZT = 'A' AND
-				// A.TZ_CLASS_ID = ? AND A.TZ_APPLY_PC_ID = ? AND
-				// C.TZ_APP_INS_ID = ?", new
-				// Object[]{classId,batchId,appInsId});
-				// if(null==queryForList||0>=queryForList.size()){
-				// rtnMap.put("errorCode", 1);
-				// rtnMap.put("error_decription","没有面试评委！");
-				// return jacksonUtil.Map2json(rtnMap);
-				// }else{
 				String signature = jsonObject.get("signature").toString();
 				sql = "update PS_TZ_MSPS_KSH_TBL set TZ_CHECKIN_DTTM=?,TZ_SIGNATURE=?,ROW_LASTMANT_DTTM=?,ROW_LASTMANT_OPRID=? where";
 				sql += " TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and  TZ_APP_INS_ID=?";
-
 				// 获取当前的时间
 				Date date = new Date();
-				timestamp = new Timestamp(date.getTime());
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				sqlQuery.update(sql,
-						new Object[] { timestamp, signature, timestamp, lastmant_oprid, classId, batchId, appInsId });
-				// sqlQuery.update("delete from ps_TZ_MP_PW_KS_TBL where
-				// TZ_CLASS_ID = ? AND TZ_APPLY_PC_ID = ? AND TZ_APP_INS_ID = ?
-				// and TZ_SCORE_INS_ID = '0'", new
-				// Object[]{classId,batchId,appInsId});
-				// //建立评委考生关系
-				// queryForList.forEach((item)->{
-				// String TZ_PWEI_OPRID = item.get("TZ_PWEI_OPRID").toString();
-				// sqlQuery.update("insert into ps_TZ_MP_PW_KS_TBL ("
-				// + "TZ_APPLY_PC_ID,"
-				// + "TZ_CLASS_ID,"
-				// + "TZ_APP_INS_ID,"
-				// + "TZ_PWEI_OPRID,"
-				// + "ROW_ADDED_DTTM,"
-				// + "ROW_ADDED_OPRID,"
-				// + "ROW_LASTMANT_DTTM,"
-				// + "ROW_LASTMANT_OPRID,"
-				// + "TZ_SCORE_INS_ID,"
-				// + "TZ_DELETE_ZT,"
-				// + "TZ_PSHEN_ZT)"
-				// + " values ("
-				// + "?,"
-				// + "?,"
-				// + "?,"
-				// + "?,"
-				// + "getdate(),"
-				// + "?,"
-				// + "getdate(),"
-				// + "?,"
-				// + "'0',"
-				// + "'N',"
-				// + "'N')", new
-				// Object[]{batchId,classId,appInsId,TZ_PWEI_OPRID,lastmant_oprid,lastmant_oprid});
-				// });
+						new Object[] { date, signature, date, lastmant_oprid, classId, batchId, appInsId });
 				rtnMap.put("success", true);
-				rtnMap.put("checkInTime", timestamp.toString());
+				rtnMap.put("checkInTime", sdf.format(date));
 				rtnMap.put("errorCode", 0);
 				rtnMap.put("error_decription", "签到成功");
-				// }
 
 			}
 			// 撤销签到操作
 			if ("revoke".equals(operation)) {
-
 				if (null == lastmant_oprid) {
 					errorMsg[0] = "1";
 					errorMsg[1] = "未知用户操作";
 				}
-				;
-
 				// 撤销签到的sql语句
-				sql = "update PS_TZ_MSPS_KSH_TBL set TZ_CHECKIN_DTTM=?,TZ_SIGNATURE=?,ROW_LASTMANT_DTTM=?,ROW_LASTMANT_OPRID=? where";
+				sql = "update PS_TZ_MSPS_KSH_TBL set TZ_CHECKIN_DTTM=?,TZ_SIGNATURE='',ROW_LASTMANT_DTTM=?,ROW_LASTMANT_OPRID=? where";
 				sql += "  TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and  TZ_APP_INS_ID=?";
-				sqlQuery.update(sql, new Object[] { timestamp, null, new Timestamp(new Date().getTime()),
-						lastmant_oprid, classId, batchId, appInsId });
-				// sqlQuery.update("delete from ps_TZ_MP_PW_KS_TBL where
-				// TZ_CLASS_ID = ? AND TZ_APPLY_PC_ID = ? AND TZ_APP_INS_ID = ?
-				// and TZ_SCORE_INS_ID = '0'", new
-				// Object[]{classId,batchId,appInsId});
-
+				sqlQuery.update(sql, new Object[] { timestamp, new Date(),lastmant_oprid, classId, batchId, appInsId });
 				rtnMap.put("success", true);
 				rtnMap.put("errorCode", 0);
 				rtnMap.put("error_decription", "撤销成功");
