@@ -250,7 +250,7 @@
                 //考生导入信息;
                 //ksdrInfoForm.setValues(formData.ksdrInfo);
                 //考生个人信息
-                userInfoForm.setValues(formData.perInfo)
+                userInfoForm.setValues(formData.column)
                 //录取流程
                 //processInfoForm.setValues(formData.lqlcInfo);
                 /*var userInfoItems = [];
@@ -330,7 +330,7 @@
                 //考生导入信息;
                 //ksdrInfoForm.setValues(formData.ksdrInfo);
                 //考生个人信息
-                userInfoForm.setValues(formData.perInfo)
+                userInfoForm.setValues(formData.column)
                 //录取流程
                 //processInfoForm.setValues(formData.lqlcInfo);
                 /*var userInfoItems = [];
