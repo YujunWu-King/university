@@ -147,7 +147,7 @@ public class TzMsGroupMangerServiceImpl extends FrameworkImpl {
 							sum = sum + 1;
 							sqlQuery.update(sql, new Object[] { jugGroupId, sum,gropid, classId, batchId, ins});
 							//考生与评委建立关系-----改在签到时建立
-							sqlQuery.update("delete from PS_TZ_MP_PW_KS_TBL where TZ_CLASS_ID = ? AND TZ_APPLY_PC_ID = ? AND TZ_APP_INS_ID = ? and TZ_SCORE_INS_ID = '0'", new Object[]{classId,batchId,ins});
+							sqlQuery.update("delete from PS_TZ_MP_PW_KS_TBL where TZ_CLASS_ID = ? AND TZ_APPLY_PC_ID = ? AND TZ_APP_INS_ID = ? and TZ_SCORE_INS_ID = '999999999999999'", new Object[]{classId,batchId,ins});
 							queryForList.forEach((item)->{
 								String TZ_PWEI_OPRID = item.get("TZ_PWEI_OPRID").toString();
 								sqlQuery.update("insert into PS_TZ_MP_PW_KS_TBL ("
@@ -171,7 +171,7 @@ public class TzMsGroupMangerServiceImpl extends FrameworkImpl {
 										+ "?,"
 										+ "NOW(),"
 										+ "?,"
-										+ "'0',"
+										+ "'999999999999999',"
 										+ "'N',"
 										+ "'N')", new Object[]{batchId,classId,ins,TZ_PWEI_OPRID,Oprid,Oprid});
 							});
