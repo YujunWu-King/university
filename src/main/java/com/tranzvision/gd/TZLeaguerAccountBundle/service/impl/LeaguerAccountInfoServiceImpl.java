@@ -455,7 +455,10 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl {
 				    }else{
 				    	psoprdefn.setAcctlock(Short.valueOf("0"));
 				    }
-				    if("F".equals(userSex)||("M").equals(userSex)){
+				    //更新TZ_LXFSINFO_TBL中的手机信息和邮箱
+                    String phoneAndemailSql="UPDATE PS_TZ_LXFSINFO_TBL SET TZ_ZY_SJ=? ,TZ_ZY_EMAIL=? WHERE TZ_LXFS_LY='ZCYH' AND TZ_LYDX_ID=?";
+				    jdbcTemplate.update(phoneAndemailSql, new Object[]{userPhone, userEmail, strOprId});
+                    if("F".equals(userSex)||("M").equals(userSex)){
 						//添加用户信息表中的身份证号
 						String updatelSFSSql = "UPDATE PS_TZ_REG_USER_T SET TZ_BLACK_NAME=?,TZ_ALLOW_APPLY=?,TZ_BEIZHU=?,NATIONAL_ID=?,TZ_COMPANY_NAME=?,TZ_COMMENT1=?,TZ_LEN_PROID=?,TZ_GENDER=?,TZ_REALNAME=?,TZ_SCH_CNAME=?,TZ_LEN_PROID=?," +
 								"TZ_COMPANY_NAME=?,TZ_COMP_INDUSTRY=? WHERE OPRID=?";
