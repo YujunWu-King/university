@@ -98,9 +98,7 @@ public class InterviewDescription{
 		String CLASSID = params.getString("CLASSID");
 		String BATCHID = params.getString("BATCHID");
 		//面试说明
-		String sql = "SELECT TZ_MSPS_SM "
-				+ "FROM PS_TZ_MSPS_GZ_TBL "
-				+ "WHERE tz_class_id = ? AND tz_apply_pc_id = ?";
+		String sql = "SELECT TZ_MSPS_SM FROM PS_TZ_MSPS_GZ_TBL WHERE tz_class_id = ? AND tz_apply_pc_id = ?";
 		String queryData = sqlQuery.queryForObject(sql, new Object[]{CLASSID,BATCHID}, "String");
 		HashMap<String, Object> hashMap = new HashMap<String,Object>();
 		hashMap.put("MSSM", queryData==null?"":queryData);

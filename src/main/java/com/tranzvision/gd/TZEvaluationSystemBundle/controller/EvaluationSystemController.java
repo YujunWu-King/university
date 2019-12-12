@@ -233,6 +233,9 @@ public class EvaluationSystemController {
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
 		jsonMap.put("success", loginStatus);
 		jsonMap.put("error", errorMsg);
+		if("2".equals(judgeType)) {
+			jsonMap.put("indexUrl", errorMsg);
+		}
 
 		return jacksonUtil.Map2json(jsonMap);
 	}

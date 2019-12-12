@@ -363,7 +363,7 @@ public class InterviewGrade extends FrameworkImpl {
 		try {
 			Timestamp currentTimestamp = new Timestamp(new Date().getTime());
 
-			if (scoreInsId == 0) {
+			if ("999999999999999".equals(String.valueOf(scoreInsId))) {
 				scoreInsId = creatScoreInsId();
 				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 				Timestamp deadline = new Timestamp(dateFormat.parse("2099-12-31").getTime());
@@ -556,7 +556,7 @@ public class InterviewGrade extends FrameworkImpl {
 					new Object[] { orgId, classId, batchId, appInsId });
 
 			for (Map<String, Object> mapData : listData) {
-				Long appInsIdLong = (Long) mapData.get("TZ_APP_INS_ID");
+				Long appInsIdLong = Long.valueOf(String.valueOf(mapData.get("TZ_APP_INS_ID")));
 				BigDecimal tally = ((BigDecimal) mapData.get("TZ_SCORE")).setScale(1,BigDecimal.ROUND_HALF_UP);
 				sqlQuery.update("UPDATE PS_TZ_MSPS_KSH_TBL SET TZ_SCORE=? WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=?",
 						new Object[]{tally,classId,batchId,appInsIdLong});

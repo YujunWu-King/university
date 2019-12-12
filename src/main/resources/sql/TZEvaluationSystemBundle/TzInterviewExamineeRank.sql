@@ -44,4 +44,4 @@ FROM
 	(
 		SELECT
 			@objno := NULL ,@rank := 0
-	) b;、
+	) b
