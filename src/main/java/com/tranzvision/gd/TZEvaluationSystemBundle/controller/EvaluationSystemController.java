@@ -234,9 +234,8 @@ public class EvaluationSystemController {
 		jsonMap.put("success", loginStatus);
 		jsonMap.put("error", errorMsg);
 		if("2".equals(judgeType)) {
-			jsonMap.put("indexUrl", errorMsg);
+			jsonMap.put("indexUrl", "/evaluation/material/index");
 		}
-
 		return jacksonUtil.Map2json(jsonMap);
 	}
 

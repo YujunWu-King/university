@@ -272,7 +272,7 @@ public class InterviewStatistics{
 					//成绩项 
 					String cjxSql0 = "(SELECT c.tz_score_item_id,b.tz_score_item_type,b.DESCR,c.TZ_PX,a.TZ_SCORE_MODAL_ID FROM PS_TZ_RS_MODAL_TBL a INNER JOIN PS_TZ_MODAL_DT_TBL b ON (a.tree_name = b.tree_name AND a.TZ_JG_ID = b.TZ_JG_ID) INNER JOIN PS_TZ_CJ_BPH_TBL c ON (a.TZ_SCORE_MODAL_ID = c.TZ_SCORE_MODAL_ID AND b.tz_score_item_id = c.tz_score_item_id) WHERE c.TZ_ITEM_S_TYPE = 'A' AND b.tz_score_item_type <> 'A')";
 					//成绩汇总
-					String cjxSql1 = "(SELECT b.tz_score_item_id,b.tz_score_item_type,b.DESCR,99,a.TZ_SCORE_MODAL_ID FROM PS_TZ_RS_MODAL_TBL a INNER JOIN PS_TZ_MODAL_DT_TBL b ON (a.tree_name = b.tree_name AND a.TZ_JG_ID = b.TZ_JG_ID) WHERE b.tz_score_item_type = 'A')";
+					String cjxSql1 = "( SELECT b.tz_score_item_id, b.tz_score_item_type, b.DESCR, c.TREE_NODE_NUM AS TZ_PX, a.TZ_SCORE_MODAL_ID FROM PS_TZ_RS_MODAL_TBL a INNER JOIN PS_TZ_MODAL_DT_TBL b ON ( a.tree_name = b.tree_name AND a.TZ_JG_ID = b.TZ_JG_ID ) INNER JOIN PSTREENODE c ON ( a.TREE_NAME = c.TREE_NAME AND c.TREE_NODE = b.tz_score_item_id ) WHERE b.tz_score_item_type = 'A' )";
 					//并集
 					String cjxSql = "SELECT DISTINCT z.tz_score_item_id,z.tz_score_item_type,z.DESCR,z.TZ_PX FROM (" + cjxSql0
 							+ " UNION ALL " + cjxSql1 + ") z WHERE z.TZ_SCORE_MODAL_ID = ? ORDER BY z.TZ_PX ASC";
@@ -329,8 +329,7 @@ public class InterviewStatistics{
 
 							//学生的得分状况
 							Map<String, Object> scoreData = queryData(
-									"SELECT TZ_SCORE_NUM,TZ_CJX_XLK_XXBH,TZ_SCORE_PY_VALUE "
-											+ "FROM PS_TZ_CJX_TBL WHERE TZ_SCORE_INS_ID = ? AND TZ_SCORE_ITEM_ID = ?",
+									"SELECT TZ_SCORE_NUM,TZ_CJX_XLK_XXBH,TZ_SCORE_PY_VALUE FROM PS_TZ_CJX_TBL WHERE TZ_SCORE_INS_ID = ? AND TZ_SCORE_ITEM_ID = ?",
 											new Object[] { scoreid, cjxId }, Map.class);
 
 							//页面显示
