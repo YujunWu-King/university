@@ -448,6 +448,8 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 			} catch (Exception e) {
 				existComQx = 0;
 			}
+			
+			
 			if (existComQx == 0) {
 				errMsgArr[0] = "1";
 				errMsgArr[1] = "非法访问，您对组件页面[" + sComID + "][" + sPageID + "]的访问未获得授权。";
