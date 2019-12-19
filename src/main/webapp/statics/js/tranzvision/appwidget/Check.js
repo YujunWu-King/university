@@ -232,6 +232,7 @@ SurveyBuild.extend("Check", "baseComponent", {
 					//固定格式校验（选择个数）
 					if (classname == "NumSizeValidator") {
 						NumErrorMsg = classObj["messages"];
+                        NumErrorMsg+="，选项过多";
 					}
 				}
 			});
