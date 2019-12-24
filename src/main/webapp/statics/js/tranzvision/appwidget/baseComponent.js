@@ -36,21 +36,21 @@ SurveyBuild.define("baseComponent",{
                 var defExp = data.defaultval.substring(1,data.defaultval.length - 1);
                 var field = defExp.split(":")[1];
                 if(UserInfoSet.hasOwnProperty(field)){
-                    data.children[0]["value"] = UserInfoSet[field];
+                    data.children[0]["value"] = SurveyBuild.htmlCharReplace(UserInfoSet[field]);
                 }
             }
             if(paramChild == "P2" && data.defaultval && data.defaultval.indexOf("%BIND") > 0 && "undefined" != typeof UserInfoSet){
                 var defExp = data.defaultval.substring(1,data.defaultval.length - 1);
                 var field = defExp.split(":")[1];
                 if(UserInfoSet.hasOwnProperty(field)){
-                    data.children[1]["value"] = UserInfoSet[field];
+                    data.children[1]["value"] = SurveyBuild.htmlCharReplace(UserInfoSet[field]);
                 }
             }
         }else if(data.defaultval && data.defaultval.indexOf("%BIND") > 0 && "undefined" != typeof UserInfoSet){
                 var defExp = data.defaultval.substring(1,data.defaultval.length - 1);
                 var field = defExp.split(":")[1];
                 if(UserInfoSet.hasOwnProperty(field)){
-                    data.value = UserInfoSet[field];
+                    data.value = SurveyBuild.htmlCharReplace(UserInfoSet[field]);
                 }
         }
     }
