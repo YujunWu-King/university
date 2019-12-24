@@ -102,6 +102,7 @@
 		var ComID = formParams['ComID'];
    	 	var PageID = formParams['PageID'];
    	 	var appClassMc = formParams['appClassMc'];
+   	 	var ViewMc = formParams['ViewMc'];
    	 	
         cmp = new ViewClass();
         //操作类型设置为更新
@@ -109,7 +110,7 @@
         cmp.on('afterrender',function(panel){
         	var form2 = panel.child('form').getForm();
         	//参数
-            var tzParams = '{"ComID":"TZ_GD_FILTER_COM","PageID":"TZ_FILTER_FLDC_STD","OperateType":"QF","comParams":{"ComID":"'+ComID+'","PageID":"'+PageID+'","appClassMc":"'+appClassMc+'","FieldMc":"","type":"1"}}';
+            var tzParams = '{"ComID":"TZ_GD_FILTER_COM","PageID":"TZ_FILTER_FLDC_STD","OperateType":"QF","comParams":{"ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'","appClassMc":"'+appClassMc+'","FieldMc":"","type":"1"}}';
             //加载数据
             Ext.tzLoad(tzParams,function(responseData){
                 //资源集合信息数据
@@ -120,25 +121,17 @@
                 var roleList = responseData.listData;
             });
             var queryID;
-            /*
-			if(grid.name == "searchFld"){
-				queryID = "1";
-			}
-			if(grid.name == "promptFld"){
-				queryID = "2";
-			}
-			*/
 
 			queryID = "1";
 			var grid1 = panel.down('grid[name=searchFld]');
-			var tzStoreParams1 = '{"queryID":"' + queryID + '","ComID":"'+ComID+'","PageID":"'+PageID+'","appClassMc":"'+appClassMc+'","FieldMc":"","type":"1"}';
+			var tzStoreParams1 = '{"queryID":"' + queryID + '","ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'","appClassMc":"'+appClassMc+'","FieldMc":"","type":"1"}';
             grid1.store.tzStoreParams = tzStoreParams1;
             grid1.store.load();
             
            
-           /* queryID = "2";
+            /*queryID = "2";
             var grid2 = panel.down('grid[name=promptFld]');
-						var tzStoreParams2 = '{"queryID":"' + queryID + '","ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'","FieldMc":"'+FieldMc+'"}';
+			var tzStoreParams2 = '{"queryID":"' + queryID + '","ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'","FieldMc":"'+FieldMc+'"}';
             grid2.store.tzStoreParams = tzStoreParams2;
             grid2.store.load();*/
         });
@@ -366,27 +359,28 @@
     	//var store = view.findParentByType("grid").store;
 	 		//var selRec = store.getAt(rowIndex);
 		 	//选中行
-		   var tabpanel = this.getView().child("tabpanel");
-		   var grid = tabpanel.down('grid[name=filterGrid]');
-		   var selList = grid.getSelectionModel().getSelection();
-		   //选中行长度
-		   var checkLen = selList.length;
-		   if(checkLen == 0){
-				Ext.Msg.alert("提示","请选择一条要修改的记录");   
-				return;
-		   }else if(checkLen >1){
-			   Ext.Msg.alert("提示","只能选择一条要修改的记录");   
-			   return;
-		   }
-		   selRec = selList[0];
+	   var tabpanel = this.getView().child("tabpanel");
+	   var grid = tabpanel.down('grid[name=filterGrid]');
+	   var selList = grid.getSelectionModel().getSelection();
+	   //选中行长度
+	   var checkLen = selList.length;
+	   if(checkLen == 0){
+			Ext.Msg.alert("提示","请选择一条要修改的记录");   
+			return;
+	   }else if(checkLen >1){
+		   Ext.Msg.alert("提示","只能选择一条要修改的记录");   
+		   return;
+	   }
+	   selRec = selList[0];
 	   
    	 	var ComID = selRec.get("ComID");
    	 	var PageID = selRec.get("PageID");
+   	 	var ViewMc = selRec.get("ViewMc");
    	 	var appClassMc = selRec.get("appClassMc");
    	 	var FieldMc = selRec.get("FieldMc");
    	 	
      	//显示编辑页面
-     	this.editFilterFldByID2(ComID,PageID,appClassMc,FieldMc);
+     	this.editFilterFldByID2(ComID,PageID,appClassMc,ViewMc,FieldMc);
     },
     editFld2: function(view, rowIndex){
     	var store = view.findParentByType("grid").store;
@@ -394,13 +388,14 @@
 	 	
    	 	var ComID = selRec.get("ComID");
    	 	var PageID = selRec.get("PageID");
+   	 	var ViewMc = selRec.get("ViewMc");
    	 	var appClassMc = selRec.get("appClassMc");
    	 	var FieldMc = selRec.get("FieldMc");
    	 	
      	//显示编辑页面
-     	this.editFilterFldByID2(ComID,PageID,appClassMc,FieldMc);
+     	this.editFilterFldByID2(ComID,PageID,appClassMc,ViewMc,FieldMc);
     },
-    editFilterFldByID2: function(ComID,PageID,appClassMc,FieldMc){
+    editFilterFldByID2: function(ComID,PageID,appClassMc,ViewMc,FieldMc){
         //是否有访问权限
         var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_GD_FILTER_COM"]["TZ_FILTER_FLDC_STD"];
         if( pageResSet == "" || pageResSet == undefined){
@@ -458,23 +453,38 @@
             //资源信息列表
             var grid = panel.child('form').child('tabpanel').getActiveTab();	
             //参数
-            var tzParams = '{"ComID":"TZ_GD_FILTER_COM","PageID":"TZ_FILTER_FLDC_STD","OperateType":"QF","comParams":{"ComID":"'+ComID+'","PageID":"'+PageID+'","appClassMc":"'+appClassMc+'","FieldMc":"'+FieldMc+'","type":"1"}}';
+            var tzParams = '{"ComID":"TZ_GD_FILTER_COM","PageID":"TZ_FILTER_FLDC_STD","OperateType":"QF","comParams":{"ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'","appClassMc":"'+appClassMc+'","FieldMc":"'+FieldMc+'","type":"1"}}';
             //加载数据
             Ext.tzLoad(tzParams,function(responseData){
                 //资源集合信息数据
                 var formData = responseData.formData;
                 form.setValues(formData);
                 
+                /*var strDeepQueryFlg=formData.deepQueryFlg;
+                form.findField("deepQueryFlg").hide();
+                if (strDeepQueryFlg=="Y"){
+                	  form.findField("deepQueryView").show();
+                	  form.findField("deepQueryFld").show();
+                }else{
+                	 form.findField("deepQueryView").hide();
+               	  	 form.findField("deepQueryFld").hide();
+                }*/
+                
                 //资源集合信息列表数据
                 var roleList = responseData.listData;
             });
-            var queryID;
 
 			queryID = "1";
 			var grid1 = panel.down('grid[name=searchFld]');
-			var tzStoreParams1 = '{"queryID":"' + queryID + '","ComID":"'+ComID+'","PageID":"'+PageID+'","appClassMc":"'+appClassMc+'","FieldMc":"'+FieldMc+'","type":"1"}';
+			var tzStoreParams1 = '{"queryID":"' + queryID + '","ComID":"'+ComID+'","PageID":"'+PageID+'","appClassMc":"'+appClassMc+'","ViewMc":"'+ViewMc+'","FieldMc":"'+FieldMc+'","type":"1"}';
             grid1.store.tzStoreParams = tzStoreParams1;
             grid1.store.load();
+            
+            queryID = "2";
+            var grid2 = panel.down('grid[name=promptFld]');
+			var tzStoreParams2 = '{"queryID":"' + queryID + '","ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'","FieldMc":"'+FieldMc+'"}';
+            grid2.store.tzStoreParams = tzStoreParams2;
+            grid2.store.load();
             
         });
 

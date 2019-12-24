@@ -71,15 +71,16 @@
                 minWidth: 100,
                 flex: 1
             },{
-                text: '视图名称',
+                text: '视图/程序类名称',
                 sortable: true,
 								dataIndex: 'ViewMc',
                 minWidth: 100,
 								flex:1
             },{
-                text: '程序类名称',
+                text: '程序类路径',
                 sortable: true,
 				dataIndex: 'appClassMc',
+				hidden:true,
                 minWidth: 100,
 				flex:1
             },{

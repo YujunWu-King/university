@@ -1471,6 +1471,7 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 			
 			// 根据评审状态 修改/插入   表 TZ_IMP_MSZG_TBL中的TZ_RESULT_CODE字段
 			// 首先根据报名表编号查询PsTzMSZGINFO对象是否已经存在
+			/*
 			PsTzMszgT p = pstzMszgTMapper.selectByPrimaryKey(strAppInsID);
 			String sql = "select TZ_BATCH_NAME from PS_TZ_CLS_BATCH_T A, PS_TZ_APP_CC_T B ,PS_TZ_FORM_WRK_T C\n" + 
 					"where A.TZ_BATCH_ID=B.TZ_APP_S_TEXT \n" + 
@@ -1508,7 +1509,7 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 					p.setTzMsBatch(null);
 				}
 				pstzMszgTMapper.updateByPrimaryKey(p);
-			}
+			}*/
 			
 			
 

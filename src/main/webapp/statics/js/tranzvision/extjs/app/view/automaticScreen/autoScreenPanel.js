@@ -16,7 +16,7 @@
 	controller: 'autoScreenController',
 	//multiColumnSort: true,
 	
-	title: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.autoScreen","自动初筛"),
+	title: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.autoScreenMs","面试打分"),
 	bodyStyle:'overflow-y:auto;overflow-x:hidden',
 	
 	listeners:{
@@ -38,21 +38,21 @@
 		this.batchName = config.batchName;
 		className = config.className;
 		
-		var tzParams ='{"ComID":"TZ_AUTO_SCREEN_COM","PageID":"TZ_AUTO_SCREEN_STD","OperateType":"queryScoreColumns","comParams":{"classId":"'+ config.classId +'"}}';
+		/*var tzParams ='{"ComID":"TZ_AUTO_SCREEN_COM","PageID":"TZ_AUTO_SCREEN_STD","OperateType":"queryScoreColumns","comParams":{"classId":"'+ config.classId +'"}}';
 		Ext.tzLoadAsync(tzParams,function(respData){
 			className = respData.className;
 			itemColumns = respData.columns;
-		});
+		});*/
 		var tzParamsMs ='{"ComID":"TZ_AUTO_SCREEN_COM","PageID":"TZ_AUTO_SCREEN_STD","OperateType":"queryScoreMsColumns","comParams":{"classId":"'+ config.classId +'"}}';
 		Ext.tzLoadAsync(tzParamsMs,function(respData){
 			className = respData.className;
 			itemMsColumns = respData.columns;
 		});
-		var tzParamsZj ='{"ComID":"TZ_AUTO_SCREEN_COM","PageID":"TZ_AUTO_SCREEN_STD","OperateType":"queryScoreZjColumns","comParams":{"classId":"'+ config.classId +'"}}';
+		/*var tzParamsZj ='{"ComID":"TZ_AUTO_SCREEN_COM","PageID":"TZ_AUTO_SCREEN_STD","OperateType":"queryScoreZjColumns","comParams":{"classId":"'+ config.classId +'"}}';
 		Ext.tzLoadAsync(tzParamsZj,function(respData){
 			className = respData.className;
 			itemZjColumns = respData.columns;
-		});
+		});*/
 		
 		this.className = className;
 		this.itemColumns = itemColumns;
@@ -93,7 +93,7 @@
 			menuDisabled: true,
 			sortable: false,
 			hideable:false,
-			width:90
+			width:120
 		}]
     	
     	//成绩项分值列
@@ -160,7 +160,7 @@
     		var strLen = descr.length;
     		if(strLen > 0){
     			colWidth = strLen*15 + 20;
-    			if(colWidth<90) colWidth = 90;
+    			if(colWidth<90) colWidth = 120;
     			if(colWidth>140) colWidth = 140;
     		}
     		
@@ -306,7 +306,7 @@
 			align: 'center',
 			items:[
 				{iconCls: 'preview',tooltip: '查看报名表', handler: 'showApplicationForm'},
-				{iconCls: 'edit',tooltip: '编辑', handler: 'editStuScreenDetails',
+				//{iconCls: 'edit',tooltip: '编辑', handler: 'editStuScreenDetails',
 					/*isDisabled:function(view ,rowIndex ,colIndex ,item,record ){
 						var scoreInsId = record.get('scoreInsId');
 						if(scoreInsId == "0"){
@@ -315,7 +315,7 @@
 							return false;
 						}
 					}*/
-				}
+				//}
 			]
 		});
     	
@@ -376,7 +376,7 @@
 	    				xtype:"toolbar",
 	    				items:[
 	    					{text:"查询",tooltip:"查询数据",iconCls: "query",handler:"searchAutoScreenStu"},"-",
-	    					{text:"运行自动初筛",tooltip:"运行自动初筛",iconCls:"set",handler:"runAutoScreenEngine"},"-",
+	    					/*{text:"运行自动初筛",tooltip:"运行自动初筛",iconCls:"set",handler:"runAutoScreenEngine"},"-",*/
 	    					{text:"计算面试分数",tooltip:"计算面试分数",iconCls:"set",handler:"runMSEngine"},"-",
 	    					{text:"计算总分",tooltip:"计算总分",iconCls:"set",handler:"runSumEngine"},"-",
 	    					{text:"批量发布面试结果",tooltip:"批量发布面试结果",iconCls:"set",handler:"runRleaseEngine"},"-",
@@ -398,7 +398,7 @@
 	    						}]
 	    					},
 	    					'->', */
-	    					{
+	    					/*{
 	    						xtype:'splitbutton',
 	    						text:'更多操作',
 	    						iconCls:  'list',
@@ -415,7 +415,7 @@
 	    						},{
 	    							text:'查看并下载导出结果',iconCls:"download", handler:'downloadExportFile'
 	    						}]
-	    					}
+	    					}*/
 	    				]
 	    			}],
 	    			

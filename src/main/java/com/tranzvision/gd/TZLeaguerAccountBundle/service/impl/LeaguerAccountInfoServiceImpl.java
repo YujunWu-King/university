@@ -9,6 +9,7 @@ import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzRegUserT;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -86,15 +87,21 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl {
 				
 				//性别;
 				String str_sex = "",str_name="",str_acctlook="";
-				//邮箱、手机,skype;
-				String str_email = "", str_phone= "", str_skype="";
+				//邮箱、手机;
+				String str_email = "", str_phone= "";
+				//邮箱绑定标识
+				String bindEmailFlg="";
+				//手机绑定标识
+				String bindPhoneFlg="";
 				//账号激活状态、创建日期时间;
 				String str_jihuozt = "" , str_zc_time = "";
 				//身份证
 				String str_ksNationId="";
 				//公司、职位、省份
 				String comment1="";
-				ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
+				//真实姓名
+				String realname="";
+				Map<String, Object> arraylist = new HashMap<>();
 				
 				
 				PsTzRegUserT psTzRegUserT = psTzRegUserTMapper.selectByPrimaryKey(str_oprid);
@@ -108,8 +115,7 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl {
 						String sexSQL = "select TZ_ZHZ_DMS from PS_TZ_GENDER_V where TZ_ZHZ_ID=?";
 						str_sex = jdbcTemplate.queryForObject(sexSQL, new Object[]{str_sex},"String");
 					}
-					
-					str_name= psTzRegUserT.getTzRealname();
+
 					//-----------------
 					str_msSqh= psTzRegUserT.getTzMssqh();
 					str_blackName= psTzRegUserT.getTzBlackName();
@@ -125,18 +131,24 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl {
 					str_ksNationId=psTzRegUserT.getNationalId();
 					//-----------------
 					comment1 = psTzRegUserT.getTzComment1();
-					
-					String phoneAndEmailSQL = "select TZ_ZY_EMAIL,TZ_ZY_SJ,TZ_SKYPE from PS_TZ_LXFSINFO_TBL where TZ_LXFS_LY='ZCYH' and TZ_LYDX_ID=?";
+
+					String phoneAndEmailSQL="SELECT TZ_REALNAME,TZ_EMAIL,TZ_MOBILE,TZ_YXBD_BZ,TZ_SJBD_BZ FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_RYLX='ZCYH' AND OPRID=?";
 					Map<String, Object> phoneAndEmailMap = jdbcTemplate.queryForMap(phoneAndEmailSQL,new Object[]{str_oprid});
+					//个人信息中的邮箱，手机，手机标识，邮箱标识
 					if(phoneAndEmailMap != null){
-						str_email = (String) phoneAndEmailMap.get("TZ_ZY_EMAIL");
+						str_name=phoneAndEmailMap.get("TZ_REALNAME")==null?"":String.valueOf(phoneAndEmailMap.get
+								("TZ_REALNAME"));
+						str_email = (String) phoneAndEmailMap.get("TZ_EMAIL");
 						str_email = (str_email != null) ? str_email : "";
 						
-						str_phone = (String) phoneAndEmailMap.get("TZ_ZY_SJ");
+						str_phone = (String) phoneAndEmailMap.get("TZ_MOBILE");
 						str_phone = (str_phone != null) ? str_phone : "";
-						
-						str_skype = (String) phoneAndEmailMap.get("TZ_SKYPE");
-						str_skype = (str_skype != null) ? str_skype : "";
+
+						bindEmailFlg=phoneAndEmailMap.get("TZ_YXBD_BZ")==null?"":String.valueOf(phoneAndEmailMap.get
+								("TZ_YXBD_BZ"));
+
+						bindPhoneFlg=phoneAndEmailMap.get("TZ_SJBD_BZ")==null?"":String.valueOf(phoneAndEmailMap.get
+								("TZ_SJBD_BZ"));
 					} 
 					
 					String tzsql1 = tzSQLObject.getSQLText("SQL.TZLeaguerAccountBundle.LeaguerAISI01");
@@ -212,39 +224,19 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl {
 						}
 					}
 					
-//					jsonMap = new HashMap<>();
-//					jsonMap.put("TZ_SKYPE", str_skype);
-//					jsonMap.put("desc", "Sky账号");
-//					arraylist.add(jsonMap);
-					jsonMap = new HashMap<>();
-					//20170225,yuds,更改为省市
-					jsonMap.put("TZ_LEN_CITY", str_lenProvince);
-					jsonMap.put("desc", "工作所在省市");
-					arraylist.add(jsonMap);
-					jsonMap = new HashMap<>();
-					jsonMap.put("TZ_COMPANY_NAME", str_comName);
-					jsonMap.put("desc", "工作单位");
-					arraylist.add(jsonMap);
-					jsonMap = new HashMap<>();
-					//20170225,yuds,行业类别下拉框
-					String str_comIndusDesc="";
-					String tzsql3 = tzSQLObject.getSQLText("SQL.TZLeaguerAccountBundle.LeaguerAISI03");
-//					String str_sqlIndus = "SELECT TZ_OPT_VALUE FROM PS_TZ_YHZC_XXZ_TBL WHERE TZ_REG_FIELD_ID='TZ_COMP_INDUSTRY' AND TZ_SITEI_ID = '' AND TZ_OPT_ID=?";
-					str_comIndusDesc = jdbcTemplate.queryForObject(tzsql3, new Object[]{str_comIndus},"String");
-					jsonMap.put("TZ_COMP_INDUSTRY", str_comIndusDesc);
-					jsonMap.put("desc", "行业类别");
-					arraylist.add(jsonMap);
-					jsonMap = new HashMap<>();
-					jsonMap.put("TZ_SCH_CNAME", str_schName);
-					jsonMap.put("desc", "本科院校");
-					arraylist.add(jsonMap);
+					realname= psTzRegUserT.getTzRealname();//真实姓名
+					arraylist.put("realname",realname);
+					arraylist.put("lenProvince", str_lenProvince);
+					arraylist.put("companyname", str_comName);
+					arraylist.put("copmindustry", str_comIndus);
+					arraylist.put("shcoolcname", str_schName);
 				}
 				
 				//考生导入信息;
 				//查询当前人员的报名表id;
 //				Long appIns = jdbcTemplate.queryForObject(" select TZ_APP_INS_ID from PS_TZ_FORM_WRK_T WHERE OPRID=? ORDER BY ROW_LASTMANT_DTTM LIMIT 0,1", new Object[]{str_oprid},"Long");
 //				Map<String, Object> ksdrMap = new HashMap<>();
-//				
+//
 //				if(appIns != null && appIns > 0){
 					//材料评审
 //					Map< String, Object> clmsMap = jdbcTemplate.queryForMap("SELECT TZ_RESULT,TZ_RESULT_CODE FROM TZ_IMP_CLPS_TBL WHERE TZ_APP_INS_ID=?",new Object[]{appIns});
@@ -252,7 +244,7 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl {
 //						ksdrMap.put("clpsJg", clmsMap.get("TZ_RESULT"));
 //						ksdrMap.put("sfmsZg", clmsMap.get("TZ_RESULT_CODE"));
 //					}
-					
+
 					//面试
 //					Map< String, Object> msMap = jdbcTemplate.queryForMap("select TZ_TIME,TZ_ADDRESS,TZ_RESULT,TZ_RESULT_CODE from TZ_IMP_MSPS_TBL WHERE TZ_APP_INS_ID=?",new Object[]{appIns});
 //					if(msMap != null){
@@ -261,7 +253,7 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl {
 //						ksdrMap.put("msJg", msMap.get("TZ_RESULT"));
 //						ksdrMap.put("msJgBz", msMap.get("TZ_RESULT_CODE"));
 //					}
-					
+
 					//联考报名
 //					Map< String, Object> lkMap = jdbcTemplate.queryForMap("select TZ_YEAR,TZ_SCORE,TZ_ENGLISH,TZ_COMPREHENSIVE,TZ_OVERLINE,TZ_POLITICS,TZ_ENG_LISTENING,TZ_POLLSN_OVERLINE,TZ_PRE_ADMISSION,TZ_STU_NUM,TZ_DEGREE_CHECK,TZ_STU_NUM_LAST4,TZ_POL_ENG_TIME,TZ_POL_ENG_ADDR,TZ_SCHOLARSHIP_STA,TZ_POLLSN_DESC from TZ_IMP_LKBM_TBL WHERE TZ_APP_INS_ID=?",new Object[]{appIns});
 //					if(lkMap != null){
@@ -282,7 +274,7 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl {
 //						ksdrMap.put("ssJxjSqZt", lkMap.get("TZ_SCHOLARSHIP_STA"));
 //						ksdrMap.put("zzTlKsBz", lkMap.get("TZ_POLLSN_DESC"));
 //					}
-					
+
 //					//预录取
 //					Map< String, Object> ylqMap = jdbcTemplate.queryForMap("select TZ_SCHOLARSHIP_RST,TZ_TUITION_REFERENCE,TZ_STU_ID,TZ_PYXY_ACCEPT,TZ_GZZM_ACCEPT,TZ_CLASS_RST,TZ_EMAIL,TZ_INITIAL_PSWD from TZ_IMP_YLQ_TBL WHERE TZ_APP_INS_ID=?",new Object[]{appIns});
 //					if(ylqMap != null){
@@ -295,7 +287,7 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl {
 //						ksdrMap.put("jgYx", ylqMap.get("TZ_EMAIL"));
 //						ksdrMap.put("yxCsMm", ylqMap.get("TZ_INITIAL_PSWD"));
 //					}
-					
+
 //				}
 //				//tmt 修改 2017-4-7录取流程信息
 //				Map<String, Object> lqlcInfoMap = new HashMap<>();
@@ -307,36 +299,36 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl {
 //					lqlcInfoMap.put("tjlqzg", getlqlcInfoMap.get("TZ_TJLQZG"));
 //					lqlcInfoMap.put("tjlqzgxm", getlqlcInfoMap.get("TZ_TJLQZG_XM"));
 //					lqlcInfoMap.put("msjgpc", getlqlcInfoMap.get("TZ_MSJG_PC"));
-//					
+//
 //					lqlcInfoMap.put("lkbm", getlqlcInfoMap.get("TZ_LKBM"));
 //					lqlcInfoMap.put("lqlzqk", getlqlcInfoMap.get("TZ_LKQ_TZQK"));
 //					lqlcInfoMap.put("tzyyNotes", getlqlcInfoMap.get("TZ_TZYY_NOTES"));
 //					lqlcInfoMap.put("lkqtjluzg", getlqlcInfoMap.get("TZ_LKQ_TJLQZG"));
 //					lqlcInfoMap.put("lkqtjluzgxm", getlqlcInfoMap.get("TZ_LKQ_TJLQZG_XM"));
-//					
+//
 //					lqlcInfoMap.put("lksk", getlqlcInfoMap.get("TZ_LKSK"));
 //					lqlcInfoMap.put("yytlgx", getlqlcInfoMap.get("TZ_LKYYTLGX"));
 //					lqlcInfoMap.put("zzgx", getlqlcInfoMap.get("TZ_LKZZGX"));
 //					lqlcInfoMap.put("lkgx", getlqlcInfoMap.get("TZ_LKGX"));
 //					lqlcInfoMap.put("ylqzzqk", getlqlcInfoMap.get("TZ_YLQ_TZQK"));
-//					
+//
 //					lqlcInfoMap.put("tzyyNotes2", getlqlcInfoMap.get("TZ_TZYY_NOTES2"));
 //					lqlcInfoMap.put("ylqzg", getlqlcInfoMap.get("TZ_YLQ_ZG"));
 //					lqlcInfoMap.put("ylqzgxm", getlqlcInfoMap.get("TZ_YLQ_ZG_XM"));
 //					lqlcInfoMap.put("zslqzzqk", getlqlcInfoMap.get("TZ_ZSLQ_TZQK"));
 //					lqlcInfoMap.put("tzyyNotes3", getlqlcInfoMap.get("TZ_TZYY_NOTES3"));
-//					
+//
 //					lqlcInfoMap.put("zslqzg", getlqlcInfoMap.get("TZ_ZSLQ_ZG"));
 //					lqlcInfoMap.put("zslqzgxm", getlqlcInfoMap.get("TZ_ZSLQ_ZG_XM"));
 //					lqlcInfoMap.put("rxqzzqk", getlqlcInfoMap.get("TZ_RXQ_TZQK"));
 //					lqlcInfoMap.put("tzyyNotes4", getlqlcInfoMap.get("TZ_TZYY_NOTES4"));
 //					lqlcInfoMap.put("rxqk", getlqlcInfoMap.get("TZ_RX_QK"));
 //					lqlcInfoMap.put("rxxm", getlqlcInfoMap.get("TZ_RX_XM"));
-//					
-//					
-//					
-//					
-//					
+//
+//
+//
+//
+//
 //				}
 				//查询考生个人信息
 				//出生日期、联系电话、证件类型、证件号码、工作所在省市、考生编号、准考证号、是否有海外学历、申请的专业硕士和专业、紧急联系人、紧急联系人性别、紧急联系人手机号码
@@ -356,14 +348,6 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl {
 				    perInfoMap.put("isHaiwXuel", grxxMap.get("TZ_COMMENT4"));
 				    
 				}
-				//没有专业及相关表，yuds注释
-				/*
-				String appMajor = jdbcTemplate.queryForObject("SELECT TZ_APP_MAJOR_NAME FROM PS_TZ_APP_KS_INFO_EXT_T WHERE TZ_OPRID=?", new Object[]{str_oprid}, "String");
-				if(appMajor==null){
-				    appMajor = "";
-				}
-				perInfoMap.put("appMajor", appMajor);
-				*/
 				Map<String, Object> jsonMap2 = new HashMap<String, Object>();
 				jsonMap2.put("OPRID", str_oprid);
 				jsonMap2.put("msSqh", str_msSqh);
@@ -371,14 +355,14 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl {
 				jsonMap2.put("userSex",str_sex );
 				jsonMap2.put("userEmail",str_email );
 				jsonMap2.put("userPhone",str_phone);
+				jsonMap2.put("bindEmailFlg",bindEmailFlg);
+				jsonMap2.put("bindPhoneFlg",bindPhoneFlg);
 				jsonMap2.put("jihuoZt",str_jihuozt );
 				jsonMap2.put("acctlock",str_acctlook );
 				jsonMap2.put("zcTime",str_zc_time);
 				jsonMap2.put("titleImageUrl",titleImageUrl );
 				jsonMap2.put("column",arraylist );
-				//jsonMap2.put("ksdrInfo",ksdrMap);
 				jsonMap2.put("perInfo", perInfoMap);
-				//jsonMap2.put("lqlcInfo", lqlcInfoMap);
 				if(!"Y".equals(str_blackName)){
 				    str_blackName = "N";
 				}
@@ -442,7 +426,28 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl {
 				    //省份
 				    String lenProid =(String) map.get("lenProid"); 
 				    //姓名
-				    String userName =(String) map.get("userName"); 
+				    String userName =(String) map.get("userName");
+				    //性别
+					String userSex=String.valueOf(map.get("userSex"));
+					//手机号
+					String userPhone=String.valueOf(map.get("userPhone"));
+					//邮箱
+					String userEmail=String.valueOf(map.get("userEmail"));
+					//邮箱绑定标识
+					String bindEmailFlg=String.valueOf(map.get("bindEmailFlg"));
+					//手机绑定标识
+					String bindPhoneFlg=String.valueOf(map.get("bindPhoneFlg"));
+					//个人信息
+					//真实姓名
+					String realname=String.valueOf(map.get("realname"));
+					//本科院校
+					String shcoolcname=String.valueOf(map.get("shcoolcname"));
+					//常驻州省
+					String lenProvince=String.valueOf(map.get("lenProvince"));
+					//工作单位
+					String companyname=String.valueOf(map.get("companyname"));
+					//工作类别
+					String copmindustry=String.valueOf(map.get("copmindustry"));
 				    Psoprdefn psoprdefn = new Psoprdefn();
 				    psoprdefn.setOprid(strOprId);
 				    if("1".equals(strAcctLock)){
@@ -450,41 +455,20 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl {
 				    }else{
 				    	psoprdefn.setAcctlock(Short.valueOf("0"));
 				    }
-				    //tmt 修改
-				    //录取流程
-				    String mspsmc=(String) map.get("mspsmc");
-				    String mspspc=(String) map.get("mspspc");
-				    String tjlqzg=(String) map.get("tjlqzg");
-				    String tjlqzgxm=(String) map.get("tjlqzgxm");
-				    String msjgpc=(String) map.get("msjgpc");
-				    
-				    String lkbm=(String) map.get("lkbm");
-				    String lqlzqk=(String) map.get("lqlzqk");
-				    String tzyyNotes=(String) map.get("tzyyNotes");
-				    String lkqtjluzg=(String) map.get("lkqtjluzg");
-				    String lkqtjluzgxm=(String) map.get("lkqtjluzgxm");
-				    
-				    String lksk=(String) map.get("lksk");
-				    String yytlgx=(String) map.get("yytlgx");
-				    String zzgx=(String) map.get("zzgx");
-				    String lkgx=(String) map.get("lkgx");
-				    String ylqzzqk=(String) map.get("ylqzzqk");
-				    
-				    String tzyyNotes2=(String) map.get("tzyyNotes2");
-				    String ylqzg=(String) map.get("ylqzg");
-				    String ylqzgxm=(String) map.get("ylqzgxm");
-				    String zslqzzqk=(String) map.get("zslqzzqk");
-				    String tzyyNotes3=(String) map.get("tzyyNotes3");
-				    
-				    String zslqzg=(String) map.get("zslqzg");
-				    String zslqzgxm=(String) map.get("zslqzgxm");
-				    String rxqzzqk=(String) map.get("rxqzzqk");
-				    String tzyyNotes4=(String) map.get("tzyyNotes4");
-				    String rxqk=(String) map.get("rxqk");
-				    String rxxm=(String) map.get("rxxm");
-				    //添加用户信息表中的身份证号
-				    String updatelSFSSql = "UPDATE PS_TZ_REG_USER_T SET TZ_BLACK_NAME=?,TZ_ALLOW_APPLY=?,TZ_BEIZHU=?,NATIONAL_ID=?,TZ_COMPANY_NAME=?,TZ_COMMENT1=?,TZ_LEN_PROID=? WHERE OPRID=?";
-					jdbcTemplate.update(updatelSFSSql, new Object[]{strBlackName,strAllowApply,strBeiZhu,strnationId,companyName, comment1,lenProid,strOprId});
+				    //更新TZ_LXFSINFO_TBL中的手机信息和邮箱
+                    String phoneAndemailSql="UPDATE PS_TZ_LXFSINFO_TBL SET TZ_ZY_SJ=? ,TZ_ZY_EMAIL=? WHERE TZ_LXFS_LY='ZCYH' AND TZ_LYDX_ID=?";
+				    jdbcTemplate.update(phoneAndemailSql, new Object[]{userPhone, userEmail, strOprId});
+                    if("F".equals(userSex)||("M").equals(userSex)){
+						//添加用户信息表中的身份证号
+						String updatelSFSSql = "UPDATE PS_TZ_REG_USER_T SET TZ_BLACK_NAME=?,TZ_ALLOW_APPLY=?,TZ_BEIZHU=?,NATIONAL_ID=?,TZ_COMPANY_NAME=?,TZ_COMMENT1=?,TZ_LEN_PROID=?,TZ_GENDER=?,TZ_REALNAME=?,TZ_SCH_CNAME=?,TZ_LEN_PROID=?," +
+								"TZ_COMPANY_NAME=?,TZ_COMP_INDUSTRY=? WHERE OPRID=?";
+						jdbcTemplate.update(updatelSFSSql, new Object[]{strBlackName,strAllowApply,strBeiZhu,strnationId,companyName, comment1,lenProid,userSex,realname,shcoolcname,lenProvince,companyname,copmindustry,strOprId});
+					}else{
+						//添加用户信息表中的身份证号
+						String updatelSFSSql = "UPDATE PS_TZ_REG_USER_T SET TZ_BLACK_NAME=?,TZ_ALLOW_APPLY=?,TZ_BEIZHU=?,NATIONAL_ID=?,TZ_COMPANY_NAME=?,TZ_COMMENT1=?,TZ_LEN_PROID=?,TZ_REALNAME=?,TZ_SCH_CNAME=?,TZ_LEN_PROID=?," +
+								"TZ_COMPANY_NAME=?,TZ_COMP_INDUSTRY=? WHERE OPRID=?";
+						jdbcTemplate.update(updatelSFSSql, new Object[]{strBlackName,strAllowApply,strBeiZhu,strnationId,companyName, comment1,lenProid,realname,shcoolcname,lenProvince,companyname,copmindustry,strOprId});
+					}
 
 				    //同步修改报名表身份证 
 				    
@@ -506,82 +490,35 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl {
 						jdbcTemplate.update(sql1, new Object[] { oldstrnationId, strnationId, strOprId, strOprId });
 
 					}
-					
-					
-					
-					
-					//tmt 修改 录取流程信息 
-					/*PsTzKshLqlcTbl psTzKshLqlcTbl=new PsTzKshLqlcTbl();
-					psTzKshLqlcTbl.setOprid(strOprId);
-					psTzKshLqlcTbl.setTzMspsMc(mspsmc);
-					psTzKshLqlcTbl.setTzMspsPc(mspspc);
-					psTzKshLqlcTbl.setTzTjlqzg(tjlqzg);
-					psTzKshLqlcTbl.setTzTjlqzgXm(tjlqzgxm);
-					psTzKshLqlcTbl.setTzMsjgPc(msjgpc);	
-					
-					psTzKshLqlcTbl.setTzLkbm(lkbm);
-					psTzKshLqlcTbl.setTzLkqTzqk(lqlzqk);
-					psTzKshLqlcTbl.setTzTzyyNotes(tzyyNotes);
-					psTzKshLqlcTbl.setTzLkqTjlqzg(lkqtjluzg);
-					psTzKshLqlcTbl.setTzLkqTjlqzgXm(lkqtjluzgxm);
-					
-					
-					psTzKshLqlcTbl.setTzLksk(lksk);
-					psTzKshLqlcTbl.setTzLkyytlgx(yytlgx);
-					psTzKshLqlcTbl.setTzLkzzgx(zzgx);
-					psTzKshLqlcTbl.setTzLkgx(lkgx);
-					psTzKshLqlcTbl.setTzYlqTzqk(ylqzzqk);
-					
-					psTzKshLqlcTbl.setTzTzyyNotes2(tzyyNotes2);
-					psTzKshLqlcTbl.setTzYlqZg(ylqzg);
-					psTzKshLqlcTbl.setTzYlqZgXm(ylqzgxm);
-					psTzKshLqlcTbl.setTzZslqTzqk(zslqzzqk);
-					psTzKshLqlcTbl.setTzTzyyNotes3(tzyyNotes3);
-					
-					psTzKshLqlcTbl.setTzZslqZg(zslqzg);
-					psTzKshLqlcTbl.setTzZslqZgXm(zslqzgxm);
-					psTzKshLqlcTbl.setTzRxqTzqk(rxqzzqk);
-					psTzKshLqlcTbl.setTzTzyyNotes4(tzyyNotes4);
-					psTzKshLqlcTbl.setTzRxQk(rxqk);
-					psTzKshLqlcTbl.setTzRxXm(rxxm);
-					PsTzKshLqlcTbl info=psTzKshLqlcTblMapper.selectByPrimaryKey(strOprId);
-					if(info==null){
-						psTzKshLqlcTblMapper.insert(psTzKshLqlcTbl);
-					}else{
-						psTzKshLqlcTblMapper.updateByPrimaryKeySelective(psTzKshLqlcTbl);
-					}*/
-					//jdbcTemplate.update(updatelqlcSql, new Object[]{strOprId});
-					
-					String updateJhuoZt = "UPDATE PS_TZ_AQ_YHXX_TBL SET TZ_JIHUO_ZT=?,TZ_REALNAME=? WHERE OPRID=?";
-					jdbcTemplate.update(updateJhuoZt, new Object[]{strJihuoZt,userName,strOprId});
-					String usernamesql = "UPDATE PS_TZ_REG_USER_T SET TZ_REALNAME=? WHERE OPRID=?";
-					jdbcTemplate.update(usernamesql, new Object[]{userName,strOprId});
+					/**
+					 * 张超 时间：2019年12月11日12:23:45 备注：在原有性别，邮箱，邮箱绑定标识，手机，手机绑定标识未保存到后台，修改sql完成保存
+					 */
+					String updateJhuoZt = "UPDATE PS_TZ_AQ_YHXX_TBL SET TZ_JIHUO_ZT=?,TZ_REALNAME=?,TZ_YXBD_BZ=?," +
+							"TZ_SJBD_BZ=?,TZ_EMAIL=?,TZ_MOBILE=? WHERE OPRID=?";
+					jdbcTemplate.update(updateJhuoZt, new Object[]{strJihuoZt,userName,bindEmailFlg,bindPhoneFlg,
+							userEmail,userPhone,strOprId});
 				    int i = psoprdefnMapper.updateByPrimaryKeySelective(psoprdefn);
 				    
 				    //保存报名表提交状态
 				    ArrayList<String> appStatusUtil=new ArrayList<String>();
 				    appStatusUtil=(ArrayList<String>) map.get("updateStatus");
 				    if(appStatusUtil!=null&&appStatusUtil.size()>0){
-					for (Object obj : appStatusUtil) {
-					    Map<String, Object> mapFormData = (Map<String, Object>) obj;
-					    String strAppInsId = String.valueOf(mapFormData.get("appInsId"));					    
-					    String strStatus = String.valueOf(mapFormData.get("appSubStatus"));
-					    String StrUpdateSql = "UPDATE PS_TZ_APP_INS_T SET TZ_APP_FORM_STA='" + strStatus + "' WHERE TZ_APP_INS_ID='" + strAppInsId + "'";
-					    jdbcTemplate.update(StrUpdateSql, new Object[]{});
-					    
-
-					}
+						for (Object obj : appStatusUtil) {
+							Map<String, Object> mapFormData = (Map<String, Object>) obj;
+							String strAppInsId = String.valueOf(mapFormData.get("appInsId"));
+							String strStatus = String.valueOf(mapFormData.get("appSubStatus"));
+							String StrUpdateSql = "UPDATE PS_TZ_APP_INS_T SET TZ_APP_FORM_STA='" + strStatus + "' WHERE TZ_APP_INS_ID='" + strAppInsId + "'";
+							jdbcTemplate.update(StrUpdateSql, new Object[]{});
+						}
 				    }
-				    
+
 				    if (i > 0) {
-					returnJsonMap.replace("OPRID", strOprId);
+						returnJsonMap.replace("OPRID", strOprId);
 				    } else {
-				    	
-					errMsg[0] = "1";
-					errMsg[1] = "信息更新保存失败";
+						errMsg[0] = "1";
+						errMsg[1] = "信息更新保存失败";
 				    }
 				}else{
-					
 					errMsg[0] = "1";
 					errMsg[1] = "参数错误";
 				}

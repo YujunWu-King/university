@@ -24,7 +24,7 @@ import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
- * 
+ *
  * @author xzx
  * 功能说明：面试评委账号管理列表页面;
  * 原PS类：TZ_GD_JUDEG_PKG:TZ_JUGINFO_CLS
@@ -45,7 +45,7 @@ public class JudgesAccClServiceImpl extends FrameworkImpl {
 	private HttpServletRequest request;
 	@Autowired
 	private PsoprdefnMapper psoprdefnMapper;
-	
+
 	/* 查询面试评委账号列表 */
 	@Override
 	@SuppressWarnings("unchecked")
@@ -107,14 +107,14 @@ public class JudgesAccClServiceImpl extends FrameworkImpl {
 					String accountNo = (String) infoData.get("accountNo");
 					// 所属机构编号;
 					String orgID = (String) infoData.get("orgId");
-					
+
 					String sql = "select COUNT(1) from PS_TZ_AQ_YHXX_TBL WHERE TZ_DLZH_ID=? AND TZ_JG_ID=?";
 					int count = jdbcTemplate.queryForObject(sql, new Object[] { accountNo, orgID }, "Integer");
 					if (count > 0) {
 						errMsg[0] = "1";
 						errMsg[1] = "当前机构下登陆账号为：" + accountNo + "的信息已经存在。";
 						return strRet;
-					} 
+					}
 					// 密码;
 					String password = (String) infoData.get("password");
 					password = DESUtil.encrypt(password, "TZGD_Tranzvision");
@@ -136,15 +136,15 @@ public class JudgesAccClServiceImpl extends FrameworkImpl {
 					if (infoData.containsKey("clockFlag")) {
 						clockFlag = (String) infoData.get("clockFlag");
 					}
-					
+
 					oprID = "TZ_" + getSeqNum.getSeqNum("PSOPRDEFN", "OPRID");
 					PsTzAqYhxxTbl psTzAqYhxxTbl = new PsTzAqYhxxTbl();
 					psTzAqYhxxTbl.setTzDlzhId(accountNo);
 					psTzAqYhxxTbl.setTzJgId(orgID);
 					psTzAqYhxxTbl.setOprid(oprID);
 					psTzAqYhxxTbl.setTzRealname(judgeName);
-//					psTzAqYhxxTbl.setTzEmail(judgeEmail);
-//					psTzAqYhxxTbl.setTzMobile(judgePhoneNumber);
+					psTzAqYhxxTbl.setTzEmail(judgeEmail);
+					psTzAqYhxxTbl.setTzMobile(judgePhoneNumber);
 					psTzAqYhxxTbl.setTzRylx(tzRylx);;
 					psTzAqYhxxTbl.setTzJihuoZt(tzJihuoZt);
 					psTzAqYhxxTbl.setTzZhceDt(new Date());
@@ -154,7 +154,7 @@ public class JudgesAccClServiceImpl extends FrameworkImpl {
 					psTzAqYhxxTbl.setRowLastmantDttm(new Date());
 					psTzAqYhxxTbl.setRowLastmantOprid(updateOperid);
 					psTzAqYhxxTblMapper.insert(psTzAqYhxxTbl);
-					
+
 					short clockFlagNum;
 					if ("Y".equals(clockFlag) || "on".equals(clockFlag) || "1".equals(clockFlag)) {
 						clockFlagNum = 1;
@@ -173,7 +173,7 @@ public class JudgesAccClServiceImpl extends FrameworkImpl {
 					psoprdefn.setLastupddttm(new Date());
 					psoprdefn.setLastupdoprid(updateOperid);
 					psoprdefnMapper.insert(psoprdefn);
-					
+
 					// 联系方式;
 					if ((judgePhoneNumber != null && !"".equals(judgePhoneNumber)) || (judgeEmail != null && !"".equals(judgeEmail))) {
 						String lsfsSQL = "INSERT INTO PS_TZ_LXFSINFO_TBL(TZ_LXFS_LY,TZ_LYDX_ID,TZ_ZY_SJ,TZ_ZY_EMAIL) VALUES(?,?,?,?)";
@@ -189,12 +189,12 @@ public class JudgesAccClServiceImpl extends FrameworkImpl {
 //						Map<String, Object> map = jdbcTemplate.queryForMap(sqlType, new Object[] { userType });
 						if (roleName != null) {
 //							roleName = (String) map.get("ROLENAME");
-						
+
 						String roleSQL = "INSERT INTO PSROLEUSER(ROLEUSER,ROLENAME,DYNAMIC_SW) VALUES(?,?,?)";
 						jdbcTemplate.update(roleSQL, new Object[]{oprID,roleName,"N"});
 						}
 					}
-			    	
+
 				}else{
 					errMsg[0] = "1";
 					errMsg[1] = "参数错误";
@@ -206,7 +206,7 @@ public class JudgesAccClServiceImpl extends FrameworkImpl {
 		}
 		return strRet;
 	}
-	
+
 	// 查询评委信息表单
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {
@@ -215,7 +215,7 @@ public class JudgesAccClServiceImpl extends FrameworkImpl {
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
-		
+
 			if (jacksonUtil.containsKey("accountNo") && jacksonUtil.containsKey("orgId")) {
 				String accountNo = jacksonUtil.getString("accountNo");
 				String userOrg = jacksonUtil.getString("orgId");
@@ -237,7 +237,7 @@ public class JudgesAccClServiceImpl extends FrameworkImpl {
 					psTzAqYhxxTblKey.setTzDlzhId(accountNo);
 					psTzAqYhxxTblKey.setTzJgId(userOrg);
 					PsTzAqYhxxTbl psTzAqYhxxTbl = psTzAqYhxxTblMapper.selectByPrimaryKey(psTzAqYhxxTblKey);
-					
+
 					if (psTzAqYhxxTbl != null) {
 						oprID = psTzAqYhxxTbl.getOprid();
 						name = psTzAqYhxxTbl.getTzRealname();
@@ -255,7 +255,7 @@ public class JudgesAccClServiceImpl extends FrameworkImpl {
 					// 角色名称
 					String sqlRole = "SELECT A.ROLENAME,DESCR FROM PSROLEUSER A, PSROLEDEFN_VW B WHERE A.ROLENAME=B.ROLENAME AND A.ROLEUSER=? ";
 					Map<String, Object> mapRole = jdbcTemplate.queryForMap(sqlRole, new Object[] { oprID });
-					
+
 
 					if (map1 != null) {
 						userType = (String) map1.get("TZ_JUGTYP_ID");
@@ -268,11 +268,11 @@ public class JudgesAccClServiceImpl extends FrameworkImpl {
 						roleName = (String) mapRole.get("ROLENAME");
 						roleNameDesc = (String) mapRole.get("DESCR");
 					}
-					
+
 					Psoprdefn psoprdefn = new Psoprdefn();
 					psoprdefn = psoprdefnMapper.selectByPrimaryKey(oprID);
 					short localNum = 0;
-				
+
 					if (psoprdefn != null) {
 						password = psoprdefn.getOperpswd();
 						if (!"".equals(password)) {
@@ -298,21 +298,21 @@ public class JudgesAccClServiceImpl extends FrameworkImpl {
 					rylx = "NBYH";
 					originOrgId = "";
 				}
-				
+
 				returnJsonMap.put("accountNo", accountNo);
 				returnJsonMap.put("orgId", userOrg);
 				returnJsonMap.put("oprid", oprID);
-				
+
 				returnJsonMap.put("judgeName", name);
 				returnJsonMap.put("judgeEmail", email);
 				returnJsonMap.put("judgePhoneNumber", mobile);
-				
+
 				returnJsonMap.put("jhState", jhState);
 //				returnJsonMap.put("jhMethod", jhMethod);
 				returnJsonMap.put("password", password);
 				returnJsonMap.put("rePassword", password);
 //				returnJsonMap.put("perType", perType);
-				
+
 				returnJsonMap.put("originOrgId", originOrgId);
 				returnJsonMap.put("rylx", rylx);
 				returnJsonMap.put("clockFlag", acctLock);
@@ -337,14 +337,14 @@ public class JudgesAccClServiceImpl extends FrameworkImpl {
 	public String tzDelete(String[] actData, String[] errMsg) {
 		// 返回值;
 		String strRet = "{}";
- 
+
 		// 若参数为空，直接返回;
 		if (actData == null || actData.length == 0) {
 			return strRet;
 		}
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
-			
+
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
 				String oprID = "";
@@ -356,7 +356,7 @@ public class JudgesAccClServiceImpl extends FrameworkImpl {
 				String accountNo = jacksonUtil.getString("accountNo");
 				// 机构编号;
 				String orgId = jacksonUtil.getString("jgID");
-				
+
 			    if(accountNo != null && !"".equals(accountNo)&& orgId != null && !"".endsWith(orgId)){
 			    	/*获取用户ID*/
 					PsTzAqYhxxTblKey psTzAqYhxxTblKey = new PsTzAqYhxxTblKey();
@@ -380,10 +380,10 @@ public class JudgesAccClServiceImpl extends FrameworkImpl {
 				    	//删除用户角色;
 				    	String deleteROLESQL = "DELETE FROM PSROLEUSER WHERE ROLEUSER=?";
 				    	jdbcTemplate.update(deleteROLESQL, new Object[]{oprID});
-				    	
+
 					}
 			    }
-					
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -435,11 +435,11 @@ public class JudgesAccClServiceImpl extends FrameworkImpl {
 //					String tzJihuoZt = "Y";
 					// 锁定用户;
 					String clockFlag = "";
-					
+
 					String tzRylxSql = "SELECT TZ_RYLX from PS_TZ_AQ_YHXX_TBL where TZ_JG_ID=? and TZ_DLZH_ID=?";
 					String tzRylx = jdbcTemplate.queryForObject(tzRylxSql,
 								new Object[] { orgID, accountNo }, "String");
-					
+
 					if (infoData.containsKey("clockFlag")) {
 						clockFlag = (String) infoData.get("clockFlag");
 					}
@@ -447,9 +447,9 @@ public class JudgesAccClServiceImpl extends FrameworkImpl {
 					oprID = jdbcTemplate.queryForObject(originOpridSql,
 								new Object[] { orgID, accountNo }, "String");
 					// 2017-6-21 xzx add PS_TZ_AQ_YHXX_TBL表中是绑定的手机和邮箱不用
-					String updateOprdSql = "update PS_TZ_AQ_YHXX_TBL set TZ_DLZH_ID=?, TZ_REALNAME = ?,TZ_RYLX = ?,ROW_LASTMANT_DTTM = curdate(),ROW_LASTMANT_OPRID = ? where OPRID=?";
+					String updateOprdSql = "update PS_TZ_AQ_YHXX_TBL set TZ_DLZH_ID=?, TZ_REALNAME = ?,TZ_RYLX = ?,ROW_LASTMANT_DTTM = curdate(),ROW_LASTMANT_OPRID = ?,TZ_MOBILE=?,TZ_EMAIL=? where OPRID=?";
 					String updateOprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
-					jdbcTemplate.update(updateOprdSql, new Object[]{accountNo,judgeName, tzRylx,updateOprid, oprID});
+					jdbcTemplate.update(updateOprdSql, new Object[]{accountNo,judgeName, tzRylx,updateOprid, judgePhoneNumber,judgeEmail,oprID});
 
 					/*short userTypeNum;
 					if ("Y".equals(userType) || "on".equals(userType)) {
@@ -463,7 +463,7 @@ public class JudgesAccClServiceImpl extends FrameworkImpl {
 					} else {
 						clockFlagNum = 0;
 					}
-					
+
 					Psoprdefn psoprdefn = new Psoprdefn();
 					psoprdefn.setOprid(oprID);
 					psoprdefn.setOperpswd(password);
@@ -471,18 +471,18 @@ public class JudgesAccClServiceImpl extends FrameworkImpl {
 					psoprdefn.setLastupddttm(new Date());
 					psoprdefn.setLastupdoprid(updateOprid);
 					psoprdefnMapper.updateByPrimaryKeySelective(psoprdefn);
-					
+
 					// 联系方式;
 					int isExistNum = 0;
 					String isExistLXFS = "SELECT COUNT(1) FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY=? and TZ_LYDX_ID=?";
 					isExistNum = jdbcTemplate.queryForObject(isExistLXFS, new Object[] { tzRylx, oprID },
 								"Integer");
-					
+
 					if (isExistNum <= 0) {
 						if ((judgePhoneNumber != null && !"".equals(judgePhoneNumber)) || (judgeEmail != null && !"".equals(judgeEmail))) {
 							String lsfsSQL = "INSERT INTO PS_TZ_LXFSINFO_TBL(TZ_LXFS_LY,TZ_LYDX_ID,TZ_ZY_SJ,TZ_ZY_EMAIL) VALUES(?,?,?,?)";
 							jdbcTemplate.update(lsfsSQL, new Object[]{tzRylx, oprID, judgePhoneNumber, judgeEmail});
-							
+
 						}
 					} else {
 						String updatelSFSSql = "UPDATE PS_TZ_LXFSINFO_TBL SET TZ_ZY_SJ=?,TZ_ZY_EMAIL=? WHERE TZ_LXFS_LY=? AND TZ_LYDX_ID=?";
@@ -494,7 +494,7 @@ public class JudgesAccClServiceImpl extends FrameworkImpl {
 					String isExistRole = "SELECT COUNT(1) FROM PSROLEUSER WHERE ROLEUSER=? ";
 					roleNum = jdbcTemplate.queryForObject(isExistRole, new Object[] { oprID },
 								"Integer");
-					
+
 					if (roleNum <= 0) {
 						if ((judgePhoneNumber != null && !"".equals(judgePhoneNumber)) || (judgeEmail != null && !"".equals(judgeEmail))) {
 							String roleSQL = "INSERT INTO PSROLEUSER(ROLEUSER,ROLENAME,DYNAMIC_SW) VALUES(?,?,?)";

@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -134,6 +136,12 @@ public class QuestionnaireEditorEngineImpl {
 		String tplHtml = "";
 		componentData = componentData.replace("\\", "\\\\");
 		componentData = componentData.replace("$", "\\$");
+		Pattern CRLF = Pattern.compile("(\r\n|\r|\n|\n\r)");
+		Matcher mc = CRLF.matcher(componentData);
+		if (mc.find()) {
+			componentData = mc.replaceAll("\\\\n");
+		}
+		componentData = componentData.replace(" ", "");
 		try {
 			tplHtml = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_TEMPLATE_HTML", strTname,
 					survyID, componentData, tzGeneralURL, msgSet, "SRVY", request.getContextPath(), contextUrl);

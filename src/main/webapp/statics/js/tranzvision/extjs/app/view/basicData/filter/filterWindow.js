@@ -25,7 +25,7 @@
 	
 		fieldDefaults: {
 			msgTarget: 'side',
-			labelWidth: 80,
+			labelWidth: 100,
 			labelStyle: 'font-weight:bold'
 		},
 		items: [
@@ -57,13 +57,13 @@
             },
             {
 			xtype: 'textfield',
-			fieldLabel: '视图名称',
+			fieldLabel: '视图/程序类名称',
 			name: 'ViewMc',
 			maxLength: 18,
 			allowBlank: false
 		},{
 			xtype: 'textfield',
-			fieldLabel: '程序类名称',
+			fieldLabel: '程序类路径',
 			name: 'appClassMc',
 			maxLength: 18,
 			allowBlank: true,
@@ -79,8 +79,8 @@
 	        queryMode: 'remote',
 	    	valueField: 'TValue',
     		displayField: 'TSDesc',
-    		store: new KitchenSink.view.common.store.appTransStore("TZ_SEARCH_TYPE"),
-    		listeners:{
+    		store: new KitchenSink.view.common.store.appTransStore("TZ_SEARCH_TYPE")
+    		/*listeners:{
 				change:function(ts, newvalue, oldvalue){
 					var typeName = ts.findParentByType("form").down('textfield[name=typeName]').getValue();
 					if(typeName == 0){
@@ -96,7 +96,7 @@
 						ts.findParentByType("form").down('textfield[name=ViewMc]').setHidden(true);
 					}
 				}
-			}
+			}*/
 		}]
 	}],
     buttons: [{

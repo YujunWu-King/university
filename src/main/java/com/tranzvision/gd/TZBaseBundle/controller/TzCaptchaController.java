@@ -7,7 +7,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.tranzvision.gd.util.captcha.Patchca;
 
@@ -18,7 +20,8 @@ import com.tranzvision.gd.util.captcha.Patchca;
  * @since 2015-11-03
  */
 @Controller
-@RequestMapping("/captcha")
+@RequestMapping(value="/captcha",method={RequestMethod.POST,RequestMethod.GET})
+@CrossOrigin(origins="*")
 public class TzCaptchaController {
 
 	@RequestMapping(value = { "/", "" })

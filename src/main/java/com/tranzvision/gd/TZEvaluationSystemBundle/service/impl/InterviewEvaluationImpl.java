@@ -2,27 +2,30 @@ package com.tranzvision.gd.TZEvaluationSystemBundle.service.impl;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZEvaluationSystemBundle.service.impl.module.InterviewApplicant;
+import com.tranzvision.gd.TZEvaluationSystemBundle.service.impl.module.InterviewBatch;
+import com.tranzvision.gd.TZEvaluationSystemBundle.service.impl.module.InterviewCheckin;
+import com.tranzvision.gd.TZEvaluationSystemBundle.service.impl.module.InterviewDescription;
+import com.tranzvision.gd.TZEvaluationSystemBundle.service.impl.module.InterviewGrade;
+import com.tranzvision.gd.TZMbaPwMspsBundle.dao.psTzMspwpsjlTblMapper;
+import com.tranzvision.gd.TZMbaPwMspsBundle.model.psTzMspwpsjlTbl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
-import com.tranzvision.gd.TZMbaPwMspsBundle.dao.psTzMspwpsjlTblMapper;
-import com.tranzvision.gd.TZMbaPwMspsBundle.model.psTzMspwpsjlTbl;
-import com.tranzvision.gd.TZEvaluationSystemBundle.service.impl.InterviewEvaluationCls;
 
 /**
  * 材料面试评审
@@ -47,13 +50,32 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 	TZGDObject tzGdObject;
 	@Autowired
 	private GetHardCodePoint getHardCodePoint;
+	@Autowired
+	private InterviewBatch batchModule;
+	@Autowired
+	private InterviewCheckin checkinModule;
+	@Autowired
+	private InterviewDescription descriptionModule;
+	@Autowired
+	private InterviewApplicant applicantModule;
+	@Autowired
+	private InterviewGrade gradeModule;
 	
+	private final static String INTERVIEW_BATCH = "BATCH";
+	private final static String INTERVIEW_CHECKIN = "CHECKIN";
+	private final static String INTERVIEW_DESCRIPTION = "DESCRIPTION";
+	private final static String INTERVIEW_APPLICANT = "APPLICANT";
+	private final static String INTERVIEW_GRADE = "GRADE";
 	@Override
 	public String tzGetJsonData(String strParams) {
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		jacksonUtil.json2Map(strParams);
 		String strReturn = "";
 		try {
 			String type = request.getParameter("type");
+			if(type==null || "".equals(type)) {
+				type = jacksonUtil.getString("type");
+			}
 			// 获取批次列表
 			if ("list".equals(type)) {
 				strReturn = getBatchList(strParams);
@@ -111,10 +133,18 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 	 * @return
 	 */
 	private String queryTimer(String strParams) {
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		jacksonUtil.json2Map(strParams);
 		String classId = request.getParameter("classId"); /*字符串，请求班级编号*/
-		String batchId = request.getParameter("batchId"); /*字符串，请求报考批次编号*/
-		String oprId = tzLoginServiceImpl.getLoginedManagerOprid(request);
+		if(classId == null || "".equals(classId)) {
+			classId = jacksonUtil.getString("classId");
+		}
 		
+		String batchId = request.getParameter("batchId"); /*字符串，请求报考批次编号*/
+		if(batchId == null || "".equals(batchId)) {
+			batchId = jacksonUtil.getString("batchId");
+		}
+		String oprId = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		Map<String,Object> rtnMap = new HashMap<String,Object>();
 
 		String TZ_APP_INS_ID = "";
@@ -133,8 +163,7 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 		rtnMap.put("name", name);
 		rtnMap.put("seconds", seconds);
 		rtnMap.put("startDt", TZ_MSSJ);
-		JacksonUtil jacksonUtil = new JacksonUtil();
-		return jacksonUtil.Map2json(rtnMap);
+		return jacksonUtil.Map2json(rtnMap); 
 	}
 
 	private String searchApplicant(String strParams){
@@ -1434,5 +1463,36 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 		}
 
 		return strRet;
+	}
+	
+	/**
+	 * by yujun.wu 从高金迁移过来
+	 */
+	@Override
+	public String tzOther(String oprType, String strParams, String[] errorMsg) {
+		String sReturn = "{}";
+
+		switch(oprType.toUpperCase()){
+		case INTERVIEW_BATCH:
+			sReturn = batchModule.processor(strParams, errorMsg);
+			break;
+		case INTERVIEW_CHECKIN:
+			sReturn = checkinModule.processor(strParams, errorMsg);
+			break;
+		case INTERVIEW_DESCRIPTION:
+			sReturn = descriptionModule.processor(strParams, errorMsg);
+			break;
+		case INTERVIEW_APPLICANT:
+			sReturn = applicantModule.processor(strParams, errorMsg);
+			break;
+		case INTERVIEW_GRADE:
+			sReturn = gradeModule.processor(strParams, errorMsg);
+			break;
+		default:
+			errorMsg[0] = "1";
+			errorMsg[1] = "未知操作";
+		}
+		
+		return sReturn;
 	}
 }

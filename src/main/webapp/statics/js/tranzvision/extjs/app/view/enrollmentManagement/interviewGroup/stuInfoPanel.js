@@ -134,7 +134,17 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.stuInfoPanel', 
 						tooltip: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.PYFZ", "批量分组"),
 						iconCls: "query",
 						handler: 'PYFZ'
-					}]
+					}, {
+                        text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.clearGroupInfo", "清空分组信息"),
+                        tooltip: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.clearGroupInfo", "清空分组信息"),
+                        handler: 'clearGroupInfo',
+                        iconCls: "query"
+                    }, {
+                        text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.groupOrder", "组内排序"),
+                        tooltip: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.groupOrder", "组内排序"),
+                        handler: 'groupOrder',
+                        iconCls: "query"
+                    }]
 				}],
 				columns: [{
 					text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.OPRID","OPRID"),

@@ -81,78 +81,18 @@ public class TzReviewMsExamAddServiceImpl extends FrameworkImpl {
 					mapList.put("batchId", rowList[1]);
 					mapList.put("appInsId", rowList[2]);
 					List<Map<String, Object>> listMap = sqlQuery.queryForList(sql, new Object[] { rowList[2] });
-					for (Map<String, Object> map : listMap) {
-						if (Strjudename.equals("")) {
-							Strjudename = map.get("TZ_REALNAME") == null ? "" : map.get("TZ_REALNAME").toString();
+					if(listMap != null && listMap.size()>0) {
+						for (Map<String, Object> map : listMap) {
+							if (Strjudename.equals("")) {
+								Strjudename = map.get("TZ_REALNAME") == null ? "" : map.get("TZ_REALNAME").toString();
 
-							revistus = map.get("TZ_PSHEN_ZT") == null ? "" : map.get("TZ_PSHEN_ZT").toString();
-						} else {
-							Strjudename = Strjudename + "," + map.get("TZ_REALNAME") == null ? ""
-									: map.get("TZ_REALNAME").toString();
+								revistus = map.get("TZ_PSHEN_ZT") == null ? "" : map.get("TZ_PSHEN_ZT").toString();
+							} else {
+								Strjudename = Strjudename + "," + map.get("TZ_REALNAME") == null ? ""
+										: map.get("TZ_REALNAME").toString();
+							}
 						}
 					}
-					// 评委列表、评审状态
-					//String pwList = "" , reviewStatusDesc = "";
-					// 评委总分
-					//Float pwTotal = 0.00f;
-					// 评委数
-					//Integer pwNum = 0;
-
-					//String sql1 = "";
-					// 每生评审人数、当前评审轮次
-					//sql1 = "SELECT TZ_MSPY_NUM,TZ_DQPY_LUNC FROM PS_TZ_CLPS_GZ_TBL  WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
-					//Map<String, Object> mapRule = sqlQuery.queryForMap(sql1, new Object[] { rowList[0], rowList[1] });
-					//String strMspsNum = mapRule.get("TZ_MSPY_NUM") == null ? "" : mapRule.get("TZ_MSPY_NUM").toString();
-					//Integer mspsNum = 2;
-					//if (!"".equals(strMspsNum) && strMspsNum != null) {
-					//	mspsNum = Integer.valueOf(strMspsNum);
-					//}
-					//String strDqpyLunc = mapRule.get("TZ_DQPY_LUNC") == null ? ""
-					//		: mapRule.get("TZ_DQPY_LUNC").toString();
-					//Integer dqpyLunc = 0;
-					//if (!"".equals(strDqpyLunc) && strDqpyLunc != null) {
-					//	dqpyLunc = Integer.valueOf(strDqpyLunc);
-					//}
-
-					//sql1 = tzSQLObject.getSQLText("SQL.TZMaterialInterviewReviewBundle.material.TzGetMaterialKsPwInfo");
-					//List<Map<String, Object>> listPw = sqlQuery.queryForList(sql1,
-					//		new Object[] { rowList[0], rowList[1], rowList[2], dqpyLunc });
-
-					/*for (Map<String, Object> mapPw : listPw) {
-
-						String pwOprid = mapPw.get("TZ_PWEI_OPRID") == null ? ""
-								: mapPw.get("TZ_PWEI_OPRID").toString();
-						String pwDlzhId = mapPw.get("TZ_DLZH_ID") == null ? "" : mapPw.get("TZ_DLZH_ID").toString();
-						String scoreInsId = mapPw.get("TZ_SCORE_INS_ID") == null ? ""
-								: mapPw.get("TZ_SCORE_INS_ID").toString();
-						Float scoreNum = mapPw.get("TZ_SCORE_NUM") == null ? Float.valueOf("0")
-								: Float.valueOf(mapPw.get("TZ_SCORE_NUM").toString());
-						String submitFlag = mapPw.get("TZ_SUBMIT_YN") == null ? ""
-								: mapPw.get("TZ_SUBMIT_YN").toString();
-
-						if ("Y".equals(submitFlag)) {
-							// 已评审
-							pwNum++;
-						}
-
-						if (!"".equals(pwList)) {
-							pwList += "," + pwDlzhId;
-						} else {
-							pwList = pwDlzhId;
-						}
-						pwTotal += scoreNum;
-					} */
-
-					//if (mspsNum.equals(pwNum)) {
-					//	reviewStatusDesc = "已完成";
-					//} else {
-					//	reviewStatusDesc = "未完成（" + pwNum + "/" + mspsNum + "）";
-					//}
-					
-
-					
-					//mapList.put("pwList", pwList);
-					//mapList.put("reviewStatusDesc", reviewStatusDesc);
 					mapList.put("judges", Strjudename);
 					mapList.put("judgeStatus", revistus);
 					mapList.put("ksOprId", rowList[3]);

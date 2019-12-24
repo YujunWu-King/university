@@ -48,7 +48,8 @@ Ext.define('KitchenSink.view.template.survey.question.wjdcInfo', {
             {text:"新增",tooltip:"新增",iconCls:"add",handler:'addDcwj'},'-',
           //  {text:'删除',tooltip:'删除',iconCls:"remove",handler:'deleteWjdc'},'-',
           //   {text:'删除',tooltip:'删除',iconCls:"remove",handler:'generateWjdc'},'-',
-            {text:'发布',tooltip:'发布',iconCls:"publish",handler:'publishWjdc'},'->',
+            {text:'发布',tooltip:'发布',iconCls:"publish",handler:'publishWjdc'},'-',
+            {text:'删除',tooltip:'删除',iconCls:"remove",handler:'deleteWjdcNot'},'->',
             {
                 xtype:'splitbutton',
                 text:'更多操作',
@@ -81,6 +82,16 @@ Ext.define('KitchenSink.view.template.survey.question.wjdcInfo', {
                     sortable: true,
                     dataIndex: 'TZ_DC_WJBT',
                     flex:1
+                },{
+                    /**
+                     * Description:在原有的基础上，添加创建时间字段，倒叙排序
+                     * modity Time: 2019年12月4日12:36:32
+                     * @author 张超
+                     */
+                    text:Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_WJGL_STD.ROW_ADDED_DTTM","创建时间"),
+                    sortable: true,
+                    minWidth: 150,
+                    dataIndex: 'ROW_ADDED_DTTM'
                 },{  text: '状态',
                     dataIndex: 'TZ_DC_WJ_ZT',
                     width:100,

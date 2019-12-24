@@ -1,22 +1,6 @@
 
 package com.tranzvision.gd.TZMbaPwClpsBundle.service.impl;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.tranzvision.gd.TZAccountMgBundle.dao.PsoprdefnMapper;
 import com.tranzvision.gd.TZAccountMgBundle.model.Psoprdefn;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
@@ -30,11 +14,22 @@ import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPsPwTbl;
 import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzPwExtTbl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.captcha.PasswordCheck;
+import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.encrypt.DESUtil;
 import com.tranzvision.gd.util.poi.excel.ExcelHandle;
+import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.servlet.http.HttpServletRequest;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * MBA材料面试评审-面试规则-面试规则设置
@@ -66,6 +61,10 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 	private PsTzMsPsPwTblMapper psTzMsPsPwTblMapper;
 	@Autowired
 	private PsoprdefnMapper PsoprdefnMapper;
+	@Autowired
+	private GetSeqNum getSeqNum;
+	@Autowired
+	private GetHardCodePoint getHardCodePoint;
 
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {
@@ -291,18 +290,19 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 		int count = 0;
 		try {
 			String Orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-			String teamsql = "SELECT TZ_GRP_COUNT FROM PS_TZ_MSPS_GZ_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? ";
+//			String teamsql = "SELECT TZ_GRP_COUNT FROM PS_TZ_MSPS_GZ_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? ";
+//
+//			String count1 = sqlQuery.queryForObject(teamsql, new Object[] { classId, batchId }, "String");
+//			if (count1 == null) {
+//				count = 999999999;
+//			} else {
+//				count = Integer.valueOf(count1);
+//
+//			}
 
-			String count1 = sqlQuery.queryForObject(teamsql, new Object[] { classId, batchId }, "String");
-			if (count1 == null) {
-				count = 999999999;
-			} else {
-				count = Integer.valueOf(count1);
-
-			}
-
-			String sql = "SELECT TZ_CLPS_GR_ID,TZ_CLPS_GR_NAME FROM PS_TZ_MSPS_GR_TBL WHERE TZ_JG_ID=? ORDER BY  CAST(TZ_CLPS_GR_ID AS UNSIGNED INTEGER) ASC  LIMIT ? ";
-			List<Map<String, Object>> listMap = sqlQuery.queryForList(sql, new Object[] { Orgid, count });
+			String sql = "SELECT TZ_CLPS_GR_ID,TZ_CLPS_GR_NAME FROM PS_TZ_MSPS_GR_TBL WHERE TZ_JG_ID=? ORDER BY  CAST(TZ_CLPS_GR_ID AS UNSIGNED INTEGER) ASC ";
+			List<Map<String, Object>> listMap = sqlQuery.queryForList(sql, new Object[] { Orgid });
+			if(listMap!=null){
 			for (Map<String, Object> map : listMap) {
 				if (Strjudegid.equals("") && Strjudename.equals("")) {
 					Strjudegid = map.get("TZ_CLPS_GR_ID").toString();
@@ -313,6 +313,7 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 
 				}
 
+			}
 			}
 			RetrnStr = Strjudegid + "|" + Strjudename;
 
@@ -396,7 +397,11 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 		return jacksonUtil.Map2json(mapRet);
 
 	}
-
+/**
+ * 面试评委批量导出修改
+ * author：丁鹏
+ * time：2019年11月25日11:46:55
+ * */
 	@SuppressWarnings("unchecked")
 	public String exportpwinform(String strParams, String[] errorMsg) {
 		String RetrnStr = "";
@@ -458,17 +463,37 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 				judgId = jacksonUtil.getString("judgId");
 				judgName = jacksonUtil.getString("judgName");
 				judgGroupId = jacksonUtil.getString("judgGroupId");
+				if(judgGroupId.contains(",")==true) {
+					String[] judgGroupId2 = judgGroupId.split(",");
+					String pwgroup2="";
+					String[] pwgroup1=new String[judgGroupId2.length];
+					for(int k=0;k<judgGroupId2.length;k++) {
+						pwgroup = sqlQuery.queryForObject(pwgroupsql, new Object[] { judgGroupId2[k] }, "String");
+						pwgroup1[k] = pwgroup;
+						
+					}
+					pwgroup2 = String.join(",", pwgroup1);
+					pwpwd = sqlQuery.queryForObject(pwpwdsql, new Object[] { judgId, orgid }, "String");
 
-				pwgroup = sqlQuery.queryForObject(pwgroupsql, new Object[] { judgGroupId }, "String");
+					mapData.put("pwoprid", judzhxx);
+					mapData.put("pwname", judgName);
+					mapData.put("pwgroup", pwgroup2);
+					mapData.put("pwpassword", pwpwd);
 
-				pwpwd = sqlQuery.queryForObject(pwpwdsql, new Object[] { judgId, orgid }, "String");
+					dataList.add(mapData);
+				}else {
+					pwgroup = sqlQuery.queryForObject(pwgroupsql, new Object[] { judgGroupId }, "String");
 
-				mapData.put("pwoprid", judzhxx);
-				mapData.put("pwname", judgName);
-				mapData.put("pwgroup", pwgroup);
-				mapData.put("pwpassword", pwpwd);
+					pwpwd = sqlQuery.queryForObject(pwpwdsql, new Object[] { judgId, orgid }, "String");
 
-				dataList.add(mapData);
+					mapData.put("pwoprid", judzhxx);
+					mapData.put("pwname", judgName);
+					mapData.put("pwgroup", pwgroup);
+					mapData.put("pwpassword", pwpwd);
+
+					dataList.add(mapData);}
+
+				
 
 			}
 
@@ -484,7 +509,13 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 			boolean rst = excelHandle.export2Excel(fileName, dataCellKeys, dataList);
 			if (rst) {
 				// System.out.println("---------生成的excel文件路径----------");
-				RetrnStr = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+				/**
+				 * 张超修改，时间：2019年12月9日14:33:14  备注原 request.getServerName()取值为ip地址，无法获得域名导致需要了解vpn才能完成导出功能
+				 * 添加hardcode值将域名存入其中再取出。
+				 */
+//				RetrnStr = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+//						+ request.getContextPath() + excelHandle.getExportExcelPath();
+				RetrnStr = request.getScheme() + "://" +getHardCodePoint.getHardCodePointVal("TZGD_DOMAINNAME")
 						+ request.getContextPath() + excelHandle.getExportExcelPath();
 				// System.out.println(strRet);
 			} else {
@@ -705,6 +736,17 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 
 					String judgGroupId = infoData.get("judgGroupId") == null ? ""
 							: String.valueOf(infoData.get("judgGroupId"));
+					StringBuilder tjudgGroupId = new StringBuilder();
+					if(judgGroupId.length()<=2){
+						judgGroupId = "";
+					}else{
+						judgGroupId = judgGroupId.substring(judgGroupId.indexOf("[")+1, judgGroupId.indexOf("]"));
+						String[] split = judgGroupId.split(",");
+						for (String string : split) {
+							tjudgGroupId.append(string.trim()).append(",");
+						}
+						judgGroupId = tjudgGroupId.substring(0, tjudgGroupId.lastIndexOf(","));
+					}
 
 					String judgName = infoData.get("judzhxx") == null ? "" : String.valueOf(infoData.get("judzhxx"));
 
@@ -839,6 +881,115 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 					 * &TZ_CLPS_PW_TBL.ROW_LASTMANT_OPRID.Value = %UserId;
 					 * &TZ_CLPS_PW_TBL.Insert() End-If; End-If; End-If;
 					 */
+				}
+				/**
+				 * 添加管理员和面试组
+				 * 丁鹏
+				 * 时间：2019/11/18
+				 * */
+				if(StringUtils.equals("GLY", strFlag)){
+
+					// 信息内容
+					Map<String, Object> infoData = jacksonUtil.getMap("data");
+
+					String classId = jacksonUtil.getString("classId");
+
+					// .get("classId") == null ? "" :
+					// String.valueOf(infoData.get("classId"));
+					// System.out.println("classID:" + classId);
+					String batchId = jacksonUtil.getString("batchId");
+
+					// infoData.get("batchId") == null ? "" :
+					// String.valueOf(infoData.get("batchId"));
+
+					String glyId = infoData.get("glyId") == null ? "" : String.valueOf(infoData.get("glyId"));
+
+					String glyZh = infoData.get("glyZh") == null ? ""
+							: String.valueOf(infoData.get("glyZh"));
+
+					String glyName = infoData.get("glyName") == null ? "" : String.valueOf(infoData.get("glyName"));
+
+					String glyLb = infoData.get("glyLb") == null ? ""
+							: String.valueOf(infoData.get("glyLb"));
+
+					String glyState = infoData.get("glyState") == null ? "" : String.valueOf(infoData.get("glyState"));
+
+					System.out.println("classId：" + classId + "judgState:" + glyState);
+					String sql = "SELECT COUNT(1) from tz_interview_admin_t where TZ_CLASS_ID =? and TZ_APPLY_PC_ID =? and OPRID=?";
+					int count = sqlQuery.queryForObject(sql, new Object[] { classId, batchId, glyId }, "Integer");
+					if (count > 0) {
+						sqlQuery.update("UPDATE "
+								+ "tz_interview_admin_t "
+								+ "SET status=?,"
+								+ "type=? "
+								+ "WHERE TZ_APPLY_PC_ID=? AND TZ_CLASS_ID=? AND OPRID=?",
+								new Object[] { glyState,glyLb, batchId, classId, glyId });
+
+					} else {
+						errMsg[0] = "1";
+						errMsg[1] = "管理员:" + glyName + "不存在，无法修改！";
+
+					}
+
+				}
+
+				//面试组
+				if(StringUtils.equals("MSZ", strFlag)){
+
+					// 信息内容
+					Map<String, Object> infoData = jacksonUtil.getMap("data");
+
+					String classId = jacksonUtil.getString("classId");
+					String batchId = jacksonUtil.getString("batchId");
+					SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd'T'HH:mm:ss");
+					SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
+
+					String id = infoData.get("mszid") == null ? "null" : String.valueOf(infoData.get("mszid"));
+
+					String mszsd = infoData.get("mszsd") == null ? "" : String.valueOf(infoData.get("mszsd"));
+
+					String mszkssj = infoData.get("mszkssj") == null ? "" : String.valueOf(infoData.get("mszkssj"));
+
+					String mszjssj = infoData.get("mszjssj") == null ? "" : String.valueOf(infoData.get("mszjssj"));
+					
+					String mszmj = infoData.get("mszmj") == null ? "" : String.valueOf(infoData.get("mszmj"));
+					Date dt = new Date();
+					Date dt2 = new Date();
+//					if("00:00:00".equals(mszkssj)) {
+//						
+//					}else {
+//						if(mszkssj!="") {
+//							
+//							dt = sdf.parse(mszkssj);
+//							mszkssj = sdf2.format(dt);
+//						}
+//						
+//						if(mszjssj!="") {
+//							dt2 = sdf.parse(mszjssj);
+//							mszjssj = sdf2.format(dt2);
+//						}
+//					}
+					
+					
+					if (!"null".equals(id)) { 
+						sqlQuery.update("UPDATE "
+								+ "TZ_INTERVIEW_GROUP "
+								+ "SET "
+								+ "TZ_START_DTTM=?,"
+								+ "TZ_END_DTTM=?,"
+								+ "TZ_MODIFIED_DTTM=NOW(),"
+								+ "TZ_MODIFIED_OPRID=?,"
+								+ "TZ_GROUP_DESC=?,"
+								+ "TZ_GROUP_SPACE=? "
+								+ "WHERE TZ_APPLY_PC_ID=? AND TZ_CLASS_ID=? AND TZ_GROUP_ID=?",
+								new Object[] { null,null,oprId,mszmj,mszsd, batchId, classId, id});
+						sqlQuery.update("update PS_TZ_INTEGROUP_T set TZ_GROUP_NAME=? where TZ_GROUP_ID=?",new Object[] {mszkssj,id});
+					} else {
+						String TZ_GROUP_ID  = String.valueOf(getSeqNum.getSeqNum("PS_TZ_INTEGROUP_T", "TZ_GROUP_ID"));
+						sqlQuery.update("insert into PS_TZ_INTEGROUP_T(TZ_GROUP_ID,TZ_GROUP_NAME,TZ_CLASS_ID,TZ_APPLY_PC_ID) values(?,?,?,?)",new Object[] {TZ_GROUP_ID,mszmj,classId,batchId});
+						sqlQuery.update("insert into TZ_INTERVIEW_GROUP values (?,?,?,?,?,?,?,NOW(),?)",
+								new Object[] { classId,batchId, TZ_GROUP_ID, mszmj, mszsd,null,null,oprId});
+					}
 				}
 			}
 		} catch (Exception e) {

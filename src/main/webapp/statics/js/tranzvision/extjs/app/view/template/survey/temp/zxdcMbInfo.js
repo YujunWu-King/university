@@ -59,6 +59,16 @@ Ext.define('KitchenSink.view.template.survey.temp.zxdcMbInfo', {
                     width: 320,
                     allowBlank:false,
                     flex: 1
+                },{
+                    /**
+                     * Description:在原有的基础上，添加创建时间字段，倒叙排序
+                     * modity Time: 2019年12月4日12:36:32
+                     * @author 张超
+                     */
+                    text:Ext.tzGetResourse("TZ_ZXDC_MBGL_COM.TZ_ZXDC_MBGL_STD.ROW_ADDED_DTTM","创建时间"),
+                    sortable: true,
+                    minWidth: 150,
+                    dataIndex: 'ROW_ADDED_DTTM'
                 },{text: '状态',
                     dataIndex: 'TZ_EFFEXP_ZT',
                     width:70,

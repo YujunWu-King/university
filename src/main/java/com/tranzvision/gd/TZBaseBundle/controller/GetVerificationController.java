@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -14,7 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
  * @Description: 生成随机UUID，dispatcher分发器校验，防止跨站脚本攻击
  */
 @RestController
-@RequestMapping(value = "/")
+@RequestMapping(value = "/",method={RequestMethod.POST,RequestMethod.GET})
+@CrossOrigin(origins="*")
 public class GetVerificationController {
     public static List<String> VERIFICATION_LIST = new ArrayList<>();
 

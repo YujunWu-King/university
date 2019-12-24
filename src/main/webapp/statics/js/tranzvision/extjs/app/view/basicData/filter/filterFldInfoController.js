@@ -2,6 +2,10 @@
     extend: 'Ext.app.ViewController',
     alias: 'controller.filterFldInfo', 
     addFld: function(btn) {
+    	if(this.getView().actType == "add"){
+			Ext.MessageBox.alert("提示","请先保存组信息后，再新增字段信息。");
+			return;
+		}
     	var formValues = this.getView().child("form").getForm().getValues();
     	var ComID = formValues['ComID'];
     	var PageID = formValues['PageID'];
@@ -236,13 +240,15 @@
     },
     onFilterInfoSave2: function(btn){
 		var from = this.getView().child("form").getForm();
-		var actType = this.getView().actType;
+		var comView = this.getView();
+		var actType = comView.actType;
 		if (from.isValid()) {
 			var actType = this.getView().actType;
 			var comSiteParams = from.getValues();
 			var ComID = comSiteParams['ComID'];
 			var PageID = comSiteParams['PageID'];
 			var appClassMc = comSiteParams['appClassMc'];
+			var ViewMc = comSiteParams['ViewMc'];
 			var FieldMc = comSiteParams['FieldMc'];
 			var comParams = "";
 			
@@ -265,7 +271,7 @@
 			var tabpanel = this.getView().child("form").child("tabpanel");
 			var grid = tabpanel.getActiveTab();
 			var grid1 = tabpanel.down('grid[name=searchFld]');
-			
+			var grid2 = tabpanel.down('grid[name=promptFld]');
 			var queryID;
 			
 			var store1 = grid1.getStore();
@@ -293,19 +299,47 @@
 				}
 			}
 		
-			//修改json字符串
-			
+			var editJson2="";
+			var removeJson2="";
+			var store2 = grid2.getStore();
+			for(var i =0;i<store2.getCount();i++){
+				var rec2 = store2.getAt(i);
+				var FieldGL = rec2.get('FieldGL');
+				if(FieldGL == "" || FieldGL == "请选择"){
+					Ext.Msg.alert("提示","请选择字段。");
+					return;
+				}
+				if(editJson2 == ""){
+					editJson2 = Ext.JSON.encode(rec2.data);
+				}else{
+					editJson2 = editJson2 + ','+Ext.JSON.encode(rec2.data);
+				}
+			}
+			//列表中删除的数据
+			var removeRecs2 = store2.getRemovedRecords();
+			for(var i=0;i<removeRecs2.length;i++){
+				if(removeJson2 == ""){
+					removeJson2 = Ext.JSON.encode(removeRecs2[i].data);
+				}else{
+					removeJson2 = removeJson2 + ','+Ext.JSON.encode(removeRecs2[i].data);
+				}
+			}
+		
 			if(actType == "add"){
 	            comParams = '"add":[{"add":' + Ext.JSON.encode(comSiteParams) + ',"updateList":{"data1":[' + editJson1 + ']}}]';
 	        }
 			if(actType == "update"){
-				comParams = '"update":[{"type":"1","update":' + Ext.JSON.encode(comSiteParams) + ',"updateList":{"data1":[' + editJson1 + '],"data2":[],"data3":[]}}]';
+				comParams = '"update":[{"type":"1","update":' + Ext.JSON.encode(comSiteParams) + ',"updateList":{"data1":[' + editJson1 + '],"data2":['+ editJson2 + '],"data3":['+ removeJson2 + ']}}]';
 	        }
+			
 			//提交参数
 			var tzParams = '{"ComID":"TZ_GD_FILTER_COM","PageID":"TZ_FILTER_FLD_STD","OperateType":"U","comParams":{'+comParams+'}}';
-			
 			Ext.tzSubmit(tzParams,function(){
+				comView.actType = 'update';
+				store1.tzStoreParams='{"queryID":"1","ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'","FieldMc":"'+FieldMc+'","type":"1"}';
+				store2.tzStoreParams='{"queryID":"2","ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'","FieldMc":"'+FieldMc+'","type":"1"}';
 				store1.reload();
+				store2.reload();
 			},"",true,this);
 			if(btn == "btn_Ensure"){
 				this.getView().close();

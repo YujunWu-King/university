@@ -249,26 +249,26 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl {
 						mapList.put("total_label", rowList[11]);
 					
 						/* 自动打分项 */
-						for (String itemId : itemsList) {
-							String scoreNum = "0.00";
-							String scoreGc = "";
-							String sql = "select TZ_SCORE_NUM,TZ_SCORE_DFGC from PS_TZ_CJX_TBL where TZ_SCORE_INS_ID=? and TZ_SCORE_ITEM_ID=?";
-							if(!"".equals(scoreInsId)&& scoreInsId!=null  && !"0".equals(scoreInsId)){
-								Map<String, Object> scoreMap = sqlQuery.queryForMap(sql,
-										new Object[] { scoreInsId, itemId });
-	
-								if (scoreMap != null) {
-									scoreNum = scoreMap.get("TZ_SCORE_NUM") == null ? "0.00"
-											: scoreMap.get("TZ_SCORE_NUM").toString();
-									// 打分过程
-									scoreGc = scoreMap.get("TZ_SCORE_DFGC") == null ? ""
-											: scoreMap.get("TZ_SCORE_DFGC").toString();
-								}
-							}
-
-							mapList.put(itemId, scoreNum);
-							mapList.put(itemId + "_label", scoreGc);
-						}
+//						for (String itemId : itemsList) {
+//							String scoreNum = "0.00";
+//							String scoreGc = "";
+//							String sql = "select TZ_SCORE_NUM,TZ_SCORE_DFGC from PS_TZ_CJX_TBL where TZ_SCORE_INS_ID=? and TZ_SCORE_ITEM_ID=?";
+//							if(!"".equals(scoreInsId)&& scoreInsId!=null  && !"0".equals(scoreInsId)){
+//								Map<String, Object> scoreMap = sqlQuery.queryForMap(sql,
+//										new Object[] { scoreInsId, itemId });
+//	
+//								if (scoreMap != null) {
+//									scoreNum = scoreMap.get("TZ_SCORE_NUM") == null ? "0.00"
+//											: scoreMap.get("TZ_SCORE_NUM").toString();
+//									// 打分过程
+//									scoreGc = scoreMap.get("TZ_SCORE_DFGC") == null ? ""
+//											: scoreMap.get("TZ_SCORE_DFGC").toString();
+//								}
+//							}
+//
+//							mapList.put(itemId, scoreNum);
+//							mapList.put(itemId + "_label", scoreGc);
+//						}
 						
 						/* 面试打分项 */
 						for (String itemIdMs : itemsMsList) {
@@ -292,26 +292,26 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl {
 							mapList.put(itemIdMs + "_label", scoreGc);
 						}
 						/* 专家打分项 -和面试使用相同的成绩项ID*/
-						for (String itemIdZj : itemsZjList) {
-							String scoreNum = "0.00";
-							String scoreGc = "";
-							String sql = "select TZ_SCORE_NUM,TZ_SCORE_DFGC from PS_TZ_CJX_TBL where TZ_SCORE_INS_ID=? and TZ_SCORE_ITEM_ID=?";
-							if(!"".equals(scoreMsInsId)&& scoreMsInsId!=null && !"0".equals(scoreMsInsId)){
-								Map<String, Object> scoreMap = sqlQuery.queryForMap(sql,
-										new Object[] { scoreMsInsId, itemIdZj });
-								
-								if (scoreMap != null) {
-									scoreNum = scoreMap.get("TZ_SCORE_NUM") == null ? "0.00"
-											: scoreMap.get("TZ_SCORE_NUM").toString();
-									// 打分过程
-									scoreGc = scoreMap.get("TZ_SCORE_DFGC") == null ? ""
-											: scoreMap.get("TZ_SCORE_DFGC").toString();
-								}
-							}
-							
-							mapList.put(itemIdZj, scoreNum);
-							mapList.put(itemIdZj + "_label", scoreGc);
-						}
+//						for (String itemIdZj : itemsZjList) {
+//							String scoreNum = "0.00";
+//							String scoreGc = "";
+//							String sql = "select TZ_SCORE_NUM,TZ_SCORE_DFGC from PS_TZ_CJX_TBL where TZ_SCORE_INS_ID=? and TZ_SCORE_ITEM_ID=?";
+//							if(!"".equals(scoreMsInsId)&& scoreMsInsId!=null && !"0".equals(scoreMsInsId)){
+//								Map<String, Object> scoreMap = sqlQuery.queryForMap(sql,
+//										new Object[] { scoreMsInsId, itemIdZj });
+//								
+//								if (scoreMap != null) {
+//									scoreNum = scoreMap.get("TZ_SCORE_NUM") == null ? "0.00"
+//											: scoreMap.get("TZ_SCORE_NUM").toString();
+//									// 打分过程
+//									scoreGc = scoreMap.get("TZ_SCORE_DFGC") == null ? ""
+//											: scoreMap.get("TZ_SCORE_DFGC").toString();
+//								}
+//							}
+//							
+//							mapList.put(itemIdZj, scoreNum);
+//							mapList.put(itemIdZj + "_label", scoreGc);
+//						}
 						
 						// 自动标签
 						/*String zdbqVal = "";

@@ -156,11 +156,14 @@
 	            buttonOnly:true,
 							listeners:{
 								change:function(file, value, eOpts ){
+									var form = file.findParentByType("form").getForm();
+									//获取该类
+									var panel = file.findParentByType("orgJgInfo");
 									if(value != ""){
-										var form = file.findParentByType("form").getForm();
-										//获取该类
-										var panel = file.findParentByType("orgJgInfo");
-										
+										if(!checkFileSize()){
+											form.reset();
+											Ext.MessageBox.alert("提示", "上传文件的大小不能大于10M");
+										}else {
 											//获取后缀
 											var fix = value.substring(value.lastIndexOf(".") + 1,value.length);
 											if(fix.toLowerCase() == "jpg" || fix.toLowerCase() == "jpeg" || fix.toLowerCase() == "jpeg" || fix.toLowerCase() == "png" || fix.toLowerCase() == "gif" || fix.toLowerCase() == "bmp" || fix.toLowerCase() == "ico"){
@@ -176,29 +179,29 @@
 														}else{
 															path = path + "/" + sysFileName;
 														}
-														
-														file.previousSibling().previousSibling().setSrc(TzUniversityContextPath + path);	
+
+														file.previousSibling().previousSibling().setSrc(TzUniversityContextPath + path);
 														panel.child("form").getForm().findField("orgLoginBjImgUrl").setValue(path);
-																		
+
 														tzParams = '{"ComID":"TZ_GD_ORGGL_COM","PageID":"TZ_GD_ORGDEF_STD","OperateType":"HTML","comParams":' + Ext.JSON.encode(action.result.msg) +'}';
-				
+
 														Ext.Ajax.request({
-														    url: Ext.tzGetGeneralURL,
-														    params: {
-														        tzParams: tzParams
-														    },
-														    success: function(response){
-														    	var responseText = eval( "(" + response.responseText + ")" );
-														      if(responseText.success == 0){
-																		
-																	}else{
-																		file.previousSibling().previousSibling().setSrc("");
-																		panel.child("form").getForm().findField("orgLoginBjImgUrl").setValue("");
-																		Ext.MessageBox.alert("错误", responseText.message);	
-																	}
+															url: Ext.tzGetGeneralURL,
+															params: {
+																tzParams: tzParams
+															},
+															success: function(response){
+																var responseText = eval( "(" + response.responseText + ")" );
+																if(responseText.success == 0){
+
+																}else{
+																	file.previousSibling().previousSibling().setSrc("");
+																	panel.child("form").getForm().findField("orgLoginBjImgUrl").setValue("");
+																	Ext.MessageBox.alert("错误", responseText.message);
 																}
+															}
 														});
-														
+
 														//重置表单
 														form.reset();
 													},
@@ -213,7 +216,7 @@
 												form.reset();
 												Ext.MessageBox.alert("提示", "请上传jpg|png|gif|bmp|ico格式的图片。");
 											}
-										
+										}
 									}
 								}
 							}
@@ -247,3 +250,13 @@
 		handler: 'onFormClose'
 	}]
 });
+
+function checkFileSize(){
+	var flag=true;
+	var fileUpload=document.getElementsByName("orguploadfile");
+	var upLoadFileSize = fileUpload[0].files[0].size;
+	if(upLoadFileSize/(1024*1024) > 10){
+		flag=false;
+	}
+	return flag;
+}

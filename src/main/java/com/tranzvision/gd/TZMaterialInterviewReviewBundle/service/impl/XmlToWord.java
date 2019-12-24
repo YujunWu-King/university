@@ -179,11 +179,21 @@ public class XmlToWord {
 			if (TZ_CLASS_MAP == null) {
 			} else {
 				TZ_CLASS_NAME = ((String) TZ_CLASS_MAP.get("TZ_CLASS_NAME") != null) ? (String) TZ_CLASS_MAP.get("TZ_CLASS_NAME") : "";
+				//字符转义 suzl
+				if(TZ_CLASS_NAME.contains("&")){
+					TZ_CLASS_NAME = TZ_CLASS_NAME.replaceAll("&", "&amp;");
+				}
 			}
 			
 			//获取批次名称
 			String TZ_CLS_BATCH_SQL = "select TZ_BATCH_NAME from PS_TZ_CLS_BATCH_T where TZ_CLASS_ID = ? and TZ_BATCH_ID = ?";
 			String 	TZ_BATCH_NAME = jdbcTemplate.queryForObject(TZ_CLS_BATCH_SQL, new Object[] { TZ_CLASS_ID,TZ_APPLY_PC_ID},"String");
+			//字符转义 suzl
+			if(TZ_BATCH_NAME!= null&&!"".equals(TZ_BATCH_NAME)){
+				if(TZ_BATCH_NAME.contains("&")){
+					TZ_BATCH_NAME = TZ_BATCH_NAME.replaceAll("&", "&amp;");
+				}
+			}
 
 			//拼装班级批次信息
 			String class_pc = TZ_CLASS_NAME + "-" + ((TZ_BATCH_NAME!=null)?TZ_BATCH_NAME:"");

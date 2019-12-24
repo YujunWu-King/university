@@ -11,7 +11,9 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.common.base.Strings;
@@ -26,7 +28,8 @@ import com.tranzvision.gd.util.cookie.TzCookie;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 @Controller
-@RequestMapping(value = "/")
+@RequestMapping(value = "/",method={RequestMethod.POST,RequestMethod.GET})
+@CrossOrigin(origins="*")
 public class Index {
 	/**
 	 * Cookie存储的系统语言信息
@@ -58,7 +61,6 @@ public class Index {
 	public String index(HttpServletRequest request, HttpServletResponse response) {
 		String url = "";
         url = request.getScheme() +"://" + request.getServerName() + ":" +request.getServerPort()+ request.getServletPath();
-        System.out.println(url+"+++++++++++++++++++++++");
        if(url.toLowerCase().indexOf("jsp")!=-1||url.indexOf("::")!=-1) {
     	   return "login/errorLogin";
        }
@@ -341,7 +343,6 @@ public class Index {
 					isCheck = true;
 				}
 			}
-			System.out.println("is CSRF Check：" + isCheck);
 
 			if (isCheck) {
 				String verification = request.getParameter("verification");
@@ -514,6 +515,7 @@ public class Index {
 				}
 
 				// 根据搜索条件获取搜索表中的数据，供下拉框使用;
+				
 				strComContent = gdKjComService.getPromptSearchList(precname, pcondition, presult, maxRow, numLimit,
 						numStart, errMsgArr);
 				break;

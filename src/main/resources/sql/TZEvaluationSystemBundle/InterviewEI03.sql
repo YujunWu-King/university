@@ -1,0 +1,1 @@
+select 'Y' from PS_TZ_MP_PW_KS_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID = ? and TZ_PWEI_OPRID = ? and TZ_PSHEN_ZT<>'Y'and TZ_PSHEN_ZT<>'C' and TZ_DELETE_ZT<>'Y' LIMIT 0,1

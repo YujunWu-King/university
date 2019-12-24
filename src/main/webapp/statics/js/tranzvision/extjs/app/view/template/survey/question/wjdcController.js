@@ -1830,7 +1830,52 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
                 }
             },this);
         }
-	},
+	}, /**
+     * Description:在原有的基础上，增加删除方法，只删除状态为未开始的
+     * modity Time: 2019年12月4日12:36:32
+     * @author 张超
+     */
+    deleteWjdcNot:function(btn){
+        //选中行
+        var selList =  btn.findParentByType("grid").getSelectionModel().getSelection();
+        //选中行长度
+        var checkLen = selList.length;
+        if(checkLen == 0){
+            Ext.Msg.alert("提示","请选择要删除的记录");
+            return;
+        }else{
+            for(var i=0;i<checkLen;i++){
+                if(1==selList[i].data.TZ_DC_WJ_ZT){
+                    Ext.Msg.alert("提示","只能删除非进行中数据");
+                    return;
+                }
+            };
+            Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?', function(btnId){
+                if(btnId == 'yes'){
+                    var removeJson = "";
+                    var resSetStore =  btn.findParentByType("grid").store;
+                    resSetStore.remove(selList);
+                    var removeRecs = resSetStore.getRemovedRecords();
+                    for(var i=0;i<removeRecs.length;i++){
+                        if(removeJson == ""){
+                            removeJson = Ext.JSON.encode(removeRecs[i].data);
+                        }else{
+                            removeJson = removeJson + ','+Ext.JSON.encode(removeRecs[i].data);
+                        }
+                    }
+                    if(removeJson != ""){
+                        comParams = '"delete":[' + removeJson + "]";
+                    }else{
+                        return;
+                    }
+                    var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_DELETE_STD","OperateType":"U","comParams":{'+comParams+'}}';
+                    Ext.tzSubmit(tzParams,function(){
+                    },"",true,this);
+                    resSetStore.reload();
+                }
+            },this);
+        }
+    },
 	delCurRowWjAppcls:function(view,rowIndex){
 		Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?',
 	            function(btnId) {
