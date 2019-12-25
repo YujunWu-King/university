@@ -600,6 +600,9 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 						errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE", "50", "验证码不正确",
 								"The security code is incorrect");
 						return strResult;
+					}else{
+						//验证码正确销毁验证码
+						patchca.removeToken(request);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
