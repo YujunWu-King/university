@@ -1871,6 +1871,8 @@ var SurveyBuild = {
         if(str.length == 0) return "";
         s = $.trim(str.toString());
         s = s.replace(/\"/g,"&quot;");
+        s = s.replace(/\</g,"&lt;");
+        s = s.replace(/\>/g,"&gt;");
 
         return s;
     },
