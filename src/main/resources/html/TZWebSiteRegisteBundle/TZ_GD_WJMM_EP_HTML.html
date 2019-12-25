@@ -114,6 +114,7 @@ $(document).ready(function(){
             $('#picyzm_statusEmail').html("<span>图片验证码不能为空</span>");
             $("#picyzm_styleEmail").removeClass("alert_display_none");
             create_yzm();
+            return;
         }
 		if($("#sendemail").prop("disabled") != "true"){
 			var email=$("#Email_User").val();
