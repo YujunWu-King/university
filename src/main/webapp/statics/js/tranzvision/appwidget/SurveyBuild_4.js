@@ -124,7 +124,7 @@ var SurveyBuild = {
 		var topdiv = new Array();
 		$.each(this._items, function(h, obj) {
 			// alert("fPageId"+obj.fPageId);
-			var variable2 = obj.fPageId || ''; 
+			var variable2 = obj.fPageId || '';
 			// 顶层的显示
 			if (obj["classname"] == "Page" && variable2 =='' ) {
 				tabs += '<div id="'+obj.itemId+'" data_id="' + h + '" class="' + (i == 0 ? "tabNav_c": "tabNav") + '" onclick="SurveyBuild._editTabs();return false;" style="' + obj.tapStyle + '">' + obj.title + '</div>';
@@ -174,7 +174,7 @@ var SurveyBuild = {
 			data.pageHeight = 55;
 		}
 		e += '<div class="edit_item_warp" style="padding-bottom:8px"><span class="edit_item_label"><span style="color:red">*</span>页签高度：</span><input type="text" style="width:170px;" onkeyup="SurveyBuild.saveTabAttr(this,\'pageHeight\')" value="' + data.pageHeight + '"> px</div>';
-		
+
         e += '  <table class="table table-bordered data-table">';
         e += '      <thead>';
         e += '          <tr>';
@@ -194,7 +194,7 @@ var SurveyBuild = {
         if (!el || !attrName) return;
         var instanceId = $(el).attr("data_id");
         var val = this._getAttrVal(el);
-	
+
         if(attrName == "itemName"){
         	this._items[instanceId][attrName] = val;
             $("#question-box li[data_id='" + instanceId + "'] .pagename").html(val);
@@ -203,12 +203,12 @@ var SurveyBuild = {
             if (!el || !attrName) return;
             var instanceId = $(el).attr("data_id");
             var val = this._getAttrVal(el);
-            
+
             this._items[instanceId][attrName] = val;
-            
+
     		var data = this._data;
     		var pageHeight = data.hasOwnProperty("pageHeight") ? data.pageHeight : "55";
-    		
+
     		$.each(this._items, function(h, obj) {
     			if (obj["classname"] == "Page") {
     				obj.tapStyle = "width:"+ obj.tapWidth+"px;height:"+ pageHeight + "px";
@@ -221,16 +221,16 @@ var SurveyBuild = {
             data = this._data;
     		var val = this._getAttrVal(el);
             data[attrName] = val;
-    		
+
     		$.each(this._items, function(h, obj) {
                 if (obj["classname"] == "Page") {
     				obj.tapHeight = val;
     				obj.tapStyle = "width:"+ obj.tapWidth+"px;height:"+ val + "px";
                 }
             });
-    		
+
     		var items = this._items;
-    		
+
     		$("#tabNav > div").each(function(){
     		  var instanceId = $(this).attr("data_id");
     		  $("#tabNav div[data_id='" + instanceId + "']").html(items[instanceId].title);
@@ -241,49 +241,49 @@ var SurveyBuild = {
     },
     /*
 	 * 暂时注释掉 By WRL @20160411 saveTabAttr: function(el, attrName) {
-	 * 
+	 *
 	 * if (!el || !attrName) return; var instanceId = $(el).attr("data_id"); var
 	 * val = this._getAttrVal(el);
-	 * 
+	 *
 	 * if(attrName == "itemName"){ //$("#tabNav div[data_id='" + instanceId +
 	 * "']").html(val); $("#question-box li[data_id='" + instanceId + "']
 	 * .pagename").html(val); } this._items[instanceId][attrName] = val;
 	 * this.is_edit = true; }, saveTapNumAttr: function(el, attrName) {
-	 * 
+	 *
 	 * var data = this._data;
-	 * 
+	 *
 	 * var pageHeight = data.hasOwnProperty("pageHeight") ? data.pageHeight :
 	 * "55";
-	 * 
+	 *
 	 * if (!el || !attrName) return; var instanceId = $(el).attr("data_id");
-	 * 
+	 *
 	 * var tapWidth = this._items[instanceId][attrName];
-	 * 
+	 *
 	 * var val = this._getAttrVal(el);
-	 * 
+	 *
 	 * this._items[instanceId][attrName] = val; this.is_edit = true;
-	 * 
+	 *
 	 * $.each(this._items, function(h, obj) { if (obj["classname"] == "Page") {
 	 * obj.tapStyle = "width:"+ obj.tapWidth+"px;height:"+ pageHeight + "px"; }
 	 * }); },
-	 * 
+	 *
 	 * saveTapHeight: function(el, attrName) { if (!el || !attrName) return;
 	 * data = this._data; var tapHeight; tapHeight = this._getAttrVal(el);
 	 * data[attrName] = tapHeight;
-	 * 
+	 *
 	 * this.is_edit = true;
-	 * 
+	 *
 	 * $.each(this._items, function(h, obj) { if (obj["classname"] == "Page") {
 	 * obj.tapHeight = tapHeight; obj.tapStyle = "width:"+
 	 * obj.tapWidth+"px;height:"+ tapHeight + "px"; } });
-	 * 
+	 *
 	 * var items = this._items;
-	 * 
+	 *
 	 * $("#tabNav > div").each(function(){ var instanceId =
 	 * $(this).attr("data_id"); $("#tabNav div[data_id='" + instanceId +
 	 * "']").html(items[instanceId].title); //$("#tabNav div[data_id='" +
 	 * instanceId + "']").attr("style",items[instanceId].tapStyle);
-	 * 
+	 *
 	 * }); },
 	 */
     saveTjx_fj: function() {
@@ -323,6 +323,7 @@ var SurveyBuild = {
     },
     /* level0级属性赋值 */
     saveAttr: function(el, attrName) {
+    	console.log("是否调用")
         if (!el || !attrName) return;
         // alert("OK");
         // alert(attrName);
@@ -343,9 +344,9 @@ var SurveyBuild = {
 
         var rules = data["rules"];
         var _rules = this._componentConfig[$.inArray(data["classname"], this._componentIndex)]["rules"];
-        
-        
-        
+
+
+
         var $activeLi = $("#question-box li.active");
         if (attrName == "title") {
             /*
@@ -429,7 +430,7 @@ var SurveyBuild = {
                          $("#is_CheckRows").prop("checked", $(el).prop("checked"));
                      }
             	 } else {
-            	
+
             		if (attrName == "isNumSize") {
             			var NumSizeValidatorObj = _rules["NumSizeValidator"]
             			if (!rules["NumSizeValidator"] && NumSizeValidatorObj) {
@@ -449,7 +450,7 @@ var SurveyBuild = {
             				var RegularValidatorObj = _rules["RegularValidator"]
             				if (!rules["RegularValidator"] && RegularValidatorObj) {
             					rules["RegularValidator"] = RegularValidatorObj;
-            				}	
+            				}
             				if (rules["RegularValidator"]) {
             					if (val == "N" || val == "") {
             						rules["RegularValidator"]["isEnable"] = "N"
@@ -500,6 +501,23 @@ var SurveyBuild = {
             							} else if (attrName == "fPageId"){
             								// alert("GO");
             								data["classname"] == "Page" && this._initTab();
+            							}else if (attrName == "firstName"){ //doubleSelect控件专用
+            								// alert("GO");
+            								data["firstName"] = val;
+            								data["children"][0]["itemName"] = val;
+            								data["children"][0]["title"] = val;
+            								data["wzsm"]=data["firstName"]+"_"+data["secondName"];
+            							} else if (attrName == "secondName"){ //doubleSelect控件专用
+            								// alert("GO");
+            								data["secondName"] = val;
+            								data["children"][1]["itemName"] = val;
+            								data["children"][1]["title"] = val;
+            								data["wzsm"]=data["firstName"]+"_"+data["secondName"];
+            							} else if (attrName == "otherName"){ //doubleSelect控件专用
+            								//alert("GO");
+            								data["otherName"] = val;
+            								data["children"][2]["itemName"] = val;
+            								data["children"][2]["title"] = val;
             							}
             						}
             					}
@@ -530,20 +548,27 @@ var SurveyBuild = {
                     data["option"][i][attrNameLevel1] = 'N';
                 }
             }
-			
+
 			if (attrNameLevel1 == "other") {
 				var clsname = data["classname"];
-				if(clsname != "Radio"){
+				if(clsname != "Check"){
 	                for (var i in data["option"]) {
 	                    data["option"][i][attrNameLevel1] = 'N';
 	                    $("#o" + i).find("b").remove();
 	                }
 				}
-
                 if(val == "Y"){
-                    $("#o" + optionId).append('<b class="read-input"></b>')
+                	if(clsname == "Check"){
+                		$("#o" + optionId).append('<b class="read-input short"></b>')
+                	}else{
+                		$("#o" + optionId).append('<b class="read-input"></b>')
+                	}
+                } else if(val == "N"){
+                	$("#o" + optionId).find("b").remove();
                 }
             }
+
+
 
             data["option"][ids[1]][attrNameLevel1] = val;
             if (attrNameLevel1 == "defaultval") {
@@ -553,6 +578,81 @@ var SurveyBuild = {
                 if (false) val += '<b class="read-input"></b>';
                 $("#o" + ids[1]).html(val)
             }
+        } catch(e) {};
+        this.is_edit = true;
+    },
+    //DoubleSelect 控件专用
+    saveLevel1AttrForDoubleSelect: function(el, attrNameLevel1,name) {
+        if (!el || !attrNameLevel1) return;
+        var val = this._getAttrVal(el),data = "";
+        
+        //console.log("val:"+val);
+        //console.log("attrNameLevel1:"+attrNameLevel1);
+        //console.log("name:"+name);
+       
+        
+        var $tr = $(el).closest("tr"),
+        ids = $tr.attr("data-id").split("-"),
+        instanceId = ids[0];
+        optionId = ids[1];
+        //console.log("optionId:"+optionId);
+        if (SurveyBuild.isDHContainer) {
+            data = this._items[SurveyBuild.currentDHID]["children"][instanceId];
+        } else {
+            data = this._items[instanceId];
+        }
+
+        try {
+        	var option=new Array();
+        	if (name =="optionF") {
+        		option = data.optionF;
+        		
+        		//所有都置为N
+                if (attrNameLevel1 == "defaultval") {
+                    for (var i in option) {
+                    	option[i][attrNameLevel1] = 'N';
+                    }
+                    //某一项置为val
+                    option[optionId][attrNameLevel1] = val;
+                }
+                
+                
+                if (attrNameLevel1 == "defaultval" ) {
+                	if (val=="Y") {
+                		data["children"][0].value = option[ids[1]]["code"];
+                	} else {
+                		data["children"][0].value ="";
+                	}
+                }
+                if (attrNameLevel1 == "txt") {
+                	option[optionId].txt = val;
+                }
+                if (attrNameLevel1 == "code") {
+                	option[optionId].code = val;
+                }
+                if (attrNameLevel1 == "other") {
+                	//console.log("GOOO");
+                	 for (var i in option) {
+                     	option[i][attrNameLevel1] = 'N';
+                     }
+                     //某一项置为val
+                	 //console.log(val);
+                     option[optionId][attrNameLevel1] = val;
+                     //console.log(option[optionId][other]);
+                }
+        	} else {
+        		option = data.optionS;
+        		 if (attrNameLevel1 == "txt") {
+                 	option[optionId].txt = val;
+                 }
+                 if (attrNameLevel1 == "code") {
+                 	option[optionId].code = val;
+                 }
+                 if (attrNameLevel1 == "weight") {
+                  	option[optionId].weight = val;
+                  }
+        	}
+
         } catch(e) {};
         this.is_edit = true;
     },
@@ -601,6 +701,55 @@ var SurveyBuild = {
                     $("#" + $tr.attr("data-id") + "_1").css("display", "none");
                 }
 
+            }
+        } catch(e) {};
+        this.is_edit = true;
+    },
+    //多选题，JINX
+    saveLevel1Attr3: function(el, attrNameLevel1) {
+        if (!el || !attrNameLevel1) return;
+        var val = this._getAttrVal(el),data = "";
+        var $tr = $(el).closest("tr"),
+        ids = $tr.attr("data-id").split("-"),
+        instanceId = ids[0];
+        optionId = ids[1];
+        if (SurveyBuild.isDHContainer) {
+            data = this._items[SurveyBuild.currentDHID]["children"][instanceId];
+        } else {
+            data = this._items[instanceId];
+        }
+
+        try {
+            if (attrNameLevel1 == "defaultval") {
+                for (var i in data["option"]) {
+                    data["option"][i][attrNameLevel1] = 'N';
+                }
+            }
+
+            if (attrNameLevel1 == "other") {
+                var clsname = data["classname"];
+                /*if(clsname != "Radio"){
+                    for (var i in data["option"]) {
+                        data["option"][i][attrNameLevel1] = 'N';
+                        $("#o" + i).find("b").remove();
+                    }
+                }*/
+
+                if(val == "Y"){
+                    $("#o" + optionId).append('<b class="read-input"></b>')
+                }
+                if(val == "N"){
+                    $("#o" + optionId).find("b").remove();
+                }
+            }
+
+            data["option"][ids[1]][attrNameLevel1] = val;
+            if (attrNameLevel1 == "defaultval") {
+                data.value = data["option"][ids[1]]["code"];
+            }
+            if (attrNameLevel1 == "txt") {
+                if (false) val += '<b class="read-input"></b>';
+                $("#o" + ids[1]).html(val)
             }
         } catch(e) {};
         this.is_edit = true;
@@ -729,8 +878,33 @@ var SurveyBuild = {
             CallBack()
         };
     },
+    /* 获取高级设置可用同步配置 */
+    selectSyncConfig: function () {
+        var syncConfdata = [];
+        var tzParams = '{"ComID":"TZ_APPSYNC_COM","PageID":"TZ_APPSYNC_STD","OperateType":"QG","comParams":{"cfgSrhId":"TZ_APPSYNC_COM.TZ_APPSYNC_STD.TZ_APPSYNC_CONFIG","condition":{}}}';
+        $.ajax({
+            type: "post",
+            async: false,
+            dataType: "json",
+            url: TzUniversityContextPath + "/dispatcher",
+            data: {
+                tzParams: tzParams
+            },
+            success: function (response) {
+                if(response.comContent.root){
+                    var objArray = response.comContent.root;
+                    for(var i = 0;i<objArray.length;i++){
+                        var obj = {"appSyncId":objArray[i]["TZ_APPSYNC_ID"],"appSyncDesc":objArray[i]["TZ_APPSYNC_DESC"]}
+                        syncConfdata.push(obj)
+                    }
+                }
+            }
+        });
+        return syncConfdata;
+    },
     /* 控件属性--高级设置--Begin */
     RulesSet: function(el) {
+    	//console.log("11111111111");
         /* 控件实例ID */
         var instanceId = $("#question-edit").attr("data_id");
         var _d;
@@ -811,10 +985,14 @@ var SurveyBuild = {
                 "isEff": "N",
                 "syncType": "",
                 "syncOrder": "",
-                "syncSep": ""
+                "syncSep": "",
+                "isMultiLine":""
             }
             _d["syncRule"] = g;
         }
+
+        var syncConfData = this.selectSyncConfig();
+
         pageHtml += '<div class="edit_item_warp">';
         pageHtml += '	<fieldset><span style="font-weight: bold">信息项同步配置</span></fieldset>';
         pageHtml += '</div>';
@@ -825,12 +1003,13 @@ var SurveyBuild = {
         pageHtml += '			<tr>';
         pageHtml += '				<th width="50px" style="text-align: center">启用</th>';
         pageHtml += '				<th>同步类型</th>';
-        pageHtml += '				<th>合并顺序</th>';
+        //pageHtml += '				<th>合并顺序</th>';
         pageHtml += '				<th>合并分隔符</th>';
+        pageHtml += '				<th style="text-align: center">是否多行容器</th>';
         pageHtml += '				<th>&nbsp;</th>';
         pageHtml += '			</tr>';
 
-
+        //console.log(pageHtml);
         $.each(_d["syncRule"],function(h, obj) {
             pageHtml += '			<tr data_id="' + h + '">';
             pageHtml += '				<td style="text-align: center">';
@@ -839,26 +1018,37 @@ var SurveyBuild = {
             pageHtml += '				<td>';
             pageHtml += '					<select id="type_' + h + '" onchange="SurveyBuild.saveSyncAttr(this,\'syncType\')" class="ml8">';
             pageHtml += '                       <option>--请选择--</option>';
-            pageHtml += '                       <option value="ZYSJ" ' + (obj.syncType == "ZYSJ" ? "selected='selected'": "") + '>主要手机</option>';
-            pageHtml += '                       <option value="BYSJ" ' + (obj.syncType == "BYSJ" ? "selected='selected'": "") + '>备用手机</option>';
-            pageHtml += '                       <option value="ZYDH" ' + (obj.syncType == "ZYDH" ? "selected='selected'": "") + '>主要电话</option>';
-            pageHtml += '                       <option value="BYDH" ' + (obj.syncType == "BYDH" ? "selected='selected'": "") + '>备用电话</option>';
-            pageHtml += '                       <option value="ZYYX" ' + (obj.syncType == "ZYYX" ? "selected='selected'": "") + '>主要邮箱</option>';
-            pageHtml += '                       <option value="BYYX" ' + (obj.syncType == "BYYX" ? "selected='selected'": "") + '>备用邮箱</option>';
-            pageHtml += '                       <option value="ZYDZ" ' + (obj.syncType == "ZYDZ" ? "selected='selected'": "") + '>主要通讯地址</option>';
-            pageHtml += '                       <option value="ZYYB" ' + (obj.syncType == "ZYYB" ? "selected='selected'": "") + '>主要通讯地址邮编</option>';
-            pageHtml += '                       <option value="BYDZ" ' + (obj.syncType == "BYDZ" ? "selected='selected'": "") + '>备用通讯地址</option>';
-            pageHtml += '                       <option value="BYYB" ' + (obj.syncType == "BYYB" ? "selected='selected'": "") + '>备用通讯地址邮编</option>';
-            pageHtml += '                       <option value="WX" ' + (obj.syncType == "WX" ? "selected='selected'": "") + '>微信号	</option>';
-            pageHtml += '                       <option value="SKY" ' + (obj.syncType == "SKY" ? "selected='selected'": "") + '>Sky账号</option>';
-            pageHtml += '                       <option value="IDCARD" ' + (obj.syncType == "IDCARD" ? "selected='selected'": "") + '>证件号码</option>';
+            for(var i = 0;i<syncConfData.length;i++){
+                pageHtml += '<option value="'+syncConfData[i]["appSyncId"]+'" ' + (obj.syncType == syncConfData[i]["appSyncId"] ? "selected='selected'": "") + '>'+syncConfData[i]["appSyncDesc"]+'</option>';
+            }
+            //pageHtml += '                       <option>--请选择--</option>';
+            //pageHtml += '                       <option value="ZYSJ" ' + (obj.syncType == "ZYSJ" ? "selected='selected'": "") + '>主要手机</option>';
+            //pageHtml += '                       <option value="BYSJ" ' + (obj.syncType == "BYSJ" ? "selected='selected'": "") + '>备用手机</option>';
+            //pageHtml += '                       <option value="ZYDH" ' + (obj.syncType == "ZYDH" ? "selected='selected'": "") + '>主要电话</option>';
+            //pageHtml += '                       <option value="BYDH" ' + (obj.syncType == "BYDH" ? "selected='selected'": "") + '>备用电话</option>';
+            //pageHtml += '                       <option value="ZYYX" ' + (obj.syncType == "ZYYX" ? "selected='selected'": "") + '>主要邮箱</option>';
+            //pageHtml += '                       <option value="BYYX" ' + (obj.syncType == "BYYX" ? "selected='selected'": "") + '>备用邮箱</option>';
+            //pageHtml += '                       <option value="ZYDZ" ' + (obj.syncType == "ZYDZ" ? "selected='selected'": "") + '>主要通讯地址</option>';
+            //pageHtml += '                       <option value="ZYYB" ' + (obj.syncType == "ZYYB" ? "selected='selected'": "") + '>主要通讯地址邮编</option>';
+            // pageHtml += '                       <option value="BYDZ" ' + (obj.syncType == "BYDZ" ? "selected='selected'": "") + '>备用通讯地址</option>';
+            // pageHtml += '                       <option value="BYYB" ' + (obj.syncType == "BYYB" ? "selected='selected'": "") + '>备用通讯地址邮编</option>';
+            // pageHtml += '                       <option value="WX" ' + (obj.syncType == "WX" ? "selected='selected'": "") + '>微信号	</option>';
+            // pageHtml += '                       <option value="SKY" ' + (obj.syncType == "SKY" ? "selected='selected'": "") + '>Sky账号</option>';
+            // pageHtml += '                       <option value="IDCARD" ' + (obj.syncType == "IDCARD" ? "selected='selected'": "") + '>证件号码</option>';
+            // pageHtml += '                       <option value="REALNAME" ' + (obj.syncType == "REALNAME" ? "selected='selected'": "") + '>姓名</option>';
+            // pageHtml += '                       <option value="COMPANY" ' + (obj.syncType == "COMPANY" ? "selected='selected'": "") + '>公司名称</option>';
+            // pageHtml += '                       <option value="ZHIWEI" ' + (obj.syncType == "ZHIWEI" ? "selected='selected'": "") + '>职位</option>';
+            // pageHtml += '                       <option value="GUOJI" ' + (obj.syncType == "GUOJI" ? "selected='selected'": "") + '>国籍</option>';
             pageHtml += '					</select>';
             pageHtml += '				</td>';
-            pageHtml += '				<td>';
-            pageHtml += '					<input type="text" class="option-txt syncOrder" id="order_' + h + '" value="' + obj.syncOrder + '" onkeyup="SurveyBuild.saveSyncAttr(this,\'syncOrder\')">';
-            pageHtml += '				</td>';
+            // pageHtml += '				<td>';
+            // pageHtml += '					<input type="text" class="option-txt syncOrder" id="order_' + h + '" value="' + obj.syncOrder + '" onkeyup="SurveyBuild.saveSyncAttr(this,\'syncOrder\')">';
+            // pageHtml += '				</td>';
             pageHtml += '				<td>';
             pageHtml += '					<input type="text" class="option-txt" id="sep_' + h + '" value="' + obj.syncSep + '" onkeyup="SurveyBuild.saveSyncAttr(this,\'syncSep\')">';
+            pageHtml += '				</td>';
+            pageHtml += '				<td style="text-align: center">';
+            pageHtml += '					<label class="checkbox inline"><input type="checkbox" id="iml' + h + '" onchange="SurveyBuild.saveSyncAttr(this,\'isMultiLine\')" ' + (obj.isMultiLine == "Y" ? " checked=\'true\'": "") + '></label>';
             pageHtml += '				</td>';
             pageHtml += '				<td>';
             pageHtml += '					<a href="javascript:void(0);" class="text-success" onclick="SurveyBuild.plusSync(this);return false;"><i class="icon-plus-sign"></i> </a>&nbsp;';
@@ -866,6 +1056,7 @@ var SurveyBuild = {
             pageHtml += '				</td>';
             pageHtml += '			</tr>';
         });
+        //console.log(pageHtml);
         pageHtml += '		</tbody>';
         pageHtml += '	</table>';
         pageHtml += '</fieldset>';
@@ -912,12 +1103,15 @@ var SurveyBuild = {
                     "isEff": "N",
                     "syncType": "",
                     "syncOrder": "",
-                    "syncSep": ""
+                    "syncSep": "",
+                    "isMultiLine":""
                 }
             }
         }
 
         data.syncRule = g;
+
+        var syncConfData = this.selectSyncConfig();
 
         syncRow += '<tr data_id="' + n + '">';
         syncRow += '	<td style="text-align: center">';
@@ -925,26 +1119,38 @@ var SurveyBuild = {
         syncRow += '	</td>';
         syncRow += '	<td>';
         syncRow += '		<select id="type_' + n + '" onchange="SurveyBuild.saveSyncAttr(this,\'syncType\')" class="ml8">';
-        syncRow += '            <option>--请选择--</option>';
-        syncRow += '          <option value="ZYSJ" ' + (data.syncRule[n].syncType == "ZYSJ" ? "selected='selected'": "") + '>主要手机</option>';
-        syncRow += '          <option value="BYSJ" ' + (data.syncRule[n].syncType == "BYSJ" ? "selected='selected'": "") + '>备用手机</option>';
-        syncRow += '          <option value="ZYDH" ' + (data.syncRule[n].syncType == "ZYDH" ? "selected='selected'": "") + '>主要电话</option>';
-        syncRow += '          <option value="BYDH" ' + (data.syncRule[n].syncType == "BYDH" ? "selected='selected'": "") + '>备用电话</option>';
-        syncRow += '          <option value="ZYYX" ' + (data.syncRule[n].syncType == "ZYYX" ? "selected='selected'": "") + '>主要邮箱</option>';
-        syncRow += '          <option value="BYYX" ' + (data.syncRule[n].syncType == "BYYX" ? "selected='selected'": "") + '>备用邮箱</option>';
-        syncRow += '          <option value="ZYDZ" ' + (data.syncRule[n].syncType == "ZYDZ" ? "selected='selected'": "") + '>主要通讯地址</option>';
-        syncRow += '          <option value="ZYYB" ' + (data.syncRule[n].syncType == "ZYYB" ? "selected='selected'": "") + '>主要通讯地址邮编</option>';
-        syncRow += '          <option value="BYDZ" ' + (data.syncRule[n].syncType == "BYDZ" ? "selected='selected'": "") + '>备用通讯地址</option>';
-        syncRow += '          <option value="BYYB" ' + (data.syncRule[n].syncType == "BYYB" ? "selected='selected'": "") + '>备用通讯地址邮编</option>';
-        syncRow += '          <option value="WX" ' + (data.syncRule[n].syncType == "WX" ? "selected='selected'": "") + '>微信号	</option>';
-        syncRow += '          <option value="SKY" ' + (data.syncRule[n].syncType == "SKY" ? "selected='selected'": "") + '>Sky账号</option>';
+        syncRow += '         <option>--请选择--</option>';
+        for(var i = 0;i<syncConfData.length;i++){
+            syncRow += '<option value="'+syncConfData[i]["appSyncId"]+'" ' + (data.syncRule[n].syncType == syncConfData[i]["appSyncId"] ? "selected='selected'": "") + '>'+syncConfData[i]["appSyncDesc"]+'</option>';
+        }
+        // syncRow += '            <option>--请选择--</option>';
+        // syncRow += '          <option value="ZYSJ" ' + (data.syncRule[n].syncType == "ZYSJ" ? "selected='selected'": "") + '>主要手机</option>';
+        // syncRow += '          <option value="BYSJ" ' + (data.syncRule[n].syncType == "BYSJ" ? "selected='selected'": "") + '>备用手机</option>';
+        // syncRow += '          <option value="ZYDH" ' + (data.syncRule[n].syncType == "ZYDH" ? "selected='selected'": "") + '>主要电话</option>';
+        // syncRow += '          <option value="BYDH" ' + (data.syncRule[n].syncType == "BYDH" ? "selected='selected'": "") + '>备用电话</option>';
+        // syncRow += '          <option value="ZYYX" ' + (data.syncRule[n].syncType == "ZYYX" ? "selected='selected'": "") + '>主要邮箱</option>';
+        // syncRow += '          <option value="BYYX" ' + (data.syncRule[n].syncType == "BYYX" ? "selected='selected'": "") + '>备用邮箱</option>';
+        // syncRow += '          <option value="ZYDZ" ' + (data.syncRule[n].syncType == "ZYDZ" ? "selected='selected'": "") + '>主要通讯地址</option>';
+        // syncRow += '          <option value="ZYYB" ' + (data.syncRule[n].syncType == "ZYYB" ? "selected='selected'": "") + '>主要通讯地址邮编</option>';
+        // syncRow += '          <option value="BYDZ" ' + (data.syncRule[n].syncType == "BYDZ" ? "selected='selected'": "") + '>备用通讯地址</option>';
+        // syncRow += '          <option value="BYYB" ' + (data.syncRule[n].syncType == "BYYB" ? "selected='selected'": "") + '>备用通讯地址邮编</option>';
+        // syncRow += '          <option value="WX" ' + (data.syncRule[n].syncType == "WX" ? "selected='selected'": "") + '>微信号	</option>';
+        // syncRow += '          <option value="SKY" ' + (data.syncRule[n].syncType == "SKY" ? "selected='selected'": "") + '>Sky账号</option>';
+        // syncRow += '                       <option value="IDCARD" ' + (data.syncRule[n].syncType == "IDCARD" ? "selected='selected'": "") + '>证件号码</option>';
+        // syncRow += '                       <option value="REALNAME" ' + (data.syncRule[n].syncType == "REALNAME" ? "selected='selected'": "") + '>姓名</option>';
+        // syncRow += '                       <option value="COMPANY" ' + (data.syncRule[n].syncType == "COMPANY" ? "selected='selected'": "") + '>公司名称</option>';
+        // syncRow += '                       <option value="ZHIWEI" ' + (data.syncRule[n].syncType == "ZHIWEI" ? "selected='selected'": "") + '>职位</option>';
+        // syncRow += '                       <option value="GUOJI" ' + (data.syncRule[n].syncType == "GUOJI" ? "selected='selected'": "") + '>国籍</option>';
         syncRow += '		</select>';
         syncRow += '    </td>';
-        syncRow += '	 <td>';
-        syncRow += '		<input type="text" class="option-txt syncOrder" id="order_' + n + '" value="' + data.syncRule[n].syncOrder + '" onkeyup="SurveyBuild.saveSyncAttr(this,\'syncOrder\')">';
-        syncRow += '	</td>';
+        //syncRow += '	 <td>';
+        //syncRow += '		<input type="text" class="option-txt syncOrder" id="order_' + n + '" value="' + data.syncRule[n].syncOrder + '" onkeyup="SurveyBuild.saveSyncAttr(this,\'syncOrder\')">';
+        //syncRow += '	</td>';
         syncRow += '	<td>';
         syncRow += '		<input type="text" class="option-txt" id="sep_' + n + '" value="' + data.syncRule[n].syncSep + '" onkeyup="SurveyBuild.saveSyncAttr(this,\'syncSep\')">';
+        syncRow += '	</td>';
+        syncRow += '	<td style="text-align: center">';
+        syncRow += '    	<label class="checkbox inline"><input type="checkbox" id="iml_' + n + '" onchange="SurveyBuild.saveSyncAttr(this,\'isMultiLine\')" ' + (data.syncRule[n].isMultiLine == "Y" ? " checked=\'true\'": "") + '></label>';
         syncRow += '	</td>';
         syncRow += '	<td>';
         syncRow += '		<a href="javascript:void(0);" class="text-success" onclick="SurveyBuild.plusSync(this);return false;"><i class="icon-plus-sign"></i> </a>&nbsp;';
@@ -1055,7 +1261,7 @@ var SurveyBuild = {
 						pageHtml += '<tr reg-id="' + siteObj.siteId+ '">';
 						pageHtml += '<td>'+siteObj.siteId+'</td>' ;
 						pageHtml += '<td>'+siteObj.siteName+'</td>' ;
-						pageHtml += '<td><button class="btn btn-small" onclick="SurveyBuild.DynamicBindValBySite(\''+siteObj.siteId + '\')">选择</button></td>';			
+						pageHtml += '<td><button class="btn btn-small" onclick="SurveyBuild.DynamicBindValBySite(\''+siteObj.siteId + '\')">选择</button></td>';
 						pageHtml  += '</tr> ';
 					 });
 						pageHtml += '		</table>';
@@ -1065,12 +1271,12 @@ var SurveyBuild = {
 						SurveyBuild.openMoadal(_DynamicSiteHtml,callBack);
 					}
 				}
-			})	
+			})
 		}else{
 			this.openMoadal(SurveyBuild._DynamicBindHtml,callBack);
 		}
-    },  
-	DynamicBindValBySite: function(siteId){   
+    },
+	DynamicBindValBySite: function(siteId){
 		var callBack = function(){};
 		if(!SurveyBuild._DynamicBindHtml){
 			$.ajax({
@@ -1109,20 +1315,20 @@ var SurveyBuild = {
 					pageHtml += '<td><input type="checkbox" disabled="disabled" '+(item.isEnable?'checked="checked"':"")+'</td>' ;
 					pageHtml += '<td>'+getRegFieldTypeDesc (item.regFieldType)+'</td>' ;
 					pageHtml += '<td><input type="checkbox" disabled="disabled" '+(item.isRequired?'checked="checked"':"")+'</td>' ;
-					pageHtml += '<td><button class="btn btn-small" onclick="SurveyBuild.DynamicBindValCallBack(this)">绑定</button></td>'; 												
+					pageHtml += '<td><button class="btn btn-small" onclick="SurveyBuild.DynamicBindValCallBack(this)">绑定</button></td>';
 					pageHtml  += '</tr> ';
 				 });
 				pageHtml += '		</table>';
     				pageHtml += '	<fieldset>';
-      				pageHtml += '</div>';	
+      				pageHtml += '</div>';
 				SurveyBuild._DynamicBindHtml	=pageHtml ;
-				}				
+				}
 			}
-		});	
+		});
 	}
 	this.openMoadal(SurveyBuild._DynamicBindHtml,callBack);
 
-    },  
+    },
     // 设置常用控件的启用标识
     saveCommonRulesBz: function(el, key) {
         this.saveAttr(el, key);
@@ -1242,7 +1448,7 @@ var SurveyBuild = {
 		ruleSetPage += "</select></div></div>";
 		ruleSetPage	+= '<div class="modal-footer clearfix">';
 		ruleSetPage	+= '<button class="btn btn-warning pull-right" onclick="SurveyBuild.SaveTjx1('+tz_app_id+');"><i class="icon-ok"></i>确定</button></div>';
-		this.openMoadal(ruleSetPage);        
+		this.openMoadal(ruleSetPage);
     },
 	tjx_zhschange:function(){
 		if (document.getElementById("zhs_qy").checked){
@@ -1315,7 +1521,7 @@ var SurveyBuild = {
 
 		ruleSetPage	+= '<div class="modal-footer clearfix">';
 		ruleSetPage	+= '<button class="btn btn-warning pull-right" onclick="SurveyBuild.SaveTjx2('+tz_app_id+');"><i class="icon-ok"></i>确定</button></div>';
-		this.openMoadal(ruleSetPage);        
+		this.openMoadal(ruleSetPage);
     },
 	tjx_engchange:function(){
 		if (document.getElementById("eng_qy").checked){
@@ -1400,7 +1606,7 @@ var SurveyBuild = {
                         } else if (classname == "CharLenValidator") {
                             component["isCheckStrLen"] = "Y";
                         } else if (classname == "RowLenValidator") {
-                            component["isCheckRows"] = "Y";                                                          
+                            component["isCheckRows"] = "Y";
                         } else if (classname == "NumSizeValidator") {
                             component["isNumSize"] = "Y";
                         } else if (classname == "RegularValidator") {
@@ -1831,7 +2037,7 @@ var SurveyBuild = {
                 var c = editor.html();
                 SurveyBuild._items[a].title = c;
 				instanceId = SurveyBuild._items[a].instanceId;
-			
+
 				$("#tabNav div[data_id='" + instanceId + "']").html(c);
                 KindEditor.remove("#" + b)
             }
@@ -2135,7 +2341,7 @@ var SurveyBuild = {
         a += '<div class="modal-header">';
         a += '	<h4>批量编辑选项<span class="muted">(记录之间以回车分隔，名称与描述以”,“分隔)</span></h4>';
         a += '</div>';
-		
+
 		a += '<div class="modal-line"></div>';
 
         a += '<div id="modal-question-option" class="modal-body">';
@@ -2171,7 +2377,178 @@ var SurveyBuild = {
             }
         })
     },
+    
+    //doubleSlsect控件专用
+    optionBatchForDoubleSelect: function(e,e1,name) {
+        var a = '';
+
+        var data = {};
+        if (SurveyBuild.isDHContainer) {
+            data = this._items[SurveyBuild.currentDHID]["children"][e];
+        } else {
+            data = this._items[e];
+        }
+
+        a += '<div class="modal-header">';
+        a += '	<h4>批量编辑选项<span class="muted">(记录之间以回车分隔，名称与描述以”,“分隔)</span></h4>';
+        a += '</div>';
+		
+		a += '<div class="modal-line"></div>';
+
+        a += '<div id="modal-question-option" class="modal-body">';
+        a += '	<textarea id="' + e + '-batch" class="option-text">';
+
+        /* option列表 */
+        //var c = data[name];
+        //console.log("name:"+name);
+        var c=new Array();
+        if (name == "optionF") {
+        	c = data.optionF;
+        } else {
+        	c = data.optionS;
+        }
+        
+        if (name =="optionF") {
+        	for (var b in c) {
+        		a += c[b]["code"] + "," + c[b]["txt"] + "\n"
+        	}
+        } else {
+        	for (var b in c) {
+        		a += c[b]["code"] + "," + c[b]["txt"] + "," + c[b]["weight"]+"\n"
+        	}
+        }
+
+        a +='</textarea>';
+        a +='</div>';
+        a +='<div class="modal-footer clearfix">';
+        a +='	<button class="btn pull-left" onclick="$.fancybox.close()">';
+        a +='		<i class="icon-ban-circle"></i>取消';
+        a +='	</button>';
+        a +='	<button class="btn btn-warning pull-right" onclick="SurveyBuild.optionBatchSaveForDoubleSelect(\'' + e + '\',\'' + e1 + '\',\'' + name + '\')">';
+        a +='		<i class="icon-ok"></i>确认';
+        a +='	</button>';
+        a +='</div>';
+
+        $.fancybox.open({
+            content: a,
+            helpers: {
+                overlay: {
+                    closeClick: false
+                }
+            },
+            afterShow: function() {
+                var g = $("#" + e + "-batch").val();
+                $("#" + e + "-batch").val("").focus().val(g)
+            }
+        })
+    },
     optionBatchSave: function(l) {
+        this.is_edit = true;
+        var m = $.trim($("#" + l + "-batch").val()),
+        a = m.split("\n"),
+        y = {},
+        e = a.length,
+       
+        f = 0,
+        h = {},
+        code = "",
+        txt = "",
+        d = null;
+        console.log("e:"+e);
+        // modity by caoy 20190802 修改option里面的项ID应该是 控件instanceId 然后加自增，原先是直接加时间
+        var n = "A" + ( + new Date());
+         
+        if (SurveyBuild.isDHContainer) {
+            data = this._items[SurveyBuild.currentDHID]["children"][l];
+        } else {
+            data = this._items[l];
+        }
+        clsname = data["classname"];
+        var b = data.option;//现有数据
+        
+        //console.dir(b);
+        var index=0;
+        if(clsname == "Radio" || clsname == "Check"){
+        	n=l;
+        	for (var g = 0; g < e;g++) {
+        		index = g+1;
+        		y = a[g].split(",");
+            	if (a[g].indexOf(",") > 0) {
+                	code = y[0] || "";
+                	txt = y[1] || "";
+            	} else {
+                	code = f,
+                	txt = a[g];
+            	}
+            	h[n + index] = {
+            		code: code,
+                	txt: txt,
+                	orderby: f
+            	};
+            	h[n + index]["defaultval"] = 'N';
+        		h[n + index]["other"] = 'N';
+        		h[n + index]["weight"] = 0;
+        		h[n + index]["checked"] = 'N';
+        		h[n + index]["othervalue"] = '';
+        	}
+        } else {
+
+        	for (var g in b) {
+            	if(e <= f){
+                	break;
+            	}
+            	y = a[f].split(",");
+            	if (a[f].indexOf(",") > 0) {
+                	code = y[0] || "";
+                	txt = y[1] || "";
+            	} else {
+                	txt = a[f];
+            	}
+            	if (e > f) {
+                	h[g] = b[g];
+                	h[g].txt = txt;
+                	if (a[f].indexOf(",") > 0) {
+                    	h[g].code = code;
+                	}
+					++f;
+            	}
+        	}
+        	if (e > f) {
+            	var k = e - f;
+            	for (var g = 0; g < k; ++g) {
+					++f;
+                	y = a[f - 1].split(",");
+                	if (a[f - 1].indexOf(",") > 0) {
+                    	code = y[0] || "";
+                    	txt = y[1] || "";
+                	} else {
+                    	code = f,
+                    	txt = a[f - 1];
+                	}
+                	h[n + g] = {
+                		code: code,
+                    	txt: txt,
+                    	orderby: f
+                	};
+                	if(clsname == "Radio" || clsname == "Check"){
+                		h[n + g]["defaultval"] = 'N';
+                		h[n + g]["other"] = 'N';
+                		h[n + g]["weight"] = 0;
+                		h[n + g]["checked"] = 'N';
+                		h[n + g]["othervalue"] = '';
+                	}
+            	}
+        	}
+        }
+        data.option = h;
+        console.dir(h);
+
+        $(this._html(l)).find(".question-answer").replaceAll("#question-box li[data_id='" + l + "'] .question-answer");
+        $("#question-box li[data_id='" + l + "']").click();
+        $.fancybox.close()
+    },
+    //doubleSelect 控件专用
+    optionBatchSaveForDoubleSelect: function(l,l1,name) {
         this.is_edit = true;
         var m = $.trim($("#" + l + "-batch").val()),
         a = m.split("\n"),
@@ -2182,6 +2559,7 @@ var SurveyBuild = {
         h = {},
         code = "",
         txt = "",
+        weight="",
         d = null;
         if (SurveyBuild.isDHContainer) {
             data = this._items[SurveyBuild.currentDHID]["children"][l];
@@ -2189,7 +2567,15 @@ var SurveyBuild = {
             data = this._items[l];
         }
         clsname = data["classname"];
-        var b = data.option;
+        //var b = data[name];
+        
+        //console.log("name:"+name);
+        var b=new Array();
+        if (name == "optionF") {
+        	b = data.optionF;
+        } else {
+        	b = data.optionS;
+        }
 
         for (var g in b) {
             if(e <= f){
@@ -2199,6 +2585,11 @@ var SurveyBuild = {
             if (a[f].indexOf(",") > 0) {
                 code = y[0] || "";
                 txt = y[1] || "";
+                if (name =="optionS") {
+                	weight= y[2] || "";
+                } else {
+                	weight="0";
+                }
             } else {
                 txt = a[f];
             }
@@ -2207,6 +2598,11 @@ var SurveyBuild = {
                 h[g].txt = txt;
                 if (a[f].indexOf(",") > 0) {
                     h[g].code = code;
+                    if (name =="optionS") {
+                    	h[g].weight = weight;
+                    } else {
+                    	h[g].weight="0";
+                    }
                 }
 				++f;
             }
@@ -2219,15 +2615,23 @@ var SurveyBuild = {
                 if (a[f - 1].indexOf(",") > 0) {
                     code = y[0] || "";
                     txt = y[1] || "";
+                    if (name =="optionS") {
+                    	weight= y[2] || "";
+                    }else {
+                    	weight="0";
+                    }
                 } else {
                     code = f,
                     txt = a[f - 1];
+                    weight="0";
                 }
                 h[n + g] = {
                     code: code,
                     txt: txt,
+                    weight: weight,
                     orderby: f
                 };
+                console.log(clsname);
                 if(clsname == "Radio" || clsname == "Check"){
                 	h[n + g]["defaultval"] = 'N';
                 	h[n + g]["other"] = 'N';
@@ -2237,7 +2641,14 @@ var SurveyBuild = {
                 }
             }
         }
-        data.option = h;
+        //data[name] = h;
+        
+        if (name == "optionF") {
+        	data.optionF  = h ;
+        } else {
+        	data.optionS = h;
+        }
+        console.log(h);
 
         $(this._html(l)).find(".question-answer").replaceAll("#question-box li[data_id='" + l + "'] .question-answer");
         $("#question-box li[data_id='" + l + "']").click();
@@ -2293,7 +2704,7 @@ var SurveyBuild = {
             tr += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr(this,\'txt\')" value="" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
             tr += '<td><a onclick="SurveyBuild.plusOption(this,\'autocpl\');return false;" class="text-success" href="javascript:void(0);"><i class="icon-plus-sign"></i> </a><a onclick="SurveyBuild.minusOption(this);return false;" class="text-warning" href="javascript:void(0);"><i class="icon-minus-sign"></i> </a><a href="javascript:void(0);" class="text-info option-move"><i class="icon-move"></i> </a></td>';
             tr += '</tr>';
-		}else{			
+		}else{
 			tr += '<tr class="read-radio" data-id="' + k + '-' + n + '">';
 			tr += '<td><input type="checkbox" onchange="$(\'.defaultval\').not(this).prop(\'checked\',false);SurveyBuild.saveLevel1Attr(this,\'defaultval\')" class="defaultval" value="1"></td>';
 			tr += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr(this,\'code\')" value="' + a + '" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="ocode"></td>';
@@ -2304,9 +2715,8 @@ var SurveyBuild = {
         $(f).parents("tr").after(tr);
         $(this._html(k)).find(".question-answer").replaceAll("#question-box li[data_id='" + k + "'] .question-answer");
     },
-		
-	// add by kwl 20150420
-	plusOption_radio: function(f) {
+    //doubleSelect 控件专用
+    plusOptionForDoubleSelect: function(f,showType,name) {
         this.is_edit = true;
         var m = $(f).parents("tr").attr("data-id").split("-"),
         k = m[0],
@@ -2316,6 +2726,95 @@ var SurveyBuild = {
         g = {},
         h = 0,
         data = {};
+        //console.log(k);
+        if (SurveyBuild.isDHContainer) {
+            data = this._items[SurveyBuild.currentDHID]["children"][k];
+        } else {
+            data = this._items[k];
+        }
+        // 生成唯一编号code
+        
+        //console.log("name:"+name);
+        
+        //console.dir(data);
+        var option=new Array();
+        if (name == "optionF") {
+        	option = data.optionF;
+        } else {
+        	option = data.optionS;
+        }
+        	
+        
+        for (var e in option) {
+            if ($.isNumeric(option[e].code)) {
+                var j = 1 * option[e].code;
+                if (j > l) {
+                    l = j
+                }
+            }
+        }
+        var a = ++l;
+        data.sort = 1;
+        for (var e in option) {
+            h++;
+            g[e] = cloneObj(option[e]);
+            g[e].orderby = h;
+            if (e == b) {++h;
+                g[n] = {
+                    code: a,
+                    txt: "",
+                    orderby: h,
+                    defaultval: 'N',
+                    other: 'N',
+                    weight: 0
+                }
+            }
+        }
+        option = g;
+        if (name == "optionF") {
+        	data.optionF = g;
+        } else {
+        	data.optionS = g;
+        }
+        
+        var d = $("#build-right").height();
+        var tr = "";
+		if(showType=='secondtname'){
+			tr += '<tr class="read-radio" data-id="' + k + '-' + n + '">';
+			tr += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1AttrForDoubleSelect(this,\'code\')" value="' + a + '" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="ocode"></td>';
+			tr += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1AttrForDoubleSelect(this,\'txt\')" value="" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
+			tr += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1AttrForDoubleSelect(this,\'weight\')" value="0" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="ocode"></td>';
+			tr += '<td><a onclick="SurveyBuild.plusOptionForDoubleSelect(this,\'secondtname\',\'optionS\');return false;" class="text-success" href="javascript:void(0);"><i class="icon-plus-sign"></i> </a><a onclick="SurveyBuild.minusOptionForDoubleSelect(this,\'' + name + '\');return false;" class="text-warning" href="javascript:void(0);"><i class="icon-minus-sign"></i> </a><a href="javascript:void(0);" class="text-info option-move"><i class="icon-move"></i> </a></td>';
+			tr += '</tr>';
+		}else{			
+			tr += '<tr class="read-radio" data-id="' + k + '-' + n + '">';
+			tr += '<td><input type="checkbox" onchange="$(\'.defaultval\').not(this).prop(\'checked\',false);SurveyBuild.saveLevel1AttrForDoubleSelect(this,\'defaultval\',\'optionF\')" class="defaultval" value="N"></td>';
+			tr += '<td><input type="checkbox" onchange="$(\'.other\').not(this).prop(\'checked\',false);SurveyBuild.saveLevel1AttrForDoubleSelect(this,\'other\',\'optionF\');" class="other"  value="N"></td>';
+			tr += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1AttrForDoubleSelect(this,\'code\',\'optionF\')" value="' + a + '" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="ocode"></td>';
+			tr += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1AttrForDoubleSelect(this,\'txt\',\'optionF\')" value="" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
+			tr += '<td><a onclick="SurveyBuild.plusOptionForDoubleSelect(this,\'firstname\',\'optionF\');return false;" class="text-success" href="javascript:void(0);"><i class="icon-plus-sign"></i> </a><a onclick="SurveyBuild.minusOptionForDoubleSelect(this,\'' + name + '\');return false;" class="text-warning" href="javascript:void(0);"><i class="icon-minus-sign"></i> </a><a href="javascript:void(0);" class="text-info option-move"><i class="icon-move"></i> </a></td>';
+			tr += '</tr>';
+		}
+        $(f).parents("tr").after(tr);
+        $(this._html(k)).find(".question-answer").replaceAll("#question-box li[data_id='" + k + "'] .question-answer");
+    },
+
+	// add by kwl 20150420
+	plusOption_radio: function(f) {
+        this.is_edit = true;
+        var m = $(f).parents("tr").attr("data-id").split("-"),
+        k = m[0],
+        b = m[1],
+        l = 0,
+        // modity by caoy 20190802 修改option里面的项ID应该是 控件instanceId 然后加自增，原先是直接加时间
+        //n = "A" + ( + new Date()),
+        index = $(f).parents("tbody").find("tr").length+1,
+        n = k+index,
+        g = {},
+        h = 0,
+        data = {};
+        console.log("radio_index:"+index);
+        console.log("this option instanceId:"+n);
         if (SurveyBuild.isDHContainer) {
             data = this._items[SurveyBuild.currentDHID]["children"][k];
         } else {
@@ -2365,11 +2864,11 @@ var SurveyBuild = {
         // 操作
         tr += '<td><a onclick="SurveyBuild.plusOption_radio(this);return false;" class="text-success" href="javascript:void(0);"><i class="icon-plus-sign"></i> </a><a onclick="SurveyBuild.minusOption(this);return false;" class="text-warning" href="javascript:void(0);"><i class="icon-minus-sign"></i> </a><a href="javascript:void(0);" class="text-info option-move"><i class="icon-move"></i> </a></td>';
         tr += '</tr>';
-		
+
         $(f).parents("tr").after(tr);
         $(this._html(k)).find(".question-answer").replaceAll("#question-box li[data_id='" + k + "'] .question-answer");
     },
-	
+
     minusOption: function(e) {
         this.is_edit = true;
         if ($(e).parents("tr").siblings().length == 0) {
@@ -2388,6 +2887,43 @@ var SurveyBuild = {
                 $(e).parents("tr").remove();
                 $("#o" + d).remove();
                 delete data.option[d]
+            } else {
+                this._error("非法操作")
+            }
+        }
+    },
+    //doubleSelect控件专用
+    minusOptionForDoubleSelect: function(e,name) {
+        this.is_edit = true;
+        if ($(e).parents("tr").siblings().length == 0) {
+            this._error("至少要有一个选项")
+        } else {
+            var c = $(e).parents("tr").attr("data-id").split("-"),
+            f = c[0],
+            d = c[1],
+            data = {};
+            if (SurveyBuild.isDHContainer) {
+                data = this._items[SurveyBuild.currentDHID]["children"][f];
+            } else {
+                data = this._items[f];
+            }
+            
+            //console.log("name:"+name);
+            var option=new Array();
+            if (name == "optionF") {
+            	option = data.optionF;
+            } else {
+            	option = data.optionS;
+            }
+            
+            if (option.hasOwnProperty(d)) {
+                $(e).parents("tr").remove();
+                $("#o" + d).remove();              
+                if (name == "optionF") {
+                	 delete data.optionF[d]
+                } else {
+                	delete data.optionS[d]
+                }
             } else {
                 this._error("非法操作")
             }
@@ -2492,7 +3028,7 @@ var SurveyBuild = {
 	    SurveyBuild.saveBuild(true);
     },
 	preiewAppForm: function(siteId){
-	    var tzParams = '?tzParams='+encodeURIComponent('{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_FORM_STD","OperateType":"HTML","comParams":{"mode":"Y","TZ_APP_TPL_ID":"' + SurveyBuild._tid + '","SiteID":"' +siteId+ '"}}')
+	    var tzParams = '?tzParams='+encodeURIComponent('{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_FORM_STD","OperateType":"HTML","comParams":{"mode":"Y","TZ_APP_TPL_ID":"' + SurveyBuild._tid + '","SiteID":"' +siteId+ '"}}');
         var url = SurveyBuild.tzGeneralURL + tzParams;
         window.open(url, '_blank');
     },
@@ -2501,9 +3037,9 @@ var SurveyBuild = {
         if (!this.checkAttrVal()) {
             return
         }
-        
+
 		var pageSize = $(".tabNav_child").size();
-		console.log(pageSize);
+		//console.log(pageSize);
 		if(pageSize > 0){
 			if(pageSize == 1){
 				noteing("建议分页报名表至少分两页！", 2)
@@ -2512,132 +3048,90 @@ var SurveyBuild = {
 				return;
 			}
 		}
-		
-		var displaytype = this._data.displayType;
-		var a = {},b = true,d = "Page",c = 0,pageno = 1;// 页号从1 开始
-		
-		if(displaytype == "H"){
-			/*横向报名表*/
-	        $("#question-box>li").each(function(f) {
-	            var g = $(this),h = g.attr("data_id"),e = SurveyBuild._items[h]["classname"];
-	            e == "Page" && ++c && ++pageno;
-	            SurveyBuild._items[h]["pageno"] = pageno;
-	            console.log(" -- " + pageno);
-	            if (d == "Page" && e == "Page" && c != 1) {
-	                SurveyBuild.fail($(this), "第" + c + "页不能没有问题", "top");
-	                b = false;
-	                return false
-	            } else {
-	                d = e;
-	                /*如果是多行容器、分组框，那么重新获取其内容（用于多行容器信息项排序）*/
-	                if ($.inArray(SurveyBuild._items[h].classname, ["DHContainer","LayoutControls"]) != -1) {
-	                    var children = {};
-	                     $("#q" + SurveyBuild._items[h]["instanceId"] + " > ul > li").each(function(f){
-	                        var insId = $(this).attr("data_id");
-	                         children[insId] =  SurveyBuild._items[h]["children"][insId];
-	                     });
-	                    SurveyBuild._items[h]["children"] = children;
-	                }
-	                a[h] = SurveyBuild._items[h]
-	            }
-	        });
-		}else{
-			/*纵向报名表*/
-	        
-	        // 标记 顶层页 真正的页 不是页
-	        var topPage=false,Page=false,noPage=false;
-	        // 校验是否是多层菜单
-	        var isMultilayerMenu = false;
-	        $("#question-box>li").each(function(f) {
-	        	var hhhhhh = $(this).attr("data_id")
-	        	var variable2 = SurveyBuild._items[hhhhhh]["fPageId"] || '';
-	        	if (variable2 !='') {
-	        		isMultilayerMenu = true;
-	        		return false;
-	        	}
-	        });
-	        
-	        $("#question-box>li").each(function(f) {
-	        	topPage=false,Page=false,noPage=false;
-	        	
-	            var g = $(this),h = g.attr("data_id"),e = SurveyBuild._items[h]["classname"];
-	            //console.log(h);
-	            //console.log(e);
-	            //console.log(SurveyBuild._items[h]["itemName"]);
-	            //console.log(SurveyBuild._items[h]["fPageId"]);
-	            if (e !="Page") {
-	            	noPage = true;
-					topPage = false;
-					Page = false;
-	            } else {
-					noPage=false;
-	            	var variable2 = SurveyBuild._items[h]["fPageId"] || '';
-	            	console.log(variable2);
-	            	if (variable2 !='') {
-	            		Page = true;
-	            		topPage = false;
-	            	} else {
-	            		topPage = true;
-	            		Page = false;
-	            	}
-	            }
-	            // 顶级的页，不算pageno，固定写死为0
-				
-	         // 顶级的页，不算pageno，固定写死为0
-	            if (isMultilayerMenu) {
-	            	if (topPage) {
-	            		SurveyBuild._items[h]["pageno"] = 0;
-	            	} else {
-	            		SurveyBuild._items[h]["pageno"] = pageno;
-	            	}
-	            } else {
-	            	SurveyBuild._items[h]["pageno"] = pageno;
-	            	 if (e =="Page") {
-	            		 Page = true;
-	            		 noPage = false;
-	            	 } else {
-	            		 noPage = true;
-	            		 Page= false;
-	            	 }
-	            }
-	            
-	            // 遇到不是分页，c累加1，c的作用是 某一页内 控件的统计
-	            if (noPage) {
-	            	c =c +1;
-	            }
-	            
-				console.log("noPage"+noPage);
-				console.log("topPage"+topPage);
-				console.log("Page"+Page);
-				console.log("c"+c);
-				console.log("pageno"+pageno);
-				
-	            // modity by caoy 顶级的页，不需要做这个判断
-	            if (Page && c == 0) {
-	    			SurveyBuild.fail($(this), "第" + pageno + "页不能没有问题", "top");
-	    			b = false;
-	    			return false
-	            } else {
-	            	// 遇到Page pageno累加1 c重新计数
-	                if (Page) {
-	                	pageno = pageno+1;
-	                	c = 0;
-	                }
-	                d = e;
-	                /* 如果是多行容器、分组框，那么重新获取其内容（用于多行容器信息项排序） */
-	                if ($.inArray(SurveyBuild._items[h].classname, ["DHContainer","LayoutControls"]) != -1) {
-	                    var children = {};
-	                     $("#q" + SurveyBuild._items[h]["instanceId"] + " > ul > li").each(function(f){
-	                        var insId = $(this).attr("data_id");
-	                         children[insId] =  SurveyBuild._items[h]["children"][insId];
-	                     });
-	                    SurveyBuild._items[h]["children"] = children;
-	                }
-	                a[h] = SurveyBuild._items[h]
-	            }
-				
-	        });
-		}
+        var a = {},b = true,d = "Page",c = 0,pageno = 1;// 页号从1 开始
+
+        // 标记 顶层页 真正的页 不是页
+        var topPage=false,Page=false,noPage=false;
+        // 校验是否是多层菜单
+        var isMultilayerMenu = false;
+        $("#question-box>li").each(function(f) {
+        	var hhhhhh = $(this).attr("data_id")
+        	var variable2 = SurveyBuild._items[hhhhhh]["fPageId"] || '';
+        	if (variable2 !='') {
+        		isMultilayerMenu = true;
+        		return false;
+        	}
+        });
+
+        //console.log("isMultilayerMenu:"+isMultilayerMenu);
+
+        $("#question-box>li").each(function(f) {
+        	topPage=false,Page=false,noPage=false;
+
+            var g = $(this),h = g.attr("data_id"),e = SurveyBuild._items[h]["classname"];
+            //console.log("id:"+SurveyBuild._items[h]["itemId"]);
+            //console.log("classname:"+e);
+            if (e !="Page") {
+            	noPage = true;
+            } else {
+            	var variable2 = SurveyBuild._items[h]["fPageId"] || '';
+            	if (variable2 !='') {
+            		Page = true;
+            	} else {
+            		topPage = true;
+            	}
+            }
+            // 顶级的页，不算pageno，固定写死为0
+            if (isMultilayerMenu) {
+            	if (topPage) {
+            		SurveyBuild._items[h]["pageno"] = 0;
+            	} else {
+            		SurveyBuild._items[h]["pageno"] = pageno;
+            	}
+            } else {
+            	SurveyBuild._items[h]["pageno"] = pageno;
+            	 if (e =="Page") {
+            		 Page = true;
+            	 } else {
+            		 noPage = true;
+            	 }
+            }
+
+
+            // 遇到不是分页，c累加1，c的作用是 某一页内 控件的统计
+            if (noPage) {
+            	c =c +1;
+            }
+            //console.log("pageno:"+pageno);
+            //console.log("noPage:"+noPage);
+            //console.log("Page:"+Page);
+            //console.log("c:"+c);
+
+            // modity by caoy 顶级的页，不需要做这个判断
+            if (Page && c == 0) {
+    			SurveyBuild.fail($(this), "第" + pageno + "页不能没有问题", "top");
+    			b = false;
+    			return false
+            } else {
+            	// 遇到Page pageno累加1 c重新计数
+                if (Page) {
+                	pageno = pageno+1;
+                	c = 0;
+                }
+                d = e;
+                /* 如果是多行容器、分组框，那么重新获取其内容（用于多行容器信息项排序） */
+                if ($.inArray(SurveyBuild._items[h].classname, ["DHContainer","LayoutControls"]) != -1) {
+                    var children = {};
+                     $("#q" + SurveyBuild._items[h]["instanceId"] + " > ul > li").each(function(f){
+                        var insId = $(this).attr("data_id");
+                         children[insId] =  SurveyBuild._items[h]["children"][insId];
+                     });
+                    SurveyBuild._items[h]["children"] = children;
+                }
+                a[h] = SurveyBuild._items[h]
+            }
+
+        });
 
         SurveyBuild._data['items'] = a;
         var params = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_OTHER_STD","OperateType":"U","comParams":{"update":[{"tid":"' + SurveyBuild._tid + '","data":' + $.toJSON(SurveyBuild._data) + '}]}}';
@@ -2670,10 +3164,7 @@ var SurveyBuild = {
 								dataType: "json",
 								async: false,
 								success: function(result){
-									//console.log(result);
 									var siteArr = result.comContent.root;
-									//console.log(result.comContent.total);
-									//console.log(siteArr);
 									if(result.comContent.total == "1"){
 										var siteObj = siteArr[0];
 										var siteId = siteObj.siteId;
@@ -2696,7 +3187,7 @@ var SurveyBuild = {
 										pageHtml += '<tr reg-id="' + siteObj.siteId+ '">';
 										pageHtml += '<td>'+siteObj.siteId+'</td>' ;
 										pageHtml += '<td>'+siteObj.siteName+'</td>' ;
-										pageHtml += '<td><button class="btn btn-small" onclick="SurveyBuild.preiewAppForm(\''+siteObj.siteId + '\')">选择</button></td>';			
+										pageHtml += '<td><button class="btn btn-small" onclick="SurveyBuild.preiewAppForm(\''+siteObj.siteId + '\')">选择</button></td>';
 										pageHtml  += '</tr> ';
 									 });
 										pageHtml += '		</table>';
@@ -3035,15 +3526,15 @@ var SurveyBuild = {
                 children1 = childrens[i];
                 $.each(children1,function(insid, obj) {
                     if(obj.hasOwnProperty("rules") && obj.isSingleLine != "Y"){
-						
+
                         // 事件绑定
                         $.each(obj["rules"],function(classname, classObj) {
                             if(classname=="AssociatedValidator"){
 								if ($.inArray(classname, me._baseRules) == -1 && obj["rules"][classname]["isEnable"] == "Y") {
-									
+
 									var _ruleClass = ValidationRules[classname];
                                     if (_ruleClass && _ruleClass._eventList && $.trim(classObj["messages"])!="") {
-										
+
                                         if(obj["classname"]=="Radio"){
                                             $inputObjects = $("input[name='radio" + obj["itemId"] + "']");
                                             eval(classObj["messages"]);
@@ -3057,7 +3548,7 @@ var SurveyBuild = {
                                     }
                                 }
                             }
-                            
+
                         });
                     }
                 });
@@ -3219,7 +3710,7 @@ var SurveyBuild = {
 					if(obj["isSingleLine"]&& obj["isSingleLine"] == "Y"){
 						lineno = obj[0]["itemId"].substr(-1);
 					}else{
-						lineno = obj["itemId"].substr(-1);		
+						lineno = obj["itemId"].substr(-1);
 					}
 				}
         });
@@ -3298,8 +3789,8 @@ var SurveyBuild = {
 		/* 新增一行动态效果 */
 		var $newRow = $(btnEl).parents(".main_inner_content_info").prev(".main_inner_content_para");
 		$("html,body").animate({scrollTop: $newRow.offset().top}, 1000);
-		
-		
+
+
         // 行数等于最大行数时，隐藏“Add One +”按钮
         if (_children.length == maxLines) {
             $(btnEl).hide();
@@ -3315,7 +3806,7 @@ var SurveyBuild = {
 			 * //事件绑定 $.each(obj["rules"],function(classname, classObj) { if
 			 * ($.inArray(classname, me._baseRules) == -1 &&
 			 * obj["rules"][classname]["isEnable"] == "Y") {
-			 * 
+			 *
 			 * var _ruleClass = ValidationRules[classname]; if (_ruleClass &&
 			 * _ruleClass._eventList && $.trim(classObj["messages"])!="") { if
 			 * (obj["classname"] == "CheckBox") { $inputObject = $("#" +
@@ -3373,7 +3864,7 @@ var SurveyBuild = {
         });
         _children.push(_fc);
 		/*
-		 * 
+		 *
 		 * $.each(_children[_children.length - 1],function(d, obj) { if
 		 * (obj.classname == "Select") { $("#" + obj.itemId).chosen() } if
 		 * (obj._eventbind && typeof obj._eventbind == "function") {
@@ -3565,7 +4056,7 @@ var SurveyBuild = {
             eventSetPage += '</select></td>';
             eventSetPage += '<td><a href="javascript:void(0);" class="text-success" onclick="SurveyBuild.plusEvent(this);return false;"><i class="icon-plus-sign"></i> </a>&nbsp;<a href="javascript:void(0);" class="text-warning" onclick="SurveyBuild.minusEvent(this);return false;"><i class="icon-minus-sign"></i> </a></td></tr>';
         });
-		
+
         eventSetPage += '</tbody></table>';
         eventSetPage += '<fieldset>';
         eventSetPage += '<div class="edit_item_warp"><span class="edit_item_label">跳转方式：</span><select id="targetType" class="edit_boxSize elewidth-select"><option value="IFRM" ' + (this._data.targetType == "IFRM" ? " selected=\'selected\'": "") + '>当前Iframe</option><option value="TOP" ' + (this._data.targetType == "TOP" ? " selected=\'selected\'": "") + '>顶层窗口</option></select></div>';
@@ -3578,7 +4069,7 @@ var SurveyBuild = {
 		{
 			showMainTpl = "";
 		}
-		eventSetPage += '<div class="edit_item_warp" id="mainTemplateSpan" '+ showMainTpl +'><span class="edit_item_label">主模版：</span><select id="mainTemplate" class="edit_boxSize elewidth-select">';		
+		eventSetPage += '<div class="edit_item_warp" id="mainTemplateSpan" '+ showMainTpl +'><span class="edit_item_label">主模版：</span><select id="mainTemplate" class="edit_boxSize elewidth-select">';
 		eventSetPage += '<option value="">请选择</option>';
 		for (var i in mainTplArr) {
 				eventSetPage += '<option ' + (this._data.mainTemplate == mainTplArr[i]["tplid"] ? "selected='selected'": "") + 'value="' + mainTplArr[i]["tplid"] + '">' + mainTplArr[i]["tplname"] + '</option>';
@@ -3625,7 +4116,7 @@ var SurveyBuild = {
         /* 提交后发送邮件、邮件模板 */
         data.mailTemplate = $("#mailTemplate").val();
         data.isSendMail = $("#isSendMail").prop("checked") ? "Y": "N";
-		
+
 		data.showSubmitOnly = $("#showSubmitOnly").prop("checked") ? "Y": "N";
 
         $.each(data["events"],function(key, obj) {
@@ -3724,7 +4215,7 @@ var SurveyBuild = {
         htmlSet += '		<option value="N" ' + (data.hasOwnProperty("state") && data.state == "N" ? " selected=\'selected\'": "") + '>失效</option>';
         htmlSet += '	</select>';
         htmlSet += '</legend></fieldset>';
-		
+
         htmlSet += '<fieldset><legend>';
         htmlSet += '	<span class="edit_item_label">语言选择：</span>';
         htmlSet += '	<select class="edit_boxSize select" onchange="SurveyBuild.save0Attr(this,\'lang\')">';
@@ -3732,7 +4223,7 @@ var SurveyBuild = {
         htmlSet += '		<option value="ENG" ' + (data.hasOwnProperty("lang") && data.lang == "ENG" ? " selected=\'selected\'": "") + '>ENGLISH</option>';
         htmlSet += '	</select>';
         htmlSet += '</legend></fieldset>';
-        
+
         htmlSet += '<fieldset><legend>';
         htmlSet += '	<span class="edit_item_label">报名表打印类型：</span>';
         htmlSet += '	<select class="edit_boxSize select" onchange="SurveyBuild.save0Attr(this,\'tpPdfType\')">';
@@ -3754,8 +4245,8 @@ var SurveyBuild = {
         htmlSet += '		<option ' + (data.hasOwnProperty("tplUseType") && data.tplUseType == "TJX" ? " selected=\'selected\'": "") + ' value="TJX">推荐信</option>';
         htmlSet += '	</select>';
         htmlSet += '</legend></fieldset>';
-        
-        
+
+
         htmlSet += '<fieldset><legend>';
         htmlSet += '	<span class="edit_item_label">推荐信开启密码：</span>';
         htmlSet += '	<select class="edit_boxSize select" onchange="SurveyBuild.save0Attr(this,\'tpPwdType\')">';
@@ -3764,7 +4255,7 @@ var SurveyBuild = {
         htmlSet += '		<option value="N" ' + (data.hasOwnProperty("tpPwdType") && data.tpPwdType == "N" ? " selected=\'selected\'": "") + '>不开启密码</option>';
         htmlSet += '	</select>';
         htmlSet += '</legend></fieldset>';
-        
+
     	if(!data.hasOwnProperty("leftWidth")){
     		data.leftWidth = "35";
     	}
@@ -3780,7 +4271,7 @@ var SurveyBuild = {
         htmlSet += '	<span class="edit_item_label">Right Width：</span>';
         htmlSet += '	<input type="text" maxlength="11" class="medium" onkeyup="SurveyBuild.save0Attr(this,\'rightWidth\')" value="' + data.rightWidth + '">';
         htmlSet += '</legend></fieldset>';
-        
+
         htmlSet += '<fieldset><legend>';
 		htmlSet += ' <span class="edit_item_label">展示方式：</span>';
 		htmlSet += ' <select class="edit_boxSize select" onchange="SurveyBuild.save0Attr(this,\'displayType\')">';
@@ -3798,7 +4289,7 @@ var SurveyBuild = {
 		 * htmlSet += ' <option ' + (data.hasOwnProperty("labelPostion") &&
 		 * data.labelPostion == "UP" ? " selected=\'selected\'": "") + '
 		 * value="UP">上</option>'; htmlSet += ' </select>'; htmlSet += '</legend></fieldset>';
-		 * 
+		 *
 		 * htmlSet += '<fieldset><legend>'; htmlSet += ' <span
 		 * class="edit_item_label">提示方式：</span>'; htmlSet += ' <select
 		 * class="edit_boxSize select"
@@ -3808,13 +4299,13 @@ var SurveyBuild = {
 		 * htmlSet += ' <option value="VAL" ' + (data.hasOwnProperty("showType") &&
 		 * data.showType == "VAL" ? " selected=\'selected\'": "") + '>Validate</option>';
 		 * htmlSet += ' </select>'; htmlSet += '</legend></fieldset>';
-		 * 
-		 * 
+		 *
+		 *
 		 * htmlSet += '<div class="header-title">'; htmlSet += ' <span
 		 * class="title"><i class="icon-cog"></i> 打印设置</span>'; htmlSet += '</div>';
-		 * 
+		 *
 		 * htmlSet += '<div class="groupbox">';
-		 * 
+		 *
 		 * htmlSet += '<div class="edit_item_warp">'; htmlSet += ' <span
 		 * class="edit_item_label">第一步：</span>'; htmlSet += ' <div
 		 * class="edit_item_right">'; htmlSet += ' <div style="display:
@@ -3824,7 +4315,7 @@ var SurveyBuild = {
 		 * data-reveal-id="myModal" class="big-link"
 		 * onclick="SurveyBuild.showMsg(this,event)" data-for-id="help_export"
 		 * href="#">(?)</a>'; htmlSet += '</div>';
-		 * 
+		 *
 		 * htmlSet += '<div class="edit_item_warp">'; htmlSet += ' <span
 		 * class="edit_item_label">第二步：</span>'; htmlSet += ' <div
 		 * class="edit_item_right">'; htmlSet += ' <a href="' +
@@ -3835,7 +4326,7 @@ var SurveyBuild = {
 		 * onclick="SurveyBuild.showMsg(this,event)"
 		 * data-for-id="help_tplMaking" href="#">(?)</a>'; htmlSet += '
 		 * </div>'; htmlSet += '</div>';
-		 * 
+		 *
 		 * htmlSet += '<div class="edit_item_warp">'; htmlSet += ' <form
 		 * id="form1" name="form1" method="post" action="' +
 		 * TzUniversityContextPath + '/UpdWebServlet?filePath=appFormPrintTpl"
@@ -3852,7 +4343,7 @@ var SurveyBuild = {
 		 * onclick="SurveyBuild.showMsg(this,event)" class="big-link"
 		 * data-reveal-id="myModal" data-animation="fade">(?)</a>'; htmlSet += '
 		 * </form>'; htmlSet += '</div>';
-		 * 
+		 *
 		 * htmlSet += '<div id="PrintAttFile" style="margin-bottom:5px;"
 		 * class="edit_item_warp">'; htmlSet += '<a style="color: #0c7bce;"
 		 * target="_blank" id="downAtt" href="' +
@@ -3864,13 +4355,13 @@ var SurveyBuild = {
 		 * (data.hasOwnProperty("filename") && data["filename"].length > 1 ? "":
 		 * "display:none") + '" href="javascript:void(0)"
 		 * onclick="SurveyBuild.deleteAtt(this)">删除</a>'; htmlSet += '</div>';
-		 * 
+		 *
 		 * htmlSet += '</div>';
 		 */
         htmlSet += '<div class="edit_item_warp">';
         htmlSet += '	<a onclick="SurveyBuild.EventSet(this);" href="javascript:void(0);"><i class="icon-cogs"></i> 高级设置</a>';
         htmlSet += '</div>';
-		
+
 		htmlSet += '<div class="edit_item_warp">';
         htmlSet += '&nbsp;';
         htmlSet += '</div>';
@@ -3973,7 +4464,7 @@ var SurveyBuild = {
     reFocus:function(id){
         $("#"+id).trigger('blur');
     },
-	specialCharReplace: function(str){ 
+	specialCharReplace: function(str){
 		var s = "";
 		if(str == undefined) {
 			return str;
