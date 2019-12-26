@@ -61,7 +61,7 @@
 
         return cmp;
     },
-    //查询
+    //查询console.log();
     queryUser: function (btn) {
         //搜索条件过多，无法使用可配置搜索
         Ext.tzShowCFGSearch({
@@ -71,23 +71,9 @@
                     "TZ_JG_ID": Ext.tzOrgID,
                 },
             callback: function (seachCfg) {
+
                 var store = btn.findParentByType("grid").store;
                 store.tzStoreParams = seachCfg;
-
-                //	temp =seachCfg;
-
-               /* var tzParams = '{"ComID":"TZ_UM_USERMG_COM","PageID":"TZ_UM_GETSQL_STD","OperateType":"getQuerySQL","comParams":' + seachCfg + '}';
-
-                Ext.tzLoadAsync(tzParams, function (responseData) {
-
-
-                    var getedSQL = responseData.SQL;
-
-                    window.getedSQL2 = responseData.SQL;
-                    console.log(getedSQL2);
-
-                });*/
-
                 store.load();
             }
         });
@@ -235,9 +221,7 @@
         cmp.on('afterrender',function(){
             var msgForm = this.lookupReference('userApplyForm');
             var form = this.lookupReference('userApplyForm').getForm();
-            //var userInfoForm =this.lookupReference('userApplyForm').down('form[name=userInfoForm]').getForm();
-            //var processInfoForm =this.lookupReference('userApplyForm').down('form[name=processInfoForm]').getForm();
-            //var ksdrInfoForm =this.lookupReference('userApplyForm').down('form[name=ksdrInfoForm]').getForm();
+
             var store = this.lookupReference('userApplyForm').down('grid[name=viewAppGrid]').getStore();
             console.log(store);
             var oprid = form.findField('OPRID').getValue();
@@ -251,38 +235,7 @@
 
                 form.setValues(formData);
 
-                //考生导入信息;
-                //ksdrInfoForm.setValues(formData.ksdrInfo);
-                //考生个人信息
-                //userInfoForm.setValues(formData.perInfo)
-                //录取流程
-                //processInfoForm.setValues(formData.lqlcInfo);
-                /*var userInfoItems = [];
 
-                 var fields = formData.column;
-                 var size = fields.length;
-                 typeField = {};*/
-                /*for(var i = 0;i < size;i++){
-                 var field = fields[i];
-                 var fieldLabel,name,value;
-                 for(var fieldName in field){
-                 if(fieldName == "desc"){
-                 fieldLabel = field["desc"];
-                 }else{
-                 name = fieldName;
-                 value = field[fieldName];
-                 }
-                 }
-                 typeField = {
-                 xtype: 'textfield',
-                 fieldLabel: fieldLabel,
-                 readOnly:true,
-                 name: name,
-                 value: value,
-                 fieldStyle:'background:#F4F4F4',
-                 }
-                 userInfoForm.add(typeField);
-                 }*/
                 if(msgForm.down('hiddenfield[name=titleImageUrl]').getValue()){
                     msgForm.down('image[name=titileImage]').setSrc(TzUniversityContextPath + msgForm.down('hiddenfield[name=titleImageUrl]').getValue());
                 }else{
@@ -352,68 +305,6 @@
         }
 
     },
-    /**
-     * 查看缴费计划
-     * @param grid
-     * @param rowIndex
-     * @param colIndex
-     */
-/*    viewPlanDetails:function(grid, rowIndex, colIndex){
-        //是否有访问权限
-        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_UM_USERAPPLY_COM"]["TZ_VIEW_JFJH_STD"];
-        if( pageResSet == "" || pageResSet == undefined){
-            Ext.MessageBox.alert('提示', '您没有修改数据的权限');
-            return;
-        }
-        //该功能对应的JS类
-        var className = pageResSet["jsClassName"];
-        if(className == "" || className == undefined){
-            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_PAY_INFO_STD，请检查配置。');
-            return;
-        }
-
-        var record = grid.store.getAt(rowIndex);
-        var appInsId = record.data.TZ_APP_INS_ID;
-        var win = this.lookupReference('admissionAndPayInfoWindow');
-        if (!win) {
-            Ext.syncRequire(className);
-            ViewClass = Ext.ClassManager.get(className);
-            //新建类
-            win = new ViewClass();
-            this.getView().add(win);
-        }
-        //win.actType = "update";
-        var tzParams = '{"ComID":"TZ_UM_USERAPPLY_COM","PageID":"TZ_VIEW_JFJH_STD","OperateType":"QF","comParams":{"appInsId":"'+appInsId+'"}}';
-        //加载数据
-        var form = win.child('form').getForm();
-        Ext.tzLoad(tzParams,function(responseData){
-            //资源集合信息数据
-            var formData = responseData.formData;
-            form.setValues(formData);
-            var jxjIds = formData.jxjIds;
-            var jxjNames = formData.jxjNames;
-            var oprIdArray = new Array();
-            var i = 0, j = 0;
-            for (j = 0; j < jxjIds.length; j++) {
-                var TagModel = new KitchenSink.view.activity.tagModel();
-                var jxjId = jxjIds[j];
-                var jxjName = jxjNames[j];
-                TagModel.set('tagId', jxjId);
-                TagModel.set('tagName', jxjName);
-                oprIdArray[i] = TagModel;
-                i++;
-            }
-            form.findField("jxjList").setValue(oprIdArray);
-            var windowgrid = win.child('form').child("grid") ;
-            var tzStoreParams = '{"appIns":"'+appInsId+'"}';
-            windowgrid.store.tzStoreParams = tzStoreParams;
-            windowgrid.store.load();
-
-
-        });
-
-        win.show();
-    },*/
     onWindowClose:function(btn){
         var win = btn.findParentByType("window");
         win.close();
@@ -529,37 +420,6 @@
         }, "重置密码成功", true, this);
 
     },
-    /****
-     resetPassword: function(){
-		//选中行
-	   	var selList = this.getView().getSelectionModel().getSelection();
-	   	//选中行长度
-	   	var checkLen = selList.length;
-	   	if(checkLen == 0){
-			Ext.Msg.alert("提示","请选择要重置密码的记录");   
-			return;
-	   	}else if(checkLen >1){
-		   Ext.Msg.alert("提示","只能选择一条要重置密码的记录");   
-		   return;
-	    }
-	    
-	    var OPRID = selList[0].get("OPRID");
-	    var JGID = Ext.tzOrgID;
-	    var tzChParams = '{"OPRID":"' + OPRID + '","JGID":"' + JGID + '"}';
-	    var tzParams = '{"ComID":"TZ_UM_USERMG_COM","PageID":"TZ_UM_USERMG_STD","OperateType":"HTML","comParams":'+tzChParams+'}';	
-	    Ext.Ajax.request({
-    		//url: '/psc/TZDEV/EMPLOYEE/CRM/s/WEBLIB_GD_UM.TZ_GD_USERMG.FieldFormula.Iscript_ResetPassword',
-    		url:Ext.tzGetGeneralURL(),
-    		params: {
-        		tzParams: tzParams
-    		},
-    		success: function(response){
-		        Ext.Msg.alert("提示",response.responseText); 
-		        //Ext.MessageBox.alert("错误", "已发送邮件至该用户邮箱"); 
-   			}
-		});
-	},
-     *****/
     deleteUser: function () {
         //选中行
         var selList = this.getView().getSelectionModel().getSelection();
@@ -702,10 +562,6 @@
     },
     onFormEnsure: function (btn) {
         this.saveDataInfo(btn);
-
-        //this.getView().close();
-
-
     },
 
     onFormSave2: function () {

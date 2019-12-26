@@ -27,8 +27,8 @@ Ext.define('KitchenSink.view.common.cfgSearchWindow', {
        
         var userID=TranzvisionMeikecityAdvanced.Boot.loginUserId;
         var jgID=Ext.tzOrgID;
-        console.log(userID);
-        console.log(jgID);
+        //console.log(userID);
+        //console.log(jgID);
         
 				Ext.apply(Ext.form.field.VTypes, {  
 				  promptVildate:  function(value,field) {  
@@ -445,9 +445,9 @@ Ext.define('KitchenSink.view.common.cfgSearchWindow', {
 			var dataSetItems = [];
 			var formDataSet = responseData.formDataSet;
 			var isDisplay = responseData.isDisplay;
-			console.log(isDisplay);
+			//console.log(isDisplay);
 			if(formDataSet.length>0){
-				console.log(formDataSet);
+				//console.log(formDataSet);
 				for(var dataSet_i=0;dataSet_i<formDataSet.length;dataSet_i++){
 					var defaultChecked = false;
 					if(formDataSet[dataSet_i]["TZ_FLTDST_DEFAULT"] == "on"){
@@ -572,7 +572,7 @@ Ext.define('KitchenSink.view.common.cfgSearchWindow', {
             var formParams = form.getValues();
 
             var cfgSrhId = this.cfgSrhId;
-			console.log(formParams);
+			//console.log(formParams);
 
             var tzSearchParams = '{"cfgSrhId":"'+cfgSrhId+'","condition":'+Ext.encode(formParams)+'}';
 
