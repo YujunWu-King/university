@@ -7,12 +7,22 @@
 <link href="page_stylecss" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="%bind(:4)/statics/js/lib/jquery/jquery.min.js"></script>
 <script type="text/javascript">
-$(document).ready(function(){ 
-	create_yzm();//获取验证码
+$(document).ready(function(){
+    create_yzmEmail();//获取邮箱验证码
 	$("#picyzm").val("");	
-	$("#status_picyzm").val("");	
+	$("#status_picyzm").val("");
+    //解决第一加载时无法获取css样式，提供给手机和邮箱验证码判断
+    document.getElementsByClassName("tab1 block")[0].style.display="block";
+    document.getElementsByClassName("tab1 blockzc")[0].style.display="none";
 })
 	function setTab(m,n){
+        //根据当前显示的div来获取不同的验证码
+        if(n==0&&document.getElementsByClassName("tab1 block")[0].style.display=="none"){
+            create_yzmEmail();
+        }
+        if(n==1&&document.getElementsByClassName("tab1 blockzc")[0].style.display=="none"){
+            create_yzm();
+        }
 		var menu=document.getElementById("tab" + m).getElementsByTagName("li");  
 		var showdiv=$("#content" + m + " .tab1"); 
 	 	for(i=0;i<menu.length;i++)
@@ -21,7 +31,11 @@ $(document).ready(function(){
 		   showdiv[i].style.display=i==n?"block":"none"; 
 		}
 	}
- 
+	//加载邮箱图片验证码
+	function create_yzmEmail(){
+		var _captchaURL =  "/captcha";
+		$('#yzmImgEmail').attr('src',_captchaURL + "?" + Math.random());
+	}
 	function check_email(val){
 	var flag=false;
 		if(val!=''){
@@ -93,14 +107,21 @@ $(document).ready(function(){
 		}
 		return flag;
 	}
-
+	//张超  时间：2019年12月23日19:45:50  备注：在原有的基础上发送请求的时在后台校验邮箱图片验证码
 	function send_email(){
+        var picyzmEmail=$("#picyzmEmail").val();
+        if(picyzmEmail==''){
+            $('#picyzm_statusEmail').html("<span>图片验证码不能为空</span>");
+            $("#picyzm_styleEmail").removeClass("alert_display_none");
+            create_yzm();
+            return;
+        }
 		if($("#sendemail").prop("disabled") != "true"){
 			var email=$("#Email_User").val();
 			if(check_email(email)){
-				if(email==""){alert("请输入邮箱！");}
+				if(email==""){create_yzmEmail();alert("请输入邮箱！");}
 				else{
-		var tzParams = 	'{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_MAIL_STD","OperateType":"QF","comParams":{"email":"'+email+'","orgid":"'+$("#orgid").val()+'","lang":"%bind(:3)",	"sen":"6"}}';
+		var tzParams = 	'{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_MAIL_STD","OperateType":"QF","comParams":{"email":"'+email+'","orgid":"'+$("#orgid").val()+'","lang":"%bind(:3)","picyzmEmail":"'+picyzmEmail+'","sen":"6"}}';
 					$.ajax({
 						type:"post",
 						dataType:"json",
@@ -110,12 +131,30 @@ $(document).ready(function(){
 							},
 						url:"%bind(:1)",
 						success:function(result){
-							if(result.comContent=="success"){emailtime();alert("邮件已发送到您邮箱，请注意查收！");}
-							else{alert(result.state.errdesc);}
+							if(result.comContent=="success"){
+							    emailtime();
+                                $('#picyzm_statusEmail').html("");
+                                $("#picyzm_styleEmail").addClass("alert_display_none");
+                                create_yzmEmail();
+							    alert("邮件已发送到您邮箱，请注意查收！");
+							} else{
+                                //返回为错误信息
+                                if(result.state.errcode=="325"){
+                                    //验证码错误
+                                    $('#picyzm_statusEmail').html("<span>"+result.state.errdesc+"</span>");
+                                    $("#picyzm_styleEmail").removeClass("alert_display_none");
+                                }else{
+                                    //其他错误
+                                    $('#picyzm_statusEmail').html("");
+                                    $("#picyzm_styleEmail").addClass("alert_display_none");
+                                    alert(result.state.errdesc);
+                                }
+							}
 						}
 					});
 				}
 			}else{
+                create_yzmEmail();
 				alert("请输入正确的邮件地址");
 			}
 		}
@@ -363,7 +402,17 @@ $(document).ready(function(){
 					      <span id="userEmailStyle" class="alert_display_none"><img src="%bind(:5)/alert.png" width="16" height="16" class="alert_img"  />
 						  <label id="userEmail_status"></label></span>
 					    </div>
-					  </div>
+					</div>
+					<div class="main_full_line">
+						<div class="main_full_line_left"><span class="reg_title_star"></span>图片验证码：</div>
+						<div class="main_full_line_right">
+							<!--<input name="picyzm" type="text" class="input_text input_120px" id="picyzm" onblur="check_yzm(this.value)">-->
+							<input name="picyzm" type="text" class="input_text input_120px" id="picyzmEmail">
+							<a id="changeImgEmail" href="javascript:void(0)" onclick="create_yzmEmail();"><img id="yzmImgEmail" src="" width="113" height="37" class="img_num"></a>
+							<span id="picyzm_styleEmail" class="alert_display_none"><img src="%bind(:5)/alert.png" width="16" height="16" class="alert_img"><label id="picyzm_statusEmail"></label>
+						</span>
+						</div>
+					</div>
 					<div class="padding_div_50px"></div>
 					<div class="main_full_line">
 						<div class="main_full_line_right">
@@ -372,7 +421,7 @@ $(document).ready(function(){
 						</div>
 			  		</div>
 				</div>
-				<div class="tab1">
+				<div class="tab1 blockzc">
 					<div class="main_full_line">
 					    <div class="main_full_line_left"><span class="reg_title_star"></span>手机：</div>
 					    <div class="main_full_line_right">

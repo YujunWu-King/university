@@ -57,6 +57,7 @@ public class InterviewStatistics{
 		JacksonUtil params = new JacksonUtil(strParams);
 		String CLASSID = params.getString("CLASSID");
 		String BATCHID = params.getString("BATCHID");
+		String signature = params.getString("signature");
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		
 		//评委信息
@@ -116,7 +117,7 @@ public class InterviewStatistics{
 						psTzMspwpsjlTbl.setTzApplyPcId(BATCHID);
 						psTzMspwpsjlTbl.setTzPweiOprid(OPRID);
 						psTzMspwpsjlTbl.setTzSubmitYn("Y");
-						psTzMspwpsjlTbl.setTzSignature("");
+						psTzMspwpsjlTbl.setTzSignature(signature);
 						psTzMspwpsjlTbl.setRowLastmantOprid(OPRID);
 						psTzMspwpsjlTbl.setRowLastmantDttm(new Date());
 
@@ -131,7 +132,7 @@ public class InterviewStatistics{
 						//计算考生平均分
 						updateTally(CLASSID,BATCHID);
 					}
-				
+			
 					/*检查考生的成绩单里有成绩为0的成绩项*/ 
 //					String name_zero_all = "";
 
@@ -202,7 +203,8 @@ public class InterviewStatistics{
 		//职位
 		List<String> personPos = new ArrayList<String>();
 		personPos.add("职位");
-
+		//评委提交状态
+		String PwSubState = "N";
 
 		try {
 
@@ -247,6 +249,12 @@ public class InterviewStatistics{
 //				
 //			}
 
+			/**
+			 * 获取评委提交状态
+			 * by wuyujun
+			 */
+			PwSubState = sqlQuery.queryForObject("select TZ_SUBMIT_YN from PS_TZ_MSPWPSJL_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID = ? and TZ_PWEI_OPRID = ? LIMIT 1", new Object[] {CLASSID,BATCHID,OPRID}, "String");
+			
 			//获得成绩模型
 			String scoreModalId = queryData("SELECT B.TZ_MSCJ_SCOR_MD_ID FROM PS_TZ_PRJ_INF_T A INNER JOIN PS_TZ_CLASS_INF_T B ON (A.tz_prj_id = B.tz_prj_id) WHERE A.TZ_IS_OPEN = 'Y' AND B.TZ_CLASS_ID = ?", new Object[]{CLASSID},String.class);
 			if (scoreModalId!=null&&!"null".equals(scoreModalId.trim())) {
@@ -264,9 +272,9 @@ public class InterviewStatistics{
 					//成绩项 
 					String cjxSql0 = "(SELECT c.tz_score_item_id,b.tz_score_item_type,b.DESCR,c.TZ_PX,a.TZ_SCORE_MODAL_ID FROM PS_TZ_RS_MODAL_TBL a INNER JOIN PS_TZ_MODAL_DT_TBL b ON (a.tree_name = b.tree_name AND a.TZ_JG_ID = b.TZ_JG_ID) INNER JOIN PS_TZ_CJ_BPH_TBL c ON (a.TZ_SCORE_MODAL_ID = c.TZ_SCORE_MODAL_ID AND b.tz_score_item_id = c.tz_score_item_id) WHERE c.TZ_ITEM_S_TYPE = 'A' AND b.tz_score_item_type <> 'A')";
 					//成绩汇总
-					String cjxSql1 = "(SELECT b.tz_score_item_id,b.tz_score_item_type,b.DESCR,99,a.TZ_SCORE_MODAL_ID FROM PS_TZ_RS_MODAL_TBL a INNER JOIN PS_TZ_MODAL_DT_TBL b ON (a.tree_name = b.tree_name AND a.TZ_JG_ID = b.TZ_JG_ID) WHERE b.tz_score_item_type = 'A')";
+					String cjxSql1 = "( SELECT b.tz_score_item_id, b.tz_score_item_type, b.DESCR, c.TREE_NODE_NUM AS TZ_PX, a.TZ_SCORE_MODAL_ID FROM PS_TZ_RS_MODAL_TBL a INNER JOIN PS_TZ_MODAL_DT_TBL b ON ( a.tree_name = b.tree_name AND a.TZ_JG_ID = b.TZ_JG_ID ) INNER JOIN PSTREENODE c ON ( a.TREE_NAME = c.TREE_NAME AND c.TREE_NODE = b.tz_score_item_id ) WHERE b.tz_score_item_type = 'A' )";
 					//并集
-					String cjxSql = "SELECT z.tz_score_item_id,z.tz_score_item_type,z.DESCR,z.TZ_PX FROM (" + cjxSql0
+					String cjxSql = "SELECT DISTINCT z.tz_score_item_id,z.tz_score_item_type,z.DESCR,z.TZ_PX FROM (" + cjxSql0
 							+ " UNION ALL " + cjxSql1 + ") z WHERE z.TZ_SCORE_MODAL_ID = ? ORDER BY z.TZ_PX ASC";
 					List<Map<String, Object>> cjxList = queryData(cjxSql, new Object[] {scoreModalId},ArrayList.class);
 					for (Map<String, Object> cjxmap : cjxList) {
@@ -321,8 +329,7 @@ public class InterviewStatistics{
 
 							//学生的得分状况
 							Map<String, Object> scoreData = queryData(
-									"SELECT TZ_SCORE_NUM,TZ_CJX_XLK_XXBH,TZ_SCORE_PY_VALUE "
-											+ "FROM PS_TZ_CJX_TBL WHERE TZ_SCORE_INS_ID = ? AND TZ_SCORE_ITEM_ID = ?",
+									"SELECT TZ_SCORE_NUM,TZ_CJX_XLK_XXBH,TZ_SCORE_PY_VALUE FROM PS_TZ_CJX_TBL WHERE TZ_SCORE_INS_ID = ? AND TZ_SCORE_ITEM_ID = ?",
 											new Object[] { scoreid, cjxId }, Map.class);
 
 							//页面显示
@@ -367,7 +374,7 @@ public class InterviewStatistics{
 			e.printStackTrace();
 		}
 
-
+		result.put("pwSubState", PwSubState);
 		result.put("headerS", headerS);
 		result.put("scoreS", scoreS);
 		result.put("personCom", personCom);
@@ -426,7 +433,7 @@ public class InterviewStatistics{
 					new Object[] { orgId, classId, batchId });
 
 			for (Map<String, Object> mapData : listData) {
-				Long appInsId = (Long) mapData.get("TZ_APP_INS_ID");
+				Long appInsId = Long.valueOf(String.valueOf(mapData.get("TZ_APP_INS_ID")));
 				BigDecimal tally = ((BigDecimal) mapData.get("TZ_SCORE")).setScale(1,BigDecimal.ROUND_HALF_UP);
 				sqlQuery.update("UPDATE PS_TZ_MSPS_KSH_TBL SET TZ_SCORE=? WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=?",
 						new Object[]{tally,classId,batchId,appInsId});

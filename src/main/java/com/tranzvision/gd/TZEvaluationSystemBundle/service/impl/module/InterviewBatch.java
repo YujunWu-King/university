@@ -61,28 +61,20 @@ System.out.println(strParams+"+++++++++++++++++++strParams");
 				jacksonUtil.Map2json(mapRet);
 			}
 			//批次列表
-			String sql = "SELECT a.TZ_CLASS_ID,a.TZ_APPLY_PC_ID,d.TZ_CLASS_NAME,"+
-					" (SELECT TZ_BATCH_NAME FROM PS_TZ_CLS_BATCH_T "+
-					" WHERE TZ_CLASS_ID = a.TZ_CLASS_ID AND TZ_BATCH_ID =a.TZ_APPLY_PC_ID) AS TZ_BATCH_NAME "+
-					" FROM PS_TZ_PRJ_INF_T c INNER JOIN PS_TZ_CLASS_INF_T d ON (c.tz_prj_id = d.tz_prj_id) "+
-					" INNER JOIN PS_TZ_MSPS_GZ_TBL a ON d.TZ_CLASS_ID = a.TZ_CLASS_ID "+
-					" WHERE a.TZ_DQPY_ZT = 'A' AND c.TZ_IS_OPEN = 'Y' AND c.tz_jg_id = ?"+
-					" AND (exists(select 1 from PS_TZ_MSPS_PW_TBL "+
-					" where TZ_CLASS_ID = a.TZ_CLASS_ID AND TZ_APPLY_PC_ID = a.TZ_APPLY_PC_ID and tz_pwei_zhzt='A' and TZ_pwei_oprid = ?)"+
-					" or exists(select 1 from tz_interview_admin_t "+
-					" where TZ_CLASS_ID = a.TZ_CLASS_ID AND TZ_APPLY_PC_ID = a.TZ_APPLY_PC_ID and oprid=? and type='QD' and status='A'))";
-					
-					List<?> resultlist = sqlQuery.queryForList(sql, new Object[] {orgid,oprid,oprid});
+			String sql = "SELECT a.TZ_CLASS_ID,a.TZ_APPLY_PC_ID,d.TZ_CLASS_NAME, (SELECT TZ_BATCH_NAME FROM PS_TZ_CLS_BATCH_T  WHERE TZ_CLASS_ID = a.TZ_CLASS_ID AND TZ_BATCH_ID =a.TZ_APPLY_PC_ID) AS TZ_BATCH_NAME  FROM PS_TZ_PRJ_INF_T c INNER JOIN PS_TZ_CLASS_INF_T d ON (c.tz_prj_id = d.tz_prj_id)  INNER JOIN PS_TZ_MSPS_GZ_TBL a ON d.TZ_CLASS_ID = a.TZ_CLASS_ID  WHERE a.TZ_DQPY_ZT = 'A' AND c.TZ_IS_OPEN = 'Y' AND c.tz_jg_id = ? AND (exists(select 1 from PS_TZ_MSPS_PW_TBL  where TZ_CLASS_ID = a.TZ_CLASS_ID AND TZ_APPLY_PC_ID = a.TZ_APPLY_PC_ID and tz_pwei_zhzt='A' and TZ_pwei_oprid = ?) or exists(select 1 from tz_interview_admin_t  where TZ_CLASS_ID = a.TZ_CLASS_ID AND TZ_APPLY_PC_ID = a.TZ_APPLY_PC_ID and oprid=? and type='QD' and status='A'))";
+			System.out.println("orgid:"+orgid+"+++++++++++++++=oprid:"+oprid);
+			List<?> resultlist = sqlQuery.queryForList(sql, new Object[] {orgid,oprid,oprid});
 			
 			//评委类型
 					/**
 					 * 改造:1、首先判断是否具有面试管理员角色
-					 * 2、判断是否是面试管理员中的签到管理员
-					 * 
+					 * 2、如果不是则判断是否是面试管理员中的签到管理员
+					 * yujun.wu
 					 */
 					String judgeType = "";
-					String isFlag = sqlQuery.queryForObject("select 'Y' from PS_TZ_JUSR_REL_TBL where TZ_jg_id=? and OPRID=? AND TZ_JUGTYP_ID='1' LIMIT 1", new Object[] {oprid,orgid}, "String");
-					if("Y".equals(isFlag)) {
+					String isFlag = sqlQuery.queryForObject("select 'Y' from PS_TZ_JUSR_REL_TBL where TZ_jg_id=? and OPRID=? AND TZ_JUGTYP_ID='1' LIMIT 1", new Object[] {orgid,oprid}, "String");
+					
+					if(!"Y".equals(isFlag)) {
 						judgeType = sqlQuery.queryForObject("SELECT A.type AS type FROM tz_interview_admin_t A INNER JOIN PS_TZ_AQ_YHXX_TBL B ON A.oprid = B.oprid WHERE A. STATUS = 'A' AND A.OPRID = ? AND B.TZ_JG_ID = ?", new Object[] {oprid,orgid}, "String");
 					}
 			
@@ -103,7 +95,7 @@ System.out.println(strParams+"+++++++++++++++++++strParams");
 		
 						listData.add(mapRetJson);
 					}
-
+System.out.println(judgeType+"+++++++++++++++=judgeType");
 			mapRet.replace("judgeType", judgeType!=null?judgeType:"QD");
 			mapRet.replace("root", listData);
 		} catch (Exception e) {

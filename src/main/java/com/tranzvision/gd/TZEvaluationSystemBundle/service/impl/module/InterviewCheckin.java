@@ -111,26 +111,16 @@ public class InterviewCheckin extends FrameworkImpl {
 			String key = jsonObject.get("key").toString();
 			Integer nationalId = null;
 			String sql = null;
-
-			sql = "SELECT TZ_APP_INS_ID,TZ_REALNAME,NATIONAL_ID,TZ_COMPANY_NAME,TZ_CHECKIN_DTTM  "
-					+ "FROM PS_TZ_MSPS_KS_VW WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? ";
+			//获取当前班级批次下所有组信息
+			List<Map<String,Object>> groupList = sqlQuery.queryForList("SELECT TZ_GROUP_ID ,TZ_GROUP_DESC FROM TZ_INTERVIEW_GROUP  WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?", new Object[] { classId, batchId });
+			
+			
+			
+			sql = "SELECT TZ_APP_INS_ID,TZ_REALNAME,NATIONAL_ID,TZ_COMPANY_NAME,TZ_CHECKIN_DTTM  FROM PS_TZ_MSPS_KS_VW WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? ";
 
 			//判断是否选择了时段
-			if (null != times && !"".equals(times)) {
-				//上午
-				if("am".equals(times)){
-					sql += " AND EXISTS(SELECT 'Y' FROM TZ_INTERVIEW_GROUP WHERE "
-							+ "TZ_CLASS_ID=PS_TZ_MSPS_KS_VW.TZ_CLASS_ID "
-							+ "AND TZ_APPLY_PC_ID=PS_TZ_MSPS_KS_VW.TZ_APPLY_PC_ID "
-							+ "AND TZ_GROUP_ID=PS_TZ_MSPS_KS_VW.TZ_GROUP_ID AND TZ_GROUP_SPACE='A')";
-				}
-				//下午
-				if("pm".equals(times)){
-					sql += " AND EXISTS(SELECT 'Y' FROM TZ_INTERVIEW_GROUP WHERE "
-							+ "TZ_CLASS_ID=PS_TZ_MSPS_KS_VW.TZ_CLASS_ID "
-							+ "AND TZ_APPLY_PC_ID=PS_TZ_MSPS_KS_VW.TZ_APPLY_PC_ID "
-							+ "AND TZ_GROUP_ID=PS_TZ_MSPS_KS_VW.TZ_GROUP_ID AND TZ_GROUP_SPACE='B')";
-				}
+			if (null != times && !"".equals(times) && !"all".equalsIgnoreCase(times)) {
+				sql += " AND TZ_GROUP_ID ='"+times+"'";
 			}
 			
 			// 判断key输入的是按姓名检索还是按身份证号检索
@@ -145,7 +135,7 @@ public class InterviewCheckin extends FrameworkImpl {
 			}
 
 			sql += " ORDER BY TZ_CHECKIN_DTTM ASC,TZ_REALNAME";
-
+System.out.println(sql+"++++++++++++=sql");
 			List<Map<String, Object>> list = sqlQuery.queryForList(sql, new Object[] { classId, batchId });
 			ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
 
@@ -177,7 +167,7 @@ public class InterviewCheckin extends FrameworkImpl {
 				mapList.put("photo", photo);
 				listData.add(mapList);
 			}
-
+			rtnMap.put("groupList", groupList);
 			rtnMap.put("item", listData);
 			rtnMap.put("errorCode", 0);
 			rtnMap.put("error_decription", "处理成功");

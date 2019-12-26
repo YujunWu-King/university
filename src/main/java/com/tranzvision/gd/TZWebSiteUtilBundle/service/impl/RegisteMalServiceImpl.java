@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.tranzvision.gd.util.captcha.Patchca;
 import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -576,6 +577,7 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 		String strDlzhid = "";
 		String strLang = "";
 	    String strUserName = "";
+		String strPicyzmEmail="";//邮箱图片验证码
 
 		String strResult = "\"failure\"";
 		JacksonUtil jacksonUtil = new JacksonUtil();
@@ -583,12 +585,32 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 			jacksonUtil.json2Map(strParams);
 			if(jacksonUtil.containsKey("email") 
 					&& jacksonUtil.containsKey("orgid") 
-					&& jacksonUtil.containsKey("lang")){
+					&& jacksonUtil.containsKey("lang")&&jacksonUtil.containsKey("picyzmEmail")){
 				strEmail = jacksonUtil.getString("email").trim();
 				strOrgid = jacksonUtil.getString("orgid").trim();
 				strLang =  jacksonUtil.getString("lang").trim();
-		      	
-		      	
+				strPicyzmEmail=jacksonUtil.getString("picyzmEmail").trim();
+				//张超 时间：2019年12月23日19:22:37  备注：添加代码用于邮箱验证码校验
+				//邮箱校验验证码，防止url地址攻击，校验不通过返回failure
+				try {
+					//校验邮箱图片验证码
+					Patchca patchca = new Patchca();
+					if (!patchca.verifyToken(request, strPicyzmEmail)) {
+						errorMsg[0] = "325";
+						errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE", "50", "验证码不正确",
+								"The security code is incorrect");
+						return strResult;
+					}else{
+						//验证码正确销毁验证码
+						patchca.removeToken(request);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					errorMsg[0] = "100";
+					errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE", "55",
+							"获取数据失败，请联系管理员", "Get the data failed, please contact the administrator");
+					return strResult;
+				}
 		      	// 生成邮件发送令牌;
 				String strYZM = UUID.randomUUID().toString().replaceAll("-","");
 				

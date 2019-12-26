@@ -198,7 +198,11 @@ public class EvaluationSystemController {
 		String code = new Patchca().getToken(request);
 		String type = request.getParameter("type");
 		String judgeType = "interview".equals(type) ? "1" : "2";
-
+		//面试秘书账号
+		if("secretary".equals(type)) {
+			judgeType = "3";
+		}
+		
 		ArrayList<String> aryErrorMsg = new ArrayList<String>();
 
 
@@ -233,7 +237,9 @@ public class EvaluationSystemController {
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
 		jsonMap.put("success", loginStatus);
 		jsonMap.put("error", errorMsg);
-
+		if(!"1".equals(judgeType)) {
+			jsonMap.put("indexUrl", "/evaluation/"+type+"/index");
+		}
 		return jacksonUtil.Map2json(jsonMap);
 	}
 

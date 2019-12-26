@@ -68,10 +68,14 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 	private final static String INTERVIEW_GRADE = "GRADE";
 	@Override
 	public String tzGetJsonData(String strParams) {
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		jacksonUtil.json2Map(strParams);
 		String strReturn = "";
 		try {
 			String type = request.getParameter("type");
+			if(type==null || "".equals(type)) {
+				type = jacksonUtil.getString("type");
+			}
 			// 获取批次列表
 			if ("list".equals(type)) {
 				strReturn = getBatchList(strParams);
@@ -129,10 +133,18 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 	 * @return
 	 */
 	private String queryTimer(String strParams) {
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		jacksonUtil.json2Map(strParams);
 		String classId = request.getParameter("classId"); /*字符串，请求班级编号*/
-		String batchId = request.getParameter("batchId"); /*字符串，请求报考批次编号*/
-		String oprId = tzLoginServiceImpl.getLoginedManagerOprid(request);
+		if(classId == null || "".equals(classId)) {
+			classId = jacksonUtil.getString("classId");
+		}
 		
+		String batchId = request.getParameter("batchId"); /*字符串，请求报考批次编号*/
+		if(batchId == null || "".equals(batchId)) {
+			batchId = jacksonUtil.getString("batchId");
+		}
+		String oprId = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		Map<String,Object> rtnMap = new HashMap<String,Object>();
 
 		String TZ_APP_INS_ID = "";
@@ -151,8 +163,7 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 		rtnMap.put("name", name);
 		rtnMap.put("seconds", seconds);
 		rtnMap.put("startDt", TZ_MSSJ);
-		JacksonUtil jacksonUtil = new JacksonUtil();
-		return jacksonUtil.Map2json(rtnMap);
+		return jacksonUtil.Map2json(rtnMap); 
 	}
 
 	private String searchApplicant(String strParams){

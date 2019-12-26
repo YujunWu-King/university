@@ -5436,3 +5436,189 @@ a.bw:link, a.bw:visited {
 	font-weight: bold;
 	margin-top: 10px;
 }
+/*张超  时间：2019年12月19日15:48:01  备注用于多选框的分列样式修改*/
+.zc_select{
+	width: 13.8em;
+	height: 2.05em;
+}
+
+.question-answer-zc{
+	white-space:normal;
+}
+
+.question-answer-zc .format2 li, .question-answer-zc .format3 li,
+.question-answer-zc .format4 li, .question-answer-zc .format5 li,
+.question-answer-zc .format6 li, .question-answer-zc .format7 li,
+.question-answer-zc .format8 li, .question-answer-zc .format9 li {
+	display: inline-block;
+	*display: inline;
+	*zoom: 1;
+	margin-right: 5px;
+}
+
+.question-answer-zc .format1 b.read-input {
+	width: 180px;
+}
+
+.question-answer-zc .format2 b.read-input {
+	width: 300px;
+}
+
+.question-answer-zc .format3 b.read-input {
+	width: 96%;
+}
+
+.question-answer-zc .format4 b.read-input {
+	width: 96%;
+	height: 60px;
+}
+
+.question-answer-zc .format5 b.read-input {
+	width: 96%;
+	height: 120px;
+}
+
+.question-answer-zc .format6 b.read-input {
+	width: 96%;
+	height: 240px;
+}
+
+.question-answer-zc .format2 li {
+	width: 42%;
+}
+
+.question-answer-zc .format3 li {
+	width: 25%
+}
+
+.question-answer-zc .format4 li {
+	width: 17%
+}
+
+.question-answer-zc .format5 li {
+	width: 12%
+}
+
+.question-answer-zc .format6 li {
+	width: 8%
+}
+
+.question-answer-zc ul li {
+	padding: 2px 3px 2px 17px;
+	position: relative;
+	color: #666;
+	min-height: 20px;
+	vertical-align: top;
+}
+
+.question-answer-zc ul.thumbnails li {
+	padding: 0;
+}
+
+.question-answer-zc .format1 .thumbnail {
+	width: 700px;
+	height: 526px;
+}
+
+.question-answer-zc .format2 .thumbnail {
+	width: 320px;
+	height: 240px;
+}
+
+.question-answer-zc.format3 .thumbnail {
+	width: 202px;
+	height: 160px;
+}
+
+.question-answer-zc.format4 .thumbnail {
+	width: 140px;
+	height: 108px;
+}
+
+.question-answer-zc.format5 .thumbnail {
+	width: 100px;
+	height: 78px;
+}
+
+.question-answer-zc .read-check {
+	background: url("../../images/appeditor/read-check.gif") no-repeat
+	scroll -4px 4px;
+}
+
+.question-answer-zc .read-radio {
+	background: url("../../images/appeditor/read-radio.gif") no-repeat
+	scroll -4px 4px;
+}
+
+.question-answer-zc .read-check b.read-input, .question-answer-zc .read-radio b.read-input,
+.question-answer-zc .opentxt b.read-input {
+	width: 100px;
+	height: 20px;
+	vertical-align: middle;
+	margin-left: 5px;
+}
+
+.question-answer-zc .opentxt b.read-input {
+	width: 50%;
+}
+
+.question-answer-zc b.read-select, .question-answer-zc b.read-input {
+	display: inline-block;
+	*display: inline;
+	font-weight: 500;
+	min-width: 200px;
+	border: 1px solid #DCDBD6;
+	height: 30px;
+	line-height: 30px;
+	padding: 0 10px;
+	background-color: #F9F7F5;
+	*zoom: 1;
+}
+
+.question-answer-zc table td b.read-input {
+	width: 60%;
+	height: 20px;
+	vertical-align: middle;
+}
+
+.question-answer-zc table th b.read-input {
+	width: 50px;
+	margin-left: 5px;
+	height: 18px;
+	vertical-align: top;
+}
+
+.question-answer-zc b.read-select {
+	background: url("../../images/appeditor/read-dropdown-arrow.gif")
+	no-repeat scroll right 2px #F9F7F5;
+}
+
+.question-answer-zc .opentxt {
+	width: 20%;
+	margin-right: 8px;
+	display: inline-block;
+	*display: inline;
+	*zoom: 1;
+	text-align: right;
+}
+
+.question-answer-zc b.read-line {
+	display: inline-block;
+	height: 25px;
+	width: 50%;
+	border-bottom: 1px solid #DCDBD6;
+	*display: inline;
+	*zoom: 1;
+}
+.question-answer-zc .table {
+	background: #FFF;
+}
+
+.question-answer-zc .table th {
+	font-weight: 500;
+}
+
+.question-answer-zc .table td {
+	vertical-align: middle;
+	text-align: center;
+}

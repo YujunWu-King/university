@@ -29,7 +29,6 @@ SurveyBuild.extend("Check", "baseComponent", {
 	},
 	_getHtml: function(data, previewmode) {
 		var c = "",e = "";
-		
 		if (previewmode) {
 			SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
 			if(SurveyBuild.accessType == "M"){
@@ -72,8 +71,8 @@ SurveyBuild.extend("Check", "baseComponent", {
 
 				c += '<div class="input-list input-radiobox" data-instancid="' + data.instanceId + '">';
 				c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-				c += '    <div class="margart15 input-list-textwrap left">';
-				c += '    	 <ul>' + e + '<div class="clear"></div></ul>';
+				c += '    <div class="margart15 input-list-textwrap left question-answer-zc">';
+				c += '    	 <ul class="format format'+data.format+'">' + e + '<div class="clear"></div></ul>';
 				c += '    </div>';
 				c += '    <div class="input-list-suffix left">';
 				if(!SurveyBuild._readonly){
@@ -93,8 +92,7 @@ SurveyBuild.extend("Check", "baseComponent", {
 				}
 				e += '</li>';
 			}
-
-			c = '<div class="question-answer"><ul class="format">' + e + '</ul></div>'
+			c = '<div class="question-answer"><ul class="format format'+data.format+'">' + e + '</ul></div>'
 
 		}
 		return c;
@@ -134,23 +132,7 @@ SurveyBuild.extend("Check", "baseComponent", {
 		e += '		<tbody class="ui-sortable">' + list + '</tbody>';
 		e += '	</table>';
 		e += '</fieldset>';
-
 		e += '<div class="edit_jygz">';
-
-		e += '	<div class="question-type clearfix" style="display:none">';
-		e += '		<fieldset>';
-		e += '			<legend>选项排列</legend>';
-		e += '			<select onchange="SurveyBuild.saveAttr(this,\'format\')" data-id="' + data.instanceId + '">';
-		e += '				<option value="1" ' + (data.format == "1" ? "selected='selected'": "") + '>垂直1列</option>';
-		e += '				<option value="2" ' + (data.format == "2" ? "selected='selected'": "") + '>垂直2列</option>';
-		e += '				<option value="3" ' + (data.format == "3" ? "selected='selected'": "") + '>垂直3列</option>';
-		e += '				<option value="4" ' + (data.format == "4" ? "selected='selected'": "") + '>垂直4列</option>';
-		e += '				<option value="5" ' + (data.format == "5" ? "selected='selected'": "") + '>垂直5列</option>';
-		e += '				<option value="6" ' + (data.format == "6" ? "selected='selected'": "") + '>垂直6列</option>';
-		e += '				<option value="9" ' + (data.format == "9" ? "selected='selected'": "") + '>水平</option>';
-		e += '			</select>';
-		e += '		</fieldset>';
-		e += '	</div>';
 
 		e += '	<div class="edit_item_warp">';
 		e += '		<span class="edit_item_label">最少选择：</span>';
@@ -165,6 +147,19 @@ SurveyBuild.extend("Check", "baseComponent", {
 		e += '  <span class="edit_item_label">默认值：</span>';
 		e += '  <input type="text" class="medium" id="defaultval" onkeyup="SurveyBuild.saveAttr(this,\'defaultval\')" value="' + data.defaultval + '"/>';
 		e += '</div>';
+        //张超  时间：2019年12月19日15:48:49  备注：多选框分列样式修改
+        e += '	<div class="question-type clearfix edit_item_warp" >';
+        e += '		<span class="edit_item_label">选项排列:</span>';
+        e += '		<select class="zc_select" onchange="SurveyBuild.saveAttr(this,\'format\')" data-id="' + data.instanceId + '">';
+        e += '			<option value="1" ' + (data.format == "1" ? "selected='selected'": "") + '>垂直1列</option>';
+        e += '			<option value="2" ' + (data.format == "2" ? "selected='selected'": "") + '>垂直2列</option>';
+        e += '			<option value="3" ' + (data.format == "3" ? "selected='selected'": "") + '>垂直3列</option>';
+        e += '			<option value="4" ' + (data.format == "4" ? "selected='selected'": "") + '>垂直4列</option>';
+        e += '			<option value="5" ' + (data.format == "5" ? "selected='selected'": "") + '>垂直5列</option>';
+        e += '			<option value="6" ' + (data.format == "6" ? "selected='selected'": "") + '>垂直6列</option>';
+        e += '			<option value="9" ' + (data.format == "9" ? "selected='selected'": "") + '>水平</option>';
+        e += '			</select>';
+        e += '	</div>';
 
 		e += '<div class="edit_item_warp" style="text-align:right;">';
 		e += '  <a href="javascript:void(0);" onclick="SurveyBuild.DynamicBindVal()" class="">动态绑定值</a>';
@@ -237,6 +232,7 @@ SurveyBuild.extend("Check", "baseComponent", {
 					//固定格式校验（选择个数）
 					if (classname == "NumSizeValidator") {
 						NumErrorMsg = classObj["messages"];
+                        NumErrorMsg+="，选项过多";
 					}
 				}
 			});
