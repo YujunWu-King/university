@@ -542,7 +542,7 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                         messageProperty: 'state.errdesc'
                     }
                 });
-
+            //console.log(proxy.reader.rootPropertyR);
             return proxy;
         },
 
@@ -2907,9 +2907,12 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                             {
                                 //返回值
                                 var responseText = eOpts.getResponse().responseText;
+                                
+                                //console.log(responseText);
 
                                 //返回值json对象
                                 var jsonObject = Ext.util.JSON.decode(responseText);
+                                //console.log(jsonObject);
 
                                 //获取数据失败
                                 if(jsonObject.state.errcode != 0)

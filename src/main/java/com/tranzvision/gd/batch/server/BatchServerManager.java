@@ -63,6 +63,7 @@ public class BatchServerManager extends BaseJob
 	        	Enumeration<InetAddress> addresses = e.nextElement().getInetAddresses();
 	        	while(addresses.hasMoreElements() == true)
 	        	{
+	        		System.out.println("LOCAL IP:"+addresses.nextElement().getHostAddress());
 	        		batchServerIPSet.add(addresses.nextElement().getHostAddress());
 	        	}
 	        }
@@ -178,6 +179,7 @@ public class BatchServerManager extends BaseJob
 			while(iter.hasNext() == true)
 			{
 				ipAddress = iter.next();
+				System.out.println("scanBatchServers LOCAL IP:"+ipAddress);
 				TzSQLObject tmpSQLObject = createSQLObject(getSQLText("SQL.TZBatchServer.TzGetBatchServer"), ipAddress);
 				
 				TzRecord tmpRecord = new TzRecord();
