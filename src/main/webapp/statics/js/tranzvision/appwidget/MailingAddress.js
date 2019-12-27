@@ -13,39 +13,85 @@ SurveyBuild.extend("MailingAddress", "baseComponent", {
     _getHtml: function(data, previewmode) {
         var c = "", children = data.children;
         if (previewmode) {
-            if(SurveyBuild._readonly){
-                //只读模式
-                
-                c += '<div class="input-list">';
-                c += '	<div class="input-list-info left"><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-                c += '  <div class="input-list-text left"><span style="line-height:24px">' + children[0]["value"] + '<br>' + children[1]["value"] + '</span></div>';
-                c += '	<div class="input-list-suffix left"></div>';
-                c += '	<div class="clear"></div>';
-                c += '</div>';
-            }else{
-                //填写模式
-                SurveyBuild.appInsId == "0" && this._getDefaultVal(data,"P2");
+            //张超  时间：2019年12月26日16:34:19  备注：添加手机样式
+            if(SurveyBuild.accessType == "M"){
+                //其他显示样式
+                if(SurveyBuild._readonly){
+                    //只读模式
+                    c += '<div class="input-list item">';
+                    c += '	<div class="input-list-info left"> <p style="display: inline-block">' + data.title + '</p><span 			class="red">' + (data.isRequire == "Y" ? "*": "") + '</span></div>';
+                    c += '	<div class="input-list-textdate left input-date-select" style="width:100%">';
+                    c += '    	<input type="text" class="inpu-list-text-enter zc_phone_input_city" title="' + MsgSet["CITY"] + '" value="' + children[0]["value"] + '" id="' + data["itemId"] + children[0]["itemId"] + '" name="' + data["itemId"] + children[0]["itemId"] + '" style="width:100%;border:1px solid #ddd;" >';
+                    c += '	</div>';
+                    c += '	<div class="input-list-textdate left input-date-select" style="width: 100%; margin:' +
+                        ' 0.5em 0 0 0;border: 1px solid #ddd;border-radius: 5px">';
+                    c += '    	<input type="text" class="inpu-list-text-enter" title="' + MsgSet["ADDRESS"] + '" value="' + children[1]["value"] + '" id="' + data["itemId"] + children[1]["itemId"] + '" name="' + data["itemId"] + children[1]["itemId"] + '">';
+                    c += '	</div>';
+                    c += '	<div class="input-list-suffix left"></div>';
+                    c += '	<div class="clear"></div>';
+                    c += '</div>';
+                }else{
+                    //填写模式
+                    SurveyBuild.appInsId == "0" && this._getDefaultVal(data,"P2");
 
-                c += '<div class="input-list">';
-                c += '	<div class="input-list-info left"><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-                c += '	<div class="input-list-textdate left input-date-select" style="width:12.5%">';
-                c += '    	<input type="text" class="inpu-list-text-enter" title="' + MsgSet["CITY"] + '" value="' + children[0]["value"] + '" id="' + data["itemId"] + children[0]["itemId"] + '" name="' + data["itemId"] + children[0]["itemId"] + '"><img id="' + data["itemId"] + data.children[0]["itemId"] + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/location.png" class="input-icon" />';
-                c += '	</div>';
-                c += '	<div class="input-list-textdate left input-date-select" style="width: 21%; margin: 0 15px 0 0;">';
-                c += '    	<input type="text" class="inpu-list-text-enter" title="' + MsgSet["ADDRESS"] + '" value="' + children[1]["value"] + '" id="' + data["itemId"] + children[1]["itemId"] + '" name="' + data["itemId"] + children[1]["itemId"] + '">';
-                c += '	</div>';
-                c += '	<div class="input-list-suffix left"><div id="' + data["itemId"] + 'Tip" class="onShow"><div class="onShow">&nbsp;</div></div></div>';
-                c += '	<div class="clear"></div>';
-                c += '</div>';
-				//提示信息
-				if ($.trim(data.onShowMessage) != "") {
-					c += '<div class="input-list-blank" id="' + data.itemId + 'msg">';
-					c += '	<div class="input-list-info-blank left"><span class="red-star"></div>';
-					c += '	<div class="input-list-wz left"><span class="blue">' + data.onShowMessage + '</span></div>';
-					c += '	<div class="input-list-suffix-blank left"></div>';
-					c += '	<div class="clear"></div>';
-					c += '</div>';
-				}
+                    c += '<div class="input-list item">';
+                    c += '	<div class="input-list-info left"> <p style="display: inline-block">' + data.title + '</p><span 			class="red">' + (data.isRequire == "Y" ? "*": "") + '</span></div>';
+                    c += '	<div class="input-list-textdate left input-date-select" style="width:100%">';
+                    c += '    	<input type="text" class="inpu-list-text-enter zc_phone_input_city" title="' + MsgSet["CITY"] + '" value="' + children[0]["value"] + '" id="' + data["itemId"] + children[0]["itemId"] + '" name="' + data["itemId"] + children[0]["itemId"] + '" style="width:100%;border:1px solid #ddd;"><img id="' + data["itemId"] + data.children[0]["itemId"] + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/location.png" class="input-icoyn zc_input_image_icon"/>';
+                    c += '	</div>';
+                    c += '	<div class="input-list-textdate left input-date-select" style="width: 100%; margin:' +
+                        ' 0.5em 0 0 0;border: 1px solid #ddd;border-radius: 5px">';
+                    c += '    	<input type="text" class="inpu-list-text-enter" title="' + MsgSet["ADDRESS"] + '" value="' + children[1]["value"] + '" id="' + data["itemId"] + children[1]["itemId"] + '" name="' + data["itemId"] + children[1]["itemId"] + '">';
+                    c += '	</div>';
+                    c += '	<div class="input-list-suffix left"><div id="' + data["itemId"] + 'Tip" class="onShow"><div class="onShow">&nbsp;</div></div></div>';
+                    c += '	<div class="clear"></div>';
+                    c += '</div>';
+                    //提示信息
+                    if ($.trim(data.onShowMessage) != "") {
+                        c += '<div class="input-list-blank" id="' + data.itemId + 'msg">';
+                        c += '	<div class="input-list-info-blank left"><span class="red-star"></div>';
+                        c += '	<div class="input-list-wz left"><span class="blue zc_span_blue">' + data.onShowMessage + '</span></div>';
+                        c += '	<div class="input-list-suffix-blank left"></div>';
+                        c += '	<div class="clear"></div>';
+                        c += '</div>';
+                    }
+                }
+            }else{
+                //其他显示样式
+                if(SurveyBuild._readonly){
+                    //只读模式
+
+                    c += '<div class="input-list">';
+                    c += '	<div class="input-list-info left"><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+                    c += '  <div class="input-list-text left"><span style="line-height:24px">' + children[0]["value"] + '<br>' + children[1]["value"] + '</span></div>';
+                    c += '	<div class="input-list-suffix left"></div>';
+                    c += '	<div class="clear"></div>';
+                    c += '</div>';
+                }else{
+                    //填写模式
+                    SurveyBuild.appInsId == "0" && this._getDefaultVal(data,"P2");
+
+                    c += '<div class="input-list">';
+                    c += '	<div class="input-list-info left"><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+                    c += '	<div class="input-list-textdate left input-date-select" style="width:12.5%">';
+                    c += '    	<input type="text" class="inpu-list-text-enter" title="' + MsgSet["CITY"] + '" value="' + children[0]["value"] + '" id="' + data["itemId"] + children[0]["itemId"] + '" name="' + data["itemId"] + children[0]["itemId"] + '"><img id="' + data["itemId"] + data.children[0]["itemId"] + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/location.png" class="input-icon" />';
+                    c += '	</div>';
+                    c += '	<div class="input-list-textdate left input-date-select" style="width: 21%; margin: 0 15px 0 0;">';
+                    c += '    	<input type="text" class="inpu-list-text-enter" title="' + MsgSet["ADDRESS"] + '" value="' + children[1]["value"] + '" id="' + data["itemId"] + children[1]["itemId"] + '" name="' + data["itemId"] + children[1]["itemId"] + '">';
+                    c += '	</div>';
+                    c += '	<div class="input-list-suffix left"><div id="' + data["itemId"] + 'Tip" class="onShow"><div class="onShow">&nbsp;</div></div></div>';
+                    c += '	<div class="clear"></div>';
+                    c += '</div>';
+                    //提示信息
+                    if ($.trim(data.onShowMessage) != "") {
+                        c += '<div class="input-list-blank" id="' + data.itemId + 'msg">';
+                        c += '	<div class="input-list-info-blank left"><span class="red-star"></div>';
+                        c += '	<div class="input-list-wz left"><span class="blue">' + data.onShowMessage + '</span></div>';
+                        c += '	<div class="input-list-suffix-blank left"></div>';
+                        c += '	<div class="clear"></div>';
+                        c += '</div>';
+                    }
+                }
             }
         } else {
             c += '<div class="question-answer">';
@@ -86,89 +132,187 @@ SurveyBuild.extend("MailingAddress", "baseComponent", {
         var address = $("#" + data["itemId"] + data.children[1]["itemId"]);
         var $selectBtn = $("#" + data["itemId"] + data.children[0]["itemId"] + "_Btn");
         var siteId=$("#siteId").val();
-        
+        //在原有的基础上添加手机端通讯地址功能
         var prov;
-		$.each([province,$selectBtn],function(i,el){
-			el.click(function(e) {
-	            var _prov_id=data["itemId"] + data.children[0]["itemId"];
+        if(SurveyBuild.accessType == "M"){
+            //手机版是事件
+            var $inputBox = $("#" + data["itemId"] + data.children[0]["itemId"]);
+            var siteId=$("#siteId").val();
 
-	            var provinceUrl = SurveyBuild.tzGeneralURL + '?tzParams=';
-	            var params = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_CITY_STD","OperateType":"HTML","comParams":{"OType":"CITY","TPLID":"' + templId + '","TZ_CITY_ID":"' + _prov_id+ '","siteId":"' + siteId + '"}}';
-	            provinceUrl = provinceUrl + window.escape(params);
+            $.each([$inputBox],function(i, el) {
+                el.focus(function(){
+                    document.activeElement.blur();
+                })
+            });
 
-	            prov = $.layer({
-	                type: 2,
-	                title: false,
-	                fix: false,
-	                closeBtn: false,
-	                shadeClose: false,
-	                shade : [0.3 , '#000' , true],
-	                border : [3 , 0.3 , '#000', true],
-	                offset: ['100px',''],
-	                area: ['588px','400px'],
-	                iframe: {src: provinceUrl}
-	            });
-			});
-		});
+            $.each([$inputBox],function(i, el) {
+                el.click(function(e) {
+                    $("#ParamCon").val(el.attr("id"));
 
-        province.formValidator({tipID:(data["itemId"] + 'Tip'),onShow:"",onFocus:"&nbsp;",onCorrect:"&nbsp;"});
-        address.formValidator({tipID:(data["itemId"] + 'Tip'),onShow:"",onFocus:"&nbsp;",onCorrect:"&nbsp;"});
+                    var tzParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_M_CITY_STD","OperateType":"HTML","comParams":{"OType":"CITY","siteId":"72","lang":"'+$("#lang").val()+'"}}';
 
-        province.functionValidator({
-            fun:function(val,elem){
-
-                //执行高级设置中的自定义规则
-                /*********************************************\
-                 ** 注意：自定义规则中不要使用formValidator **
-                 \*********************************************/
-                var _result = true;
-                if (ValidationRules) {
-                    $.each(data["rules"],function(classname, classObj) {
-                        //单选钮不需要在高级规则中的必选判断
-                        if ($.inArray(classname, SurveyBuild._baseRules) == -1 && data["rules"][classname]["isEnable"] == "Y") {
-                            var _ruleClass = ValidationRules[classname];
-                            if (_ruleClass && _ruleClass._Validator) {
-                                _result = _ruleClass._Validator(data["itemId"] + data.children[0]["itemId"], classObj["messages"]);
-                                if(_result !== true){
-                                    return false;
-                                }
-                            }
+                    $.ajax({
+                        type: "post",
+                        async :false,
+                        data:{
+                            tzParams:tzParams
+                        },
+                        url: TzUniversityContextPath + "/dispatcher",
+                        dataType: "html",
+                        success: function(result){
+                            $("#searchCountry").html("");
+                            $("#searchCountry").html(result);
+                            $("#MainDiv").hide();
+                            $("#searchCountry").fadeIn("slow");
+                            loaded ();
                         }
                     });
-                    if(_result !== true){
-                        return _result;
-                    }
-                }
-                return _result;
-            }
-        });
-        address.functionValidator({
-            fun:function(val,elem){
+                });
+            });
 
-                //执行高级设置中的自定义规则
-                /*********************************************\
-                 ** 注意：自定义规则中不要使用formValidator **
-                 \*********************************************/
-                var _result = true;
-                if (ValidationRules) {
-                    $.each(data["rules"],function(classname, classObj) {
-                        //单选钮不需要在高级规则中的必选判断
-                        if ($.inArray(classname, SurveyBuild._baseRules) == -1 && data["rules"][classname]["isEnable"] == "Y") {
-                            var _ruleClass = ValidationRules[classname];
-                            if (_ruleClass && _ruleClass._Validator) {
-                                _result = _ruleClass._Validator(data["itemId"] + data.children[1]["itemId"], classObj["messages"]);
-                                if(_result !== true){
-                                    return false;
+            province.formValidator({tipID:(data["itemId"] + 'Tip'),onShow:"",onFocus:"&nbsp;",onCorrect:"&nbsp;"});
+            // address.formValidator({tipID:(data["itemId"] + 'Tip'),onShow:"",onFocus:"&nbsp;",onCorrect:"&nbsp;"});
+
+            province.functionValidator({
+                fun:function(val,elem){
+
+                    //执行高级设置中的自定义规则
+                    /*********************************************\
+                     ** 注意：自定义规则中不要使用formValidator **
+                     \*********************************************/
+                    var _result = true;
+                    if (ValidationRules) {
+                        $.each(data["rules"],function(classname, classObj) {
+                            //单选钮不需要在高级规则中的必选判断
+                            if ($.inArray(classname, SurveyBuild._baseRules) == -1 && data["rules"][classname]["isEnable"] == "Y") {
+                                var _ruleClass = ValidationRules[classname];
+                                if (_ruleClass && _ruleClass._Validator) {
+                                    _result = _ruleClass._Validator(data["itemId"] + data.children[0]["itemId"], classObj["messages"]);
+                                    if(_result !== true){
+                                        return false;
+                                    }
                                 }
                             }
+                        });
+                        if(_result !== true){
+                            return _result;
                         }
-                    });
-                    if(_result !== true){
-                        return _result;
                     }
+                    return _result;
                 }
-                return _result;
-            }
-        });
+            });
+            address.functionValidator({
+                fun:function(val,elem){
+
+                    //执行高级设置中的自定义规则
+                    /*********************************************\
+                     ** 注意：自定义规则中不要使用formValidator **
+                     \*********************************************/
+                    var _result = true;
+                    if (ValidationRules) {
+                        $.each(data["rules"],function(classname, classObj) {
+                            //单选钮不需要在高级规则中的必选判断
+                            if ($.inArray(classname, SurveyBuild._baseRules) == -1 && data["rules"][classname]["isEnable"] == "Y") {
+                                var _ruleClass = ValidationRules[classname];
+                                if (_ruleClass && _ruleClass._Validator) {
+                                    _result = _ruleClass._Validator(data["itemId"] + data.children[1]["itemId"], classObj["messages"]);
+                                    if(_result !== true){
+                                        return false;
+                                    }
+                                }
+                            }
+                        });
+                        if(_result !== true){
+                            return _result;
+                        }
+                    }
+                    return _result;
+                }
+            });
+        }else{
+            //pc端事件
+            $.each([province,$selectBtn],function(i,el){
+                el.click(function(e) {
+                    var _prov_id=data["itemId"] + data.children[0]["itemId"];
+
+                    var provinceUrl = SurveyBuild.tzGeneralURL + '?tzParams=';
+                    var params = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_CITY_STD","OperateType":"HTML","comParams":{"OType":"CITY","TPLID":"' + templId + '","TZ_CITY_ID":"' + _prov_id+ '","siteId":"' + siteId + '"}}';
+                    provinceUrl = provinceUrl + window.escape(params);
+
+                    prov = $.layer({
+                        type: 2,
+                        title: false,
+                        fix: false,
+                        closeBtn: false,
+                        shadeClose: false,
+                        shade : [0.3 , '#000' , true],
+                        border : [3 , 0.3 , '#000', true],
+                        offset: ['100px',''],
+                        area: ['588px','400px'],
+                        iframe: {src: provinceUrl}
+                    });
+                });
+            });
+
+            province.formValidator({tipID:(data["itemId"] + 'Tip'),onShow:"",onFocus:"&nbsp;",onCorrect:"&nbsp;"});
+            address.formValidator({tipID:(data["itemId"] + 'Tip'),onShow:"",onFocus:"&nbsp;",onCorrect:"&nbsp;"});
+
+            province.functionValidator({
+                fun:function(val,elem){
+
+                    //执行高级设置中的自定义规则
+                    /*********************************************\
+                     ** 注意：自定义规则中不要使用formValidator **
+                     \*********************************************/
+                    var _result = true;
+                    if (ValidationRules) {
+                        $.each(data["rules"],function(classname, classObj) {
+                            //单选钮不需要在高级规则中的必选判断
+                            if ($.inArray(classname, SurveyBuild._baseRules) == -1 && data["rules"][classname]["isEnable"] == "Y") {
+                                var _ruleClass = ValidationRules[classname];
+                                if (_ruleClass && _ruleClass._Validator) {
+                                    _result = _ruleClass._Validator(data["itemId"] + data.children[0]["itemId"], classObj["messages"]);
+                                    if(_result !== true){
+                                        return false;
+                                    }
+                                }
+                            }
+                        });
+                        if(_result !== true){
+                            return _result;
+                        }
+                    }
+                    return _result;
+                }
+            });
+            address.functionValidator({
+                fun:function(val,elem){
+
+                    //执行高级设置中的自定义规则
+                    /*********************************************\
+                     ** 注意：自定义规则中不要使用formValidator **
+                     \*********************************************/
+                    var _result = true;
+                    if (ValidationRules) {
+                        $.each(data["rules"],function(classname, classObj) {
+                            //单选钮不需要在高级规则中的必选判断
+                            if ($.inArray(classname, SurveyBuild._baseRules) == -1 && data["rules"][classname]["isEnable"] == "Y") {
+                                var _ruleClass = ValidationRules[classname];
+                                if (_ruleClass && _ruleClass._Validator) {
+                                    _result = _ruleClass._Validator(data["itemId"] + data.children[1]["itemId"], classObj["messages"]);
+                                    if(_result !== true){
+                                        return false;
+                                    }
+                                }
+                            }
+                        });
+                        if(_result !== true){
+                            return _result;
+                        }
+                    }
+                    return _result;
+                }
+            });
+        }
     }
 });

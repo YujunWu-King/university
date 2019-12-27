@@ -44,9 +44,9 @@ SurveyBuild.extend("Radio", "baseComponent", {
 							data["option"][i]["checked"] = "Y";
 						}
 					}
-					  e += '<li >';
-					  e += '	<input type="radio" instanceId="' + i + '" name="' + data.itemId + '" class="radio ' + (data["option"][i]["other"] == "Y" ? "sur_other_box": "") + '" id="o' + data.itemId + data["option"][i]["code"] + '"  value="' + data["option"][i]["code"] + '" ' + (data["option"][i]["checked"] == "Y" ? "checked='checked'": "") + '>';
-				      e += '	<label for="o' + data.itemId + data["option"][i]["code"] + '">'+ data["option"][i]["txt"]+'</label>';
+					  e += '<li>';
+					  e += '	<input type="radio" instanceId="' + i + '" name="' + data.itemId + '" class="zc_company_radio radio ' + (data["option"][i]["other"] == "Y" ? "sur_other_box": "") + '" id="o' + data.itemId + data["option"][i]["code"] + '"  value="' + data["option"][i]["code"] + '" ' + (data["option"][i]["checked"] == "Y" ? "checked='checked'": "") + '>';
+				      e += '	<label class="zc_label" for="o' + data.itemId + data["option"][i]["code"] + '">'+ data["option"][i]["txt"]+'</label>';
 				      if (data["option"][i]["other"] == "Y" &&data.format != "H"){
 					        if(SurveyBuild._readonly){
 					        	e += '<input type="text" class="others" disabled=true value="' + data.othervalue + '" >';
@@ -58,10 +58,10 @@ SurveyBuild.extend("Radio", "baseComponent", {
 				}
 				data.format = (data.format?data.format:"S");
 				c += '<div class="item" data-instancid="' + data.instanceId + '">';
-				c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
+				c += '	<p  class="zc_radio_p" style="margin-bottom: 0px">'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
 				c += '  <div id="' + data.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
 				if(data.format == "H"){
-				c += '	<ul class="sex" id="' + data.itemId + '">'+e+'</ul>';
+				c += '	<ul class="sex" id="' + data.itemId + '" style="width: 90%;display: inline-block;">'+e+'</ul>';
 				}else{
 				c += '	<ul class="company" id="' + data.itemId + '">'+e+'</ul>';
 				}
@@ -73,7 +73,7 @@ SurveyBuild.extend("Radio", "baseComponent", {
 							data["option"][i]["checked"] = "Y";
 						}
 					}
-					e += '<li>';
+					e += '<li class="zc_li_radio">';
 					e += '	<div class="radio-btn ' + (data["option"][i]["checked"] == "Y" ? "checkedRadio": "") + '"><i><input type="radio" name="' + data.itemId + '" instanceId="' + i + '" id="o' + data.itemId + data["option"][i]["code"] + '" value="' + data["option"][i]["code"] + '" ' + (data["option"][i]["checked"] == "Y" ? "checked='checked'": "") + ' class="' + (data["option"][i]["other"] == "Y" ? "sur_other_box": "") + '"/></i></div>';
 					e += data["option"][i]["txt"];
 					if (data["option"][i]["other"] == "Y" && data["option"][i]["checked"] == "Y"){
@@ -90,9 +90,9 @@ SurveyBuild.extend("Radio", "baseComponent", {
 				data.format = (data.format?data.format:"S");
 				if(data.format == "H"){
 					c += '<div class="input-list input-radiobox" data-instancid="' + data.instanceId + '">';
-					c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+					c += '	<div class="input-list-info-zc left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
 					c += '		<div class="margart8 input-list-text left Custom-radio">';
-					c += '			<ul id="' + data.itemId + '">' + e + '<div class="clear"></div></ul>';
+					c += '			<ul class="zc_css_ul1" id="' + data.itemId + '">' + e + '<div class="clear"></div></ul>';
 					c += '		</div>';
 					c += '		<div class="input-list-suffix left">';
 					if(!SurveyBuild._readonly){
@@ -103,9 +103,9 @@ SurveyBuild.extend("Radio", "baseComponent", {
 					c += '</div>';
 				}else{
 					c += '<div class="input-list input-radiobox" data-instancid="' + data.instanceId + '">';
-					c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-					c += '	<div class="margart8 input-list-textwrap left">';
-					c += '		<ul id="' + data.itemId + '">' + e + '<div class="clear"></div></ul>';
+					c += '	<div class="input-list-info-zc left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+					c += '	<div class="margart8 input-list-textwrap left"  style="width: 91%;">';
+					c += '		<ul class="zc_css_ul" id="' + data.itemId + '">' + e + '<div class="clear"></div></ul>';
 					c += '	</div>';
 					c += '	<div class="input-list-suffix left">';
 					if(!SurveyBuild._readonly){
@@ -127,7 +127,7 @@ SurveyBuild.extend("Radio", "baseComponent", {
 				}
 				e += '</li>';
 			}
-			c = '<div class="question-answer"><ul class="format">' + e + '</ul></div>'
+			c = '<div class="question-answer"><ul class="format format'+data.format+'">' + e + '</ul></div>'
 		}
 		return c;
 	},

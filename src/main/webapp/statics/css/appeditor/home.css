@@ -5622,3 +5622,28 @@ a.bw:link, a.bw:visited {
 	vertical-align: middle;
 	text-align: center;
 }
+.input-list-info-zc{
+	width:1%;
+	text-align:right;
+	font-size: 16px;
+	color: #666;
+	height: 46px;
+	line-height: 46px;
+}
+.zc_css_ul{
+	line-height: 26px;
+	color: #666;
+	margin-left:1.4em;
+	font-family: Arial;
+}
+
+.zc_li_radio{
+	word-break:normal;
+	word-wrap:break-word;
+	text-indent: -1.85em;
+	white-space:normal;
+}
+
+.zc_css_ul1{
+	margin-left:1.4em;
+}

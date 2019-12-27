@@ -21,7 +21,7 @@ SurveyBuild.extend("CheckBox", "baseComponent", {
 				c += '</div>';
 			}else{
 				c += '<div class=" input-list input-radiobox">';
-				c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span></div>';
+				c += '	<div class="input-list-info-zc left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span></div>';
 				c += '    <div class="margart15 input-list-textwrap left">';
 				c += '    	 <ul>';
 				c += '    	 	<li><div class="check-box ' + (data.value == "Y" ? "checkedBox": "") + '"><i><input type="checkbox" name="check-box" ' + (data.value == "Y" ? "checked='checked'": "") + ' instanceId="' + data.instanceId + '" id="' + data.itemId + '" name="' + data.itemId + '" value="' + data.value + '"></i></div>' + data.title + '</li>';

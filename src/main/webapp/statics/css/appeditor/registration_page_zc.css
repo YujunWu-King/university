@@ -1,0 +1,10 @@
+/*报名表手机版控件样式修改*/
+.zc_phone_input_city{
+    border-radius:5px;
+}
+.zc_input_image_icon{
+    display: none;
+}
+.zc_span_blue{
+    color: #0070c6;
+}
