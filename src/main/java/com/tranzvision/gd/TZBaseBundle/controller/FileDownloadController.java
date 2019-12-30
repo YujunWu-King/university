@@ -10,6 +10,10 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzWebsiteLoginServiceImpl;
+import com.tranzvision.gd.TZBaseBundle.service.impl.LogSaveServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,9 +28,21 @@ import com.tranzvision.gd.util.base.JacksonUtil;
  * @author caoy
  * @version 创建时间：2016年6月22日 上午11:20:08 类说明
  */
+/**修改
+ * @author JJL
+ * @since 2019-12-30
+ * @desc 对文件下载进行日志记录
+ */
 @Controller
 @RequestMapping(value = "/")
 public class FileDownloadController {
+	@Autowired
+	private TzLoginServiceImpl tzLoginServiceImpl;
+
+	@Autowired
+	private TzWebsiteLoginServiceImpl tzWebsiteLoginServiceImpl;
+	@Autowired
+	private LogSaveServiceImpl logSaveServiceImpl;
 
 	@RequestMapping(value = "DownPdfServlet", produces = "text/html;charset=UTF-8")
 	public @ResponseBody String orgDownloadFileHandler(HttpServletRequest request, HttpServletResponse response,
@@ -35,6 +51,7 @@ public class FileDownloadController {
 		String instanceID = String.valueOf(allRequestParams.get("instanceID"));
 		String fileName = String.valueOf(allRequestParams.get("fileName"));
 
+		String oprid=tzWebsiteLoginServiceImpl.getLoginedUserOprid(request);
 		// System.out.println("instanceID：" + instanceID);
 		// System.out.println("fileName：" + fileName);
 
@@ -53,7 +70,7 @@ public class FileDownloadController {
 				} else {
 					fileName = new String(bean.getDownloadFileName().getBytes("UTF-8"), "ISO8859-1");
 				}
-				
+
 
 			} catch (UnsupportedEncodingException e1) {
 				// TODO Auto-generated catch block
@@ -79,6 +96,22 @@ public class FileDownloadController {
 
 		// System.out.println("msg：" + bean.getMsg());
 
+		//文件下载日志记录
+		if(!"".equals(oprid)&&null!=oprid){
+			String inputParam="下载文件名："+fileName;
+			String outputParam="";
+			String result="";
+			String failReason="";
+			boolean success=bean.getRs() == 0 ? true : false;
+			if(success){
+				result="下载成功！";
+			}else{
+				result="下载失败！";
+				failReason=bean.getMsg();
+			}
+			logSaveServiceImpl.SaveLogToDataBase(oprid,inputParam,outputParam,result,failReason,"","","");
+		}
+
 		Map<String, Object> mapRet = new HashMap<String, Object>();
 		mapRet.put("success", bean.getRs() == 0 ? true : false);
 		mapRet.put("msg", bean.getMsg());
@@ -89,7 +122,7 @@ public class FileDownloadController {
 
 	/**
 	 * 下载上传过的PDF模板文件
-	 * 
+	 *
 	 * @param request
 	 * @param response
 	 * @param allRequestParams
@@ -100,6 +133,8 @@ public class FileDownloadController {
 			@RequestParam Map<String, Object> allRequestParams) {
 		// System.out.println("PDF实例下载");
 		String templateID = String.valueOf(allRequestParams.get("templateID"));
+
+		String oprid=tzWebsiteLoginServiceImpl.getLoginedUserOprid(request);
 
 		PdfPrintbyModel ppm = new PdfPrintbyModel();
 		DataBean bean = ppm.getPdfTemplateURL(templateID);
@@ -132,6 +167,14 @@ public class FileDownloadController {
 					Map<String, Object> mapRet = new HashMap<String, Object>();
 					mapRet.put("success", false);
 					mapRet.put("msg", "模板文件不存在");
+					//文件下载日志记录
+					if(!"".equals(oprid)&&null!=oprid){
+						String inputParam="下载文件名："+bean.getTemplateFileName();
+						String outputParam="";
+						String result="下载失败！";
+						String failReason="模板文件不存在";
+						logSaveServiceImpl.SaveLogToDataBase(oprid,inputParam,outputParam,result,failReason,"","","");
+					}
 					JacksonUtil jacksonUtil = new JacksonUtil();
 					return jacksonUtil.Map2json(mapRet);
 				} else {
@@ -154,6 +197,22 @@ public class FileDownloadController {
 
 		// System.out.println("msg：" + bean.getMsg());
 
+		//文件下载日志记录
+		if(!"".equals(oprid)&&null!=oprid){
+			String inputParam="下载文件名："+fileName;
+			String outputParam="";
+			String result="";
+			String failReason="";
+			boolean success=bean.getRs() == 0 ? true : false;
+			if(success){
+				result="下载成功！";
+			}else{
+				result="下载失败！";
+				failReason=bean.getMsg();
+			}
+			logSaveServiceImpl.SaveLogToDataBase(oprid,inputParam,outputParam,result,failReason,"","","");
+		}
+
 		Map<String, Object> mapRet = new HashMap<String, Object>();
 		mapRet.put("success", bean.getRs() == 0 ? true : false);
 		mapRet.put("msg", bean.getMsg());
@@ -161,12 +220,12 @@ public class FileDownloadController {
 		return jacksonUtil.Map2json(mapRet);
 		// return retJson;
 	}
-	
-	
+
+
 	/**
 	 * 下载统一打印模板中上传的PDF模板文件
 	 * luyan 2017-12-6
-	 * 
+	 *
 	 * @param request
 	 * @param response
 	 * @param allRequestParams
@@ -175,8 +234,10 @@ public class FileDownloadController {
 	@RequestMapping(value = "DownPdfPServlet", produces = "text/html;charset=UTF-8")
 	public @ResponseBody String orgDownloadPdfPHandler(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam Map<String, Object> allRequestParams) {
-		
+
 		String templateID = String.valueOf(allRequestParams.get("templateID"));
+
+		String oprid=tzWebsiteLoginServiceImpl.getLoginedUserOprid(request);
 
 		PdfTemplateInfo pti = new PdfTemplateInfo();
 		DataBean bean = pti.getPdfTemplateURL(templateID);
@@ -209,6 +270,14 @@ public class FileDownloadController {
 					Map<String, Object> mapRet = new HashMap<String, Object>();
 					mapRet.put("success", false);
 					mapRet.put("msg", "模板文件不存在");
+					//文件下载日志记录
+					if(!"".equals(oprid)&&null!=oprid){
+						String inputParam="下载文件名："+bean.getTemplateFileName();
+						String outputParam="";
+						String result="下载失败！";
+						String failReason="模板文件不存在";
+						logSaveServiceImpl.SaveLogToDataBase(oprid,inputParam,outputParam,result,failReason,"","","");
+					}
 					JacksonUtil jacksonUtil = new JacksonUtil();
 					return jacksonUtil.Map2json(mapRet);
 				} else {
@@ -230,6 +299,22 @@ public class FileDownloadController {
 		}
 
 		// System.out.println("msg：" + bean.getMsg());
+
+		//文件下载日志记录
+		if(!"".equals(oprid)&&null!=oprid){
+			String inputParam="下载文件名："+fileName;
+			String outputParam="";
+			String result="";
+			String failReason="";
+			boolean success=bean.getRs() == 0 ? true : false;
+			if(success){
+				result="下载成功！";
+			}else{
+				result="下载失败！";
+				failReason=bean.getMsg();
+			}
+			logSaveServiceImpl.SaveLogToDataBase(oprid,inputParam,outputParam,result,failReason,"","","");
+		}
 
 		Map<String, Object> mapRet = new HashMap<String, Object>();
 		mapRet.put("success", bean.getRs() == 0 ? true : false);

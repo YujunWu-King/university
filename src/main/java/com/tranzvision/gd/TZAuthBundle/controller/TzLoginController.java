@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.tranzvision.gd.TZBaseBundle.service.impl.LogSaveServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,7 +28,7 @@ import com.tranzvision.gd.util.sql.TZGDObject;
 
 /**
  * 登录前端控制器
- * 
+ *
  * @author SHIHUA
  * @since 2015-11-03
  */
@@ -49,6 +50,9 @@ public class TzLoginController {
 
 	@Autowired
 	private TZGDObject tzGDObject;
+
+	@Autowired
+	private LogSaveServiceImpl logSaveServiceImpl;
 
 	private String adminOrgId;
 
@@ -175,7 +179,7 @@ public class TzLoginController {
 
 	/**
 	 * 获取有效的机构记录
-	 * 
+	 *
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
@@ -246,9 +250,28 @@ public class TzLoginController {
 
 		ArrayList<String> aryErrorMsg = new ArrayList<String>();
 
-		tzLoginServiceImpl.doLogin(request, response, orgid, userName, userPwd, code, aryErrorMsg);
+		boolean ifSuccess=tzLoginServiceImpl.doLogin(request, response, orgid, userName, userPwd, code, aryErrorMsg);
 		String loginStatus = aryErrorMsg.get(0);
 		String errorMsg = aryErrorMsg.get(1);
+
+		//登录日志保存到数据库
+		if(!"".equals(userName)&&null!=userName){
+			String getOprid="select OPRID from PS_TZ_AQ_YHXX_TBL where TZ_DLZH_ID=?";
+			String oprid=sqlQuery.queryForObject(getOprid,new Object[]{userName},"String");
+			if(!"".equals(oprid)&&null!=oprid){
+				System.out.println("loginOPRID=====>"+oprid);
+				String inputParam="登录账号："+userName;
+				String result="";
+				String failReason="";
+				if(ifSuccess){
+					result="登录成功！";
+				}else {
+					result="登录失败！";
+					failReason=errorMsg;
+				}
+				logSaveServiceImpl.SaveLogToDataBase(oprid,inputParam,"",result,failReason,"","","");
+			}
+		}
 
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
 		jsonMap.put("success", loginStatus);

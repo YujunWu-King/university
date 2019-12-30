@@ -8,6 +8,8 @@ import java.util.Map;
 
 import java.io.File;
 
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzWebsiteLoginServiceImpl;
+import com.tranzvision.gd.TZBaseBundle.service.impl.LogSaveServiceImpl;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,9 +56,11 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.tsinghua.sms.SendSmsService;
 import com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzYjfjlshiTbl;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 邮件短信发送；原：TZ_SMSMAL_QF_PKG:SendSmsOrMal
- * 
+ *
  * @author tang
  * @since 2015-11-30
  */
@@ -90,6 +94,8 @@ public class SendSmsOrMalQfServiceImpl {
 	private SqlQuery jdbcTemplate;
 	@Autowired
 	private GetSeqNum getSeqNum;
+	@Autowired
+	private HttpServletRequest request;
 	@Autowired
 	private SendSmsService sendSmsService;
 	@Autowired
@@ -129,6 +135,10 @@ public class SendSmsOrMalQfServiceImpl {
 	private PsTzZnxRecTMapper psTzZnxRecTMapper;
 	@Autowired
 	private PsTzZnxAttchTBLMapper psTzZnxAttchTBLMapper;
+	@Autowired
+	private LogSaveServiceImpl logSaveService;
+	@Autowired
+	private TzWebsiteLoginServiceImpl tzWebsiteLoginServiceImpl;
 
 	// 连接邮件服务器
 	public boolean connectToMailServer(TranzvisionMail mailer, String emailServerId, String strTaskId) {
@@ -143,7 +153,7 @@ public class SendSmsOrMalQfServiceImpl {
 			String smtpAddr = psTzEmlsDefTbl.getTzSmtpAddr();
 			String userName = psTzEmlsDefTbl.getTzUsrName();
 			String password = psTzEmlsDefTbl.getTzUsrPwd();
-			
+
 			// 设置邮件服务器名称;
 			mailer.setMailHost(smtpAddr);
 			// 设置用户名;
@@ -353,6 +363,9 @@ public class SendSmsOrMalQfServiceImpl {
 					}
 					Map<String, String> mapRst = new HashMap<String, String>();
 					String errCode = "", errMsg = "";
+					//获取当前登录用户oprid
+					String currentoprid=tzWebsiteLoginServiceImpl.getLoginedUserOprid(request);
+					System.out.println("currentoprid=====>"+currentoprid);
 					// 主要手机;
 					if ("A".equals(sendSmsType)) {
 						blRept = this.checkIsSendSms(strTaskId, mainPhone);
@@ -372,8 +385,24 @@ public class SendSmsOrMalQfServiceImpl {
 									errMsg = mapRst.get("msg");
 
 									this.writeTaskLog(strTaskId, strRwSlId, errCode, errMsg);
+									//发送失败日志记录
+									if(!"".equals(currentoprid)&&null!=currentoprid){
+										String inputParam="收件人："+mainPhone;
+										String outputParam="短信内容："+content;
+										String result="发送失败！";
+										String failReason=errMsg;
+										logSaveService.SaveLogToDataBase(currentoprid,inputParam,outputParam,result,failReason,"","","");
+									}
 								} else {
 									sendSuccess = true;
+									//发送成功日志记录
+									if(!"".equals(currentoprid)&&null!=currentoprid){
+										String inputParam="收件人："+mainPhone;
+										String outputParam="短信内容："+content;
+										String result="发送成功！";
+										String failReason="";
+										logSaveService.SaveLogToDataBase(currentoprid,inputParam,outputParam,result,failReason,"","","");
+									}
 								}
 
 							} else {
@@ -403,8 +432,26 @@ public class SendSmsOrMalQfServiceImpl {
 									errCode = mapRst.get("code");
 									errMsg = mapRst.get("msg");
 									this.writeTaskLog(strTaskId, strRwSlId, errCode, errMsg);
+									if(!"发送成功".equals(mapRst.get("msg"))){
+										//发送失败日志记录
+										if(!"".equals(currentoprid)&&null!=currentoprid){
+											String inputParam="收件人："+secondphone;
+											String outputParam="短信内容："+content;
+											String result="发送失败！";
+											String failReason=mapRst.get("msg");
+											logSaveService.SaveLogToDataBase(currentoprid,inputParam,outputParam,result,failReason,"","","");
+										}
+									}
 								} else {
 									sendSuccess = true;
+									//发送成功日志记录
+									if(!"".equals(currentoprid)&&null!=currentoprid){
+										String inputParam="收件人："+secondphone;
+										String outputParam="短信内容："+content;
+										String result="发送成功！";
+										String failReason="";
+										logSaveService.SaveLogToDataBase(currentoprid,inputParam,outputParam,result,failReason,"","","");
+									}
 								}
 							} else {
 								// 为空;
@@ -437,8 +484,26 @@ public class SendSmsOrMalQfServiceImpl {
 									mapRst = sendSmsService.doSendSms(mainPhone, content);
 									if (mapRst.get("msg") != null && !"".equals(mapRst.get("msg"))) {
 										errMsg = mapRst.get("msg");
+										if(!"发送成功".equals(mapRst.get("msg"))){
+											//发送失败日志记录
+											if(!"".equals(currentoprid)&&null!=currentoprid){
+												String inputParam="收件人："+mainPhone;
+												String outputParam="短信内容："+content;
+												String result="发送失败！";
+												String failReason=mapRst.get("msg");
+												logSaveService.SaveLogToDataBase(currentoprid,inputParam,outputParam,result,failReason,"","","");
+											}
+										}
 									} else {
 										sendSuccess = true;
+										//发送成功日志记录
+										if(!"".equals(currentoprid)&&null!=currentoprid){
+											String inputParam="收件人："+mainPhone;
+											String outputParam="短信内容："+content;
+											String result="发送成功！";
+											String failReason="";
+											logSaveService.SaveLogToDataBase(currentoprid,inputParam,outputParam,result,failReason,"","","");
+										}
 									}
 								}
 
@@ -462,9 +527,26 @@ public class SendSmsOrMalQfServiceImpl {
 										} else {
 											errMsg = errMsg + ";" + mapRst.get("msg");
 										}
-
+										if(!"发送成功".equals(mapRst.get("msg"))){
+											//发送失败日志记录
+											if(!"".equals(currentoprid)&&null!=currentoprid){
+												String inputParam="收件人："+secondphone;
+												String outputParam="短信内容："+content;
+												String result="发送失败！";
+												String failReason=mapRst.get("msg");
+												logSaveService.SaveLogToDataBase(currentoprid,inputParam,outputParam,result,failReason,"","","");
+											}
+										}
 									} else {
 										sendSuccess = true;
+										//发送成功日志记录
+										if(!"".equals(currentoprid)&&null!=currentoprid){
+											String inputParam="收件人："+secondphone;
+											String outputParam="短信内容："+content;
+											String result="发送成功！";
+											String failReason="";
+											logSaveService.SaveLogToDataBase(currentoprid,inputParam,outputParam,result,failReason,"","","");
+										}
 									}
 
 								}
@@ -815,6 +897,10 @@ public class SendSmsOrMalQfServiceImpl {
 						}
 
 						boolean ismail = mailer.sendMail();
+
+						//获取当前登录用户oprid
+						String currentoprid=tzWebsiteLoginServiceImpl.getLoginedUserOprid(request);
+						System.out.println("currentoprid=====>"+currentoprid);
 						if (ismail) {
 							// 发送成功写邮件发送历史表，附件历史表，删除【TZ_DXYJRWMX_TBL】中的发送听众
 							this.writeLsMalData(strRwSlId, emailAddrAdd, malSubjectContent, content, "SUC", strTaskId,
@@ -822,6 +908,14 @@ public class SendSmsOrMalQfServiceImpl {
 							this.writeLsMalAttchData(strRwSlId, strTaskId, strPicID);
 							this.deleteTaskAud(strTaskId, audId, audCyId);
 							successNum = successNum + 1;
+							//发送成功日志记录
+							if(!"".equals(currentoprid)&&null!=currentoprid){
+								String inputParam="收件箱："+emailAddrAdd;
+								String outputParam="邮件内容："+content;
+								String result="发送成功！";
+								String failReason="";
+								logSaveService.SaveLogToDataBase(currentoprid,inputParam,outputParam,result,failReason,"","","");
+							}
 						} else {
 							String logEmailSendFalseMsg = mailer.getErrorInfo();
 							this.writeTaskLog(strTaskId, strRwSlId, "D", logEmailSendFalseMsg);
@@ -829,6 +923,14 @@ public class SendSmsOrMalQfServiceImpl {
 							this.writeLsMalData(strRwSlId, emailAddrAdd, malSubjectContent, content, "FAIL", strTaskId,
 									prcsinstanceId, audCyId);
 							this.writeLsMalAttchData(strRwSlId, strTaskId, strPicID);
+							//发送失败日志记录
+							if(!"".equals(currentoprid)&&null!=currentoprid){
+								String inputParam="收件箱："+emailAddrAdd;
+								String outputParam="邮件内容："+content;
+								String result="发送失败！";
+								String failReason=logEmailSendFalseMsg;
+								logSaveService.SaveLogToDataBase(currentoprid,inputParam,outputParam,result,failReason,"","","");
+							}
 						}
 
 						count = count + 1;
@@ -858,7 +960,7 @@ public class SendSmsOrMalQfServiceImpl {
 				psTzRwzxshilTbl.setTzFailNum(totalSendNum - successNum);
 				psTzRwzxshilTbl.setTzJgId(strJgId);
 				psTzRwzxshilTblMapper.insert(psTzRwzxshilTbl);
-				
+
 				mailer.closeConnect();
 
 			} else {
@@ -1302,7 +1404,7 @@ public class SendSmsOrMalQfServiceImpl {
 
 				String itemName = list.get(i).get("TZ_XXX_NAME") == null ? "" : (String) list.get(i).get("TZ_XXX_NAME");
 				String StoreFieldName = list.get(i).get("TZ_FIELD_NAME") == null ? "" : (String) list.get(i).get("TZ_FIELD_NAME");
-				
+
 				if(itemName != null && !"".equals(itemName) && StoreFieldName != null && !"".equals(StoreFieldName)){
 					String selectSql = "SELECT " + StoreFieldName
 							+ " FROM PS_TZ_MLSM_DRNR_T WHERE TZ_MLSM_QFPC_ID=? AND TZ_AUDCY_ID=?";
@@ -1316,7 +1418,7 @@ public class SendSmsOrMalQfServiceImpl {
 					String[] returnString = { name, fieldValue };
 					arrayList.add(returnString);
 				}
-				
+
 			}
 		}
 		return arrayList;

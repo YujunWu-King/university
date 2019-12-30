@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.tranzvision.gd.TZBaseBundle.service.impl.LogSaveServiceImpl;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +55,9 @@ public class Index {
 	private GdObjectServiceImpl gdObjectServiceImpl;
 	@Autowired
 	private TzWebsiteLoginServiceImpl tzWebsiteLoginServiceImpl;
-	
+	@Autowired
+	private LogSaveServiceImpl logSaveServiceImpl;
+
 	Logger logger = Logger.getLogger(this.getClass());
 
 	@RequestMapping(value = {"index"})
@@ -84,11 +87,11 @@ public class Index {
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 		String zhid = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
-		
+
 		//查询注册类型，如果是ZCYH类型，视为未登录,NBYH才允许
 		String queryRylxSql = "select TZ_RYLX from PS_TZ_AQ_YHXX_TBL where OPRID = ? and TZ_JG_ID = ? and TZ_DLZH_ID=?";
 		String TZ_RYLX = jdbcTemplate.queryForObject(queryRylxSql, new Object[] {oprid, orgid, zhid}, "String");
-		
+
 		if (oprid != null && !"".equals(oprid) && orgid != null && !"".equals(orgid) && zhid != null
 				&& !"".equals(zhid) && "NBYH".equals(TZ_RYLX)) {
 			// 记住当前登录用户的主题设置;
@@ -114,7 +117,7 @@ public class Index {
 					gdKjComService.getUserGxhLanguage(request, response));
 
 			request.setAttribute("tz_gdcp_loginStyle_20150612184830", gdKjComService.getLogoStyle(request, response));
-			
+
 			return "index";
 		} else {
 			String tmpLoginURL = "";
@@ -124,7 +127,7 @@ public class Index {
 			//java高端产品后台暂时都是中文;
 			//tmpLanguageCd = tzCookie.getStringCookieVal(request, cookieLang);
 			tmpLanguageCd = "ZHS";
-			
+
 			if (tmpOrgID != null && !"".equals(tmpOrgID)) {
 				// 查询机构是不是存在;
 				String sql = "SELECT count(1) FROM PS_TZ_JG_BASE_T WHERE TZ_JG_EFF_STA='Y' AND LOWER(TZ_JG_ID)=LOWER(?)";
@@ -172,7 +175,7 @@ public class Index {
 		}
 
 	}
-	
+
 	private boolean checkOrgid(String orgid) {
 		// 查询机构是不是存在;
 		String sql = "SELECT count(1) FROM PS_TZ_JG_BASE_T WHERE TZ_JG_EFF_STA='Y' AND LOWER(TZ_JG_ID)=LOWER(?)";
@@ -206,7 +209,7 @@ public class Index {
 		 * registeServiceImpl.releasEnrollpage(content, "5",errMsg); return
 		 * errMsg[0] + "====>" + errMsg[1];
 		 */
-		
+
 		//logger.info("dispatcher---");
 		/** 校验dispatcher分发ajax请求Begin **/
 		// 校验逻辑修改，1.如果是ajax请求，一定需要校验
@@ -218,7 +221,7 @@ public class Index {
 			isCheck = true;
 		}
 		/** 校验dispatcher分发ajax请求End **/
-		
+
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		// 组件配置的类引用ID;
 		String tmpClassId = request.getParameter("classid");
@@ -236,6 +239,10 @@ public class Index {
 		String strParams = "";
 		// 返回值;
 		String strRetContent = "";
+		//组件ID
+		String comID="";
+		//页面ID
+		String sPageID="";
 
 		if (tmpClassId == null || "".equals(tmpClassId)) {
 			strParams = request.getParameter("tzParams");
@@ -321,17 +328,17 @@ public class Index {
 
 			strParams = jacksonUtil.Map2json(strParamsMap);
 		}
-		
+
 		//logger.info("strParams:"+strParams);
 
 
 		/*MBA报考服务系统手机版首页免登陆 卢艳添加，2017-4-15 begin*/
 		tzWebsiteLoginServiceImpl.autoLoginByCookie(request, response);
 		/*MBA报考服务系统手机版首页免登陆 卢艳添加，2017-4-15 end*/
-		
+
 		// 操作类型;
 		String strOprType = "";
-		
+
 		try {
 			jacksonUtil.json2Map(strParams);
 
@@ -390,7 +397,7 @@ public class Index {
 			response.setStatus(404);
 			return null;
 		}
-		
+
 		/* 防止参数携带js攻击 */
 		if (strParams.toLowerCase().contains("<script")) {
 			 strRetContent = "{\"comContent\":"+
@@ -515,7 +522,7 @@ public class Index {
 				}
 
 				// 根据搜索条件获取搜索表中的数据，供下拉框使用;
-				
+
 				strComContent = gdKjComService.getPromptSearchList(precname, pcondition, presult, maxRow, numLimit,
 						numStart, errMsgArr);
 				break;
@@ -529,9 +536,9 @@ public class Index {
 				break;
 			default:
 				// 组件ID;
-				String comID = jacksonUtil.getString("ComID");
+				comID = jacksonUtil.getString("ComID");
 				// 页面ID;
-				String sPageID = jacksonUtil.getString("PageID");
+				sPageID = jacksonUtil.getString("PageID");
 
 				// 通用参数;
 				String sCommParams = "{}";
@@ -590,13 +597,19 @@ public class Index {
 				if (gdKjComService.isSessionValid(request) == false) {
 					tmpTimeOutFlag = "true";
 				}
-			}			
+			}
 			strRetContent = "{\"comContent\": " + strComContent + ",\"state\":{\"errcode\":" + errorCode
 					+ ",\"errdesc\": \"" + strErrorDesc + "\",\"timeout\": " + tmpTimeOutFlag
 					+ ",\"authorizedInfo\": {" + authorizedInfomation + "}}}";
 		}
-		
+
 		//logger.info("strRetContent:"+strRetContent);
+		String OPRID=tzLoginServiceImpl.getLoginedManagerOprid(request);
+		System.out.println("OPRID=====>"+OPRID);
+		if(!"".equals(OPRID)&&null!=OPRID){
+			logSaveServiceImpl.SaveLogToDataBase(OPRID,strParams,strRetContent,"","",comID,sPageID,strOprType);
+		}
+
 		return strRetContent;
 	}
 

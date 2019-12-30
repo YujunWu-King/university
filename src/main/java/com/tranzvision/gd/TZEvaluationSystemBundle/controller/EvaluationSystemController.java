@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.tranzvision.gd.TZBaseBundle.service.impl.LogSaveServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -31,7 +32,7 @@ import com.tranzvision.gd.util.sql.TZGDObject;
 
 /**
  * 材料面试评审系统前端控制器
- * 
+ *
  * @author ShaweYet
  * @since 2017/02/22
  */
@@ -51,14 +52,16 @@ public class EvaluationSystemController {
 	private TzFilterIllegalCharacter tzFilterIllegalCharacter;
 	@Autowired
 	private TzCookie tzCookie;
-	
+	@Autowired
+	private LogSaveServiceImpl logSaveServiceImpl;
+
 	private final String cookieOrgId = "tzmo";
-	
+
 	@RequestMapping(value = { "/material/{orgid}" }, produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String materialEvaluationLogin(HttpServletRequest request, HttpServletResponse response,
 			@PathVariable(value = "orgid") String orgid) {
-		
+
 		/*登录页面内容*/
 		String loginHtml = "";
 		try {
@@ -67,22 +70,22 @@ public class EvaluationSystemController {
 			String sql = "select 'Y' from PS_TZ_JG_BASE_T where TZ_JG_EFF_STA='Y' AND upper(TZ_JG_ID)=?";
 
 			String orgExist = sqlQuery.queryForObject(sql,new Object[]{orgid},"String");
-			
+
 			if("Y".equals(orgExist)){
 				loginHtml = tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_METERIAL_EVALUATION_LOGIN",request.getContextPath(),orgid);
 			}else{
 				loginHtml = "无效的机构："+orgid+"，请确认您输入的浏览器地址是否正确！";
 			}
 
-			
+
 		} catch (TzSystemException e) {
 			e.printStackTrace();
 			loginHtml = "";
 		}
 		return loginHtml;
 	}
-	
-	
+
+
 	@RequestMapping(value = { "/material/index" }, produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String materialEvaluationIndex(HttpServletRequest request, HttpServletResponse response) {
@@ -94,32 +97,32 @@ public class EvaluationSystemController {
 			String zhid = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
 			String userName = sqlQuery.queryForObject("SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?", new Object[]{oprid}, "String");
 			String timeOut = "false";
-			
+
 			// 判断下用户有没有登录;
 			if (oprid == null || "".equals(oprid) || orgid == null || "".equals(orgid) || zhid == null
 					|| "".equals(zhid)) {
 				timeOut = "true";
-				
+
 				if(orgid==null||"".equals(orgid)){
 					orgid = tzCookie.getStringCookieVal(request, cookieOrgId);
 				}
 			}
-						
+
 			String contactUrl = sqlQuery.queryForObject("SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?", new Object[]{"TZ_EVALUATION_CONTACT_URL"}, "String");
 			String evaluationDescriptionUrl = sqlQuery.queryForObject("SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?", new Object[]{"TZ_EVALUATION_M_DESCRIPTION_URL"}, "String");
 			indexHtml = tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_METERIAL_EVALUATION_INDEX",request.getContextPath(),orgid,timeOut,userName,contactUrl==null?"javascript:void(0)":contactUrl,evaluationDescriptionUrl==null?"javascript:void(0)":evaluationDescriptionUrl);
-			
+
 		} catch (TzSystemException e) {
 			e.printStackTrace();
 			indexHtml = e.toString();
 		}
 		return indexHtml;
 	}
-	
-	
+
+
 
 	/**
-	 * 
+	 *
 	* Description:改造--校验机构有效性
 	* Create Time: 2019年11月19日 下午3:06:54
 	* @author yujun.wu
@@ -134,7 +137,7 @@ public class EvaluationSystemController {
 			String sql = "select 'Y' from PS_TZ_JG_BASE_T where TZ_JG_EFF_STA='Y' AND upper(TZ_JG_ID)=?";
 
 			String orgExist = sqlQuery.queryForObject(sql,new Object[]{orgid},"String");
-			
+
 			if("Y".equals(orgExist)){
 				errorMsg[0]="0";
 			}else{
@@ -148,10 +151,10 @@ public class EvaluationSystemController {
 			errorMsg[1]="校验机构有消息出错！错误描述："+e.getMessage();
 		}
 	}
-	
-	
+
+
 	/**
-	 * 
+	 *
 	* Description:从高金迁移过来--面试评审登录页
 	* Create Time: 2019年11月19日 上午10:11:56
 	* @author yujun.wu
@@ -178,14 +181,14 @@ public class EvaluationSystemController {
 			String TZ_JG_NAME = sqlQuery.queryForObject(sql,new Object[]{orgid},"String");
 			String title = TZ_JG_NAME+"面试系统";
 			indexHtml = tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_VUE_INTERVIEW_LOGIN",true,title,orgid.toUpperCase());
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			indexHtml = e.toString();
 		}
 		return indexHtml;
 	}
-	
+
 	@RequestMapping(value = { "/login" }, produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String doLogin(HttpServletRequest request, HttpServletResponse response) {
@@ -202,7 +205,7 @@ public class EvaluationSystemController {
 		if("secretary".equals(type)) {
 			judgeType = "3";
 		}
-		
+
 		ArrayList<String> aryErrorMsg = new ArrayList<String>();
 
 
@@ -218,13 +221,14 @@ public class EvaluationSystemController {
 		boolean acountIsWeeks = false;
 		PasswordCheck result = new PasswordCheck( userName, userPwd, userPwd);
 		acountIsWeeks=result.weakLoginPassword();
+		boolean isSuccess=false;
 		if("Y".equals(accountExist)){
-			
+
 			if(acountIsWeeks==false) {
 				loginStatus = "1";
 				errorMsg = "帐号密码为弱密码，请联系管理员重置！";
 			}else {
-				tzLoginServiceImpl.doLogin(request, response, orgId, userName, userPwd, code, aryErrorMsg);
+				isSuccess=tzLoginServiceImpl.doLogin(request, response, orgId, userName, userPwd, code, aryErrorMsg);
 				loginStatus = aryErrorMsg.get(0);
 				errorMsg = aryErrorMsg.get(1);
 			}
@@ -233,6 +237,24 @@ public class EvaluationSystemController {
 			errorMsg = "帐号不存在或者无效，请重新输入！";
 		}
 
+		//登录日志保存到数据库
+		if(!"".equals(userName)&&null!=userName){
+			String getOprid="select OPRID from PS_TZ_AQ_YHXX_TBL where TZ_DLZH_ID=?";
+			String oprid=sqlQuery.queryForObject(getOprid,new Object[]{userName},"String");
+			if(!"".equals(oprid)&&null!=oprid){
+				System.out.println("loginOPRID=====>"+oprid);
+				String inputParam="登录账号："+userName;
+				String loginResult="";
+				String failReason="";
+				if(isSuccess){
+					loginResult="登录成功！";
+				}else {
+					loginResult="登录失败！";
+					failReason=errorMsg;
+				}
+				logSaveServiceImpl.SaveLogToDataBase(oprid,inputParam,"",loginResult,failReason,"","","");
+			}
+		}
 
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
 		jsonMap.put("success", loginStatus);
@@ -285,6 +307,6 @@ public class EvaluationSystemController {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
+
 }

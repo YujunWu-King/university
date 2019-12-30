@@ -9,6 +9,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzWebsiteLoginServiceImpl;
+import com.tranzvision.gd.TZBaseBundle.service.impl.LogSaveServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,7 +60,7 @@ import com.tranzvision.gd.util.tsinghua.sms.SendSmsService;
 
 /**
  * 邮件短信发送；原：TZ_SMS_MAL:SendSmsOrMal
- * 
+ *
  * @author tang
  * @since 2015-11-30
  */
@@ -138,6 +140,10 @@ public class SendSmsOrMalServiceImpl {
 	SqlQuery sqlQuery;
 	@Autowired
 	private CreateTaskServiceImpl createTaskServiceImpl;
+	@Autowired
+	private LogSaveServiceImpl logSaveService;
+	@Autowired
+	private TzWebsiteLoginServiceImpl tzWebsiteLoginServiceImpl;
 
 	// 连接邮件服务器
 	public boolean connectToMailServer(TranzvisionMail mailer, String emailServerId, String strTaskId) {
@@ -152,7 +158,7 @@ public class SendSmsOrMalServiceImpl {
 			String smtpAddr = psTzEmlsDefTbl.getTzSmtpAddr();
 			String userName = psTzEmlsDefTbl.getTzUsrName();
 			String password = psTzEmlsDefTbl.getTzUsrPwd();
-			
+
 			// 设置邮件服务器名称;
 			mailer.setMailHost(smtpAddr);
 			// 设置用户名;
@@ -273,7 +279,7 @@ public class SendSmsOrMalServiceImpl {
 					String inserSQL = "insert into PS_TZ_DXYJRWMX_TBL (select a.TZ_EML_SMS_TASK_ID,a.TZ_AUDIENCE_ID,c.TZ_AUDCY_ID from PS_TZ_DXYJFSRW_TBL a,PS_TZ_AUDIENCE_T b,PS_TZ_AUDCYUAN_T c where a.TZ_EML_SMS_TASK_ID=? and a.TZ_AUDIENCE_ID=b.TZ_AUDIENCE_ID and b.TZ_AUDIENCE_ID=c.TZ_AUDIENCE_ID )";
 					jdbcTemplate.update(inserSQL, new Object[] { strTaskId });
 				}
-				
+
 				// 原模板
 				String ymbSQL = "select TZ_YMB_ID from PS_TZ_ZNXTMPL_TBL where TZ_JG_ID=? and TZ_TMPL_ID=?";
 				String strYmbId = jdbcTemplate.queryForObject(ymbSQL, new Object[] { strJgId, strMbId }, "String");
@@ -287,7 +293,7 @@ public class SendSmsOrMalServiceImpl {
 					znxSubjectContent = psTzYjmbshliTbl.getTzMalSubjuect();
 					znxContent = psTzYjmbshliTbl.getTzMalContent();
 				}
-				
+
 				this.sendZnx(strTaskId, prcsinstanceId, strJgId, strYmbId, znxSubjectContent, znxContent);
 			}
 		}
@@ -352,6 +358,9 @@ public class SendSmsOrMalServiceImpl {
 					}
 					Map<String, String> mapRst = new HashMap<String, String>();
 					String errCode = "", errMsg = "";
+					//获取当前登录用户oprid
+					String currentoprid=tzWebsiteLoginServiceImpl.getLoginedUserOprid(request);
+					System.out.println("currentoprid=====>"+currentoprid);
 					// 主要手机;
 					if ("A".equals(sendSmsType)) {
 						blRept = this.checkIsSendSms(strTaskId, mainPhone);
@@ -369,8 +378,24 @@ public class SendSmsOrMalServiceImpl {
 									errCode = mapRst.get("code");
 									errMsg = mapRst.get("msg");
 									this.writeTaskLog(strTaskId, strRwSlId, errCode, errMsg);
+									//发送失败日志记录
+									if(!"".equals(currentoprid)&&null!=currentoprid){
+										String inputParam="收件人："+mainPhone;
+										String outputParam="短信内容："+content;
+										String result="发送失败！";
+										String failReason=errMsg;
+										logSaveService.SaveLogToDataBase(currentoprid,inputParam,outputParam,result,failReason,"","","");
+									}
 								} else {
 									sendSuccess = true;
+									//发送成功日志记录
+									if(!"".equals(currentoprid)&&null!=currentoprid){
+										String inputParam="收件人："+mainPhone;
+										String outputParam="短信内容："+content;
+										String result="发送成功！";
+										String failReason="";
+										logSaveService.SaveLogToDataBase(currentoprid,inputParam,outputParam,result,failReason,"","","");
+									}
 								}
 
 							} else {
@@ -399,8 +424,26 @@ public class SendSmsOrMalServiceImpl {
 									errCode = mapRst.get("code");
 									errMsg = mapRst.get("msg");
 									this.writeTaskLog(strTaskId, strRwSlId, errCode, errMsg);
+									if(!"发送成功".equals(mapRst.get("msg"))){
+										//发送失败日志记录
+										if(!"".equals(currentoprid)&&null!=currentoprid){
+											String inputParam="收件人："+secondphone;
+											String outputParam="短信内容："+content;
+											String result="发送失败！";
+											String failReason=mapRst.get("msg");
+											logSaveService.SaveLogToDataBase(currentoprid,inputParam,outputParam,result,failReason,"","","");
+										}
+									}
 								} else {
 									sendSuccess = true;
+									//发送成功日志记录
+									if(!"".equals(currentoprid)&&null!=currentoprid){
+										String inputParam="收件人："+secondphone;
+										String outputParam="短信内容："+content;
+										String result="发送成功！";
+										String failReason="";
+										logSaveService.SaveLogToDataBase(currentoprid,inputParam,outputParam,result,failReason,"","","");
+									}
 								}
 							} else {
 								// 为空;
@@ -432,8 +475,26 @@ public class SendSmsOrMalServiceImpl {
 									mapRst = sendSmsService.doSendSms(mainPhone, content);
 									if (mapRst.get("msg") != null && !"".equals(mapRst.get("msg"))) {
 										errMsg = mapRst.get("msg");
+										if(!"发送成功".equals(mapRst.get("msg"))){
+											//发送失败日志记录
+											if(!"".equals(currentoprid)&&null!=currentoprid){
+												String inputParam="收件人："+mainPhone;
+												String outputParam="短信内容："+content;
+												String result="发送失败！";
+												String failReason=mapRst.get("msg");
+												logSaveService.SaveLogToDataBase(currentoprid,inputParam,outputParam,result,failReason,"","","");
+											}
+										}
 									} else {
 										sendSuccess = true;
+										//发送成功日志记录
+										if(!"".equals(currentoprid)&&null!=currentoprid){
+											String inputParam="收件人："+mainPhone;
+											String outputParam="短信内容："+content;
+											String result="发送成功！";
+											String failReason="";
+											logSaveService.SaveLogToDataBase(currentoprid,inputParam,outputParam,result,failReason,"","","");
+										}
 									}
 								}
 
@@ -457,9 +518,27 @@ public class SendSmsOrMalServiceImpl {
 										} else {
 											errMsg = errMsg + ";" + mapRst.get("msg");
 										}
+										if(!"发送成功".equals(mapRst.get("msg"))){
+											//发送失败日志记录
+											if(!"".equals(currentoprid)&&null!=currentoprid){
+												String inputParam="收件人："+secondphone;
+												String outputParam="短信内容："+content;
+												String result="发送失败！";
+												String failReason=mapRst.get("msg");
+												logSaveService.SaveLogToDataBase(currentoprid,inputParam,outputParam,result,failReason,"","","");
+											}
+										}
 
 									} else {
 										sendSuccess = true;
+										//发送成功日志记录
+										if(!"".equals(currentoprid)&&null!=currentoprid){
+											String inputParam="收件人："+secondphone;
+											String outputParam="短信内容："+content;
+											String result="发送成功！";
+											String failReason="";
+											logSaveService.SaveLogToDataBase(currentoprid,inputParam,outputParam,result,failReason,"","","");
+										}
 									}
 
 								}
@@ -712,6 +791,9 @@ public class SendSmsOrMalServiceImpl {
 
 						boolean ismail = mailer.sendMail();
 
+						//获取当前登录用户oprid
+						String currentoprid=tzWebsiteLoginServiceImpl.getLoginedUserOprid(request);
+						System.out.println("currentoprid=====>"+currentoprid);
 						if (ismail) {
 							// 发送成功写邮件发送历史表，附件历史表，删除【TZ_DXYJRWMX_TBL】中的发送听众
 							this.writeLsMalData(strRwSlId, emailAddrAdd, malSubjectContent, content, "SUC", strTaskId,
@@ -719,6 +801,14 @@ public class SendSmsOrMalServiceImpl {
 							this.writeLsMalAttchData(strRwSlId, strTaskId);
 							this.deleteTaskAud(strTaskId, audId, audCyId);
 							successNum = successNum + 1;
+							//发送成功日志记录
+							if(!"".equals(currentoprid)&&null!=currentoprid){
+								String inputParam="收件箱："+emailAddrAdd;
+								String outputParam="邮件内容："+content;
+								String result="发送成功！";
+								String failReason="";
+								logSaveService.SaveLogToDataBase(currentoprid,inputParam,outputParam,result,failReason,"","","");
+							}
 						} else {
 							String logEmailSendFalseMsg = mailer.getErrorInfo();
 							this.writeTaskLog(strTaskId, strRwSlId, "D", logEmailSendFalseMsg);
@@ -726,8 +816,16 @@ public class SendSmsOrMalServiceImpl {
 							this.writeLsMalData(strRwSlId, emailAddrAdd, malSubjectContent, content, "FAIL", strTaskId,
 									prcsinstanceId,audCyId);
 							this.writeLsMalAttchData(strRwSlId, strTaskId);
+							//发送失败日志记录
+							if(!"".equals(currentoprid)&&null!=currentoprid){
+								String inputParam="收件箱："+emailAddrAdd;
+								String outputParam="邮件内容："+content;
+								String result="发送失败！";
+								String failReason=logEmailSendFalseMsg;
+								logSaveService.SaveLogToDataBase(currentoprid,inputParam,outputParam,result,failReason,"","","");
+							}
 						}
-						
+
 						//判断是否是注册用户
 						String oprid = jdbcTemplate.queryForObject(
 								"select OPRID from PS_TZ_AUDCYUAN_T where TZ_AUDIENCE_ID=? and TZ_AUDCY_ID=?",
@@ -740,17 +838,17 @@ public class SendSmsOrMalServiceImpl {
 							String taskId = createTaskServiceImpl.createTaskInsTiming(strJgId, "TZ_ZSB_SEND", "ZNX", "A");
 				            // 创建短信、邮件发送的听众;
 				            String createAudience = createTaskServiceImpl.createAudienceTiming(taskId, strJgId, "站内信", "");
-				            
+
 							String sqlName = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
 							String name = sqlQuery.queryForObject(sqlName, new Object[]{ oprid }, "String");
 				            // 为听众添加听众成员
 				             boolean addAudCy = createTaskServiceImpl.addAudCy(createAudience, name, "", "", "", "",
 				                        "", "", oprid, "", "","");
-				          
+
 				             createTaskServiceImpl.updateZnxSendContent(taskId, content);
 				             createTaskServiceImpl.updateZnxSendTitle(taskId, malSubjectContent);
 				            this.send(taskId, "");
-				            
+
 						}
 
 					}
@@ -771,7 +869,7 @@ public class SendSmsOrMalServiceImpl {
 				psTzRwzxshilTbl.setTzFailNum(totalSendNum - successNum);
 				psTzRwzxshilTbl.setTzJgId(strJgId);
 				psTzRwzxshilTblMapper.insert(psTzRwzxshilTbl);
-				
+
 				mailer.closeConnect();
 
 			} else {
@@ -789,8 +887,8 @@ public class SendSmsOrMalServiceImpl {
 		}
 
 	}
-	
-	
+
+
 	public void sendZnx(String strTaskId, String prcsinstanceId, String strJgId, String strYmbId,
 			String znxSubjectContent, String znxContent) {
 
@@ -806,16 +904,16 @@ public class SendSmsOrMalServiceImpl {
 				int totalSendNum = jdbcTemplate.queryForObject(totalSQL, new Object[] { strTaskId }, "Integer");
 				// 实例开始时间;
 				Date slStartTime = new Date();
-				
+
 				// 是否已经解析;
 				boolean bl = false;
 				// 发送内容;
 				String content = "";
 				// 发送成功数;
 				int successNum = 0;
-				
+
 				String tzZnxMsgid = String.valueOf(getSeqNum.getSeqNum("PS_TZ_ZNX_MSG_T", "TZ_ZNX_MSGID"));
-				
+
 				//任务添加人;
 				String sendOPRID = "";
 				sendOPRID = jdbcTemplate.queryForObject("select ROW_ADDED_OPRID from PS_TZ_DXYJFSRW_TBL where TZ_EML_SMS_TASK_ID=?", new Object[]{strTaskId},"String");
@@ -837,14 +935,14 @@ public class SendSmsOrMalServiceImpl {
 						// String xm = (String) list.get(i).get("TZ_AUD_XM");
 						// 收件人;
 						String oprid = (String) list.get(i).get("OPRID");
-						
+
 						// 是否判重;
 						String emlIfRpt = (String) list.get(i).get("TZ_EML_IF_PRT");
 						// 任务实例编号;
 						String strRwSlId = String.valueOf(getSeqNum.getSeqNum("TZ_YJFSLSHI_TBL", "TZ_RWSL_ID"));
 
 						boolean blRept = false;
-						
+
 						//是否为空;
 						if(oprid == null || "".equals(oprid)){
 							this.writeLsZnxData(strRwSlId, oprid, "", "", "NULL", strTaskId, prcsinstanceId,audCyId);
@@ -852,10 +950,10 @@ public class SendSmsOrMalServiceImpl {
 							this.deleteTaskAud(strTaskId, audId, audCyId);
 							continue;
 						}
-						
-						
+
+
 						blRept = this.checkIsSendZnx(strTaskId, oprid);
-						
+
 						if (blRept) {
 							// 发送成功写邮件发送历史表，附件历史表，删除【TZ_DXYJRWMX_TBL】中的发送听众
 							this.writeLsZnxData(strRwSlId, oprid, "", "", "RPT", strTaskId, prcsinstanceId,audCyId);
@@ -863,7 +961,7 @@ public class SendSmsOrMalServiceImpl {
 							this.deleteTaskAud(strTaskId, audId, audCyId);
 							continue;
 						}
-						
+
 						if ("Y".equals(isDynamicFlg)) {
 							if (bl == false) {
 								content = this.analysisEmlOrSmsContent(strJgId, strYmbId, audId, audCyId, "ZNX","", "",znxContent);
@@ -877,7 +975,7 @@ public class SendSmsOrMalServiceImpl {
 						PsTzZnxMsgT psTzZnxMsgT = psTzZnxMsgTMapper.selectByPrimaryKey(tzZnxMsgid);
 					    if(psTzZnxMsgT == null){
 					    	psTzZnxMsgT = new PsTzZnxMsgT();
-							
+
 							psTzZnxMsgT.setTzZnxMsgid(tzZnxMsgid);
 							psTzZnxMsgT.setTzZnxSendid(sendOPRID);
 							psTzZnxMsgT.setTzMsgSubject(znxSubjectContent);
@@ -887,7 +985,7 @@ public class SendSmsOrMalServiceImpl {
 							psTzZnxMsgT.setRowLastmantOprid(sendOPRID);
 							psTzZnxMsgTMapper.insert(psTzZnxMsgT);
 					    }
-						
+
 						PsTzZnxRecT psTzZnxRecT = new PsTzZnxRecT();
 						psTzZnxRecT.setTzZnxMsgid(tzZnxMsgid);
 						psTzZnxRecT.setTzZnxRecid(oprid);
@@ -1003,7 +1101,7 @@ public class SendSmsOrMalServiceImpl {
 		psTzYjzwlshiTbl.setTzYjZhwen(content);
 		psTzYjzwlshiTblMapper.insert(psTzYjzwlshiTbl);
 	}
-	
+
 	// 写站内信历史数据表
 	private void writeLsZnxData(String strRwSlId, String oprid, String tj, String content, String strFsZt,
 					String strTaskId, String prcsinstanceId,String tzAudcyId) {
@@ -1063,7 +1161,7 @@ public class SendSmsOrMalServiceImpl {
 		if ("SMS".equals(msgType)) {
 			content = smsContent;
 		}
-		
+
 		if ("ZNX".equals(msgType)) {
 			content = znxContent;
 		}
@@ -1074,7 +1172,7 @@ public class SendSmsOrMalServiceImpl {
 				String[] str = arrayList.get(i);
 				String name = str[0];
 				String value = str[1];
-				
+
 				content = content.replace(name, value);
 			}
 		}
@@ -1098,16 +1196,16 @@ public class SendSmsOrMalServiceImpl {
 				analysisSysVar.setM_SysVarID(sysvarId);
 				analysisSysVar.setM_SysVarParam(sysVarParam);
 				Object obj = analysisSysVar.GetVarValue();
-				
+
 				/*
-				ymbCslbm = ymbCslbm.replaceAll("\\(", "\\\\("); 
-			   	ymbCslbm = ymbCslbm.replaceAll("\\)", "\\\\)"); 
-			   	
-			   	ymbParaId = ymbParaId.replaceAll("\\(", "\\\\("); 
-			   	ymbParaId = ymbParaId.replaceAll("\\)", "\\\\)"); 
-			   	   
-			   	ymbParaAlias = ymbParaAlias.replaceAll("\\(", "\\\\("); 
-			   	ymbParaAlias = ymbParaAlias.replaceAll("\\)", "\\\\)"); 
+				ymbCslbm = ymbCslbm.replaceAll("\\(", "\\\\(");
+			   	ymbCslbm = ymbCslbm.replaceAll("\\)", "\\\\)");
+
+			   	ymbParaId = ymbParaId.replaceAll("\\(", "\\\\(");
+			   	ymbParaId = ymbParaId.replaceAll("\\)", "\\\\)");
+
+			   	ymbParaAlias = ymbParaAlias.replaceAll("\\(", "\\\\(");
+			   	ymbParaAlias = ymbParaAlias.replaceAll("\\)", "\\\\)");
 
 				String name = "\\[" + ymbCslbm + "\\." + ymbParaId + "\\." + ymbParaAlias + "\\]";
 				*/
@@ -1148,7 +1246,7 @@ public class SendSmsOrMalServiceImpl {
 		psTzDxzwlshiTbl.setTzDxZhwen(content);
 		psTzDxzwlshiTblMapper.insert(psTzDxzwlshiTbl);
 	}
-	
+
 	// *检查在某个任务中某个人员是否已经发送过站内信;
 	private boolean checkIsSendZnx(String strTaskId, String oprid) {
 		String sql = "select count(1) from PS_TZ_ZNXFSLSHI_TBL where TZ_EML_SMS_TASK_ID=? and OPRID = ? and TZ_FS_ZT = 'SUC'";

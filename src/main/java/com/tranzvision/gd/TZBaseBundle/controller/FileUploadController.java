@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tranzvision.gd.TZBaseBundle.controller;
 
@@ -8,6 +8,7 @@ import com.tranzvision.gd.TZApplicationTemplateBundle.service.impl.PdfPrintbyMod
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzWebsiteLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FileManageServiceImpl;
+import com.tranzvision.gd.TZBaseBundle.service.impl.LogSaveServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.security.TzFilterIllegalCharacter;
@@ -30,8 +31,13 @@ import java.util.Map;
  * @since 2015-11-23
  * @version http://www.journaldev.com/2573/spring-mvc-file-upload-example-
  *          tutorial-single-and-multiple-files
- * 
+ *
  *          Handles requests for the application file upload requests
+ */
+/**修改
+ * @author JJL
+ * @since 2019-12-30
+ * @desc 对文件上传进行日志记录
  */
 @Controller
 @RequestMapping(value = "/")
@@ -53,9 +59,12 @@ public class FileUploadController {
 	@Autowired
 	private FileManageServiceImpl fileManageServiceImpl;
 
+	@Autowired
+	private LogSaveServiceImpl logSaveServiceImpl;
+
 	/**
 	 * Upload single file using Spring Controller 存储在 orgupload目录
-	 * 
+	 *
 	 * @param request
 	 * @param response
 	 * @param allRequestParams
@@ -73,15 +82,16 @@ public class FileUploadController {
 		String impl = String.valueOf(allRequestParams.get("impl"));
 		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 		String rootPath = getSysHardCodeVal.getOrgFileUploadPath();
+		String oprid=tzLoginServiceImpl.getLoginedManagerOprid(request);
 
-		String retJson = this.doSaveFile(orgid, rootPath, funcdir, language, istmpfile, file, "", impl);
+		String retJson = this.doSaveFile(oprid,orgid, rootPath, funcdir, language, istmpfile, file, "", impl);
 
 		return retJson;
 	}
 
 	/**
 	 * Upload single file using Spring Controller 存储在 orgupload目录
-	 * 
+	 *
 	 * @param request
 	 * @param response
 	 * @param allRequestParams
@@ -98,15 +108,16 @@ public class FileUploadController {
 		String istmpfile = String.valueOf(allRequestParams.get("tmp"));
 		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 		String rootPath = getSysHardCodeVal.getOrgFileUploadPath();
+		String oprid=tzLoginServiceImpl.getLoginedManagerOprid(request);
 
-		String retJson = this.doSaveFile(orgid, rootPath, funcdir, language, istmpfile, file, "", "");
+		String retJson = this.doSaveFile(oprid,orgid, rootPath, funcdir, language, istmpfile, file, "", "");
 
 		return retJson;
 	}
 
 	/**
 	 * Upload single file using Spring Controller 存储在 bmb目录
-	 * 
+	 *
 	 * @param request
 	 * @param response
 	 * @param allRequestParams
@@ -123,9 +134,10 @@ public class FileUploadController {
 		String istmpfile = String.valueOf(allRequestParams.get("tmp"));
 		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 		String rootPath = getSysHardCodeVal.getBmbSinglePdfDir();
+		String oprid=tzLoginServiceImpl.getLoginedManagerOprid(request);
 		// 最终生成文件路径/bmb/singlepdf/" + orgid + "/时间/" + Template+"/"+tplid + 里面
 
-		String retJson = this.doSaveFile(orgid, rootPath, tplid, language, istmpfile, file, 0);
+		String retJson = this.doSaveFile(oprid,orgid, rootPath, tplid, language, istmpfile, file, 0);
 
 		return retJson;
 	}
@@ -140,9 +152,10 @@ public class FileUploadController {
 		String istmpfile = String.valueOf(allRequestParams.get("tmp"));
 		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 		String rootPath = getSysHardCodeVal.getBmbSinglePdfDir();
+		String oprid=tzLoginServiceImpl.getLoginedManagerOprid(request);
 		// 最终生成文件路径/bmb/singlepdf/" + orgid + "/时间/" + Template+"/"+tplid + 里面
 
-		String retJson = this.doSaveFile(orgid, rootPath, tplid, language, istmpfile, file, 2);
+		String retJson = this.doSaveFile(oprid,orgid, rootPath, tplid, language, istmpfile, file, 2);
 
 		return retJson;
 	}
@@ -157,16 +170,17 @@ public class FileUploadController {
 		String istmpfile = String.valueOf(allRequestParams.get("tmp"));
 		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 		String rootPath = getSysHardCodeVal.getBmbSinglePdfDir();
+		String oprid=tzLoginServiceImpl.getLoginedManagerOprid(request);
 		// 最终生成文件路径/bmb/singlepdf/" + orgid + "/时间/" + Template+"/"+tplid + 里面
 
-		String retJson = this.doSaveFile(orgid, rootPath, tplid, language, istmpfile, file, 1);
+		String retJson = this.doSaveFile(oprid,orgid, rootPath, tplid, language, istmpfile, file, 1);
 
 		return retJson;
 	}
 
 	/**
 	 * 上传报名报 PDF模板 存储在/bmb/singlepdf/" + orgid + "/时间/" + Template+/+tplid + "里面
-	 * 
+	 *
 	 * @param orgid
 	 * @param rootPath
 	 *            根目录 从配置文件读取 是 /bmb/singlepdf/
@@ -179,7 +193,7 @@ public class FileUploadController {
 	 *            0 PDF 1 EXcel
 	 * @return
 	 */
-	private String doSaveFile(String orgid, String rootPath, String tplid, String language, String istmpfile,
+	private String doSaveFile(String oprid,String orgid, String rootPath, String tplid, String language, String istmpfile,
 			MultipartFile file, int type) {
 
 		String templateID = tplid;
@@ -204,6 +218,7 @@ public class FileUploadController {
 		boolean success = false;
 		Object messages = null;
 		String filename = "";
+		String parentPath = "";
 		try {
 			filename = file.getOriginalFilename();
 		} catch (Exception e) {
@@ -240,7 +255,6 @@ public class FileUploadController {
 
 					// Creating the directory to store file
 					String tmpFilePath = getSysHardCodeVal.getTmpFileUploadPath();
-					String parentPath = "";
 
 					if ("1".equals(istmpfile)) {
 						// 若是临时文件，则存储在临时文件目录
@@ -308,6 +322,20 @@ public class FileUploadController {
 			}
 		}
 
+		if(!"".equals(oprid)&&null!=oprid){
+			String inputParam="上传文件名："+filename;
+			String outputParam="上传文件路径："+parentPath;
+			String result="";
+			String failReason="";
+			if(success){
+				result="上传成功!";
+			}else{
+				result="上传失败！";
+				failReason=messages == null ? "" : messages.toString();
+			}
+			logSaveServiceImpl.SaveLogToDataBase(oprid,inputParam,outputParam,result,failReason,"","","");
+		}
+
 		Map<String, Object> mapRet = new HashMap<String, Object>();
 		mapRet.put("success", success);
 		mapRet.put("msg", messages == null ? "" : messages);
@@ -318,7 +346,7 @@ public class FileUploadController {
 
 	/**
 	 * Upload single file using Spring Controller 存储在 website目录
-	 * 
+	 *
 	 * @param request
 	 * @param response
 	 * @param allRequestParams
@@ -336,6 +364,7 @@ public class FileUploadController {
 		String siteid = allRequestParams.get("siteid") == null ? "" : String.valueOf(allRequestParams.get("siteid"));
 		String orgid = tzWebsiteLoginServiceImpl.getLoginedUserOrgid(request);
 		String rootPath = getSysHardCodeVal.getWebsiteFileUploadPath();
+		String oprid=tzWebsiteLoginServiceImpl.getLoginedUserOprid(request);
 
 		String retJson = "";
 
@@ -343,9 +372,9 @@ public class FileUploadController {
 			// Map<String, Object> mapRet = new HashMap<String, Object>();
 			// mapRet.put("success", false);
 			// mapRet.put("msg", "缺少参数siteid。");
-			retJson = this.doSaveFile(orgid, rootPath, funcdir, language, istmpfile, file, siteid, "");
+			retJson = this.doSaveFile(oprid,orgid, rootPath, funcdir, language, istmpfile, file, siteid, "");
 		} else {
-			retJson = this.doSaveFile(orgid, rootPath, funcdir, language, istmpfile, file, siteid, "");
+			retJson = this.doSaveFile(oprid,orgid, rootPath, funcdir, language, istmpfile, file, siteid, "");
 		}
 		return retJson;
 	}
@@ -357,31 +386,31 @@ public class FileUploadController {
 	@RequestMapping(value = "uploadMultipleFile", method = RequestMethod.POST)
 	public @ResponseBody String uploadMultipleFileHandler(@RequestParam("name") String[] names,
 			@RequestParam("file") MultipartFile[] files) {
-	
+
 		if (files.length != names.length)
 			return "Mandatory information missing";
-	
+
 		String message = "";
 		for (int i = 0; i < files.length; i++) {
 			MultipartFile file = files[i];
 			String name = names[i];
 			try {
 				byte[] bytes = file.getBytes();
-	
+
 				// Creating the directory to store file
 				String rootPath = System.getProperty("catalina.home");
 				File dir = new File(rootPath + File.separator + "tmpFiles");
 				if (!dir.exists())
 					dir.mkdirs();
-	
+
 				// Create the file on server
 				File serverFile = new File(dir.getAbsolutePath() + File.separator + name);
 				BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
 				stream.write(bytes);
 				stream.close();
-	
+
 				logger.info("Server File Location=" + serverFile.getAbsolutePath());
-	
+
 				message = message + "You successfully uploaded file=" + name + "<br />";
 			} catch (Exception e) {
 				return "You failed to upload " + name + " => " + e.getMessage();
@@ -391,7 +420,7 @@ public class FileUploadController {
 	}
 	*/
 
-	private String doSaveFile(String orgid, String rootPath, String funcdir, String language, String istmpfile,
+	private String doSaveFile(String oprid,String orgid, String rootPath, String funcdir, String language, String istmpfile,
 			MultipartFile file, String siteid, String impl) {
 
 		// 过滤功能目录名称中的特殊字符
@@ -430,6 +459,7 @@ public class FileUploadController {
 		boolean success = false;
 		Object messages = null;
 		String filename = "";
+		String parentPath = "";
 		try {
 			filename = file.getOriginalFilename();
 		} catch (Exception e) {
@@ -469,7 +499,6 @@ public class FileUploadController {
 
 					// Creating the directory to store file
 					String tmpFilePath = getSysHardCodeVal.getTmpFileUploadPath();
-					String parentPath = "";
 
 					if ("1".equals(istmpfile)) {
 						// 若是临时文件，则存储在临时文件目录
@@ -541,6 +570,20 @@ public class FileUploadController {
 			}
 		}
 
+		if(!"".equals(oprid)&&null!=oprid){
+			String inputParam="上传文件名："+filename;
+			String outputParam="上传文件路径："+parentPath;
+			String result="";
+			String failReason="";
+			if(success){
+				result="上传成功!";
+			}else{
+				result="上传失败！";
+				failReason=messages == null ? "" : messages.toString();
+			}
+			logSaveServiceImpl.SaveLogToDataBase(oprid,inputParam,outputParam,result,failReason,"","","");
+		}
+
 		Map<String, Object> mapRet = new HashMap<String, Object>();
 		mapRet.put("success", success);
 		mapRet.put("msg", messages == null ? "" : messages);
@@ -607,15 +650,16 @@ public class FileUploadController {
 		String siteid = allRequestParams.get("siteid") == null ? "" : String.valueOf(allRequestParams.get("siteid"));
 		String orgid = tzWebsiteLoginServiceImpl.getLoginedUserOrgid(request);
 		String rootPath = getSysHardCodeVal.getWebsiteFileUploadPath();
+		String oprid=tzWebsiteLoginServiceImpl.getLoginedUserOprid(request);
 
 		String keyName = String.valueOf(allRequestParams.get("keyName"));
 		MultipartFile file = (MultipartFile) request.getFile(keyName);
 		String retJson = "";
 
 		if ("".equals(siteid)) {
-			retJson = this.doSaveFile(orgid, rootPath, funcdir, language, istmpfile, file, siteid, "");
+			retJson = this.doSaveFile(oprid,orgid, rootPath, funcdir, language, istmpfile, file, siteid, "");
 		} else {
-			retJson = this.doSaveFile(orgid, rootPath, funcdir, language, istmpfile, file, siteid, "");
+			retJson = this.doSaveFile(oprid,orgid, rootPath, funcdir, language, istmpfile, file, siteid, "");
 		}
 		return retJson;
 	}
