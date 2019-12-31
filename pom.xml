@@ -21,7 +21,7 @@
 		<jstl.version>1.2</jstl.version>
 		<junit.version>4.11</junit.version>
 		<jacksoncore.version>2.6.3</jacksoncore.version>
-		<jacksondatabind.version>2.6.3</jacksondatabind.version>
+		<jacksondatabind.version>2.9.10.1</jacksondatabind.version>
 		<jacksonannot.version>2.6.3</jacksonannot.version>
 		<combeanutl.version>1.9.2</combeanutl.version>
 		<comcollection.version>3.2.1</comcollection.version>
