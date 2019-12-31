@@ -28,7 +28,7 @@
 		<comlang.version>2.6</comlang.version>
 		<comlogging.version>1.2</comlogging.version>
 		<spring.session.version>1.0.2.RELEASE</spring.session.version>
-		<uplfile.version>1.3.1</uplfile.version>
+		<uplfile.version>1.3.3</uplfile.version>
 		<commonsio.version>2.4</commonsio.version>
 		<comcodec.version>1.10</comcodec.version>
 		<imgscalr.version>4.2</imgscalr.version>
