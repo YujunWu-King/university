@@ -24,7 +24,7 @@
 		<jacksondatabind.version>2.6.3</jacksondatabind.version>
 		<jacksonannot.version>2.6.3</jacksonannot.version>
 		<combeanutl.version>1.9.2</combeanutl.version>
-		<comcollection.version>3.2.1</comcollection.version>
+		<comcollection.version>3.2.2</comcollection.version>
 		<comlang.version>2.6</comlang.version>
 		<comlogging.version>1.2</comlogging.version>
 		<spring.session.version>1.0.2.RELEASE</spring.session.version>
