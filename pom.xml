@@ -36,7 +36,7 @@
 		<aspectj.version>1.8.7</aspectj.version>
 		<comlang3.version>3.4</comlang3.version>
 		<freemarker.version>2.3.12</freemarker.version>
-		<quartz.version>2.2.2</quartz.version>
+		<quartz.version>2.3.2</quartz.version>
 		<c3p0.version>0.9.1.1</c3p0.version>
 		<imagescaling.version>0.8.6</imagescaling.version>
 		<zxingcore.version>3.2.1</zxingcore.version>
