@@ -44,7 +44,7 @@
 		<dom4j.version>1.6.1</dom4j.version>
 		<poi.version>3.13</poi.version>
 		<poiooxml.version>3.13</poiooxml.version>
-		<httpclient.version>4.5.2</httpclient.version>
+		<httpclient.version>4.5.13</httpclient.version>
 		<bcprov.version>4.5.2</bcprov.version>
 	</properties>
 
